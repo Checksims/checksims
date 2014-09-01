@@ -34,18 +34,15 @@ detection, and the domain-specific field of programming languages, to identify
 the most common techniques in use today and inform our direction. We will
 produce a summary of our findings, discussing relevant algorithms and
 evaluation techniques, their tradeoffs, and any previous implementations of
-similar software. % Reword, adding note that we're researching previous impls
-Our findings will be thoroughly cited, with seminal papers in the field being
-mentioned specifically to ease any future search for information on the subject.
-The finished literature review will be ready at the end of A term, but we aim
-to complete the majority of research early in the term so it may be used to
-engineer the software deliverables.
+similar software. Our findings will be thoroughly cited, with seminal papers in
+the field being mentioned specifically to ease any future search for
+information on the subject. The finished literature review will be ready at the
+end of A term, but we aim to complete the majority of research early in the
+term so it may be used to engineer the software deliverables.
 
 \subsection{Evaluation Framework}
 We will design a software system which we can use to receive measurable,
 reproducible, actionable data to evaluate any algorithms we implement. 
-% Unlikely we're designing any algorithms, that's pretty difficult.
-% Also, fixed tense issue below.
 The framework will be designed to give us a quantitative understanding of our
 product's characteristics, which will inform our engineering process. The
 framework will be designed to conform as closely as possible to the industry
@@ -55,9 +52,6 @@ and used in continuous integration testing of the other software deliverables.
 We will improve it continuously as needed.
 
 \subsection{Server Framework}
-% Clarify we're just doing Linux support. I am not interested in explicitly
-% supporting Solaris and the BSD family, nor do I feel it adds value to our
-% proposal.
 We will create server software, designed to run on the Linux operating
 system, that provides an interface for software similarity checking and a module
 system to allow the easy addition of similarity detection algorithms. 
@@ -65,29 +59,25 @@ The server will provide an HTTP REST API for requesting similarity
 checks on assignments. THe client will be allowed to specify relevant parameters
 for the checks - for example, specifying which algorithms should be used, or
 overriding default alert thresholds. The server will also be able to store
-a large volume of previously-submitted work to check against. We aim to produce
-a compact, specialized framework well-suited for this task. Finally, we will
-produce documentation to enable the easy extension of the server with new
-detection algorithms.
+a large volume of previously-submitted work which assignments can be added to
+or checked against. We aim to produce a compact, specialized framework
+well-suited for this task. Finally, we will produce documentation to enable the
+easy extension of the server with new detection algorithms.
 
 \subsection{Example Plugin}
 We will implement a simple similarity-checking algorithm focused on detecting
 simple code duplication. This algorithm will provide a means of testing our
-framework and will implement a baseline for detection functionality. At the end
-of B term, we intend for the combination of our server and this plugin to be
-usable as a means of detecting simple instances of plagiarism. We aim to
-complete this plugin by the beginning of B term to enable testing of the
-framework on real source code.
-% I'm pretty sure this was desired for C term, not B?
-% Otherwise, major reword to make it less advisor-focused, more general
-% application - we want it to be ready for simple applications everywhere when
-% we're done.
+framework and will implement a baseline for detection functionality. At the
+start of B term, we intend for the combination of our server and this plugin to
+be usable as a means of detecting simple instances of plagiarism. We will find
+early adopters in the computer science department at WPI and use their feedback
+throughout B term to inform our engineering choices.
 
 \subsection{Example Client}
 We will develop a command line tool, available on UNIX and Windows, that makes
 appropriate REST calls to the server and reports the responses in a
-human-friendly manner. We aim to have this client available at the end of C
-term.
+human-friendly manner. The example client will be delivered by the project
+deadline.
 
 \subsection{Final Paper}
 We will write a final paper according to WPI's project guidelines,
@@ -96,3 +86,4 @@ deliverables, and details of the functionality and effectiveness of the final
 deliverables. The final paper will be submitted at the project deadline.
 
 \end{document}
+
