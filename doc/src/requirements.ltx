@@ -22,46 +22,35 @@ course staff on similar work submissions, allowing them to catch more with the
 time they have. This framework will also allow the detection of instances of the
 so-called ``copy-and-paste pattern'' where identical code is reused in multiple
 places, a useful metric for large projects.
-% Added another potential application... Not sure if worth mentioning?
 
-\section{Deliverables}
 This is a two-term MQP, with 2/3 credits being applied in A term of 2014 and
 1/3 credit being applied in B term of 2014. Over the course of the project,
 we aim to produce several deliverable products, summarized below.
-% Reworded to avoid dangling end-of-sentence
 
-\subsection{Literature Review}
+\section{Literature Review}
 We will conduct a thorough review of prior work in the field of plagiarism
 detection, and the domain-specific field of programming languages, to identify
 the most common techniques in use today and inform our direction. We will
 produce a summary of our findings, discussing relevant algorithms and
 evaluation techniques, their tradeoffs, and any previous implementations of
-similar software. % Reword, adding note that we're researching previous impls
-Our findings will be thoroughly cited, with seminal papers in the field being
-mentioned specifically to ease any future search for information on the subject.
-The finished literature review will be ready at the end of A term, but we aim
-to complete the majority of research early in the term so it may be used to
-engineer the software deliverables.
-% Reworded, added reason why we're calling our seminal works
+similar software. Our findings will be thoroughly cited, with seminal papers in
+the field being mentioned specifically to ease any future search for
+information on the subject. The finished literature review will be ready at the
+end of A term, but we aim to complete the majority of research early in the
+term so it may be used to engineer the software deliverables.
 
-\subsection{Evaluation Framework}
+\section{Evaluation Framework}
 We will design a software system which we can use to receive measurable,
 reproducible, actionable data to evaluate any algorithms we implement. 
-% Unlikely we're designing any algorithms, that's pretty difficult.
-% Also, fixed tense issue below.
 The framework will be designed to give us a quantitative understanding of our
 product's characteristics, which will inform our engineering process. The
 framework will be designed to conform as closely as possible to the industry
 standard methods for evaluating similar software, as identified in our
-literature review. The evaluation framework will be built early in A term to
-enable its use in continuous integration testing of the other software
-deliverables, and we will improve it continuously as needed.
-% Clarify that we're building this first
+literature review. A basic evaluation framework will be built early in A term
+and used in continuous integration testing of the other software deliverables.
+We will improve it continuously as needed.
 
-\subsection{Server Framework}
-% Clarify we're just doing Linux support. I am not interested in explicitly
-% supporting Solaris and the BSD family, nor do I feel it adds value to our
-% proposal.
+\section{Server Framework}
 We will create server software, designed to run on the Linux operating
 system, that provides an interface for software similarity checking and a module
 system to allow the easy addition of similarity detection algorithms. 
@@ -69,36 +58,31 @@ The server will provide an HTTP REST API for requesting similarity
 checks on assignments. THe client will be allowed to specify relevant parameters
 for the checks - for example, specifying which algorithms should be used, or
 overriding default alert thresholds. The server will also be able to store
-a large volume of previously-submitted work to check against. We aim to produce
-a compact, specialized framework well-suited for this task. Finally, we will
-produce documentation to enable the easy extension of the server with new
-detection algorithms.
-% Didn't know what you were getting at with the compact-as-possible thing,
-% so I tried to clarify - is this what you meant?
+a large volume of previously-submitted work which assignments can be added to
+or checked against. We aim to produce a compact, specialized framework
+well-suited for this task. Finally, we will produce documentation to enable the
+easy extension of the server with new detection algorithms.
 
-\subsection{Example Plugin}
+\section{Example Plugin}
 We will implement a simple similarity-checking algorithm focused on detecting
 simple code duplication. This algorithm will provide a means of testing our
-framework and will implement a baseline for detection functionality. At the end
-of B term, we intend for the combination of our server and this plugin to be
-usable as a means of detecting simple instances of plagiarism.
-% I'm pretty sure this was desired for C term, not B?
-% Otherwise, major reword to make it less advisor-focused, more general
-% application - we want it to be ready for simple applications everywhere when
-% we're done.
+framework and will implement a baseline for detection functionality. At the
+start of B term, we intend for the combination of our server and this plugin to
+be usable as a means of detecting simple instances of plagiarism. We will find
+early adopters in the computer science department at WPI and use their feedback
+throughout B term to inform our engineering choices.
 
-\subsection{Example Client}
+\section{Example Client}
 We will develop a command line tool, available on UNIX and Windows, that makes
 appropriate REST calls to the server and reports the responses in a
-human-friendly manner. 
-%The tool will be available for use by the start of B term.
-% Again I thought this was a C term thing? If so, I think this should be among
-% the last things we do...
+human-friendly manner. The example client will be delivered by the project
+deadline.
 
-\subsection{Final Paper}
+\section{Final Paper}
 We will write a final paper according to WPI's project guidelines,
 incorporating our literature review, the process used to build our software
 deliverables, and details of the functionality and effectiveness of the final
-deliverables.
+deliverables. The final paper will be submitted at the project deadline.
 
 \end{document}
+
