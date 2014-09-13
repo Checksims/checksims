@@ -4,14 +4,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public final class Submission {
+public class Submission {
     private final List<String> lines;
     
     public Submission(BufferedReader b) throws IOException{
@@ -28,7 +26,9 @@ public final class Submission {
     
     public Map<LineLocation, Set<LineLocation>> getSimilarLines(
             final Map<Integer, Set<LineLocation>> others) {
-        final Map<LineLocation, Set<LineLocation>> matches = new HashMap<>();
+        throw new UnsupportedOperationException();
+        
+        /*final Map<LineLocation, Set<LineLocation>> matches = new HashMap<>();
         final Iterator<String> it = this.lines.iterator();
         int i = 0;
         while(it.hasNext()){
@@ -39,14 +39,14 @@ public final class Submission {
             }
             i++;
         }
-        return matches;
+        return matches;*/
     }
     
     public void addToDatabase(final Map<Integer, Set<LineLocation>> database) {
         int i = 0;
         for(String line : this.lines){
-            i++;
             final Integer hash = Integer.valueOf(line.hashCode()); 
+            i++;
             Set<LineLocation> locs = database.get(hash);
             if(locs == null){
                 locs = new HashSet<>();
@@ -54,5 +54,10 @@ public final class Submission {
             }
             locs.add(new LineLocation(this, i));
         }
+    }
+    
+    @Override
+    public String toString(){
+        return "Submission, " + lines.size() + " lines";
     }
 }
