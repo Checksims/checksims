@@ -13,13 +13,22 @@ import java.util.Set;
 
 public class Submission {
     private final List<String> lines;
+    private final String name;
     
-    public Submission(BufferedReader b) throws IOException{
+    public Submission(BufferedReader b, String name) throws IOException{
+        if(name == null){
+            throw new NullPointerException("Submission name cannot be null");
+        }
+        this.name = name;
         final List<String> linesRead = new ArrayList<>();
         for(String line = b.readLine(); line != null; line = b.readLine()){
             linesRead.add(line);
         }
         this.lines = Collections.unmodifiableList(linesRead);
+    }
+    
+    public Submission(BufferedReader b) throws IOException {
+        this(b, "unnamed submission");
     }
     
     public String getLine(int lineNum){
@@ -64,5 +73,13 @@ public class Submission {
     public String toString(){
         return String.format(Messages.getString("Submission.0"), //$NON-NLS-1$
                 Integer.valueOf(this.lines.size()));
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public int getNumLines() {
+        return this.lines.size();
     }
 }

@@ -11,6 +11,7 @@ public final class LineLocation {
     public Submission getSubmission(){
         return this.submission;
     }
+    
     public int getLineNum(){
         return this.lineNum;
     }
@@ -18,10 +19,10 @@ public final class LineLocation {
     @Override
     public boolean equals(Object o){
         return (o instanceof LineLocation) &&
-                this.equals((LineLocation)o);
+                this.equalsLineLocation((LineLocation)o);
     }
 
-    public boolean equals(LineLocation o){
+    public boolean equalsLineLocation(LineLocation o){
         return (this.submission.equals(o.submission)) &&
                 (this.lineNum == o.lineNum);
     }

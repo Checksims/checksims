@@ -27,17 +27,13 @@ public class LineCompareDemo {
             } catch(NoSuchFileException e){
                 System.err.println(String.format(
                         Messages.getString("LineCompareDemo.1"), arg)); //$NON-NLS-1$
-                System.exit(1);
-            } catch(AccessDeniedException e) {
-                System.err.println(String.format(
-                        Messages.getString("LineCompareDemo.2"), arg)); //$NON-NLS-1$
-                System.exit(1);
+                return; // System.exit(1);
             } catch(IOException e) {
                 System.err.println(String.format(
                         Messages.getString("LineCompareDemo.3"),        //$NON-NLS-1$
                         arg,
                         e.getMessage()));
-                System.exit(1);
+                return; //System.exit(1);
             }
         }
         

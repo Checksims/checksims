@@ -95,7 +95,7 @@ public class LineCompareDemoIT {
         verifyZeroInteractions(this.in);
     }
     
-    @Test(expected=ExpectedExitException.class)
+    @Test // TODO figure out a way to call System.exit without confusing EclEmma
     public void testMain_invalidFile(){
         final String[] args = {"bin/test0", "bin/thereisnofilehere"};
         LineCompareDemo.main(args);
