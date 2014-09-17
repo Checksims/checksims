@@ -76,6 +76,33 @@ public class LineCompareDemoIT {
     }
     
     @Test
+    public void testMain_twoFiles(){
+        final String[] args = {"bin/test0", "bin/test1"};
+        LineCompareDemo.main(args);
+        verify(this.out).print(
+                "                         test0          test1\n" +
+                "          test0              *           0.10\n" +
+                "          test1           0.77              *\n");
+        verifyNoMoreInteractions(this.out);
+        verifyZeroInteractions(this.err);
+        verifyZeroInteractions(this.in);
+    }
+    
+    @Test
+    public void testMain_moreFiles(){
+        final String[] args = {"bin/test0", "bin/test1", "bin/test2"};
+        LineCompareDemo.main(args);
+        verify(this.out).print(
+                "                         test0          test1          test2\n" +
+                "          test0              *           0.10           0.05\n" +
+                "          test1           0.77              *           0.00\n" +
+                "          test2           1.00            0.00             *\n");
+        verifyNoMoreInteractions(this.out);
+        verifyZeroInteractions(this.err);
+        verifyZeroInteractions(this.in);
+    }
+    
+    // @Test
     public void testMain_tenMatches() {
         final String[] args = {"bin/test0", "bin/test1"};
         LineCompareDemo.main(args);
@@ -85,7 +112,7 @@ public class LineCompareDemoIT {
         verifyZeroInteractions(this.in);
     }
     
-    @Test
+    // @Test
     public void testMain_fiveMatches(){
         final String[] args = {"bin/test0", "bin/test2"};
         LineCompareDemo.main(args);
