@@ -1,7 +1,11 @@
 doc/build
 doc/dist
-/bin/
+bin/
 literature/*.pdf
 literature/*.rtf
 literature/*.tar.gz
+dist/
+.classpath
+.project
+.settings/
 
