@@ -1,3 +1,7 @@
 doc/build
 doc/dist
 /bin/
+literature/*.pdf
+literature/*.rtf
+literature/*.tar.gz
+

@@ -1,0 +1,431 @@
+* http://faculty.uaeu.ac.ae/B_Belkhouche/Belkhouche/bb_dir/Papiers_publies/Conferences/plagiarism.pdf
+Unsuitable for use in project - focuses on very high-level comparison, analyzing design (code structure, data structures) of two programs for similarity (overall program design is analyzed and compared - going to be identical in low-level CS!). Mention at most.
+
+* https://it.uu.se/research/publications/reports/2007-006/2007-006.pdf#page=151
+GNU GPL licensed Java 1.5 source code plagiarism detection software dating to 2006. No evidence of active development after this point.
+
+* http://crpit.com/confpapers/CRPITV48Arwin.pdf
+Good overview of existing solutions as of publication (2006, so somewhat dated). Breaks into several overall categories: Textual, dealing with the program as plaintext (classified as very easy to subvert, 13 methods mentioned); Feature comparisons, which examine common program attributes (line count, words, characters, unique tokens, volume), which tends to produce a large volume of false positives or false negatives; Structural comparisons, which parse the code and examine the syntax trees (the most common and effective means, according to this paper). The parsing stage can also be offloaded to a compiler, and the compiler’s intermediate output analyzed. Describes inner engine of XPlag plagiarism detection tool, based on compiler-based parsing and source structure analysis. XPlag has never been released as free software or been made available commercially.
+
+* http://www3.nd.edu/~kwb/nsf-ufe/1110.pdf
+Old paper (1999) but very relevant as it directly discusses plagiarism in a programming class setting. Describes MOSS, a web-based plagiarism detection service still made available by Stanford (upwards of a decade after initial inception). MOSS does not provide details of algorithms used internally, does not provide source code, but does provide what would seem to be a useful benchmark for usability given its popularity.
+
+* http://webuser.uni-weimar.de/~cuze8081/publications/burrows_2007a_spe.pdf
+Focused on efficiency over large data sets. Details indexing algorithms adapted from genomic information retrieval for maintaining a database of source code which new submissions can be compared against, in a very efficient manner (so as to scale to many thousands or tens of thousands of submissions). Very advanced database retrieval techniques I did not understand in the slightest discussed for majority of paper.
+
+* http://www1.spms.ntu.edu.sg/~chenxin/paper/IT04a.pdf
+Attempts to “take a step back” and develop a universal measure for the amount of information shared between 2 sequences (be they DNA, text, or source code) which can then be used to make a determination on plagiarism. However, to make use of this algorithm, the program must be parsed into tokens to remove whitespace issues (amongst other reasons). Solution is named SID - Software Integrity Diagnosis. I can find no information on current development (paper dated 2004), and the official website no longer exists. No evidence source code was ever released.
+
+* ftp://ftp.cs.bham.ac.uk/.snapshot/hourly.0/pub/authors/W.B.Langdon/biblio/gecco2008/docs/p1453.pdf
+Discusses the use of genetic algorithms to tune an existing algorithm for plagiarism detection (Okapi) for optimum accuracy, and furthermore uses particle swarm genetic optimization to devise novel formulas for plagiarism detection.
+
+* http://eprints.dcs.warwick.ac.uk/52/1/cs-rr-422.pdf
+A survey of UK academics focused not on how to detect plagiarism, but what it is in the context of source code and programming classes. Useful for abstract/introduction, not really useful otherwise as Prof. Lauer has provided his own definition, and that’s what we’re working with for this project.
+
+* http://citeseerx.ist.psu.edu/viewdoc/download;jsessionid=13109629373CD8EEFB2E9DC5C99C33CA?doi=10.1.1.24.6017&rep=rep1&type=pdf
+Efficient solution to Longest Common Subsequence problem, which has important implications for plagiarism detection (though it cannot cope with comments, whitespace, etc on its own).
+
+* http://www.cis.upenn.edu/~bcpierce/papers/diff3-short.pdf
+A discussion of Diff3, a 3-way version of the conventional Diff algorithm. This could be used for plagiarism detection (detect similarities between 2 files that are not shared by a third [given reference code shared by all students]).
+
+* https://www.utdallas.edu/~mark.gabel/publications/papers/icse08-clone.pdf
+Not a proper discussion of plagiarism detection, but still very applicable. This presents a scalable approach to identifying “semantic codes” - semantically equivalent source code blocks (here presented in the context of the detection of dead/redundant code, but plagiarism applications are obvious). Based on construction of a syntax tree in a form very similar to a function call graph.
+
+* http://www.eng.uwi.tt/depts/elec/staff/feisal/ee302/sim-gitchell.pdf
+A functional description of the previously-described Sim utility. No significant details of the algorithm are mentioned which are not expanded on in the first paper, but it does mention a worthwhile statistic: Sim is O(S^2) complexity, where S is the size of the parse tree of the program being processed. This, perhaps, places the scalability papers in a better context?
+
+@article{aiken05,
+  title={Moss: A system for detecting software plagiarism},
+  author={Aiken, Alex and others},
+  journal={University of California--Berkeley. See www. cs. berkeley. edu/aiken/moss. html},
+  volume={9},
+  year={2005}
+}
+
+@inproceedings{baxter98,
+  title={Clone detection using abstract syntax trees},
+  author={Baxter, Ira D and Yahin, Andrew and Moura, Leonardo and Sant'Anna, Marcelo and Bier, Lorraine},
+  booktitle={Software Maintenance, 1998. Proceedings., International Conference on},
+  pages={368--377},
+  year={1998},
+  organization={IEEE}
+}
+
+@article{beth14,
+  title={A Comparison of Similarity Techniques for Detecting Source Code Plagiarism},
+  author={Beth, Bradley},
+  year={2014}
+}
+Beth measures the performance of four approaches to plagiarism detection
+against a simulated corpus of plagiarized C programs using five distinct
+obfuscation techniques: comment alteration, whitespace padding, identifier
+renaming, code reordering, and refactoring algebraic expressions. The project
+measures the effectiveness of Levenshtein edit distance (in source and in the
+LLVM intermediate representation bitcode), tree edit distance in the abstract
+syntax tree, graph edit distance in the control flow graphs, and w-shingling*,
+both in the source and in the IR bitcode. The algorithms are also checked
+against an unrelated piece of source code (to check for false positives), and
+their performance was also compared with the performance of MOSS, the state of
+the art plagiarism detection service provided by Stanford).
+
+The author limited the corpus to C programs, but believes the results will be
+similar for any compiler which uses the LLVM toolchain. The corpus is, however,
+very small, and perhaps not too realistic. The results are certainly not
+conclusive, but they provide a decent starting point.
+
+It seems that most approaches detect some attacks well, but not others. The
+author had comments and whitespace removed before running the checks, so both
+of those approaches did poorly. It seems that changes to order and nomenclature
+are best detected when checking compiler-generated structures rather than the
+source itself. w-shingling against the LLVM Intermediate Result performed "the
+best".
+
+"*w-shingling measures the proportion of n-gram sequences two documents have in
+common to the total number of n-gram sequences that occur in either document".
+Beth speculates that MOSS uses a similar n-gram fingerprinting retrieval
+system called winnowing.
+
+In the introduction, the author differentiated "code clone detection" from
+"source code plagiarism detection", but did not elaborate. Perhaps we should
+look more closely into the difference.
+
+@article{braumoeller01,
+	title={Actions do speak louder than words: Deterring plagiarism with the use of plagiarism-detection software},
+  author={Braumoeller, Bear F and Gaines, Brian J},
+  journal={Political Science \& Politics},
+  volume={34},
+  number={04},
+  pages={835--839},
+  year={2001},
+  publisher={Cambridge Univ Press}
+}
+
+@inproceedings{broder00,
+  title={Identifying and filtering near-duplicate documents},
+  author={Broder, Andrei Z},
+  booktitle={Combinatorial pattern matching},
+  pages={1--10},
+  year={2000},
+  organization={Springer}
+}
+
+@article{chen04,
+  title={Shared information and program plagiarism detection},
+  author={Chen, Xin and Francia, Brent and Li, Ming and Mckinnon, Brian and Seker, Amit},
+  journal={Information Theory, IEEE Transactions on},
+  volume={50},
+  number={7},
+  pages={1545--1551},
+  year={2004},
+  publisher={IEEE}
+}
+
+@article{clough00,
+  title={Plagiarism in natural and programming languages: an overview of current tools and technologies},
+  author={Clough, Paul},
+  journal={Research Memoranda: CS-00-05, Department of Computer Science, University of Sheffield, UK},
+  pages={1--31},
+  year={2000}
+}
+
+@inproceedings{clough02,
+  title={Building and annotating a corpus for the study of journalistic text reuse.},
+  author={Clough, Paul and Gaizauskas, Robert J and Piao, Scott Songlin},
+  booktitle={LREC 2002},
+  pages={1678--1685},
+  year={2002},
+  organization={European Language Resources Association}
+}
+
+@inproceedings{clough03,
+  title={Old and new challenges in automatic plagiarism detection},
+  author={Clough, Paul and others},
+  booktitle={National Plagiarism Advisory Service, 2003; http://ir. shef. ac. uk/cloughie/index. html},
+  year={2003},
+  organization={Citeseer}
+}
+According to abstract, focuses on natural language.
+
+@inproceedings{clough09,
+  title={Creating a corpus of plagiarised academic texts},
+  author={Clough, Paul and Stevenson, Mark},
+  booktitle={Proceedings of Corpus Linguistics Conference, CL’09 (to appear)},
+  year={2009}
+}
+
+@article{clough11,
+  title={Developing a corpus of plagiarised short answers},
+  author={Clough, Paul and Stevenson, Mark},
+  journal={Language Resources and Evaluation},
+  volume={45},
+  number={1},
+  pages={5--24},
+  year={2011},
+  publisher={Springer}
+}
+
+@article{cosma12,
+  title={An approach to source-code plagiarism detection and investigation using latent semantic analysis},
+  author={Cosma, Georgina and Joy, Mike},
+  journal={Computers, IEEE Transactions on},
+  volume={61},
+  number={3},
+  pages={379--394},
+  year={2012},
+  publisher={IEEE}
+}
+
+@inproceedings{donaldson81,
+  title={A plagiarism detection system},
+  author={Donaldson, John L and Lancaster, Ann-Marie and Sposato, Paula H},
+  booktitle={ACM SIGCSE Bulletin},
+  volume={13},
+  number={1},
+  pages={21--25},
+  year={1981},
+  organization={ACM}
+}
+
+@article{djuric1,
+  title={A source code similarity system for plagiarism detection},
+  author={{\DJ}uri{\'c}, Zoran and Ga{\v{s}}evi{\'c}, Dragan},
+  journal={The Computer Journal},
+  pages={bxs018},
+  year={2012},
+  publisher={Br Computer Soc}
+}
+
+@incollection{eissen06,
+  title={Intrinsic plagiarism detection},
+  author={Zu Eissen, Sven Meyer and Stein, Benno},
+  booktitle={Advances in Information Retrieval},
+  pages={565--569},
+  year={2006},
+  publisher={Springer}
+}
+
+@incollection{eissen07,
+  title={Plagiarism detection without reference collections},
+  author={Zu Eissen, Sven Meyer and Stein, Benno and Kulig, Marion},
+  booktitle={Advances in data analysis},
+  pages={359--366},
+  year={2007},
+  publisher={Springer}
+}
+
+@article{foster02,
+  title={Plagiarism-detection tool creates legal quandary},
+  author={Foster, Andrea L},
+  journal={The Chronicle of Higher Education},
+  volume={48},
+  number={36},
+  pages={A37--A38},
+  year={2002},
+  publisher={Jossey-Bass}
+}
+
+@inproceedings{grozea09,
+  title={ENCOPLOT: Pairwise sequence matching in linear time applied to plagiarism detection},
+  author={Grozea, Cristian and Gehl, Christian and Popescu, Marius},
+  booktitle={3rd PAN Workshop. Uncovering Plagiarism, Authorship and Social Software Misuse},
+  pages={10},
+  year={2009}
+}
+
+@article{hordijk08,
+  title={Structured Review of Code Clone Literature},
+  author={Hordijk, Wiebe and Ponisio, Mar{\'\i}a Laura and Wieringa, Roel},
+  year={2008},
+  publisher={Centre for Telematics and Information Technology, University of Twente}
+}
+
+@inproceedings{kang06,
+  title={PPChecker: Plagiarism pattern checker in document copy detection},
+  author={Kang, NamOh and Gelbukh, Alexander and Han, SangYong},
+  booktitle={Text, Speech and Dialogue},
+  pages={661--667},
+  year={2006},
+  organization={Springer}
+}
+
+@phdthesis{koss12,
+  title={Authorship is Continuous: Detecting Plagiarism in Student Code Assignments with Version Control},
+  author={Koss, Ian Mathias},
+  year={2012},
+  school={Florida Institute of Technology}
+}
+
+@inproceedings{liu06,
+  title={GPLAG: detection of software plagiarism by program dependence graph analysis},
+  author={Liu, Chao and Chen, Chen and Han, Jiawei and Yu, Philip S},
+  booktitle={Proceedings of the 12th ACM SIGKDD international conference on Knowledge discovery and data mining},
+  pages={872--881},
+  year={2006},
+  organization={ACM}
+}
+
+@inproceedings{lukashenko07,
+  title={Computer-based plagiarism detection methods and tools: an overview},
+  author={Lukashenko, Romans and Graudina, Vita and Grundspenkis, Janis},
+  booktitle={Proceedings of the 2007 international conference on Computer systems and technologies},
+  pages={40},
+  year={2007},
+  organization={ACM}
+}
+
+@article{parker89,
+  title={Computer algorithms for plagiarism detection},
+  author={Parker, Alan and others},
+  year={1989},
+  publisher={Citeseer}
+}
+
+@inproceedings{potthast10,
+ author={Potthast, Martin and Stein, Benno and Barr\'{o}n-Cede\~{n}o, Alberto and Rosso, Paolo},
+ title={An Evaluation Framework for Plagiarism Detection},
+ booktitle={Proceedings of the 23rd International Conference on Computational Linguistics: Posters},
+ series={COLING '10},
+ year={2010},
+ location={Beijing, China},
+ pages={997--1005},
+ numpages={9},
+ url={http://dl.acm.org/citation.cfm?id=1944566.1944681},
+ acmid={1944681},
+ publisher={Association for Computational Linguistics},
+ address={Stroudsburg, PA, USA},
+}
+Potthast et al. formalize a plagiarism as a 4-tuple consisting of the
+plagiarizing document, the copied document, and the plagiarized and original
+passages within each. They then explain that it is impossible to find an
+adequate source of "true" plagiarized material for a number of valid reasons,
+and describe three ways of generating a corpus: pay humans to plagiarize, use
+sources of legitimately copied material such as wire stories, or use an
+algorithm to mutate the document.
+
+They present PAN-PC-10, a plagiarism corpus created with Mechanical Turk and an
+algorithmic approach. They compare the corpus with existing corpori Clough09
+and METER, but stop short of claiming that any one database is the best.
+
+@inproceedings{potthast10competition,
+  title={Overview of the 2nd International Competition on Plagiarism Detection.},
+  author={Potthast, Martin and Barr{\'o}n-Cede{\~n}o, Alberto and Eiselt, Andreas and Stein, Benno and Rosso, Paolo},
+  booktitle={CLEF (Notebook Papers/LABs/Workshops)},
+  year={2010}
+}
+
+@article{potthast10workshop,
+  title={Overview of the 2nd International Benchmarking Workshop on Plagiarism Detection},
+  author={Potthast, Martin and Stein, Benno and Eiselt, Andreas and Barr{\'o}n-Cede{\~n}o, Alberto and Rosso, Paolo},
+  journal={Proceedings of PAN at CLEF},
+  year={2010}
+}
+
+@article{potthast11,
+  title={Cross-language plagiarism detection},
+  author={Potthast, Martin and Barr{\'o}n-Cede{\~n}o, Alberto and Stein, Benno and Rosso, Paolo},
+  journal={Language Resources and Evaluation},
+  volume={45},
+  number={1},
+  pages={45--62},
+  year={2011},
+  publisher={Springer}
+}
+
+@inproceedings{potthast12competition,
+  title={Overview of the 4th International Competition on Plagiarism Detection.},
+  author={Potthast, Martin and Gollub, Tim and Hagen, Matthias and Kiesel, Johannes and Michel, Maximilian and Oberl{\"a}nder, Arnd and Tippmann, Martin and Barr{\'o}n-Cedeno, Alberto and Gupta, Parth and Rosso, Paolo and others},
+  booktitle={CLEF (Online Working Notes/Labs/Workshop)},
+  year={2012}
+}
+
+@inproceedings{potthast13,
+  title={Overview of the 4th International Competition on Plagiarism Detection.},
+  author={Potthast, Martin and Gollub, Tim and Hagen, Matthias and Kiesel, Johannes and Michel, Maximilian and Oberl{\"a}nder, Arnd and Tippmann, Martin and Barr{\'o}n-Cedeno, Alberto and Gupta, Parth and Rosso, Paolo and others},
+  booktitle={CLEF (Online Working Notes/Labs/Workshop)},
+  year={2012}
+}
+
+@incollection{prilepok13,
+  title={Similarity based on data compression},
+  author={Pr{\'\i}lepok, Michal and Platos, Jan and Snasel, Vaclav},
+  booktitle={Advances in Soft Computing and Its Applications},
+  pages={267--278},
+  year={2013},
+  publisher={Springer}
+}
+
+@techreport{roy07,
+  title={A survey on software clone detection research},
+  author={Roy, Chanchal Kumar and Cordy, James R},
+  year={2007},
+  institution={Technical Report 541, Queen’s University at Kingston}
+}
+
+@inproceedings{roy08,
+  title={Scenario-based comparison of clone detection techniques},
+  author={Roy, Chanchal Kumar and Cordy, James R},
+  booktitle={Program Comprehension, 2008. ICPC 2008. The 16th IEEE International Conference on},
+  pages={153--162},
+  year={2008},
+  organization={IEEE}
+}
+
+@inproceedings{roy08mutation,
+  title={Towards a mutation-based automatic framework for evaluating code clone detection tools},
+  author={Roy, Chanchal K and Cordy, James R},
+  booktitle={Proceedings of the 2008 C 3 S 2 E conference},
+  pages={137--140},
+  year={2008},
+  organization={ACM}
+}
+
+
+@article{roy09,
+  title={Comparison and evaluation of code clone detection techniques and tools: A qualitative approach},
+  author={Roy, Chanchal K and Cordy, James R and Koschke, Rainer},
+  journal={Science of Computer Programming},
+  volume={74},
+  number={7},
+  pages={470--495},
+  year={2009},
+  publisher={Elsevier North-Holland, Inc.}
+}
+
+@inproceedings{schleimer03,
+  title={Winnowing: local algorithms for document fingerprinting},
+  author={Schleimer, Saul and Wilkerson, Daniel S and Aiken, Alex},
+  booktitle={Proceedings of the 2003 ACM SIGMOD international conference on Management of data},
+  pages={76--85},
+  year={2003},
+  organization={ACM}
+}
+
+@inproceedings{si97,
+  title={Check: a document plagiarism detection system},
+  author={Si, Antonio and Leong, Hong Va and Lau, Rynson WH},
+  booktitle={Proceedings of the 1997 ACM symposium on Applied computing},
+  pages={70--77},
+  year={1997},
+  organization={ACM}
+}
+
+@article{stamatatos09,
+  title={Intrinsic plagiarism detection using character n-gram profiles},
+  author={Stamatatos, Efstathios},
+  journal={threshold},
+  volume={2},
+  pages={1--500},
+  year={2009}
+}
+
+@article{whale90,
+  title={Identification of program similarity in large populations},
+  author={Whale, Geoff},
+  journal={The Computer Journal},
+  volume={33},
+  number={2},
+  pages={140--146},
+  year={1990},
+  publisher={Br Computer Soc}
+}
+
