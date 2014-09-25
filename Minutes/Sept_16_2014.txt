@@ -1,0 +1,18 @@
+MEETING MINUTES
+Participants: Prof. Lauer, Matt Heon, Dolan Murvihill
+Date: 9/16/2014
+
+Discussion:
+* Discussed expectations in terms of communication. Right now the plan seems to
+  be to throw deliverables "over the wall" in large batches; that won't do. We
+  should be sending things to the advisor early and often, so he is updated.
+* Literature review is behind. We should have a partial bibliography and
+  progress report ready for next week.
+* Anonymization script needs to work in a slightly different format; should
+  preserve directory structure from TurnIn in order to mirror the real-world
+  use case.
+
+Goals for Next Week:
+* Anonymization script and demo program by today
+* Partial bibliography tomorrow
+
