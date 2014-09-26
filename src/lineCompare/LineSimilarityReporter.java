@@ -1,7 +1,5 @@
 package lineCompare;
 
-import java.util.Map;
-import java.util.Set;
 
 public interface LineSimilarityReporter {
     /** Report the provided software similarities to the user. Promises not to
