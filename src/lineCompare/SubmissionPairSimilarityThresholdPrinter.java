@@ -18,6 +18,7 @@ public class SubmissionPairSimilarityThresholdPrinter implements
     public void report(LineSimilarityMatrix similarities) {
         System.out.println(Messages.getString(
                 "SubmissionPairSimilarityThresholdPrinter.0")); //$NON-NLS-1$
+        final double th = this.threshold;
         final LineSimilarityMatrix.EntryVisitor visitor =
                 new LineSimilarityMatrix.EntryVisitor() {
                     @Override
@@ -25,7 +26,7 @@ public class SubmissionPairSimilarityThresholdPrinter implements
                             Map<LineLocation, Set<LineLocation>> similarLines) {
                         final double proportion =
                                 (double)similarLines.size() / (double)sub.getNumLines(); 
-                        if(!sub.equals(other) && proportion > threshold){
+                        if(!sub.equals(other) && proportion > th){
                             System.out.println(String.format(Messages.getString("SubmissionPairSimilarityThresholdPrinter.1"), //$NON-NLS-1$
                                     sub, other, Double.valueOf(proportion*100)));
                         }
