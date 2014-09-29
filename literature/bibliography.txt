@@ -89,6 +89,23 @@ In the introduction, the author differentiated "code clone detection" from
 "source code plagiarism detection", but did not elaborate. Perhaps we should
 look more closely into the difference.
 
+@inproceedings{baker95,
+  title={On finding duplication and near-duplication in large software systems},
+  author={Baker, Brenda S},
+  booktitle={Reverse Engineering, 1995., Proceedings of 2nd Working Conference on},
+  pages={86--95},
+  year={1995},
+  organization={IEEE}
+}
+
+@inproceedings{baker98,
+  title={Deducing Similarities in Java Sources from Bytecodes.},
+  author={Baker, Brenda S and Manber, Udi},
+  booktitle={USENIX Annual Technical Conference},
+  pages={179--190},
+  year={1998}
+}
+
 @article{braumoeller01,
 	title={Actions do speak louder than words: Deterring plagiarism with the use of plagiarism-detection software},
   author={Braumoeller, Bear F and Gaines, Brian J},
@@ -98,6 +115,26 @@ look more closely into the difference.
   pages={835--839},
   year={2001},
   publisher={Cambridge Univ Press}
+}
+
+@inproceedings{brin95,
+  title={Copy detection mechanisms for digital documents},
+  author={Brin, Sergey and Davis, James and Garcia-Molina, Hector},
+  booktitle={ACM SIGMOD Record},
+  volume={24},
+  number={2},
+  pages={398--409},
+  year={1995},
+  organization={ACM}
+}
+
+@inproceedings{broder97,
+  title={On the resemblance and containment of documents},
+  author={Broder, Andrei Z},
+  booktitle={Compression and Complexity of Sequences 1997. Proceedings},
+  pages={21--29},
+  year={1997},
+  organization={IEEE}
 }
 
 @inproceedings{broder00,
@@ -232,6 +269,15 @@ According to abstract, focuses on natural language.
   year={2009}
 }
 
+@inproceedings{heintze96,
+  title={Scalable document fingerprinting},
+  author={Heintze, Nevin and others},
+  booktitle={1996 USENIX workshop on electronic commerce},
+  volume={3},
+  number={1},
+  year={1996}
+}
+
 @article{hordijk08,
   title={Structured Review of Code Clone Literature},
   author={Hordijk, Wiebe and Ponisio, Mar{\'\i}a Laura and Wieringa, Roel},
@@ -247,6 +293,19 @@ According to abstract, focuses on natural language.
   year={2006},
   organization={Springer}
 }
+
+@article{karp87,
+  title={Efficient randomized pattern-matching algorithms},
+  author={Karp, Richard M and Rabin, Michael O},
+  journal={IBM Journal of Research and Development},
+  volume={31},
+  number={2},
+  pages={249--260},
+  year={1987},
+  publisher={IBM}
+}
+@Not available online; Gordon Library has a microfiche copy and a paper copy
+@for in-library use.
 
 @phdthesis{koss12,
   title={Authorship is Continuous: Detecting Plagiarism in Student Code Assignments with Version Control},
@@ -271,6 +330,24 @@ According to abstract, focuses on natural language.
   pages={40},
   year={2007},
   organization={ACM}
+}
+
+@inproceedings{manber94,
+  title={Finding Similar Files in a Large File System.},
+  author={Manber, Udi and others},
+  booktitle={Usenix Winter},
+  volume={94},
+  pages={1--10},
+  year={1994}
+}
+
+@I came across a claim that detecting copies of continuous data is harder than
+@in the discrete domain; it cited this paper.
+@misc{mork99,
+  title={Indexing tamper resistant features for image copy detection},
+  author={Mork, Peter and Li, Beitao and Chang, Edward and Cho, Junghoo and Li, Chen and Wang, James},
+  year={1999},
+  publisher={Citeseer}
 }
 
 @article{parker89,
@@ -398,6 +475,78 @@ and METER, but stop short of claiming that any one database is the best.
   pages={76--85},
   year={2003},
   organization={ACM}
+}
+Schleimer et al. present a document fingerprinting algorithm called winnowing,
+and describe its use in Stanford's MOSS service. They describe the concept of
+"k-gram filtering", where a document of n tokens is described as a sequence of
+(n-k+1) overlapping k-grams, with a k-gram being a sequence of k tokens. In
+k-gram filtering, each k-gram is hashed, and stored, with its document ID and
+location, in a lookup table. The k-grams are reduced to a smaller list using a
+filtering algorithm, and future documents can be checked against this corpus of
+document "fingerprints".
+
+Note that our current LineCompare code is an implementation of k-gram
+filtering; in LineCompare, each line is a token, a document is represented as a
+sequence of 1-grams, and the 1-grams are filtered using the identity function.
+Since k-gram filtering (referred to by most other literature as "n-gram"
+filtering) seems to be very prevalent in the literature, we should consider
+refactoring our implementation to be a more general framework.
+
+According to the paper, current (at publication) k-gram filters suffer from a
+number of disadvantages. The biggest one is that the filter used is typically a
+mod-p filter; a mod-p filter accepts a k-gram x if H(x) is congruent to zero
+mod p. Mod-p filters are weak because the fingerprints selected from the
+document are uneven - there could be huge runs of n-grams that do not hash to
+zero mod p. In principle, the maximum "gap width" in a document is unbounded,
+and in practice it is often longer than most web pages. Mod-p especially chokes
+on low-entropy data - a long string of zeroes, for instance, will either go
+completely unfingerprinted, or fingerprinted every single time.
+
+The paper's contribution is winnowing, a k-gram filter that guarantees an upper
+bound on the distance between fingerprints in a document. That means that a
+copy which is longer than the maximum gap width is guaranteed to be detected.
+Winnowing has achieved widespread adoption, including by MOSS, and its merit
+has caused this paper to rack up 711 citations on Google Scholar.
+
+Schleimer, et al. introduce the concept of a "local algorithm", which selects a
+document fingerprint from a "window" of consecutive k-grams with length w. An
+algorithm is local if it meets two conditions:
+1. For each possible window, the algorithm selects at least one fingerprint
+   from within that window, and
+2. The choice depends only on the contents of that window, not on any other.
+
+The authors demonstrate that if two documents are compared with a k-gram filter
+using a local algorithm with window size w, the comparison will detect at least
+one k-gram from each shared substring of length w+k-1. The minimum density
+(asymptotic proportion of fingerprinted k-grams to total k-grams) of a local
+fingerprint selection algorithm is 1.5/(w+1). Winnowing has an asymptotic
+density of 2/(w+1), leading the authors to claim it is "within 33% of optimal".
+
+The related work describes the Karp-Rabin algorithm, which finds occurrences of
+a substring in a larger string; it seems pretty fundamental. SCAM uses vector
+distance between documents to find copies. Baker presents a concept called
+"parameterized matches", which can rename parameters to be equal and more
+easily detect copies that way.
+
+They ran winnowing (w=100) and mod-50 on random data and found that both came
+very close to their expected density. Against a corpus of a half million web
+pages, they found that both came close to their expected density, but that
+mod-50 was highly non-uniform. There was a run of 29,900 non-whitespace,
+non-tag characters without a fingerprint from mod-50. The probability of that
+happening in a random terabyte of data is 10e-220.
+
+Winnowing ended up fingerprinting extremely densely in low-entropy data, so the
+authors presented a very minor adjustment called "robust winnowing" to correct
+it. Robust winnowing is not a local algorithm, but performed better than
+winnowing.
+
+The authors concluded with some linguistic analysis of the web which we don't
+care about, and several extremely useful implementation suggestions.
+
+@article{shivakumar95,
+  title={SCAM: A copy detection mechanism for digital documents},
+  author={Shivakumar, Narayanan and Garcia-Molina, Hector},
+  year={1995}
 }
 
 @inproceedings{si97,

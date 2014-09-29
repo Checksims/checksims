@@ -3,4 +3,5 @@ potthast09competition (also couldn't find a citation)
 potthast10workshop
 prilepok12
 Any Aiken paper describing MOSS
+karp87 (but the WPI library has a copy)
 
