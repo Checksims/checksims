@@ -132,6 +132,16 @@ benchmark for usability given its popularity.
   organization={ACM}
 }
 
+@inproceedings{brixtel10,
+  title={Language-independent clone detection applied to plagiarism detection},
+  author={Brixtel, Romain and Fontaine, Mathieu and Lesner, Boris and Bazin, Cyril and Robbes, Romain},
+  booktitle={Source Code Analysis and Manipulation (SCAM), 2010 10th IEEE Working Conference on},
+  pages={77--86},
+  year={2010},
+  organization={IEEE}
+}
+Very promising abstract
+
 @inproceedings{broder97,
   title={On the resemblance and containment of documents},
   author={Broder, Andrei Z},
@@ -459,6 +469,21 @@ that are not shared by a third [given reference code shared by all students]).
   year={1999},
   publisher={Citeseer}
 }
+
+@article{murugesan10,
+  title={Efficient privacy-preserving similar document detection},
+  author={Murugesan, Mummoorthy and Jiang, Wei and Clifton, Chris and Si, Luo and Vaidya, Jaideep},
+  journal={The VLDB Journal—The International Journal on Very Large Data Bases},
+  volume={19},
+  number={4},
+  pages={457--475},
+  year={2010},
+  publisher={Springer-Verlag New York, Inc.}
+}
+Attempts to detect similar documents when the text of the document is not
+available, for instance, when checking for plagiarism between conferences with
+confidential systems. Not relevant enough, since we should have access to our
+full corpus.
 
 @article{parker89,
   title={Computer algorithms for plagiarism detection},
