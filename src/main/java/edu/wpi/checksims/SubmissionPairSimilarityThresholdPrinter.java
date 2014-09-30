@@ -1,4 +1,4 @@
-package lineCompare;
+package edu.wpi.checksims;
 
 import java.util.Map;
 import java.util.Set;

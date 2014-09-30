@@ -1,4 +1,4 @@
-package lineCompare;
+package edu.wpi.checksims;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;

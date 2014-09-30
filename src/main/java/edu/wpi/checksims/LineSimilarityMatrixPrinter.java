@@ -1,4 +1,4 @@
-package lineCompare;
+package edu.wpi.checksims;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -55,7 +55,6 @@ public class LineSimilarityMatrixPrinter implements LineSimilarityReporter {
     /**
      * Return the percentage of the lines in "sub" that also appear in "other"
      * @param sub submission to check
-     * @param other submission checked against (not used)
      * @param allSims where each line in sub appears in other
      * @return a double between 0.00 and 1.00
      */

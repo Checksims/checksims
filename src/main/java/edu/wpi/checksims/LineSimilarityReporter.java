@@ -1,4 +1,4 @@
-package lineCompare;
+package edu.wpi.checksims;
 
 
 public interface LineSimilarityReporter {

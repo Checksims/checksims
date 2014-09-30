@@ -8,4 +8,7 @@ dist/
 .classpath
 .project
 .settings/
+*.iml
+target/
+.idea/
 
