@@ -3,20 +3,16 @@ package edu.wpi.checksims;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class LineSimilarityMatrixPrinter implements LineSimilarityReporter {
-    public LineSimilarityMatrixPrinter() {
-        // do nothing
-    }
-    
+
     @Override
     public void report (LineSimilarityMatrix similarities){
         final List<Submission> submissions = similarities.getSubmissions();
-        final StringBuffer buffer = new StringBuffer();
+        final StringBuilder buffer = new StringBuilder();
         final int columnWidth = 15;
        
         // initialize empty similarity count matrix
@@ -25,21 +21,14 @@ public class LineSimilarityMatrixPrinter implements LineSimilarityReporter {
         for(final Submission s1 : submissions){
             final Map<Submission, Double> simPctRow = new HashMap<>();
             for(final Submission s2 : submissions){
-                simPctRow.put(s2, Double.valueOf(0.));
+                simPctRow.put(s2, 0.);
             }
             simPctMatrix.put(s1, simPctRow);
         }
         
-        final LineSimilarityMatrix.EntryVisitor similarLineCounter = new LineSimilarityMatrix.EntryVisitor() {
-            
-            @Override
-            public void visit(Submission sub, Submission other,
-                    Map<LineLocation, Set<LineLocation>> similarLines) {
-                simPctMatrix.get(sub).put(
-                        other,
-                        Double.valueOf(calculatePercentSimilar(sub, similarLines)));
-            }
-        };
+        final LineSimilarityMatrix.EntryVisitor similarLineCounter = (sub, other, similarLines) -> simPctMatrix.get(sub).put(
+                other,
+                calculatePercentSimilar(sub, similarLines));
         
         similarities.visitAllEntries(similarLineCounter);
         
@@ -65,12 +54,12 @@ public class LineSimilarityMatrixPrinter implements LineSimilarityReporter {
     }
 
     private static String makeEntry(Double entry, int width) { // yay, accounting puns!
-        return String.format("%"+width+".2f", entry.doubleValue());
+        return String.format("%"+width+".2f", entry);
     }
 
     private static String makeTableHeader(final int columnWidth,
             final List<Submission> submissions) {
-        final StringBuffer headerBuffer = new StringBuffer();
+        final StringBuilder headerBuffer = new StringBuilder();
         // empty top/left cell
         for(int i = 0; i < columnWidth; i++){
             headerBuffer.append(" ");
@@ -88,7 +77,7 @@ public class LineSimilarityMatrixPrinter implements LineSimilarityReporter {
             List<Submission> allSubs,
             Map<Submission, Double> map,
             int columnWidth){
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         buffer.append(makeLineHeader(columnWidth, sub));
         // build the line with the new similarity counts
         for(final Submission otherSub : allSubs){
@@ -113,7 +102,7 @@ public class LineSimilarityMatrixPrinter implements LineSimilarityReporter {
         
         // initialize the map so all submissions have zero similar lines
         for(final Submission sub : allSubmissions){
-            similarityCounts.put(sub, Integer.valueOf(0));
+            similarityCounts.put(sub, 0);
         }
         
         // for each line that was similar to another,
@@ -121,8 +110,8 @@ public class LineSimilarityMatrixPrinter implements LineSimilarityReporter {
             // add one to the value of each submission the line came from
             final Set<Submission> uniqueSubmissions = uniqueSubmissionsInLineLocationSet(similarities);
             for(final Submission eqSub : uniqueSubmissions){
-                final int newCount = similarityCounts.get(eqSub).intValue()+1;
-                similarityCounts.put(eqSub, Integer.valueOf(newCount));
+                final int newCount = similarityCounts.get(eqSub) +1;
+                similarityCounts.put(eqSub, newCount);
             }
         }
         

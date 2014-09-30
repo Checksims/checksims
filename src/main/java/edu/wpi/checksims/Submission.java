@@ -37,9 +37,7 @@ public class Submission {
         }
         this.name = name;
         List<String> linesRead = new ArrayList<>();
-        for(String line : lines){
-            linesRead.add(line);
-        }
+        Collections.addAll(linesRead, lines);
         this.lines = Collections.unmodifiableList(linesRead);
     }
     
@@ -58,7 +56,7 @@ public class Submission {
         int i = 0;
         while(it.hasNext()){
             i++;
-            Integer hash = Integer.valueOf(it.next().hashCode());
+            Integer hash = it.next().hashCode();
             Set<LineLocation> locs_appearing = others.get(hash);
             if(locs_appearing != null){
                 matches.put(new LineLocation(this, i), locs_appearing);
@@ -70,7 +68,7 @@ public class Submission {
     public void addToDatabase(final Map<Integer, Set<LineLocation>> database) {
         int i = 0;
         for(String line : this.lines){
-            final Integer hash = Integer.valueOf(line.hashCode()); 
+            final Integer hash = line.hashCode();
             i++;
             Set<LineLocation> locs = database.get(hash);
             if(locs == null){

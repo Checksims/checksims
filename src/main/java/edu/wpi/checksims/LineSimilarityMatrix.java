@@ -42,7 +42,6 @@ public class LineSimilarityMatrix {
              * @param sub The submission checked for similarity
              * @param other The submission checked against
              * @param similarLines lines in sub, with all similar lines in other
-             * @return The result of the computation
              */
             public void visit(
                     Submission sub,
@@ -98,6 +97,6 @@ public class LineSimilarityMatrix {
         public String toString(){
             return String.format(
                     Messages.getString("LineSimilarityMatrix.0"), //$NON-NLS-1$
-                    Integer.valueOf(this.submissions.size()));
+                    this.submissions.size());
         }
 }
