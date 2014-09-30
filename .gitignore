@@ -4,4 +4,6 @@ doc/dist
 literature/*.pdf
 literature/*.rtf
 literature/*.tar.gz
-
+*.iml
+target/
+.idea/

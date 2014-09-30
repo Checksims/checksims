@@ -1,4 +1,4 @@
-package lineCompare;
+package edu.wpi.checksims;
 
 public final class LineLocation {
     private final Submission submission;

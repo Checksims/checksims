@@ -1,4 +1,4 @@
-package lineCompare;
+package edu.wpi.checksims;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,7 +17,7 @@ public class Submission {
     
     public Submission(BufferedReader b, String name) throws IOException{
         if(name == null){
-            throw new NullPointerException("Submission name cannot be null");
+            throw new NullPointerException(Messages.getString("Submission.2")); //$NON-NLS-1$
         }
         this.name = name;
         final List<String> linesRead = new ArrayList<>();
@@ -27,8 +27,20 @@ public class Submission {
         this.lines = Collections.unmodifiableList(linesRead);
     }
     
-    public Submission(BufferedReader b) throws IOException {
-        this(b, "unnamed submission");
+    public Submission(final BufferedReader b) throws IOException {
+        this(b, Messages.getString("Submission.3")); //$NON-NLS-1$
+    }
+    
+    public Submission(final String[] lines, final String name) {
+        if(name == null){
+            throw new NullPointerException(Messages.getString("Submission.4")); //$NON-NLS-1$
+        }
+        this.name = name;
+        List<String> linesRead = new ArrayList<>();
+        for(String line : lines){
+            linesRead.add(line);
+        }
+        this.lines = Collections.unmodifiableList(linesRead);
     }
     
     public String getLine(int lineNum){
@@ -71,8 +83,7 @@ public class Submission {
     
     @Override
     public String toString(){
-        return String.format(Messages.getString("Submission.0"), //$NON-NLS-1$
-                Integer.valueOf(this.lines.size()));
+        return this.name;
     }
 
     public String getName() {
