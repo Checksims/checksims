@@ -1,4 +1,4 @@
-package lineCompare;
+package edu.wpi.checksims;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -22,10 +22,53 @@ import org.mockito.stubbing.OngoingStubbing;
 @SuppressWarnings({"nls", "static-method"})
 public class SubmissionTest {
     
+    @SuppressWarnings("unused")
+    @Test(expected=NullPointerException.class)
+    public void testArrayConstructor_nullName(){
+        final String[] lines = {};
+        new Submission(lines, null);
+    }
+   
+    @Test(expected=IndexOutOfBoundsException.class)
+    public void testArrayConstructor_noLines(){
+        final String[] lines = {};
+        final Submission submission = new Submission(lines, "testsub");
+        assertEquals("testsub", submission.getName());
+        assertEquals(0, submission.getNumLines());
+        submission.getLine(1);
+    }
+    
+    @Test(expected=IndexOutOfBoundsException.class)
+    public void testArrayConstructor_oneLine(){
+        final String[] lines = {"test1"};
+        final Submission submission = new Submission(lines, "testsub");
+        assertEquals("testsub", submission.getName());
+        assertEquals(1, submission.getNumLines());
+        assertEquals("test1", submission.getLine(1));
+        submission.getLine(2);
+    }
+    @Test(expected=IndexOutOfBoundsException.class)
+    public void testArrayConstructor_moreLines(){
+        final String[] lines = {"test1", "test2"};
+        final Submission submission = new Submission(lines, "testsub");
+        assertEquals("testsub", submission.getName());
+        assertEquals(2, submission.getNumLines());
+        assertEquals("test1", submission.getLine(1));
+        assertEquals("test2", submission.getLine(2));
+        submission.getLine(3);
+    }
+    
     @Test
     public void testToString() throws IOException{
         final Submission submission = makeTestSubmission(3);
-        assertEquals("[Submission, 3 lines]", submission.toString());
+        assertEquals("unnamed submission", submission.toString());
+    }
+    
+    @Test
+    public void testToString_differentName(){
+        final String[] args = {"line1"};
+        final Submission submission = new Submission(args, "testname");
+        assertEquals("testname", submission.toString());
     }
     
     private static BufferedReader stubTestReader(int numLines) throws IOException{

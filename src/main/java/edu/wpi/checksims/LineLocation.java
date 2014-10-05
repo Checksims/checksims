@@ -1,4 +1,4 @@
-package lineCompare;
+package edu.wpi.checksims;
 
 public final class LineLocation {
     private final Submission submission;
@@ -35,6 +35,6 @@ public final class LineLocation {
     @Override
     public String toString(){
         return String.format(Messages.getString("LineLocation.0"),//$NON-NLS-1$
-                Integer.valueOf(this.lineNum), this.submission);
+                this.lineNum, this.submission);
     }
 }
