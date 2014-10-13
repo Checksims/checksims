@@ -58,6 +58,8 @@ public class LineSimilarityChecker implements PlagiarismDetector<String> {
         List<Token<String>> linesA = a.getTokenList();
         List<Token<String>> linesB = b.getTokenList();
 
+        System.out.println("Running line similarity plagiarism detector on submissions " + a.getName() + " and " + b.getName());
+
         MessageDigest hasher;
 
         // Get a hashing instance

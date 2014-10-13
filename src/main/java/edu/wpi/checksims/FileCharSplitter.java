@@ -26,33 +26,18 @@ public class FileCharSplitter implements FileSplitter<Character> {
     }
 
     @Override
-    public List<Token<Character>> splitFile(File f) throws IOException {
-        if(!f.exists() || !f.isFile()) {
-            throw new IOException("File " + f.getName() + " does not exist or is not a file!");
-        }
+    public List<Token<Character>> splitFile(List<String> strings) {
+        List<Token<Character>> toReturn = new LinkedList<>();
 
-        List<Token<Character>> tokens = new LinkedList<>();
+        for(int i = 0; i < strings.size(); i++) {
+            char[] chars = strings.get(i).toCharArray();
 
-        BufferedReader b = new BufferedReader(new FileReader(f));
-
-        String lineRead = b.readLine();
-
-        while(lineRead != null) {
-            if(!lineRead.isEmpty()) {
-                // Split into characters
-                char[] chars = lineRead.toCharArray();
-
-                for(char c : chars) {
-                    tokens.add(new Token<>(c));
-                }
+            for(int j = 0; j < chars.length; j++) {
+                toReturn.add(new Token<>(chars[j]));
             }
-
-            lineRead = b.readLine();
         }
 
-        b.close();
-
-        return tokens;
+        return toReturn;
     }
 
     @Override

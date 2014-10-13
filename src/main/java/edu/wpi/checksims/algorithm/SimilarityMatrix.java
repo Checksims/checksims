@@ -49,6 +49,8 @@ public class SimilarityMatrix<T extends Comparable> {
 
         for(int i = 0; i < arraySize; i++) {
             for(int j = 0; j < arraySize; j++) {
+                System.out.println("Comparing submissions " + submissions.get(i).getName() + " and " + submissions.get(j).getName());
+
                 if(i == j) {
                     // The diagonal means the submissions are the same, just keep the results null.
                     resultsMatrix[i][j] = null;
@@ -56,12 +58,14 @@ public class SimilarityMatrix<T extends Comparable> {
                 }
 
                 Submission<T> a = submissions.get(i);
-                Submission<T> b = submissions.get(i);
+                Submission<T> b = submissions.get(j);
 
                 try {
                     AlgorithmResults<T> results = algorithm.detectPlagiarism(a, b);
 
                     resultsMatrix[i][j] = results;
+
+                    System.out.println("Identified " + String.format("%4f", results.percentMatchedA()) + " percent match");
                 } catch (ChecksimException e) {
                     // TODO handle this exception in a more sane manner
                     throw new RuntimeException("Error getting results for student " + a.getName() + " and " +

@@ -26,33 +26,20 @@ public class FileWhitespaceSplitter implements FileSplitter<String> {
     }
 
     @Override
-    public List<Token<String>> splitFile(File f) throws IOException {
-        if(!f.exists() || !f.isFile()) {
-            throw new IOException("File " + f.getName() + " does not exist or is not a file!");
-        }
+    public List<Token<String>> splitFile(List<String> strings) {
+        List<Token<String>> toReturn = new LinkedList<>();
 
-        List<Token<String>> tokens = new LinkedList<>();
+        for(int i = 0; i < strings.size(); i++) {
+            String[] split = strings.get(i).split("\\s+");
 
-        BufferedReader b = new BufferedReader(new FileReader(f));
-
-        String lineRead = b.readLine();
-
-        while(lineRead != null) {
-            if(!lineRead.isEmpty()) {
-                // Split based on any number of whitespace characters
-                String[] splitBySpace = lineRead.split("\\s+");
-
-                for(String s : splitBySpace) {
-                    tokens.add(new Token<>(s));
+            for(int j = 0; j < split.length; j++) {
+                if(!split[j].isEmpty()) {
+                    toReturn.add(new Token<>(split[j]));
                 }
             }
-
-            lineRead = b.readLine();
         }
 
-        b.close();
-
-        return tokens;
+        return toReturn;
     }
 
     @Override

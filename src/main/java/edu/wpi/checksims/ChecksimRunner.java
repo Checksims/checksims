@@ -27,7 +27,10 @@ public class ChecksimRunner {
         String glob = args[0];
         List<File> submissionDirs = new LinkedList<>();
 
+        System.out.println("Got glob matcher as " + glob);
+
         for(int i = 1; i < args.length; i++) {
+            System.out.println("Adding directory " + args[i]);
             submissionDirs.add(new File(args[i]));
         }
 
@@ -39,7 +42,7 @@ public class ChecksimRunner {
             submissionsLine.addAll(Submission.submissionsFromDir(f, glob, FileLineSplitter.getInstance()));
         }
 
-        SimilarityMatrix<String> smithWatermanMatrix = new SimilarityMatrix<>(submissionsWhitespace, new SmithWaterman<String>());
+        SimilarityMatrix<String> smithWatermanMatrix = new SimilarityMatrix<>(submissionsWhitespace, new SmithWaterman<>());
         SimilarityMatrix<String> lineSimilarityMatrix = new SimilarityMatrix<>(submissionsLine, LineSimilarityChecker.getInstance());
 
         SimilarityMatrixAsMatrixPrinter<String> p = new SimilarityMatrixAsMatrixPrinter<>();

@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.PathMatcher;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -84,11 +85,14 @@ public class Submission<T extends Comparable> {
 
         PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:" + glob);
 
-        // List all file which match the glob given
-        File[] contents = directory.listFiles((fileToCheck) -> matcher.matches(fileToCheck.toPath()));
+        File[] contents = directory.listFiles();
 
-        // Add all matching files to the list to include in the submission
-        Collections.addAll(files, contents);
+        // TODO should have verbose logging option to note which files are being matched and included
+        for(File f : contents) {
+            if(matcher.matches(Paths.get(f.getAbsolutePath()).getFileName())) {
+                files.add(f);
+            }
+        }
 
         return submissionFromFiles(dirName, files, splitter);
     }
@@ -101,7 +105,7 @@ public class Submission<T extends Comparable> {
         List<Token<T2>> tokenList = new LinkedList<>();
 
         for(File f : files) {
-            tokenList.addAll(splitter.splitFile(f));
+            tokenList.addAll(splitter.splitFile(FileLineReader.readFile(f)));
         }
 
         return new Submission<>(name, tokenList);

@@ -7,7 +7,6 @@ import org.junit.Test;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.StringJoiner;
 
 import static org.junit.Assert.*;
 
@@ -23,6 +22,7 @@ public class TestSmithWaterman {
     private static List<Token<String>> multiEltListABC;
     private static List<Token<String>> multiEltListAC;
     private static List<Token<String>> multiEltListCD;
+    private static List<Token<String>> multiEltListDE;
 
     @BeforeClass
     public static void setUp() {
@@ -56,6 +56,10 @@ public class TestSmithWaterman {
         multiEltListCD = new LinkedList<>();
         multiEltListCD.add(c);
         multiEltListCD.add(d);
+
+        multiEltListDE = new LinkedList<>();
+        multiEltListDE.add(d);
+        multiEltListDE.add(e);
     }
 
     @Test
@@ -140,5 +144,15 @@ public class TestSmithWaterman {
         assertTrue(r.hasMatch());
         assertEquals(Joiner.on("").join(r.getMatch()), "c");
         assertEquals(r.getMatchLength(), 1);
+    }
+
+    @Test
+    public void TestSmithWatermanNotMatchingDifferentLengthCharLists() {
+        SmithWatermanResults<String> r = SmithWaterman.applySmithWaterman(multiEltListABC, multiEltListDE, SmithWatermanParameters.getDefaultParams());
+
+        assertNotNull(r);
+        assertFalse(r.hasMatch());
+        assertTrue(r.getMatch().isEmpty());
+        assertEquals(r.getMatchLength(), 0);
     }
 }

@@ -34,6 +34,9 @@ public class SmithWaterman<T2 extends Comparable> implements PlagiarismDetector<
      */
     @Override
     public AlgorithmResults<T2> detectPlagiarism(Submission<T2> a, Submission<T2> b) {
+        // TODO add verbose option slash better logging
+        System.out.println("Running Smith-Waterman plagiarism detection on submissions " + a.getName() + " and " + b.getName());
+
         return applySmithWatermanPlagiarismDetection(a, b, this.params);
     }
 

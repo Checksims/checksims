@@ -26,28 +26,14 @@ public class FileLineSplitter implements FileSplitter<String> {
     }
 
     @Override
-    public List<Token<String>> splitFile(File f) throws IOException {
-        if(!f.exists() || !f.isFile()) {
-            throw new IOException("File " + f.getName() + " does not exist or is not a file!");
+    public List<Token<String>> splitFile(List<String> strings) {
+        List<Token<String>> toReturn = new LinkedList<>();
+
+        for(int i = 0; i < strings.size(); i++) {
+            toReturn.add(new Token<>(strings.get(i)));
         }
 
-        List<Token<String>> lines = new LinkedList<>();
-
-        BufferedReader b = new BufferedReader(new FileReader(f));
-
-        String lineRead = b.readLine();
-
-        while(lineRead != null) {
-            if(!lineRead.isEmpty()) {
-                lines.add(new Token<>(lineRead));
-            }
-
-            lineRead = b.readLine();
-        }
-
-        b.close();
-
-        return lines;
+        return toReturn;
     }
 
     @Override
