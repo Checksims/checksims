@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Performs the actual Smith-Waterman algorithm
  */
-public class SmithWaterman<T2 extends Comparable> implements PlagiarismDetector<T2> {
+public class SmithWaterman<T2 extends Comparable<T2>> implements PlagiarismDetector<T2> {
     private final SmithWatermanParameters params;
 
     public SmithWaterman(SmithWatermanParameters params) {
@@ -40,7 +40,7 @@ public class SmithWaterman<T2 extends Comparable> implements PlagiarismDetector<
         return applySmithWatermanPlagiarismDetection(a, b, this.params);
     }
 
-    public static <T extends Comparable> AlgorithmResults applySmithWatermanPlagiarismDetection(Submission<T> a,
+    public static <T extends Comparable<T>> AlgorithmResults applySmithWatermanPlagiarismDetection(Submission<T> a,
                                                                                                 Submission<T> b,
                                                                                                 SmithWatermanParameters params) {
         SmithWatermanResults firstRun = applySmithWaterman(a.getTokenList(), b.getTokenList(), params);
@@ -70,7 +70,7 @@ public class SmithWaterman<T2 extends Comparable> implements PlagiarismDetector<
         return new AlgorithmResults(a, b, totalOverlay, totalOverlay);
     }
 
-    static <T extends Comparable> SmithWatermanResults applySmithWaterman(List<Token<T>> a, List<Token<T>> b,
+    static <T extends Comparable<T>> SmithWatermanResults applySmithWaterman(List<Token<T>> a, List<Token<T>> b,
                                                                           SmithWatermanParameters params) {
         if(a.isEmpty() || b.isEmpty()) {
             // If one of the lists is empty, there can be no matches

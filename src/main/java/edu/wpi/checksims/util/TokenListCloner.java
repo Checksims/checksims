@@ -9,7 +9,7 @@ import java.util.List;
 public class TokenListCloner {
     private TokenListCloner() {}
 
-    public static <T extends Comparable> List<Token<T>> cloneList(List<Token<T>> tokens) {
+    public static <T extends Comparable<T>> List<Token<T>> cloneList(List<Token<T>> tokens) {
         List<Token<T>> newTokens = new LinkedList<>();
 
         for(int i = 0; i < tokens.size(); i++) {

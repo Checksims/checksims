@@ -8,6 +8,6 @@ import java.security.NoSuchAlgorithmException;
 /**
  * Detect plagiarism between two submissions
  */
-public interface PlagiarismDetector<T extends Comparable> {
+public interface PlagiarismDetector<T extends Comparable<T>> {
     public AlgorithmResults<T> detectPlagiarism(Submission<T> a, Submission<T> b) throws ChecksimException;
 }

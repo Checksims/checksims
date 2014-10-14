@@ -5,7 +5,7 @@ import java.util.Comparator;
 /**
  * Output a similarity matrix as a matrix
  */
-public class SimilarityMatrixAsMatrixPrinter<T extends Comparable> implements SimilarityMatrixPrinter<T> {
+public class SimilarityMatrixAsMatrixPrinter<T extends Comparable<T>> implements SimilarityMatrixPrinter<T> {
     // TODO can this be a singleton? May need to instantiate various versions because of the generic...
     public SimilarityMatrixAsMatrixPrinter() {}
 

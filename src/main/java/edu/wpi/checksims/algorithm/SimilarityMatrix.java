@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * A matrix of submissions, for reporting similarities
  */
-public class SimilarityMatrix<T extends Comparable> {
+public class SimilarityMatrix<T extends Comparable<T>> {
     private final List<Submission<T>> submissions;
     private final AlgorithmResults<T>[][] results;
 

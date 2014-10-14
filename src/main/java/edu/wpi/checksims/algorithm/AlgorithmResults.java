@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Results for a pairwise comparison algorithm
  */
-public class AlgorithmResults<T extends Comparable> {
+public class AlgorithmResults<T extends Comparable<T>> {
     public final Submission<T> a;
     public final Submission<T> b;
     public final int identicalTokensA;

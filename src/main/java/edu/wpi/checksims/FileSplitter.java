@@ -9,6 +9,6 @@ import java.util.List;
 /**
  * Interface to read in a file and return it as a list of tokens of a certain type
  */
-public interface FileSplitter<T extends Comparable> {
+public interface FileSplitter<T extends Comparable<T>> {
     public List<Token<T>> splitFile(List<String> strings);
 }

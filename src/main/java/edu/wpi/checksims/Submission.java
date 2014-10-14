@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Submission<T extends Comparable> {
+public class Submission<T extends Comparable<T>> {
     private final List<Token<T>> tokenList;
     private final String name;
 
@@ -51,7 +51,7 @@ public class Submission<T extends Comparable> {
     }
 
     // TODO once we have a proper equals and HashCode convert this to return Set<Submission>
-    public static <T2 extends Comparable> List<Submission<T2>> submissionsFromDir(File directory, String glob, FileSplitter<T2> splitter) throws IOException {
+    public static <T2 extends Comparable<T2>> List<Submission<T2>> submissionsFromDir(File directory, String glob, FileSplitter<T2> splitter) throws IOException {
         List<Submission<T2>> submissions = new LinkedList<>();
 
         if(!directory.exists() || !directory.isDirectory()) {
@@ -75,7 +75,7 @@ public class Submission<T extends Comparable> {
         return submissions;
     }
 
-    public static <T2 extends Comparable> Submission<T2> submissionFromDir(File directory, String glob, FileSplitter<T2> splitter) throws IOException {
+    public static <T2 extends Comparable<T2>> Submission<T2> submissionFromDir(File directory, String glob, FileSplitter<T2> splitter) throws IOException {
         List<File> files = new LinkedList<>();
         String dirName = directory.getName();
 
@@ -97,7 +97,7 @@ public class Submission<T extends Comparable> {
         return submissionFromFiles(dirName, files, splitter);
     }
 
-    public static <T2 extends Comparable> Submission<T2> submissionFromFiles(String name, List<File> files, FileSplitter<T2> splitter) throws IOException {
+    public static <T2 extends Comparable<T2>> Submission<T2> submissionFromFiles(String name, List<File> files, FileSplitter<T2> splitter) throws IOException {
         if(files.size() == 0) {
             return null;
         }

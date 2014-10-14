@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Results from one iteration of the Smith-Waterman algorithm
  */
-public class SmithWatermanResults<T extends Comparable> {
+public class SmithWatermanResults<T extends Comparable<T>> {
     private TwoDimIntArray watermanTable;
     private List<Token<T>> a;
     private List<Token<T>> b;
