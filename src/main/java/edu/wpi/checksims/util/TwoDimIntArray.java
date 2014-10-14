@@ -54,9 +54,9 @@ public class TwoDimIntArray {
     }
 
     public void reset() {
-        for(int j = 0; j < height; j++) {
-            for(int i = 0; i < width; i++) {
-                array[i][j] = 0;
+        for(int i = 0; i < width; i++) {
+            for(int j = 0; j < height; j++) {
+                    array[i][j] = 0;
             }
         }
     }
@@ -90,8 +90,8 @@ public class TwoDimIntArray {
     public String arrayToString() {
         StringBuilder b = new StringBuilder();
 
-        for(int j = 0; j < height; j++) {
-            for(int i = 0; i < width; i++) {
+        for(int i = 0; i < width; i++) {
+            for(int j = 0; j < height; j++) {
                 b.append(String.format("%04d, ", array[i][j]));
             }
             b.append("\n");

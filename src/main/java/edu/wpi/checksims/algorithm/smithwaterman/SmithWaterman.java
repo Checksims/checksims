@@ -40,19 +40,19 @@ public class SmithWaterman<T2 extends Comparable<T2>> implements PlagiarismDetec
         return applySmithWatermanPlagiarismDetection(a, b, this.params);
     }
 
-    public static <T extends Comparable<T>> AlgorithmResults applySmithWatermanPlagiarismDetection(Submission<T> a,
+    public static <T extends Comparable<T>> AlgorithmResults<T> applySmithWatermanPlagiarismDetection(Submission<T> a,
                                                                                                 Submission<T> b,
                                                                                                 SmithWatermanParameters params) {
-        SmithWatermanResults firstRun = applySmithWaterman(a.getTokenList(), b.getTokenList(), params);
+        SmithWatermanResults<T> firstRun = applySmithWaterman(a.getTokenList(), b.getTokenList(), params);
 
         if(firstRun == null || !firstRun.hasMatch()) {
             // No similarities found on first run, no need to loop
-            return new AlgorithmResults(a, b, 0, 0);
+            return new AlgorithmResults<>(a, b, 0, 0);
         }
 
         // Represents the total portions of the token lists matched by the Smith-Waterman algorithm
         int totalOverlay = 0;
-        SmithWatermanResults currResults = firstRun;
+        SmithWatermanResults<T> currResults = firstRun;
 
         while(currResults.getMatchLength() >= params.matchSizeThreshold) {
             totalOverlay += currResults.getMatchLength();
@@ -67,10 +67,10 @@ public class SmithWaterman<T2 extends Comparable<T2>> implements PlagiarismDetec
         // We report it regardless
         totalOverlay += currResults.getMatchLength();
 
-        return new AlgorithmResults(a, b, totalOverlay, totalOverlay);
+        return new AlgorithmResults<>(a, b, totalOverlay, totalOverlay);
     }
 
-    static <T extends Comparable<T>> SmithWatermanResults applySmithWaterman(List<Token<T>> a, List<Token<T>> b,
+    static <T extends Comparable<T>> SmithWatermanResults<T> applySmithWaterman(List<Token<T>> a, List<Token<T>> b,
                                                                           SmithWatermanParameters params) {
         if(a.isEmpty() || b.isEmpty()) {
             // If one of the lists is empty, there can be no matches
@@ -161,6 +161,6 @@ public class SmithWaterman<T2 extends Comparable<T2>> implements PlagiarismDetec
             }
         }
 
-        return new SmithWatermanResults(s, a, b);
+        return new SmithWatermanResults<>(s, a, b);
     }
 }

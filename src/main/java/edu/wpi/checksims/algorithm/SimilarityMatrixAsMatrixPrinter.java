@@ -1,7 +1,5 @@
 package edu.wpi.checksims.algorithm;
 
-import java.util.Comparator;
-
 /**
  * Output a similarity matrix as a matrix
  */

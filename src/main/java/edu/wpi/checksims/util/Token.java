@@ -1,7 +1,5 @@
 package edu.wpi.checksims.util;
 
-import java.util.Comparator;
-
 /**
  * Represents a single token which will be compared by one of our algorithms
  */

@@ -37,7 +37,7 @@ public class SimilarityMatrix<T extends Comparable<T>> {
      * @param algorithm Algorithm to use when detecting plagiarism
      * @return Array of algorithm results, with results[i,j] being the results of comparing students i and j
      */
-    private AlgorithmResults[][] getResults(List<Submission<T>> submissions, PlagiarismDetector<T> algorithm) {
+    private AlgorithmResults<T>[][] getResults(List<Submission<T>> submissions, PlagiarismDetector<T> algorithm) {
         // Need at least two submissions to compare
         if(submissions.size()  <= 1) {
             return null;
@@ -45,7 +45,7 @@ public class SimilarityMatrix<T extends Comparable<T>> {
 
         int arraySize = submissions.size();
 
-        AlgorithmResults[][] resultsMatrix = new AlgorithmResults[arraySize][arraySize];
+        AlgorithmResults<T>[][] resultsMatrix = new AlgorithmResults[arraySize][arraySize];
 
         for(int i = 0; i < arraySize; i++) {
             for(int j = 0; j < arraySize; j++) {

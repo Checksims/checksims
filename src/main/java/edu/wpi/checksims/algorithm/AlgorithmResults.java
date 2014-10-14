@@ -1,9 +1,6 @@
 package edu.wpi.checksims.algorithm;
 
 import edu.wpi.checksims.Submission;
-import edu.wpi.checksims.util.Token;
-
-import java.util.List;
 
 /**
  * Results for a pairwise comparison algorithm
