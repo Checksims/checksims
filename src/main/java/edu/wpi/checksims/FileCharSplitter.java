@@ -1,11 +1,9 @@
 package edu.wpi.checksims;
 
 import edu.wpi.checksims.util.Token;
+import org.apache.commons.lang3.ArrayUtils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,12 +27,12 @@ public class FileCharSplitter implements FileSplitter<Character> {
     public List<Token<Character>> splitFile(List<String> strings) {
         List<Token<Character>> toReturn = new LinkedList<>();
 
-        for(int i = 0; i < strings.size(); i++) {
-            char[] chars = strings.get(i).toCharArray();
+        for(String s : strings) {
+            char[] chars = s.toCharArray();
 
-            for(int j = 0; j < chars.length; j++) {
-                toReturn.add(new Token<>(chars[j]));
-            }
+            Arrays.stream(ArrayUtils.toObject(chars))
+                    .map((c) -> new Token<>(c))
+                    .forEachOrdered((token) -> toReturn.add(token));
         }
 
         return toReturn;

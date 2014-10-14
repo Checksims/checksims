@@ -2,10 +2,7 @@ package edu.wpi.checksims;
 
 import edu.wpi.checksims.util.Token;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,14 +26,13 @@ public class FileWhitespaceSplitter implements FileSplitter<String> {
     public List<Token<String>> splitFile(List<String> strings) {
         List<Token<String>> toReturn = new LinkedList<>();
 
-        for(int i = 0; i < strings.size(); i++) {
-            String[] split = strings.get(i).split("\\s+");
+        for(String s : strings) {
+            String[] split = s.split("\\s+");
 
-            for(int j = 0; j < split.length; j++) {
-                if(!split[j].isEmpty()) {
-                    toReturn.add(new Token<>(split[j]));
-                }
-            }
+            Arrays.stream(split)
+                    .filter((str) -> !str.isEmpty())
+                    .map((str) -> new Token<>(str))
+                    .forEachOrdered((token) -> toReturn.add(token));
         }
 
         return toReturn;
