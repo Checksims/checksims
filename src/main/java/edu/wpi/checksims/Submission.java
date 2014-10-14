@@ -58,17 +58,14 @@ public class Submission<T extends Comparable<T>> {
             throw new IOException("Directory " + directory.getName() + " does not exist or is not a directory!");
         }
 
-        File[] contents = directory.listFiles();
+        // List all the subdirectories we find
+        File[] contents = directory.listFiles((f) -> f.isDirectory());
 
-        // Iterate through directory contents looking for subdirectories
-        // and call submissionFromDir() on them
         for(File f : contents) {
-            if(f.exists() && f.isDirectory()) {
-                Submission<T2> s = submissionFromDir(f, glob, splitter);
+            Submission<T2> s = submissionFromDir(f, glob, splitter);
 
-                if(s != null) {
-                    submissions.add(s);
-                }
+            if(s != null) {
+                submissions.add(s);
             }
         }
 
@@ -85,14 +82,11 @@ public class Submission<T extends Comparable<T>> {
 
         PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:" + glob);
 
-        File[] contents = directory.listFiles();
+        File[] contents = directory.listFiles((f) -> matcher.matches(Paths.get(f.getAbsolutePath()).getFileName()));
 
-        // TODO should have verbose logging option to note which files are being matched and included
-        for(File f : contents) {
-            if(matcher.matches(Paths.get(f.getAbsolutePath()).getFileName())) {
-                files.add(f);
-            }
-        }
+        // TODO consider verbose logging of which files we're adding to the submission?
+
+        Collections.addAll(files, contents);
 
         return submissionFromFiles(dirName, files, splitter);
     }
