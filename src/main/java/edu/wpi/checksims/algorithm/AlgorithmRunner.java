@@ -25,12 +25,12 @@ public class AlgorithmRunner {
             try {
                 AlgorithmResults<T> result = algorithm.detectPlagiarism(pair.first, pair.second);
 
-                if(result.percentMatchedA() > 0.50) {
-                    System.out.println("Submissions " + pair.first.getName() + " and " + pair.second.getName() +
-                            " matched with percentage " + result.percentMatchedA());
-                } else if(result.percentMatchedB() > 0.50) {
-                    System.out.println("Submissions " + pair.second.getName() + " and " + pair.first.getName() +
-                            " matched with percentage " + result.percentMatchedB());
+                if(result.percentMatchedA() >= 0.50f) {
+                    System.out.println("\n\nSubmissions " + pair.first.getName() + " and " + pair.second.getName() +
+                            " matched with percentage " + result.percentMatchedA() + "\n\n");
+                } else if(result.percentMatchedB() >= 0.50f) {
+                    System.out.println("\n\nSubmissions " + pair.second.getName() + " and " + pair.first.getName() +
+                            " matched with percentage " + result.percentMatchedB() + "\n\n");
                 }
 
                 results.add(result);

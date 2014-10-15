@@ -94,7 +94,7 @@ public class LineSimilarityChecker implements PlagiarismDetector<String> {
 
             String hash = Hex.encodeHexString(hasher.digest(token.getToken().getBytes()));
 
-            SubmissionLine line = new SubmissionLine(j, a);
+            SubmissionLine line = new SubmissionLine(j, b);
 
             if(lineDatabase.get(hash) == null) {
                 lineDatabase.put(hash, new LinkedList<>());
@@ -109,6 +109,7 @@ public class LineSimilarityChecker implements PlagiarismDetector<String> {
 
         // Check all the keys
         for(String key : lineDatabase.keySet()) {
+
             // If more than 1 line has the hash...
             if(lineDatabase.get(key).size() != 1) {
                 int numLinesA = 0;
