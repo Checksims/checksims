@@ -74,34 +74,10 @@ public class LineSimilarityChecker implements PlagiarismDetector<String> {
         Map<String, List<SubmissionLine>> lineDatabase = new HashMap<>();
 
         // Hash all lines in A, and put them in the lines database
-        for(int i = 0; i < linesA.size(); i++) {
-            Token<String> token = linesA.get(i);
-
-            String hash = Hex.encodeHexString(hasher.digest(token.getToken().getBytes()));
-
-            SubmissionLine line = new SubmissionLine(i, a);
-
-            if(lineDatabase.get(hash) == null) {
-                lineDatabase.put(hash, new LinkedList<>());
-            }
-
-            lineDatabase.get(hash).add(line);
-        }
+        AddLinesToMap(linesA, lineDatabase, a, hasher);
 
         // Hash all lines in B, and put them in the lines database
-        for(int j = 0; j < linesB.size(); j++) {
-            Token<String> token = linesB.get(j);
-
-            String hash = Hex.encodeHexString(hasher.digest(token.getToken().getBytes()));
-
-            SubmissionLine line = new SubmissionLine(j, b);
-
-            if(lineDatabase.get(hash) == null) {
-                lineDatabase.put(hash, new LinkedList<>());
-            }
-
-            lineDatabase.get(hash).add(line);
-        }
+        AddLinesToMap(linesB, lineDatabase, b, hasher);
 
         // Number of matched lines contained in both
         int identicalLinesA = 0;
@@ -137,6 +113,21 @@ public class LineSimilarityChecker implements PlagiarismDetector<String> {
         }
 
         return new AlgorithmResults<>(a, b, identicalLinesA, identicalLinesB);
+    }
+
+    void AddLinesToMap(List<Token<String>> lines, Map<String, List<SubmissionLine>> lineDatabase, Submission<String> submitter, MessageDigest hasher) {
+        for(int i = 0; i < lines.size(); i++) {
+            Token<String> token = lines.get(i);
+
+            String hash = Hex.encodeHexString(hasher.digest(token.getToken().getBytes()));
+
+            if(lineDatabase.get(hash) == null) {
+                lineDatabase.put(hash, new LinkedList<>());
+            }
+
+            SubmissionLine line = new SubmissionLine(i, submitter);
+            lineDatabase.get(hash).add(line);
+        }
     }
 
     @Override
