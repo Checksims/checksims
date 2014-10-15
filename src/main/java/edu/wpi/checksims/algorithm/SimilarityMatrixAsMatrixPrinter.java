@@ -1,5 +1,7 @@
 package edu.wpi.checksims.algorithm;
 
+import java.text.DecimalFormat;
+
 /**
  * Output a similarity matrix as a matrix
  */
@@ -22,16 +24,18 @@ public class SimilarityMatrixAsMatrixPrinter<T extends Comparable<T>> implements
         }
         b.append("\n");
 
+        DecimalFormat formatter = new DecimalFormat("#.##");
+
         for(int i = 0; i < matrixSize; i++) {
             b.append(String.format("%-4d ", i));
 
             for(int j = 0; j < matrixSize; j++) {
                 if(i == j) {
-                    b.append("N/A   ");
+                    b.append(" N/A ");
                     continue;
                 }
 
-                b.append(String.format("%-4f ", results[i][j]));
+                b.append(String.format("%1$4s", formatter.format(results[i][j]))).append(" ");
             }
             b.append("\n");
         }

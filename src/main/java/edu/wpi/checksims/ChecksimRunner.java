@@ -42,15 +42,15 @@ public class ChecksimRunner {
             submissionsLine.addAll(Submission.submissionsFromDir(f, glob, FileLineSplitter.getInstance()));
         }
 
-        SimilarityMatrix<String> smithWatermanMatrix = new SimilarityMatrix<>(submissionsWhitespace, new SmithWaterman<>());
-        SimilarityMatrix<String> lineSimilarityMatrix = new SimilarityMatrix<>(submissionsLine, LineSimilarityChecker.getInstance());
-
         SimilarityMatrixAsMatrixPrinter<String> p = new SimilarityMatrixAsMatrixPrinter<>();
 
-        System.out.println("Smith-Waterman Results:");
-        p.printMatrix(smithWatermanMatrix);
+        SimilarityMatrix<String> lineSimilarityMatrix = new SimilarityMatrix<>(submissionsLine, LineSimilarityChecker.getInstance());
         System.out.println("\n\nLine Similarity Results:");
-        p.printMatrix(lineSimilarityMatrix);
+        System.out.println(p.printMatrix(lineSimilarityMatrix));
+
+        SimilarityMatrix<String> smithWatermanMatrix = new SimilarityMatrix<>(submissionsWhitespace, new SmithWaterman<>());
+        System.out.println("Smith-Waterman Results:");
+        System.out.println(p.printMatrix(smithWatermanMatrix));
 
         System.exit(0);
     }
