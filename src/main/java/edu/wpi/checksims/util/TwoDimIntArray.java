@@ -1,8 +1,6 @@
 package edu.wpi.checksims.util;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import com.google.common.primitives.Ints;
 
 /**
  * Wraps a 2D array of 32-bit signed integers to provide a convenient interface
@@ -70,13 +68,36 @@ public class TwoDimIntArray {
     }
 
     public int getMaxFrom(TwoDimArrayCoord[] coords) {
-        List<Integer> getMaxFrom = new ArrayList<>();
+        int[] toSort = new int[coords.length];
 
-        for(TwoDimArrayCoord c : coords) {
-            getMaxFrom.add(getValue(c));
+        for(int i = 0; i < coords.length; i++) {
+            toSort[i] = getValue(coords[i]);
         }
 
-        return Collections.max(getMaxFrom);
+        return Ints.max(toSort);
+    }
+
+    /**
+     * Get maximum value of the predecessor coordinates (upper-left, upper, and left)
+     *
+     * Could be accomplished with getMaxFrom, but this optimized version significantly speeds
+     * the Smith-Waterman algorithm
+     *
+     * @param coord Coordinate to get max from predecessors
+     * @return Maximum value of predecessors of coord in this array
+     */
+    public int getMaxOfPredecessors(TwoDimArrayCoord coord) {
+        int[] toSort = new int[3];
+
+        if(coord.x == 0 || coord.y == 0) {
+            throw new RuntimeException("Getting predecessors would move out of array bounds!"); // TODO should be checked
+        }
+
+        toSort[0] = array[coord.x - 1][coord.y - 1];
+        toSort[1] = array[coord.x - 1][coord.y];
+        toSort[2] = array[coord.x][coord.y - 1];
+
+        return Ints.max(toSort);
     }
 
     public int[][] getArray() {

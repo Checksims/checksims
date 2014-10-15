@@ -1,6 +1,5 @@
 package edu.wpi.checksims.algorithm;
 
-import edu.wpi.checksims.ChecksimException;
 import edu.wpi.checksims.Submission;
 
 import java.util.List;
@@ -10,7 +9,7 @@ import java.util.List;
  */
 public class SimilarityMatrix<T extends Comparable<T>> {
     private final List<Submission<T>> submissions;
-    private final AlgorithmResults<T>[][] results;
+    private final float[][] results;
 
     // TODO the list should probably be a set, but need a good equals() and hashCode() for Submission<T> first
     public SimilarityMatrix(List<Submission<T>> submissions, PlagiarismDetector<T> algorithm) {
@@ -18,13 +17,13 @@ public class SimilarityMatrix<T extends Comparable<T>> {
         this.results = getResults(submissions, algorithm);
     }
 
+    // TODO should really clone() this list, or set it to immutable
     public List<Submission<T>> getSubmissions() {
         return this.submissions;
     }
 
-    // TODO should write function to clone matrix (clone() don't work so well with nonprimitive types) and return that
-    public AlgorithmResults<T>[][] getResults() {
-        return this.results;
+    public float[][] getResults() {
+        return this.results.clone();
     }
 
     /**
@@ -37,44 +36,27 @@ public class SimilarityMatrix<T extends Comparable<T>> {
      * @param algorithm Algorithm to use when detecting plagiarism
      * @return Array of algorithm results, with results[i,j] being the results of comparing students i and j
      */
-    private AlgorithmResults<T>[][] getResults(List<Submission<T>> submissions, PlagiarismDetector<T> algorithm) {
-        // Need at least two submissions to compare
-        if(submissions.size()  <= 1) {
-            return null;
+    private float[][] getResults(List<Submission<T>> submissions, PlagiarismDetector<T> algorithm) {
+        float[][] results = new float[submissions.size()][submissions.size()];
+
+        // Get results for all possible pairs of submissions
+        List<AlgorithmResults<T>> algorithmResults = AlgorithmRunner.runAlgorithm(submissions, algorithm);
+
+        // First, null the diagonal of the results array
+        for(int i = 0; i < submissions.size(); i++) {
+            results[i][i] = 0.00f; // Same submission, ignore
         }
 
-        int arraySize = submissions.size();
+        // For each result, fill corresponding spots in the results matrix
+        algorithmResults.stream().forEach((result) -> {
+            int indexFirst = submissions.indexOf(result.a);
+            int indexSecond = submissions.indexOf(result.b);
 
-        AlgorithmResults<T>[][] resultsMatrix = new AlgorithmResults[arraySize][arraySize];
+            results[indexFirst][indexSecond] = result.percentMatchedA();
+            results[indexSecond][indexFirst] = result.percentMatchedB();
+        });
 
-        for(int i = 0; i < arraySize; i++) {
-            for(int j = 0; j < arraySize; j++) {
-                System.out.println("Comparing submissions " + submissions.get(i).getName() + " and " + submissions.get(j).getName());
-
-                if(i == j) {
-                    // The diagonal means the submissions are the same, just keep the results null.
-                    resultsMatrix[i][j] = null;
-                    continue;
-                }
-
-                Submission<T> a = submissions.get(i);
-                Submission<T> b = submissions.get(j);
-
-                try {
-                    AlgorithmResults<T> results = algorithm.detectPlagiarism(a, b);
-
-                    resultsMatrix[i][j] = results;
-
-                    System.out.println("Identified " + String.format("%4f", results.percentMatchedA()) + " percent match");
-                } catch (ChecksimException e) {
-                    // TODO handle this exception in a more sane manner
-                    throw new RuntimeException("Error getting results for student " + a.getName() + " and " +
-                            b.getName() + ": " + e.getMessage());
-                }
-            }
-        }
-
-        return resultsMatrix;
+        return results;
     }
 
     @Override

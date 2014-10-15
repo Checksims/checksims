@@ -59,7 +59,7 @@ public class Submission<T extends Comparable<T>> {
         }
 
         // List all the subdirectories we find
-        File[] contents = directory.listFiles((f) -> f.isDirectory());
+        File[] contents = directory.listFiles(File::isDirectory);
 
         for(File f : contents) {
             Submission<T2> s = submissionFromDir(f, glob, splitter);

@@ -99,12 +99,7 @@ public class SmithWaterman<T2 extends Comparable<T2>> implements PlagiarismDetec
         for(int i = 1; i < width; i++) {
             for(int j = 1; j < height; j++) {
                 TwoDimArrayCoord curr = new TwoDimArrayCoord(i, j);
-
-                TwoDimArrayCoord[] predecessors = new TwoDimArrayCoord[] {
-                        curr.getAdjacent(LEFT),
-                        curr.getAdjacent(UP),
-                        curr.getAdjacent(UPLEFT)
-                };
+                TwoDimArrayCoord predecessor = curr.getAdjacent(UPLEFT);
 
                 int newS;
                 int newM;
@@ -112,12 +107,13 @@ public class SmithWaterman<T2 extends Comparable<T2>> implements PlagiarismDetec
                 // Generate a prospective value for S[i,j]
                 if(a.get(curr.x - 1).equals(b.get(curr.y - 1))) {
                     // If the two characters match, we increment S[i-1,j-1] by 1 to get the new S[i,j]
-                    newS = s.getValue(curr.getAdjacent(UPLEFT)) + params.h;
+                    // Predecessors[0] is always the upper-left diagonal
+                    newS = s.getValue(predecessor) + params.h;
                 } else {
                     // Get the max of our predecessors, and subtract D
                     // TODO D and R are distinct quantities, should respect this, even if we usually fix them as 1
 
-                    newS = s.getMaxFrom(predecessors) - params.d;
+                    newS = s.getMaxOfPredecessors(curr) - params.d;
                 }
 
                 // Generate a prospective value for M[i.j]
@@ -126,10 +122,8 @@ public class SmithWaterman<T2 extends Comparable<T2>> implements PlagiarismDetec
                     newM = 0;
                 } else if(a.get(curr.x - 1).equals(b.get(curr.y - 1))) {
                     // If the characters match, get the match of the upper-left diagonal in M and S
-                    TwoDimArrayCoord upperLeft = curr.getAdjacent(UPLEFT);
-
-                    int sVal = s.getValue(upperLeft);
-                    int mVal = m.getValue(upperLeft);
+                    int sVal = s.getValue(predecessor);
+                    int mVal = m.getValue(predecessor);
 
                     if(sVal > mVal) {
                         newM = sVal;
@@ -138,8 +132,8 @@ public class SmithWaterman<T2 extends Comparable<T2>> implements PlagiarismDetec
                     }
                 } else {
                     // Get the max of our predecessors in M and S
-                    int sVal = s.getMaxFrom(predecessors);
-                    int mVal = m.getMaxFrom(predecessors);
+                    int sVal = s.getMaxOfPredecessors(curr);
+                    int mVal = m.getMaxOfPredecessors(curr);
 
                     if(sVal > mVal) {
                         newM = sVal;

@@ -11,7 +11,7 @@ public class SimilarityMatrixAsMatrixPrinter<T extends Comparable<T>> implements
     public String printMatrix(SimilarityMatrix<T> matrix) {
         StringBuilder b = new StringBuilder();
 
-        AlgorithmResults[][] results = matrix.getResults();
+        float[][] results = matrix.getResults();
         int matrixSize = matrix.getSubmissions().size();
 
         // Print X axis
@@ -31,7 +31,7 @@ public class SimilarityMatrixAsMatrixPrinter<T extends Comparable<T>> implements
                     continue;
                 }
 
-                b.append(String.format("%-4f ", results[i][j].percentMatchedA()));
+                b.append(String.format("%-4f ", results[i][j]));
             }
             b.append("\n");
         }
