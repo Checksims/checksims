@@ -1,4 +1,4 @@
-package edu.wpi.checksims;
+package edu.wpi.checksims.util.file;
 
 import edu.wpi.checksims.util.Token;
 import org.apache.commons.lang3.ArrayUtils;

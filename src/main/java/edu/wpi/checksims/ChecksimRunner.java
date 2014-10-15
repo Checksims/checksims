@@ -4,6 +4,8 @@ import edu.wpi.checksims.algorithm.SimilarityMatrix;
 import edu.wpi.checksims.algorithm.SimilarityMatrixAsMatrixPrinter;
 import edu.wpi.checksims.algorithm.linesimilarity.LineSimilarityChecker;
 import edu.wpi.checksims.algorithm.smithwaterman.SmithWaterman;
+import edu.wpi.checksims.util.file.FileLineSplitter;
+import edu.wpi.checksims.util.file.FileWhitespaceSplitter;
 
 import java.io.File;
 import java.io.IOException;

@@ -2,6 +2,8 @@ package edu.wpi.checksims;
 
 import edu.wpi.checksims.util.Token;
 import edu.wpi.checksims.util.TokenListCloner;
+import edu.wpi.checksims.util.file.FileLineReader;
+import edu.wpi.checksims.util.file.FileSplitter;
 
 import java.io.File;
 import java.io.IOException;

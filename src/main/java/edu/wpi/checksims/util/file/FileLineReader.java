@@ -1,4 +1,4 @@
-package edu.wpi.checksims;
+package edu.wpi.checksims.util.file;
 
 import java.io.BufferedReader;
 import java.io.File;
