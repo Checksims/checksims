@@ -12,6 +12,11 @@ public class Token<T extends Comparable<T>> {
         this.isValid = true;
     }
 
+    public Token(T token, boolean isValid) {
+        this.token = token;
+        this.isValid = isValid;
+    }
+
     public void setValid() {
         this.isValid = true;
     }

@@ -12,7 +12,7 @@ public class TokenListCloner {
     public static <T extends Comparable<T>> List<Token<T>> cloneList(List<Token<T>> tokens) {
         List<Token<T>> newTokens = new LinkedList<>();
 
-        tokens.stream().forEachOrdered((token) -> newTokens.add(new Token<>(token.getToken())));
+        tokens.stream().forEachOrdered((token) -> newTokens.add(new Token<>(token.getToken(), token.isValid())));
 
         return newTokens;
     }

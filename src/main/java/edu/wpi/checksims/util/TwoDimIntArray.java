@@ -89,15 +89,31 @@ public class TwoDimIntArray {
     public int getMaxOfPredecessors(TwoDimArrayCoord coord) {
         int[] toSort = new int[3];
 
-        if(coord.x == 0 || coord.y == 0) {
-            throw new RuntimeException("Getting predecessors would move out of array bounds!"); // TODO should be checked
+        // TODO investigate performance implications of checking cord.x and coord.y here
+
+        int a = array[coord.x - 1][coord.y - 1];
+        int b = array[coord.x - 1][coord.y];
+        int c = array[coord.x][coord.y - 1];
+
+        // Efficient getMax of 3 elements
+        // 2-3 comparisons maximum
+        if(a < b) {
+            if(b < c) {
+                return c;
+            } else {
+                return b;
+            }
+        } else {
+            if(b < c) {
+                if(a < c) {
+                    return c;
+                } else {
+                    return a;
+                }
+            } else {
+                return a;
+            }
         }
-
-        toSort[0] = array[coord.x - 1][coord.y - 1];
-        toSort[1] = array[coord.x - 1][coord.y];
-        toSort[2] = array[coord.x][coord.y - 1];
-
-        return Ints.max(toSort);
     }
 
     public int[][] getArray() {

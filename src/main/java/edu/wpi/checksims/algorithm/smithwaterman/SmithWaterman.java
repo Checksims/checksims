@@ -85,60 +85,53 @@ public class SmithWaterman<T2 extends Comparable<T2>> implements PlagiarismDetec
         TwoDimIntArray s = new TwoDimIntArray(width, height);
         TwoDimIntArray m = new TwoDimIntArray(width, height);
 
-        // Zero first row and column
-        for(int i = 0; i < width; i++) {
-            TwoDimArrayCoord t = new TwoDimArrayCoord(i, 0);
-            s.setValue(0, t);
-        }
-        for(int j = 1; j < height; j++) {
-            TwoDimArrayCoord t = new TwoDimArrayCoord(0, j);
-            s.setValue(0, t);
-        }
-
         // Iterate through and fill arrays
         for(int i = 1; i < width; i++) {
             for(int j = 1; j < height; j++) {
                 TwoDimArrayCoord curr = new TwoDimArrayCoord(i, j);
-                TwoDimArrayCoord predecessor = curr.getAdjacent(UPLEFT);
+                TwoDimArrayCoord predecessor = new TwoDimArrayCoord(i - 1, j - 1);
 
                 int newS;
                 int newM;
 
-                // Generate a prospective value for S[i,j]
+                // Generate a prospective value for S[i,j] and M[i,j]
+                // The outermost if generates S[i,j]
+                // Based off this, we then generate M[i,j]
                 if(a.get(curr.x - 1).equals(b.get(curr.y - 1))) {
                     // If the two characters match, we increment S[i-1,j-1] by 1 to get the new S[i,j]
-                    // Predecessors[0] is always the upper-left diagonal
-                    newS = s.getValue(predecessor) + params.h;
+                    int sPredecessor = s.getValue(predecessor);
+                    int mPredecessor = m.getValue(predecessor);
+
+                    newS = sPredecessor + params.h;
+
+                    // Generate M table value from S table value
+                    if(sPredecessor > mPredecessor) {
+                        newM = sPredecessor;
+                    } else {
+                        newM = mPredecessor;
+                    }
                 } else {
                     // Get the max of our predecessors, and subtract D
                     // TODO D and R are distinct quantities, should respect this, even if we usually fix them as 1
+                    int sPredMax = s.getMaxOfPredecessors(curr);
 
-                    newS = s.getMaxOfPredecessors(curr) - params.d;
-                }
+                    newS = sPredMax - params.d;
 
-                // Generate a prospective value for M[i.j]
-                if(newS == 0) {
-                    // If the prospective S is 0, prospective M is always 0
-                    newM = 0;
-                } else if(a.get(curr.x - 1).equals(b.get(curr.y - 1))) {
-                    // If the characters match, get the match of the upper-left diagonal in M and S
-                    int sVal = s.getValue(predecessor);
-                    int mVal = m.getValue(predecessor);
-
-                    if(sVal > mVal) {
-                        newM = sVal;
-                    } else {
-                        newM = mVal;
+                    if(newS < 0) {
+                        newS = 0;
                     }
-                } else {
-                    // Get the max of our predecessors in M and S
-                    int sVal = s.getMaxOfPredecessors(curr);
-                    int mVal = m.getMaxOfPredecessors(curr);
 
-                    if(sVal > mVal) {
-                        newM = sVal;
+                    // Generate M table value from S table value
+                    if(newS == 0) {
+                        newM = 0;
                     } else {
-                        newM = mVal;
+                        int mPredMax = m.getMaxOfPredecessors(curr);
+
+                        if(sPredMax > mPredMax) {
+                            newM = sPredMax;
+                        } else {
+                            newM = mPredMax;
+                        }
                     }
                 }
 

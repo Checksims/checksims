@@ -69,4 +69,16 @@ public class TokenListClonerTest {
 
         assertNotEquals(results, twoTokens);
     }
+
+    @Test
+    public void testListCreatedRetainsValidity() {
+        List<Token<String>> results1 = TokenListCloner.cloneList(twoTokens);
+
+        results1.get(0).setInvalid();
+
+        List<Token<String>> results2 = TokenListCloner.cloneList(results1);
+
+        assertNotNull(results2);
+        assertFalse(results2.get(0).isValid());
+    }
 }
