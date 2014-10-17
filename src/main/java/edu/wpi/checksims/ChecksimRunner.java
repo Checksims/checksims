@@ -2,6 +2,8 @@ package edu.wpi.checksims;
 
 import edu.wpi.checksims.algorithm.SimilarityMatrix;
 import edu.wpi.checksims.algorithm.SimilarityMatrixAsMatrixPrinter;
+import edu.wpi.checksims.algorithm.SimilarityMatrixPrinter;
+import edu.wpi.checksims.algorithm.SimilarityMatrixThresholdPrinter;
 import edu.wpi.checksims.algorithm.linesimilarity.LineSimilarityChecker;
 import edu.wpi.checksims.algorithm.smithwaterman.SmithWaterman;
 import edu.wpi.checksims.util.file.FileLineSplitter;
@@ -44,7 +46,8 @@ public class ChecksimRunner {
             submissionsLine.addAll(Submission.submissionsFromDir(f, glob, FileLineSplitter.getInstance()));
         }
 
-        SimilarityMatrixAsMatrixPrinter<String> p = new SimilarityMatrixAsMatrixPrinter<>();
+        //SimilarityMatrixPrinter<String> p = new SimilarityMatrixAsMatrixPrinter<>();
+        SimilarityMatrixPrinter<String> p = new SimilarityMatrixThresholdPrinter<>(0.50f);
 
         SimilarityMatrix<String> lineSimilarityMatrix = new SimilarityMatrix<>(submissionsLine, LineSimilarityChecker.getInstance());
         System.out.println("\n\nLine Similarity Results:");
