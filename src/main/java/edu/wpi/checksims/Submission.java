@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -75,22 +76,38 @@ public class Submission<T extends Comparable<T>> {
     }
 
     public static <T2 extends Comparable<T2>> Submission<T2> submissionFromDir(File directory, String glob, FileSplitter<T2> splitter) throws IOException {
-        List<File> files = new LinkedList<>();
         String dirName = directory.getName();
 
         if(!directory.exists() || !directory.isDirectory()) {
             throw new IOException("Directory " + dirName + " does not exist or is not a directory!");
         }
 
-        PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:" + glob);
-
-        File[] contents = directory.listFiles((f) -> matcher.matches(Paths.get(f.getAbsolutePath()).getFileName()));
-
         // TODO consider verbose logging of which files we're adding to the submission?
 
-        Collections.addAll(files, contents);
+        List<File> files = getAllMatchingFiles(directory, glob);
 
         return submissionFromFiles(dirName, files, splitter);
+    }
+
+    private static List<File> getAllMatchingFiles(File directory, String glob) {
+        List<File> allFiles = new LinkedList<>();
+
+        // Add this directory
+        Collections.addAll(allFiles, getMatchingFilesFromDir(directory, glob));
+
+        // Get subdirectories
+        File[] subdirs = directory.listFiles((f) -> f.isDirectory());
+
+        // Recursively call on all subdirectories
+        Arrays.stream(subdirs).forEach((f) -> allFiles.addAll(getAllMatchingFiles(f, glob)));
+
+        return allFiles;
+    }
+
+    private static File[] getMatchingFilesFromDir(File directory, String glob) {
+        PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:" + glob);
+
+        return directory.listFiles((f) -> matcher.matches(Paths.get(f.getAbsolutePath()).getFileName()));
     }
 
     public static <T2 extends Comparable<T2>> Submission<T2> submissionFromFiles(String name, List<File> files, FileSplitter<T2> splitter) throws IOException {

@@ -9,7 +9,7 @@
 
     <groupId>edu.wpi.checksims</groupId>
     <artifactId>checksims</artifactId>
-    <version>0.8</version>
+    <version>0.8.1</version>
     <packaging>jar</packaging>
 
     <properties>
