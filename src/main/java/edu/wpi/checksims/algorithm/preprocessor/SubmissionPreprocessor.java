@@ -10,5 +10,5 @@ import edu.wpi.checksims.Submission;
  * which this can act as via a method reference.
  */
 public interface SubmissionPreprocessor<T extends Comparable<T>> {
-    public Submission<T> process(Submission<T> submissions);
+    public Submission<T> process(Submission<T> submission);
 }

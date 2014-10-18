@@ -50,7 +50,7 @@ public class Submission<T extends Comparable<T>> {
 
         Submission<T> otherSubmission = (Submission<T>)other;
 
-        return otherSubmission.getName().equals(this.name) && otherSubmission.getNumTokens() == this.getNumTokens();
+        return otherSubmission.getName().equals(this.name) && otherSubmission.getNumTokens() == this.getNumTokens() && otherSubmission.getTokenList().equals(this.tokenList);
     }
 
     // TODO once we have a proper equals and HashCode convert this to return Set<Submission>

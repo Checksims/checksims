@@ -1,11 +1,11 @@
 package edu.wpi.checksims;
 
 import edu.wpi.checksims.algorithm.SimilarityMatrix;
-import edu.wpi.checksims.algorithm.SimilarityMatrixAsMatrixPrinter;
 import edu.wpi.checksims.algorithm.SimilarityMatrixPrinter;
 import edu.wpi.checksims.algorithm.SimilarityMatrixThresholdPrinter;
 import edu.wpi.checksims.algorithm.linesimilarity.LineSimilarityChecker;
 import edu.wpi.checksims.algorithm.preprocessor.PreprocessSubmissions;
+import edu.wpi.checksims.algorithm.preprocessor.StringLowercasePreprocessor;
 import edu.wpi.checksims.algorithm.smithwaterman.SmithWaterman;
 import edu.wpi.checksims.util.Token;
 import edu.wpi.checksims.util.file.FileLineSplitter;
@@ -48,13 +48,8 @@ public class ChecksimRunner {
             submissionsLine.addAll(Submission.submissionsFromDir(f, glob, FileLineSplitter.getInstance()));
         }
 
-        submissionsWhitespace = PreprocessSubmissions.preprocessSubmissions((submission) -> {
-            List<Token<String>> newTokens = new LinkedList<>();
-
-            submission.getTokenList().stream().forEachOrdered((token) -> newTokens.add(new Token<String>(token.getToken().toLowerCase())));
-
-            return new Submission<String>(submission.getName(), newTokens);
-        }, submissionsWhitespace);
+        // Preprocess with a single preprocessor
+        submissionsWhitespace = PreprocessSubmissions.process((s) -> StringLowercasePreprocessor.getInstance().process(s), submissionsWhitespace);
 
         //SimilarityMatrixPrinter<String> p = new SimilarityMatrixAsMatrixPrinter<>();
         SimilarityMatrixPrinter<String> p = new SimilarityMatrixThresholdPrinter<>(0.50f);

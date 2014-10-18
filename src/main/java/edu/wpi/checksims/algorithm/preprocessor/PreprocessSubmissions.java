@@ -15,13 +15,15 @@ public class PreprocessSubmissions {
     /**
      * Apply a given mapping function to each submission in a list of submissions
      *
+     * Is NOT expected to preserve token validity, as these are to be applied before that is significant
+     *
      * @param mapping Mapping function to apply. SHOULD NOT MUTATE THE EXISTING TOKEN - should return a new token
      * @param submissions Input list of submissions to apply to
      * @param <T> Inner type of the submissions's Token Lists - typically will be String or Character
      * @return New list formed by applying the mapping function to each submission. Retains order of input list.
      */
-    public static <T extends Comparable<T>> List<Submission<T>> preprocessSubmissions(Function<Submission<T>,Submission<T>> mapping, List<Submission<T>> submissions) {
-        List<Submission<T>> output = new LinkedList<Submission<T>>();
+    public static <T extends Comparable<T>> List<Submission<T>> process(Function<Submission<T>, Submission<T>> mapping, List<Submission<T>> submissions) {
+        List<Submission<T>> output = new LinkedList<>();
 
         submissions.stream().forEachOrdered((s) -> output.add(mapping.apply(s)));
 
