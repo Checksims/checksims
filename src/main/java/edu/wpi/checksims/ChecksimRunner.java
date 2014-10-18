@@ -7,7 +7,6 @@ import edu.wpi.checksims.algorithm.linesimilarity.LineSimilarityChecker;
 import edu.wpi.checksims.algorithm.preprocessor.PreprocessSubmissions;
 import edu.wpi.checksims.algorithm.preprocessor.StringLowercasePreprocessor;
 import edu.wpi.checksims.algorithm.smithwaterman.SmithWaterman;
-import edu.wpi.checksims.util.Token;
 import edu.wpi.checksims.util.file.FileLineSplitter;
 import edu.wpi.checksims.util.file.FileWhitespaceSplitter;
 
