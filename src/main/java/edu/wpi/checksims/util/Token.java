@@ -40,8 +40,9 @@ public class Token<T extends Comparable<T>> {
 
         Token otherToken = (Token)other;
 
-        return (otherToken.getToken().compareTo(token) == 0 && otherToken.isValid() && this.isValid);
+        return (otherToken.getToken().equals(token) && otherToken.isValid() && this.isValid);
     }
+
 
     @Override
     public String toString() {
