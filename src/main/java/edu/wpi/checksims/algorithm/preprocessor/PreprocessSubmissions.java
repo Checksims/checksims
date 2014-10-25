@@ -5,6 +5,8 @@ import edu.wpi.checksims.Submission;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * Apply a preprocessor (maps Submission to Submission) to a given list of submissions
@@ -23,10 +25,8 @@ public class PreprocessSubmissions {
      * @return New list formed by applying the mapping function to each submission. Retains order of input list.
      */
     public static <T extends Comparable<T>> List<Submission<T>> process(Function<Submission<T>, Submission<T>> mapping, List<Submission<T>> submissions) {
-        List<Submission<T>> output = new LinkedList<>();
+        Supplier<List<Submission<T>>> linkedListFactory = () -> new LinkedList<>();
 
-        submissions.stream().forEachOrdered((s) -> output.add(mapping.apply(s)));
-
-        return output;
+        return submissions.stream().map((s) -> mapping.apply(s)).collect(Collectors.toCollection(linkedListFactory));
     }
 }

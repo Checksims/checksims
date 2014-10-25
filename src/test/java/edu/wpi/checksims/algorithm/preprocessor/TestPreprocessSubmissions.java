@@ -73,7 +73,8 @@ public class TestPreprocessSubmissions {
 
         assertNotNull(results);
         assertEquals(results.size(), 2);
-        assertEquals(results, twoSubmissions);
+        assertTrue(results.contains(twoSubmissions.get(0)));
+        assertTrue(results.contains(twoSubmissions.get(1)));
     }
 
     @Test
@@ -86,6 +87,7 @@ public class TestPreprocessSubmissions {
 
         assertNotNull(results);
         assertEquals(results.size(), 2);
-        assertEquals(results, expected);
+        assertTrue(results.contains(expected.get(0)));
+        assertTrue(results.contains(expected.get(1)));
     }
 }
