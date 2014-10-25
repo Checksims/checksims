@@ -55,13 +55,9 @@ public class Submission<T extends Comparable<T>> {
 
     @Override
     public int hashCode() {
-        // Needs to be immutable so the lambda will compile
-        // So we use an immutable one-element array to wrap our mutable contents
-        final int[] hash = { name.hashCode() };
+        int hash = name.hashCode();
 
-        tokenList.stream().forEachOrdered((s) -> hash[0] ^= s.hashCode());
-
-        return hash[0];
+        return tokenList.stream().mapToInt((token) -> token.hashCode()).reduce(hash, (x,y) -> (x + y));
     }
 
     /**
