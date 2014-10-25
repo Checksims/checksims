@@ -25,8 +25,8 @@ public class PreprocessSubmissions {
      * @return New list formed by applying the mapping function to each submission. Retains order of input list.
      */
     public static <T extends Comparable<T>> List<Submission<T>> process(Function<Submission<T>, Submission<T>> mapping, List<Submission<T>> submissions) {
-        Supplier<List<Submission<T>>> linkedListFactory = () -> new LinkedList<>();
+        Supplier<List<Submission<T>>> linkedListFactory = LinkedList::new;
 
-        return submissions.stream().map((s) -> mapping.apply(s)).collect(Collectors.toCollection(linkedListFactory));
+        return submissions.stream().map(mapping::apply).collect(Collectors.toCollection(linkedListFactory));
     }
 }

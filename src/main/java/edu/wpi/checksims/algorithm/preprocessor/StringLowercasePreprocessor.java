@@ -5,6 +5,8 @@ import edu.wpi.checksims.util.Token;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * Lowercases strings in a Submission<String>
@@ -31,9 +33,9 @@ public class StringLowercasePreprocessor implements SubmissionPreprocessor<Strin
      */
     @Override
     public Submission<String> process(Submission<String> submission) {
-        List<Token<String>> newTokens = new LinkedList<>();
+        Supplier<List<Token<String>>> linkedListSupplier = LinkedList::new;
 
-        submission.getTokenList().stream().forEachOrdered((token) -> newTokens.add(new Token<>(token.getToken().toLowerCase())));
+        List<Token<String>> newTokens = submission.getTokenList().stream().map((token) -> new Token<>(token.getToken().toLowerCase())).collect(Collectors.toCollection(linkedListSupplier));
 
         return new Submission<>(submission.getName(), newTokens);
     }

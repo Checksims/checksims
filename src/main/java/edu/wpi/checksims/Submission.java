@@ -4,7 +4,7 @@ import edu.wpi.checksims.util.Token;
 import edu.wpi.checksims.util.TokenListCloner;
 import edu.wpi.checksims.util.file.FileLineReader;
 import edu.wpi.checksims.util.file.FileSplitter;
-import org.apache.commons.collections.list.SetUniqueList;
+import org.apache.commons.collections4.list.SetUniqueList;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,7 +57,7 @@ public class Submission<T extends Comparable<T>> {
     public int hashCode() {
         int hash = name.hashCode();
 
-        return tokenList.stream().mapToInt((token) -> token.hashCode()).reduce(hash, (x,y) -> (x + y));
+        return tokenList.stream().mapToInt(Token::hashCode).reduce(hash, (x,y) -> (x + y));
     }
 
     /**
@@ -74,7 +74,7 @@ public class Submission<T extends Comparable<T>> {
      * @throws IOException Thrown on error interacting with file or filesystem
      */
     public static <T2 extends Comparable<T2>> List<Submission<T2>> submissionsFromDir(File directory, String glob, FileSplitter<T2> splitter) throws IOException {
-        List<Submission<T2>> submissions = SetUniqueList.decorate(new LinkedList<>());
+        List<Submission<T2>> submissions = SetUniqueList.setUniqueList(new LinkedList<>());
 
         if(!directory.exists() || !directory.isDirectory()) {
             throw new IOException("Directory " + directory.getName() + " does not exist or is not a directory!");

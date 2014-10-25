@@ -5,6 +5,8 @@ import edu.wpi.checksims.util.Token;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * Lowercases characters in a Submission<Character>
@@ -25,9 +27,9 @@ public class CharacterLowercasePreprocessor implements SubmissionPreprocessor<Ch
 
     @Override
     public Submission<Character> process(Submission<Character> submission) {
-        List<Token<Character>> newTokens = new LinkedList<>();
+        Supplier<List<Token<Character>>> listSupplier = LinkedList::new;
 
-        submission.getTokenList().stream().forEachOrdered((token) -> newTokens.add(new Token<>(Character.toLowerCase(token.getToken()))));
+        List<Token<Character>> newTokens = submission.getTokenList().stream().map((token) -> new Token<>(Character.toLowerCase(token.getToken()))).collect(Collectors.toCollection(listSupplier));
 
         return new Submission<>(submission.getName(), newTokens);
     }
