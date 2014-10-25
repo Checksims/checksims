@@ -4,6 +4,7 @@ import edu.wpi.checksims.util.Token;
 import edu.wpi.checksims.util.TokenListCloner;
 import edu.wpi.checksims.util.file.FileLineReader;
 import edu.wpi.checksims.util.file.FileSplitter;
+import org.apache.commons.collections.list.SetUniqueList;
 
 import java.io.File;
 import java.io.IOException;
@@ -73,11 +74,11 @@ public class Submission<T extends Comparable<T>> {
      * @param glob Match pattern used to identify files to include in submission
      * @param splitter Tokenizes files to produce Token Lists for a submission
      * @param <T2> What type of Token the FileSplitter produces
-     * @return Set of submissions including all nonempty submissions in the given directory
+     * @return Set of submissions including all unique nonempty submissions in the given directory
      * @throws IOException Thrown on error interacting with file or filesystem
      */
     public static <T2 extends Comparable<T2>> List<Submission<T2>> submissionsFromDir(File directory, String glob, FileSplitter<T2> splitter) throws IOException {
-        List<Submission<T2>> submissions = new LinkedList<>();
+        List<Submission<T2>> submissions = SetUniqueList.decorate(new LinkedList<>());
 
         if(!directory.exists() || !directory.isDirectory()) {
             throw new IOException("Directory " + directory.getName() + " does not exist or is not a directory!");
