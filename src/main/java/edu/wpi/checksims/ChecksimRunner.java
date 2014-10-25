@@ -9,6 +9,7 @@ import edu.wpi.checksims.algorithm.preprocessor.StringLowercasePreprocessor;
 import edu.wpi.checksims.algorithm.smithwaterman.SmithWaterman;
 import edu.wpi.checksims.util.file.FileLineSplitter;
 import edu.wpi.checksims.util.file.FileWhitespaceSplitter;
+import org.apache.commons.cli.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,23 +21,51 @@ import java.util.List;
  */
 public class ChecksimRunner {
     public static void main(String[] args) throws IOException {
-        // TODO better CLI argument parsing
-        // Interpret arg1 as match pattern
-        // And arg2... as directories to check
+        // CLI Argument Handling
+        Options opts = new Options();
+        Parser parser = new GnuParser();
+        CommandLine cli = null;
 
-        if(args.length < 2) {
+        Option alg = new Option("a", "algorithm", true, "algorithm to use");
+        Option out = new Option("o", "output", true, "output format");
+        Option file = new Option("f", "file", true, "file to output to");
+        Option token = new Option("t", "token", true, "what to tokenize into");
+        Option preprocess = new Option("p", "preprocess", true, "preprocessors to apply");
+        Option verbose = new Option("v", "verbose", false, "specify verbose output");
+
+        opts.addOption(alg);
+        opts.addOption(out);
+        opts.addOption(file);
+        opts.addOption(token);
+        opts.addOption(preprocess);
+        opts.addOption(verbose);
+
+        // Parse the CLI args
+        try {
+            cli = parser.parse(opts, args);
+        } catch (ParseException e) {
+            System.err.println("Error parsing CLI arguments: " + e.getMessage());
+            System.exit(-1);
+        }
+
+        // Get unconsumed arguments
+        String[] unusedArgs = cli.getArgs();
+
+        if(unusedArgs.length < 2) {
             System.out.println("Expecting at least two arguments: File match glob, and folder(s) to check");
             System.exit(-1);
         }
 
-        String glob = args[0];
+        // First non-flag argument is the glob matcher
+        // All the rest are directories containing student submissions
+        String glob = unusedArgs[0];
         List<File> submissionDirs = new LinkedList<>();
 
         System.out.println("Got glob matcher as " + glob);
 
-        for(int i = 1; i < args.length; i++) {
+        for(int i = 1; i < unusedArgs.length; i++) {
             System.out.println("Adding directory " + args[i]);
-            submissionDirs.add(new File(args[i]));
+            submissionDirs.add(new File(unusedArgs[i]));
         }
 
         List<Submission<String>> submissionsWhitespace = new LinkedList<>();
