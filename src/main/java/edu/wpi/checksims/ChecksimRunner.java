@@ -5,7 +5,6 @@ import edu.wpi.checksims.algorithm.PlagiarismDetector;
 import edu.wpi.checksims.algorithm.output.OutputRegistry;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrix;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrixPrinter;
-import edu.wpi.checksims.algorithm.output.SimilarityMatrixThresholdPrinter;
 import edu.wpi.checksims.algorithm.preprocessor.SubmissionPreprocessor;
 import edu.wpi.checksims.util.token.FileTokenizer;
 import edu.wpi.checksims.util.token.TokenType;
@@ -56,7 +55,7 @@ public class ChecksimRunner {
         String[] unusedArgs = cli.getArgs();
 
         if(unusedArgs.length < 2) {
-            System.out.println("Expecting at least two arguments: File match glob, and folder(s) to check");
+            System.err.println("Expecting at least two arguments: File match glob, and folder(s) to check");
             System.exit(-1);
         }
 
