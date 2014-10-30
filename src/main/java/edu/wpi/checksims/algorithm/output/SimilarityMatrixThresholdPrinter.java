@@ -1,4 +1,4 @@
-package edu.wpi.checksims.algorithm;
+package edu.wpi.checksims.algorithm.output;
 
 import java.text.DecimalFormat;
 

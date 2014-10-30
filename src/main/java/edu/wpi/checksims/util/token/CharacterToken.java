@@ -38,6 +38,6 @@ public class CharacterToken extends Token {
 
     @Override
     public String toString() {
-        return "A character token containing " + token;
+        return "A character tokenization containing " + token;
     }
 }

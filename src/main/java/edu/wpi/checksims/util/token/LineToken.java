@@ -38,6 +38,6 @@ public class LineToken extends Token {
 
     @Override
     public String toString() {
-        return "A newline-delineated token containing " + token;
+        return "A newline-delineated tokenization containing " + token;
     }
 }

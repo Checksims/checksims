@@ -1,7 +1,10 @@
-package edu.wpi.checksims.algorithm;
+package edu.wpi.checksims.algorithm.output;
 
 import com.google.common.collect.ImmutableList;
 import edu.wpi.checksims.Submission;
+import edu.wpi.checksims.algorithm.AlgorithmResults;
+import edu.wpi.checksims.algorithm.AlgorithmRunner;
+import edu.wpi.checksims.algorithm.PlagiarismDetector;
 
 import java.util.List;
 

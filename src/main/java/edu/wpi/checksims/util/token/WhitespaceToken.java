@@ -7,7 +7,7 @@ public class WhitespaceToken extends Token {
     private final String token;
 
     public WhitespaceToken(String token) {
-        // TODO should validate token to ensure no whitespace
+        // TODO should validate tokenization to ensure no whitespace
         super(true);
         this.token = token;
     }
@@ -39,6 +39,6 @@ public class WhitespaceToken extends Token {
 
     @Override
     public String toString() {
-        return "A whitespace-delineated token containing " + token;
+        return "A whitespace-delineated tokenization containing " + token;
     }
 }

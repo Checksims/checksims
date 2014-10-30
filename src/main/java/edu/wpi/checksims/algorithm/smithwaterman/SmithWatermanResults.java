@@ -77,7 +77,7 @@ public class SmithWatermanResults {
         return newList;
     }
 
-    // Get all the coordinates where the two token lists overlay
+    // Get all the coordinates where the two tokenization lists overlay
     private List<TwoDimArrayCoord> getOverlayCoords() {
         List<TwoDimArrayCoord> matches = new LinkedList<>();
 

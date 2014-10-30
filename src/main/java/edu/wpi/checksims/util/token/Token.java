@@ -17,14 +17,14 @@ public abstract class Token {
     public abstract String getTokenAsString();
 
     /**
-     * @return Whether this token is valid
+     * @return Whether this tokenization is valid
      */
     public boolean isValid() {
         return isValid;
     }
 
     /**
-     * @param isValid New value for validity of this token
+     * @param isValid New value for validity of this tokenization
      */
     public void setValid(boolean isValid) {
         this.isValid = isValid;
@@ -36,7 +36,7 @@ public abstract class Token {
      * FAILS IF EITHER TOKEN IS INVALID!
      *
      * @param other Object to compare to
-     * @return True if object compared to is a Token with same type and equiv. token value
+     * @return True if object compared to is a Token with same type and equiv. tokenization value
      */
     @Override
     public boolean equals(Object other) {

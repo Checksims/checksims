@@ -17,9 +17,9 @@ public class PreprocessSubmissions {
     /**
      * Apply a given mapping function to each submission in a list of submissions
      *
-     * Is NOT expected to preserve token validity, as these are to be applied before that is significant
+     * Is NOT expected to preserve tokenization validity, as these are to be applied before that is significant
      *
-     * @param mapping Mapping function to apply. SHOULD NOT MUTATE THE EXISTING TOKEN - should return a new token
+     * @param mapping Mapping function to apply. SHOULD NOT MUTATE THE EXISTING TOKEN - should return a new tokenization
      * @param submissions Input list of submissions to apply to
      * @return New list formed by applying the mapping function to each submission. Retains order of input list.
      */

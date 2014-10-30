@@ -47,6 +47,11 @@ public class LineSimilarityChecker implements PlagiarismDetector {
         return instance;
     }
 
+    @Override
+    public String getName() {
+        return "linecompare";
+    }
+
     /**
      * Detect plagiarism using line similarity comparator
      *
@@ -134,6 +139,21 @@ public class LineSimilarityChecker implements PlagiarismDetector {
             SubmissionLine line = new SubmissionLine(i, submitter);
             lineDatabase.get(hash).add(line);
         }
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if(!(other instanceof PlagiarismDetector)) {
+            return false;
+        }
+
+        return ((PlagiarismDetector) other).getName().equals(this.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        // Singleton, so this doesn't matter at all.
+        return 42;
     }
 
     @Override

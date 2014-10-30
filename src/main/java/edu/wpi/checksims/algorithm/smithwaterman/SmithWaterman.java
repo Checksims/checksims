@@ -22,6 +22,11 @@ public class SmithWaterman implements PlagiarismDetector {
         this.params = SmithWatermanParameters.getDefaultParams();
     }
 
+    @Override
+    public String getName() {
+        return "smithwaterman";
+    }
+
     /**
      * Detect plagiarism in a submission using the Smith-Waterman Algorithm
      *
@@ -43,6 +48,20 @@ public class SmithWaterman implements PlagiarismDetector {
         return applySmithWatermanPlagiarismDetection(a, b, this.params);
     }
 
+    @Override
+    public boolean equals(Object other) {
+        if(!(other instanceof PlagiarismDetector)) {
+            return false;
+        }
+
+        return ((PlagiarismDetector) other).getName().equals(this.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        return params.h ^ 2 * params.d ^ 3 * params.r;
+    }
+
     static AlgorithmResults applySmithWatermanPlagiarismDetection(Submission a, Submission b, SmithWatermanParameters params) {
         SmithWatermanResults firstRun = applySmithWaterman(a.getTokenList(), b.getTokenList(), params);
 
@@ -51,7 +70,7 @@ public class SmithWaterman implements PlagiarismDetector {
             return new AlgorithmResults(a, b, 0, 0);
         }
 
-        // Represents the total portions of the token lists matched by the Smith-Waterman algorithm
+        // Represents the total portions of the tokenization lists matched by the Smith-Waterman algorithm
         int totalOverlay = 0;
         SmithWatermanResults currResults = firstRun;
 

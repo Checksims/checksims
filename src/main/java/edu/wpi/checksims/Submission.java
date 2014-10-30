@@ -157,7 +157,7 @@ public class Submission {
      * @param name Name of the new submission
      * @param files List of files to include in submission
      * @param splitter Tokenizer for files in the submission
-     * @return A new submission including a list containing a token list consisting of the appended token lists of every file included, or null if no files given
+     * @return A new submission including a list containing a tokenization list consisting of the appended tokenization lists of every file included, or null if no files given
      * @throws IOException Thrown on error reading from file
      */
     public static Submission submissionFromFiles(String name, List<File> files, FileTokenizer splitter) throws IOException {

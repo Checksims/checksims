@@ -136,7 +136,7 @@ public class TokenListTest {
         assertEquals(clonedInvalid.size(), 2);
         assertFalse(clonedInvalid.get(1).isValid());
 
-        // Can't verify the entire lists are equal, given that Token equals() is false if one token is invalid
+        // Can't verify the entire lists are equal, given that Token equals() is false if one tokenization is invalid
         assertEquals(clonedInvalid.get(0), twoElementsOneInvalidCharacter.get(0));
         assertEquals(clonedInvalid.get(1).getType(), twoElementsOneInvalidCharacter.get(1).getType());
         assertEquals(clonedInvalid.get(1).getToken(), twoElementsOneInvalidCharacter.get(1).getToken());

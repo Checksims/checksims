@@ -40,7 +40,7 @@ public class TokenList extends PredicatedList<Token> {
      * Perform a deep copy of a TokenList
      *
      * @param cloneFrom List to deep copy
-     * @return Cloned copy of the token list
+     * @return Cloned copy of the tokenization list
      */
     public static TokenList cloneTokenList(TokenList cloneFrom) {
         Supplier<TokenList> tokenListSupplier = () -> new TokenList(cloneFrom.type);
@@ -55,7 +55,7 @@ public class TokenList extends PredicatedList<Token> {
                     return new LineToken((String)token.getToken(), token.isValid());
                 default:
                     // TODO make this neater
-                    throw new RuntimeException("Unrecognized token type encountered!");
+                    throw new RuntimeException("Unrecognized tokenization type encountered!");
             }
         }).collect(Collectors.toCollection(tokenListSupplier));
     }

@@ -1,15 +1,13 @@
 package edu.wpi.checksims;
 
-import edu.wpi.checksims.algorithm.SimilarityMatrix;
-import edu.wpi.checksims.algorithm.SimilarityMatrixPrinter;
-import edu.wpi.checksims.algorithm.SimilarityMatrixThresholdPrinter;
-import edu.wpi.checksims.algorithm.linesimilarity.LineSimilarityChecker;
-import edu.wpi.checksims.algorithm.preprocessor.LowercasePreprocessor;
-import edu.wpi.checksims.algorithm.preprocessor.PreprocessSubmissions;
+import edu.wpi.checksims.algorithm.AlgorithmRegistry;
+import edu.wpi.checksims.algorithm.PlagiarismDetector;
+import edu.wpi.checksims.algorithm.output.SimilarityMatrix;
+import edu.wpi.checksims.algorithm.output.SimilarityMatrixPrinter;
+import edu.wpi.checksims.algorithm.output.SimilarityMatrixThresholdPrinter;
 import edu.wpi.checksims.algorithm.preprocessor.SubmissionPreprocessor;
-import edu.wpi.checksims.algorithm.smithwaterman.SmithWaterman;
-import edu.wpi.checksims.util.token.FileLineTokenizer;
-import edu.wpi.checksims.util.token.FileWhitespaceTokenizer;
+import edu.wpi.checksims.util.token.FileTokenizer;
+import edu.wpi.checksims.util.token.TokenType;
 import org.apache.commons.cli.*;
 
 import java.io.File;
@@ -22,6 +20,8 @@ import java.util.List;
  */
 public class ChecksimRunner {
     public static void main(String[] args) throws IOException {
+        // TODO should split CLI handling into separate function and add unit tests
+
         // CLI Argument Handling
         Options opts = new Options();
         Parser parser = new GnuParser();
@@ -69,29 +69,75 @@ public class ChecksimRunner {
             submissionDirs.add(new File(unusedArgs[i]));
         }
 
-        List<Submission> submissionsWhitespace = new LinkedList<>();
-        List<Submission> submissionsLine = new LinkedList<>();
-
-        for(File f : submissionDirs) {
-            submissionsWhitespace.addAll(Submission.submissionsFromDir(f, glob, FileWhitespaceTokenizer.getInstance()));
-            submissionsLine.addAll(Submission.submissionsFromDir(f, glob, FileLineTokenizer.getInstance()));
+        // Parse plagiarism detection algorithm
+        PlagiarismDetector algorithm = null;
+        String algorithmName = cli.getOptionValue("a");
+        if(algorithmName == null) {
+            algorithm = AlgorithmRegistry.getInstance().getDefaultAlgorithm();
+        } else {
+            try {
+                algorithm = AlgorithmRegistry.getInstance().getAlgorithmInstance(algorithmName);
+            } catch(ChecksimException e) {
+                System.err.println("Error getting algorithm: " + e.getMessage());
+                System.exit(-1);
+            }
         }
 
-        // Apply a lowercase preprocessor
-        SubmissionPreprocessor lowerCase = LowercasePreprocessor.getInstance();
-        List<Submission> preprocessedWhitespace = PreprocessSubmissions.process(lowerCase::process, submissionsWhitespace);
+        // Parse file output value
+        boolean outputToFile = false;
+        String outputFile = cli.getOptionValue("f");
+        File outputFileAsFile = null;
+        if(outputFile != null) {
+            outputToFile = true;
+            outputFileAsFile = new File(outputFile);
+        }
 
-        //SimilarityMatrixPrinter<String> p = new SimilarityMatrixAsMatrixPrinter<>();
-        SimilarityMatrixPrinter p = new SimilarityMatrixThresholdPrinter(0.50f);
+        boolean verboseLogging = false;
+        // Parse verbose setting
+        if(cli.hasOption("v")) {
+            verboseLogging = true;
+        }
 
-        SimilarityMatrix lineSimilarityMatrix = SimilarityMatrix.generate(submissionsLine, LineSimilarityChecker.getInstance());
-        System.out.println("\n\nLine Similarity Results:");
-        System.out.println(p.printMatrix(lineSimilarityMatrix));
+        // TODO tokenization parsing
+        TokenType tokenization = TokenType.WHITESPACE;
 
-        SimilarityMatrix smithWatermanMatrix = SimilarityMatrix.generate(preprocessedWhitespace, new SmithWaterman());
-        System.out.println("Smith-Waterman Results:");
-        System.out.println(p.printMatrix(smithWatermanMatrix));
+        // TODO preprocessor parsing
+        List<SubmissionPreprocessor> preprocessors = new LinkedList<>();
+
+        // TODO output method parsing
+        SimilarityMatrixPrinter outputPrinter = new SimilarityMatrixThresholdPrinter(0.5f);
+
+        ChecksimConfig config = new ChecksimConfig(algorithm, tokenization, preprocessors, submissionDirs, glob,
+                verboseLogging, outputPrinter, outputToFile, outputFileAsFile);
+
+        runChecksims(config);
 
         System.exit(0);
+    }
+
+    public static void runChecksims(ChecksimConfig config) {
+        FileTokenizer tokenizer = FileTokenizer.getTokenizer(config.tokenization);
+
+        List<Submission> submissions = new LinkedList<>();
+
+        try {
+            for (File f : config.submissionDirectories) {
+                submissions.addAll(Submission.submissionsFromDir(f, config.globMatcher, tokenizer));
+            }
+        } catch(IOException e) {
+            System.err.println("Error creating submissions from directory: " + e.getMessage());
+            System.exit(-1);
+        }
+
+        // TODO apply submission preprocessors
+
+        // Apply algorithm to submission
+        SimilarityMatrix results = SimilarityMatrix.generate(submissions, config.algorithm);
+
+        String output = config.outputPrinter.printMatrix(results);
+
+        // TODO write output to file code
+
+        System.out.println(output);
     }
 }
