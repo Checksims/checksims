@@ -15,6 +15,7 @@ import org.apache.commons.cli.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -54,6 +55,16 @@ public class ChecksimRunner {
         } catch (ParseException e) {
             System.err.println("Error parsing CLI arguments: " + e.getMessage());
             System.exit(-1);
+        }
+
+        // The help!
+        if(cli.hasOption("h")) {
+            HelpFormatter f = new HelpFormatter();
+            PrintWriter systemErr = new PrintWriter(System.err, true);
+
+            f.printHelp(systemErr, 80, "checksims [args] glob directory [directory2 ...]", "checksims: check similarity of student submissions", opts, 2, 4, "");
+
+            System.exit(0);
         }
 
         // Get unconsumed arguments
@@ -111,6 +122,7 @@ public class ChecksimRunner {
         if(outputFile != null) {
             outputToFile = true;
             outputFileAsFile = new File(outputFile);
+            System.out.println("Outputting to file " + outputFileAsFile.getName());
         }
 
         String numJobs = cli.getOptionValue("j");
@@ -201,7 +213,5 @@ public class ChecksimRunner {
         } else {
             System.out.println(output);
         }
-
-        System.out.println(output);
     }
 }

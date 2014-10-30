@@ -11,7 +11,7 @@ public class FileStringWriter {
     private FileStringWriter() {}
 
     public static void writeStringToFile(File f, String str) throws IOException {
-        PrintWriter writer = new PrintWriter(f.getAbsolutePath() + f.getName());
+        PrintWriter writer = new PrintWriter(f.getAbsolutePath());
 
         writer.println(str);
 
