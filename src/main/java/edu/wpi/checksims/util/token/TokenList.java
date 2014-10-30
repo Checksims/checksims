@@ -1,8 +1,10 @@
 package edu.wpi.checksims.util.token;
 
+import com.google.common.collect.ImmutableList;
 import org.apache.commons.collections4.list.PredicatedList;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -15,6 +17,21 @@ public class TokenList extends PredicatedList<Token> {
     public TokenList(TokenType type) {
         super(new LinkedList<>(), (token) -> token.getType().equals(type));
         this.type = type;
+    }
+
+    private TokenList(TokenType type, List<Token> baseList) {
+        super(baseList, (token) -> token.getType().equals(type));
+        this.type = type;
+    }
+
+    /**
+     * Peforms a shallow copy of a TokenList, returning an immutable version of the initial list
+     *
+     * @param cloneFrom List to copy
+     * @return Immutable copy of cloneFrom
+     */
+    public static TokenList immutableCopy(TokenList cloneFrom) {
+        return new TokenList(cloneFrom.type, ImmutableList.copyOf(cloneFrom));
     }
 
     /**

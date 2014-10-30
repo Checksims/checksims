@@ -22,11 +22,11 @@ public class Submission {
 
     public Submission(String name, TokenList tokens) {
         this.name = name;
-        this.tokenList = tokens;
+        this.tokenList = TokenList.immutableCopy(tokens);
     }
 
     public TokenList getTokenList() {
-        return TokenList.cloneTokenList(tokenList);
+        return tokenList;
     }
 
     public String getName() {
