@@ -9,6 +9,6 @@ import edu.wpi.checksims.Submission;
  * The contract for PreprocessSubmissions() requests a Function from Submission<T> to Submission<T>,
  * which this can act as via a method reference.
  */
-public interface SubmissionPreprocessor<T extends Comparable<T>> {
-    public Submission<T> process(Submission<T> submission);
+public interface SubmissionPreprocessor {
+    public Submission process(Submission submission);
 }

@@ -1,7 +1,9 @@
 package edu.wpi.checksims.algorithm.preprocessor;
 
 import edu.wpi.checksims.Submission;
-import edu.wpi.checksims.util.Token;
+import edu.wpi.checksims.util.token.LineToken;
+import edu.wpi.checksims.util.token.TokenList;
+import edu.wpi.checksims.util.token.TokenType;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -14,19 +16,19 @@ import static org.junit.Assert.*;
  * Tests for PreprocessSubmissions class
  */
 public class TestPreprocessSubmissions {
-    private static List<Submission<String>> empty;
-    private static List<Submission<String>> oneSubmission;
-    private static List<Submission<String>> twoSubmissions;
+    private static List<Submission> empty;
+    private static List<Submission> oneSubmission;
+    private static List<Submission> twoSubmissions;
 
     @BeforeClass
     public static void setUp() {
-        List<Token<String>> tokensA = new LinkedList<>();
-        tokensA.add(new Token<>("Submission A"));
-        Submission<String> a = new Submission<>("A", tokensA);
+        TokenList tokensA = new TokenList(TokenType.LINE);
+        tokensA.add(new LineToken("Submission A"));
+        Submission a = new Submission("A", tokensA);
 
-        List<Token<String>> tokensB = new LinkedList<>();
-        tokensB.add(new Token<>("Submission B"));
-        Submission<String> b = new Submission<>("B", tokensB);
+        TokenList tokensB = new TokenList(TokenType.LINE);
+        tokensB.add(new LineToken("Submission B"));
+        Submission b = new Submission("B", tokensB);
 
         empty = new LinkedList<>();
 
@@ -40,7 +42,7 @@ public class TestPreprocessSubmissions {
 
     @Test
     public void testEmptyReturnsEmpty() {
-        List<Submission<String>> results = PreprocessSubmissions.process((s) -> s, empty);
+        List<Submission> results = PreprocessSubmissions.process((s) -> s, empty);
 
         assertNotNull(results);
         assertTrue(results.isEmpty());
@@ -48,7 +50,7 @@ public class TestPreprocessSubmissions {
 
     @Test
     public void testOneSubmissionIdentity() {
-        List<Submission<String>> results = PreprocessSubmissions.process((s) -> s, oneSubmission);
+        List<Submission> results = PreprocessSubmissions.process((s) -> s, oneSubmission);
 
         assertNotNull(results);
         assertEquals(results.size(), 1);
@@ -58,9 +60,9 @@ public class TestPreprocessSubmissions {
 
     @Test
     public void testOneSubmissionRename() {
-        List<Submission<String>> results = PreprocessSubmissions.process((s) -> new Submission<String>("renamed", s.getTokenList()), oneSubmission);
+        List<Submission> results = PreprocessSubmissions.process((s) -> new Submission("renamed", s.getTokenList()), oneSubmission);
 
-        Submission<String> expected = new Submission<>("renamed", oneSubmission.get(0).getTokenList());
+        Submission expected = new Submission("renamed", oneSubmission.get(0).getTokenList());
 
         assertNotNull(results);
         assertEquals(results.size(), 1);
@@ -69,7 +71,7 @@ public class TestPreprocessSubmissions {
 
     @Test
     public void testTwoSubmissionIdentity() {
-        List<Submission<String>> results = PreprocessSubmissions.process((s) -> s, twoSubmissions);
+        List<Submission> results = PreprocessSubmissions.process((s) -> s, twoSubmissions);
 
         assertNotNull(results);
         assertEquals(results.size(), 2);
@@ -79,11 +81,11 @@ public class TestPreprocessSubmissions {
 
     @Test
     public void testTwoSubmissionRename() {
-        List<Submission<String>> results = PreprocessSubmissions.process((s) -> new Submission<String>("renamed " + s.getName(), s.getTokenList()), twoSubmissions);
+        List<Submission> results = PreprocessSubmissions.process((s) -> new Submission("renamed " + s.getName(), s.getTokenList()), twoSubmissions);
 
-        List<Submission<String>> expected = new LinkedList<>();
-        expected.add(new Submission<>("renamed " + twoSubmissions.get(0).getName(), twoSubmissions.get(0).getTokenList()));
-        expected.add(new Submission<>("renamed " + twoSubmissions.get(1).getName(), twoSubmissions.get(1).getTokenList()));
+        List<Submission> expected = new LinkedList<>();
+        expected.add(new Submission("renamed " + twoSubmissions.get(0).getName(), twoSubmissions.get(0).getTokenList()));
+        expected.add(new Submission("renamed " + twoSubmissions.get(1).getName(), twoSubmissions.get(1).getTokenList()));
 
         assertNotNull(results);
         assertEquals(results.size(), 2);

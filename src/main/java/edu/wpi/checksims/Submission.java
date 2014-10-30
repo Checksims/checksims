@@ -1,9 +1,9 @@
 package edu.wpi.checksims;
 
-import edu.wpi.checksims.util.Token;
-import edu.wpi.checksims.util.TokenListCloner;
+import edu.wpi.checksims.util.token.Token;
+import edu.wpi.checksims.util.token.TokenList;
 import edu.wpi.checksims.util.file.FileLineReader;
-import edu.wpi.checksims.util.file.FileSplitter;
+import edu.wpi.checksims.util.token.FileTokenizer;
 import org.apache.commons.collections4.list.SetUniqueList;
 
 import java.io.File;
@@ -16,17 +16,17 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Submission<T extends Comparable<T>> {
-    private final List<Token<T>> tokenList;
+public class Submission {
+    private final TokenList tokenList;
     private final String name;
 
-    public Submission(String name, List<Token<T>> tokens) {
+    public Submission(String name, TokenList tokens) {
         this.name = name;
         this.tokenList = tokens;
     }
 
-    public List<Token<T>> getTokenList() {
-        return TokenListCloner.cloneList(tokenList);
+    public TokenList getTokenList() {
+        return TokenList.cloneTokenList(tokenList);
     }
 
     public String getName() {
@@ -69,12 +69,11 @@ public class Submission<T extends Comparable<T>> {
      * @param directory Directory containing student submission directories
      * @param glob Match pattern used to identify files to include in submission
      * @param splitter Tokenizes files to produce Token Lists for a submission
-     * @param <T2> What type of Token the FileSplitter produces
      * @return Set of submissions including all unique nonempty submissions in the given directory
      * @throws IOException Thrown on error interacting with file or filesystem
      */
-    public static <T2 extends Comparable<T2>> List<Submission<T2>> submissionsFromDir(File directory, String glob, FileSplitter<T2> splitter) throws IOException {
-        List<Submission<T2>> submissions = SetUniqueList.setUniqueList(new LinkedList<>());
+    public static List<Submission> submissionsFromDir(File directory, String glob, FileTokenizer splitter) throws IOException {
+        List<Submission> submissions = SetUniqueList.setUniqueList(new LinkedList<>());
 
         if(!directory.exists() || !directory.isDirectory()) {
             throw new IOException("Directory " + directory.getName() + " does not exist or is not a directory!");
@@ -84,7 +83,7 @@ public class Submission<T extends Comparable<T>> {
         File[] contents = directory.listFiles(File::isDirectory);
 
         for(File f : contents) {
-            Submission<T2> s = submissionFromDir(f, glob, splitter);
+            Submission s = submissionFromDir(f, glob, splitter);
 
             if(s != null) {
                 submissions.add(s);
@@ -100,11 +99,10 @@ public class Submission<T extends Comparable<T>> {
      * @param directory Directory containing the student's submission
      * @param glob Match pattern used to identify files to include in submission
      * @param splitter Tokenizes files to produce Token List in this submission
-     * @param <T2> What type of Token the FileSplitter produces
      * @return Single submission from all files matching the glob in given directory
      * @throws IOException Thrown on error interacting with file
      */
-    public static <T2 extends Comparable<T2>> Submission<T2> submissionFromDir(File directory, String glob, FileSplitter<T2> splitter) throws IOException {
+    public static Submission submissionFromDir(File directory, String glob, FileTokenizer splitter) throws IOException {
         String dirName = directory.getName();
 
         if(!directory.exists() || !directory.isDirectory()) {
@@ -159,22 +157,21 @@ public class Submission<T extends Comparable<T>> {
      * @param name Name of the new submission
      * @param files List of files to include in submission
      * @param splitter Tokenizer for files in the submission
-     * @param <T2> Type of tokens which will be produced
      * @return A new submission including a list containing a token list consisting of the appended token lists of every file included, or null if no files given
      * @throws IOException Thrown on error reading from file
      */
-    public static <T2 extends Comparable<T2>> Submission<T2> submissionFromFiles(String name, List<File> files, FileSplitter<T2> splitter) throws IOException {
+    public static Submission submissionFromFiles(String name, List<File> files, FileTokenizer splitter) throws IOException {
         if(files.size() == 0) {
             return null;
         }
 
-        List<Token<T2>> tokenList = new LinkedList<>();
+        TokenList tokenList = new TokenList(splitter.getType());
 
         // Could do this with a .stream().forEach(...) but we'd have to handle the IOException inside
         for(File f : files) {
             tokenList.addAll(splitter.splitFile(FileLineReader.readFile(f)));
         }
 
-        return new Submission<>(name, tokenList);
+        return new Submission(name, tokenList);
     }
 }

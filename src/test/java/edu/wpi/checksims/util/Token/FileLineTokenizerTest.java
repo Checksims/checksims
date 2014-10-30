@@ -1,6 +1,6 @@
-package edu.wpi.checksims.util.file;
+package edu.wpi.checksims.util.Token;
 
-import edu.wpi.checksims.util.Token;
+import edu.wpi.checksims.util.token.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -10,13 +10,13 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 /**
- * Test for FileLineSplitter, which is itself very simple, and thus not extensively tested
+ * Test for FileLineTokenizer, which is itself very simple, and thus not extensively tested
  */
-public class FileLineSplitterTest {
+public class FileLineTokenizerTest {
     private static List<String> empty;
     private static List<String> oneString;
     private static List<String> twoStrings;
-    private static FileLineSplitter l;
+    private static FileLineTokenizer l;
 
     @BeforeClass
     public static void setUp() {
@@ -29,12 +29,12 @@ public class FileLineSplitterTest {
         twoStrings.add("hello");
         twoStrings.add("world");
 
-        l = FileLineSplitter.getInstance();
+        l = FileLineTokenizer.getInstance();
     }
 
     @Test
     public void TestEmptyReturnsEmpty() {
-        List<Token<String>> results = l.splitFile(empty);
+        TokenList results = l.splitFile(empty);
 
         assertNotNull(results);
         assertTrue(results.isEmpty());
@@ -42,10 +42,10 @@ public class FileLineSplitterTest {
 
     @Test
     public void TestOneStringReturnsString() {
-        List<Token<String>> results = l.splitFile(oneString);
+        TokenList results = l.splitFile(oneString);
 
-        List<Token<String>> expected = new LinkedList<>();
-        expected.add(new Token<>("hello"));
+        TokenList expected = new TokenList(TokenType.LINE);
+        expected.add(new LineToken("hello"));
 
         assertNotNull(results);
         assertFalse(results.isEmpty());
@@ -55,11 +55,11 @@ public class FileLineSplitterTest {
 
     @Test
     public void TestTwoStringsReturnsTwoStrings() {
-        List<Token<String>> results = l.splitFile(twoStrings);
+        TokenList results = l.splitFile(twoStrings);
 
-        List<Token<String>> expected = new LinkedList<>();
-        expected.add(new Token<>("hello"));
-        expected.add(new Token<>("world"));
+        TokenList expected = new TokenList(TokenType.LINE);
+        expected.add(new LineToken("hello"));
+        expected.add(new LineToken("world"));
 
         assertNotNull(results);
         assertFalse(results.isEmpty());

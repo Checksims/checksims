@@ -15,15 +15,15 @@ import java.util.Set;
 public class AlgorithmRunner {
     private AlgorithmRunner() {}
 
-    public static <T extends Comparable<T>> List<AlgorithmResults<T>> runAlgorithm(List<Submission<T>> submissions, PlagiarismDetector<T> algorithm) {
-        List<AlgorithmResults<T>> results = Collections.synchronizedList(new LinkedList<>());
+    public static List<AlgorithmResults> runAlgorithm(List<Submission> submissions, PlagiarismDetector algorithm) {
+        List<AlgorithmResults> results = Collections.synchronizedList(new LinkedList<>());
 
-        Set<Pair<Submission<T>>> allPairs = Pair.generatePairsFromList(submissions);
+        Set<Pair<Submission>> allPairs = Pair.generatePairsFromList(submissions);
 
         // Perform parallel analysis of all submission pairs to generate result lists
         allPairs.stream().parallel().forEach((pair) -> {
             try {
-                AlgorithmResults<T> result = algorithm.detectPlagiarism(pair.first, pair.second);
+                AlgorithmResults result = algorithm.detectPlagiarism(pair.first, pair.second);
 
                 if(result.percentMatchedA() >= 0.50f) {
                     System.out.println("\n\nSubmissions " + pair.first.getName() + " and " + pair.second.getName() +

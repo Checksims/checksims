@@ -3,18 +3,16 @@ package edu.wpi.checksims.algorithm.smithwaterman;
 import edu.wpi.checksims.Submission;
 import edu.wpi.checksims.algorithm.AlgorithmResults;
 import edu.wpi.checksims.algorithm.PlagiarismDetector;
-import edu.wpi.checksims.util.Token;
 import edu.wpi.checksims.util.TwoDimArrayCoord;
 import edu.wpi.checksims.util.TwoDimIntArray;
-
-import static edu.wpi.checksims.util.Direction.*;
+import edu.wpi.checksims.util.token.TokenList;
 
 import java.util.List;
 
 /**
  * Performs the actual Smith-Waterman algorithm
  */
-public class SmithWaterman<T2 extends Comparable<T2>> implements PlagiarismDetector<T2> {
+public class SmithWaterman implements PlagiarismDetector {
     private final SmithWatermanParameters params;
 
     public SmithWaterman(SmithWatermanParameters params) {
@@ -33,32 +31,30 @@ public class SmithWaterman<T2 extends Comparable<T2>> implements PlagiarismDetec
      * @return AlgorithmResults indicating number of matched tokens
      */
     @Override
-    public AlgorithmResults<T2> detectPlagiarism(Submission<T2> a, Submission<T2> b) {
+    public AlgorithmResults detectPlagiarism(Submission a, Submission b) {
         // TODO add verbose option slash better logging
         System.out.println("Running Smith-Waterman plagiarism detection on submissions " + a.getName() + " and " + b.getName());
 
         return applySmithWatermanPlagiarismDetection(a, b, this.params);
     }
 
-    public static <T extends Comparable<T>> AlgorithmResults<T> applySmithWatermanPlagiarismDetection(Submission<T> a,
-                                                                                                Submission<T> b,
-                                                                                                SmithWatermanParameters params) {
-        SmithWatermanResults<T> firstRun = applySmithWaterman(a.getTokenList(), b.getTokenList(), params);
+    public static AlgorithmResults applySmithWatermanPlagiarismDetection(Submission a, Submission b, SmithWatermanParameters params) {
+        SmithWatermanResults firstRun = applySmithWaterman(a.getTokenList(), b.getTokenList(), params);
 
         if(firstRun == null || !firstRun.hasMatch()) {
             // No similarities found on first run, no need to loop
-            return new AlgorithmResults<>(a, b, 0, 0);
+            return new AlgorithmResults(a, b, 0, 0);
         }
 
         // Represents the total portions of the token lists matched by the Smith-Waterman algorithm
         int totalOverlay = 0;
-        SmithWatermanResults<T> currResults = firstRun;
+        SmithWatermanResults currResults = firstRun;
 
         while(currResults.getMatchLength() >= params.matchSizeThreshold) {
             totalOverlay += currResults.getMatchLength();
 
-            List<Token<T>> newA = currResults.setMatchInvalidA();
-            List<Token<T>> newB = currResults.setMatchInvalidB();
+            TokenList newA = currResults.setMatchInvalidA();
+            TokenList newB = currResults.setMatchInvalidB();
 
             currResults = applySmithWaterman(newA, newB, params);
         }
@@ -67,11 +63,10 @@ public class SmithWaterman<T2 extends Comparable<T2>> implements PlagiarismDetec
         // We report it regardless
         totalOverlay += currResults.getMatchLength();
 
-        return new AlgorithmResults<>(a, b, totalOverlay, totalOverlay);
+        return new AlgorithmResults(a, b, totalOverlay, totalOverlay);
     }
 
-    static <T extends Comparable<T>> SmithWatermanResults<T> applySmithWaterman(List<Token<T>> a, List<Token<T>> b,
-                                                                          SmithWatermanParameters params) {
+    static SmithWatermanResults applySmithWaterman(TokenList a, TokenList b, SmithWatermanParameters params) {
         if(a.isEmpty() || b.isEmpty()) {
             // If one of the lists is empty, there can be no matches
             return null;
@@ -148,6 +143,6 @@ public class SmithWaterman<T2 extends Comparable<T2>> implements PlagiarismDetec
             }
         }
 
-        return new SmithWatermanResults<>(s, a, b);
+        return new SmithWatermanResults(s, a, b);
     }
 }

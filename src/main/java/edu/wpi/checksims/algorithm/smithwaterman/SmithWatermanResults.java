@@ -1,7 +1,6 @@
 package edu.wpi.checksims.algorithm.smithwaterman;
 
-import edu.wpi.checksims.util.Token;
-import edu.wpi.checksims.util.TokenListCloner;
+import edu.wpi.checksims.util.token.TokenList;
 import edu.wpi.checksims.util.TwoDimArrayCoord;
 import edu.wpi.checksims.util.TwoDimIntArray;
 
@@ -13,12 +12,12 @@ import java.util.List;
 /**
  * Results from one iteration of the Smith-Waterman algorithm
  */
-public class SmithWatermanResults<T extends Comparable<T>> {
+public class SmithWatermanResults {
     private TwoDimIntArray watermanTable;
-    private List<Token<T>> a;
-    private List<Token<T>> b;
+    private TokenList a;
+    private TokenList b;
 
-    public SmithWatermanResults(TwoDimIntArray table, List<Token<T>> a, List<Token<T>> b) {
+    public SmithWatermanResults(TwoDimIntArray table, TokenList a, TokenList b) {
         this.watermanTable = table;
         this.a = a;
         this.b = b;
@@ -33,12 +32,12 @@ public class SmithWatermanResults<T extends Comparable<T>> {
         return watermanTable.getMax() != 0;
     }
 
-    public List<T> getMatch() {
+    public List<String> getMatch() {
         List<TwoDimArrayCoord> matches = getOverlayCoords();
-        List<T> results = new LinkedList<>();
+        List<String> results = new LinkedList<>();
 
         for(TwoDimArrayCoord t : matches) {
-            results.add(0, a.get(t.x - 1).getToken());
+            results.add(0, a.get(t.x - 1).getTokenAsString());
         }
 
         return results;
@@ -56,23 +55,23 @@ public class SmithWatermanResults<T extends Comparable<T>> {
         return watermanTable.arrayToString();
     }
 
-    public List<Token<T>> setMatchInvalidA() {
+    public TokenList setMatchInvalidA() {
         List<TwoDimArrayCoord> matches = getOverlayCoords();
-        List<Token<T>> newList = TokenListCloner.cloneList(a);
+        TokenList newList = TokenList.cloneTokenList(a);
 
         for(TwoDimArrayCoord t : matches) {
-            newList.get(t.x - 1).setInvalid();
+            newList.get(t.x - 1).setValid(false);
         }
 
         return newList;
     }
 
-    public List<Token<T>> setMatchInvalidB() {
+    public TokenList setMatchInvalidB() {
         List<TwoDimArrayCoord> matches = getOverlayCoords();
-        List<Token<T>> newList = TokenListCloner.cloneList(b);
+        TokenList newList = TokenList.cloneTokenList(b);
 
         for(TwoDimArrayCoord t : matches) {
-            newList.get(t.y - 1).setInvalid();
+            newList.get(t.y - 1).setValid(false);
         }
 
         return newList;

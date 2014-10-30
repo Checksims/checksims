@@ -4,7 +4,8 @@ import edu.wpi.checksims.ChecksimException;
 import edu.wpi.checksims.Submission;
 import edu.wpi.checksims.algorithm.AlgorithmResults;
 import edu.wpi.checksims.algorithm.PlagiarismDetector;
-import edu.wpi.checksims.util.Token;
+import edu.wpi.checksims.util.token.Token;
+import edu.wpi.checksims.util.token.TokenList;
 import org.apache.commons.codec.binary.Hex;
 
 import java.security.MessageDigest;
@@ -17,14 +18,14 @@ import java.util.Map;
 /**
  * Implements a line-by-line similarity checker
  */
-public class LineSimilarityChecker implements PlagiarismDetector<String> {
+public class LineSimilarityChecker implements PlagiarismDetector {
     private static LineSimilarityChecker instance;
 
     class SubmissionLine {
         public final int lineNum;
-        public final Submission<String> submission;
+        public final Submission submission;
 
-        SubmissionLine(int lineNum, Submission<String> submission) {
+        SubmissionLine(int lineNum, Submission submission) {
             this.lineNum = lineNum;
             this.submission = submission;
         }
@@ -54,9 +55,9 @@ public class LineSimilarityChecker implements PlagiarismDetector<String> {
      * @return Number of identical lines in both submissions
      */
     @Override
-    public AlgorithmResults<String> detectPlagiarism(Submission<String> a, Submission<String> b) throws ChecksimException {
-        List<Token<String>> linesA = a.getTokenList();
-        List<Token<String>> linesB = b.getTokenList();
+    public AlgorithmResults detectPlagiarism(Submission a, Submission b) throws ChecksimException {
+        TokenList linesA = a.getTokenList();
+        TokenList linesB = b.getTokenList();
 
         System.out.println("Running line similarity plagiarism detector on submissions " + a.getName() + " and " + b.getName());
 
@@ -112,14 +113,14 @@ public class LineSimilarityChecker implements PlagiarismDetector<String> {
             }
         }
 
-        return new AlgorithmResults<>(a, b, identicalLinesA, identicalLinesB);
+        return new AlgorithmResults(a, b, identicalLinesA, identicalLinesB);
     }
 
-    void AddLinesToMap(List<Token<String>> lines, Map<String, List<SubmissionLine>> lineDatabase, Submission<String> submitter, MessageDigest hasher) {
+    void AddLinesToMap(TokenList lines, Map<String, List<SubmissionLine>> lineDatabase, Submission submitter, MessageDigest hasher) {
         for(int i = 0; i < lines.size(); i++) {
-            Token<String> token = lines.get(i);
+            Token token = lines.get(i);
 
-            String hash = Hex.encodeHexString(hasher.digest(token.getToken().getBytes()));
+            String hash = Hex.encodeHexString(hasher.digest(token.getTokenAsString().getBytes()));
 
             if(lineDatabase.get(hash) == null) {
                 lineDatabase.put(hash, new LinkedList<>());

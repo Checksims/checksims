@@ -6,6 +6,6 @@ import edu.wpi.checksims.Submission;
 /**
  * Detect plagiarism between two submissions
  */
-public interface PlagiarismDetector<T extends Comparable<T>> {
-    public AlgorithmResults<T> detectPlagiarism(Submission<T> a, Submission<T> b) throws ChecksimException;
+public interface PlagiarismDetector {
+    public AlgorithmResults detectPlagiarism(Submission a, Submission b) throws ChecksimException;
 }

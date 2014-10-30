@@ -4,11 +4,9 @@ import edu.wpi.checksims.algorithm.SimilarityMatrix;
 import edu.wpi.checksims.algorithm.SimilarityMatrixPrinter;
 import edu.wpi.checksims.algorithm.SimilarityMatrixThresholdPrinter;
 import edu.wpi.checksims.algorithm.linesimilarity.LineSimilarityChecker;
-import edu.wpi.checksims.algorithm.preprocessor.PreprocessSubmissions;
-import edu.wpi.checksims.algorithm.preprocessor.StringLowercasePreprocessor;
 import edu.wpi.checksims.algorithm.smithwaterman.SmithWaterman;
-import edu.wpi.checksims.util.file.FileLineSplitter;
-import edu.wpi.checksims.util.file.FileWhitespaceSplitter;
+import edu.wpi.checksims.util.token.FileLineTokenizer;
+import edu.wpi.checksims.util.token.FileWhitespaceTokenizer;
 import org.apache.commons.cli.*;
 
 import java.io.File;
@@ -29,16 +27,16 @@ public class ChecksimRunner {
         Option alg = new Option("a", "algorithm", true, "algorithm to use");
         Option out = new Option("o", "output", true, "output format");
         Option file = new Option("f", "file", true, "file to output to");
-        Option token = new Option("t", "token", true, "what to tokenize into");
         Option preprocess = new Option("p", "preprocess", true, "preprocessors to apply");
         Option verbose = new Option("v", "verbose", false, "specify verbose output");
+        Option help = new Option("h", "help", false, "show usage information");
 
         opts.addOption(alg);
         opts.addOption(out);
         opts.addOption(file);
-        opts.addOption(token);
         opts.addOption(preprocess);
         opts.addOption(verbose);
+        opts.addOption(help);
 
         // Parse the CLI args
         try {
@@ -68,25 +66,22 @@ public class ChecksimRunner {
             submissionDirs.add(new File(unusedArgs[i]));
         }
 
-        List<Submission<String>> submissionsWhitespace = new LinkedList<>();
-        List<Submission<String>> submissionsLine = new LinkedList<>();
+        List<Submission> submissionsWhitespace = new LinkedList<>();
+        List<Submission> submissionsLine = new LinkedList<>();
 
         for(File f : submissionDirs) {
-            submissionsWhitespace.addAll(Submission.submissionsFromDir(f, glob, FileWhitespaceSplitter.getInstance()));
-            submissionsLine.addAll(Submission.submissionsFromDir(f, glob, FileLineSplitter.getInstance()));
+            submissionsWhitespace.addAll(Submission.submissionsFromDir(f, glob, FileWhitespaceTokenizer.getInstance()));
+            submissionsLine.addAll(Submission.submissionsFromDir(f, glob, FileLineTokenizer.getInstance()));
         }
 
-        // Preprocess with a single preprocessor
-        submissionsWhitespace = PreprocessSubmissions.process((s) -> StringLowercasePreprocessor.getInstance().process(s), submissionsWhitespace);
-
         //SimilarityMatrixPrinter<String> p = new SimilarityMatrixAsMatrixPrinter<>();
-        SimilarityMatrixPrinter<String> p = new SimilarityMatrixThresholdPrinter<>(0.50f);
+        SimilarityMatrixPrinter p = new SimilarityMatrixThresholdPrinter(0.50f);
 
-        SimilarityMatrix<String> lineSimilarityMatrix = new SimilarityMatrix<>(submissionsLine, LineSimilarityChecker.getInstance());
+        SimilarityMatrix lineSimilarityMatrix = SimilarityMatrix.generate(submissionsLine, LineSimilarityChecker.getInstance());
         System.out.println("\n\nLine Similarity Results:");
         System.out.println(p.printMatrix(lineSimilarityMatrix));
 
-        SimilarityMatrix<String> smithWatermanMatrix = new SimilarityMatrix<>(submissionsWhitespace, new SmithWaterman<>());
+        SimilarityMatrix smithWatermanMatrix = SimilarityMatrix.generate(submissionsWhitespace, new SmithWaterman());
         System.out.println("Smith-Waterman Results:");
         System.out.println(p.printMatrix(smithWatermanMatrix));
 

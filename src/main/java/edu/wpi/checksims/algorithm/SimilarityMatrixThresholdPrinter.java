@@ -5,7 +5,7 @@ import java.text.DecimalFormat;
 /**
  * Prints all similarity matrix entries over a certain threshold
  */
-public class SimilarityMatrixThresholdPrinter<T extends Comparable<T>> implements SimilarityMatrixPrinter<T> {
+public class SimilarityMatrixThresholdPrinter implements SimilarityMatrixPrinter {
     private float threshold;
 
     public SimilarityMatrixThresholdPrinter(float threshold) {
@@ -14,7 +14,7 @@ public class SimilarityMatrixThresholdPrinter<T extends Comparable<T>> implement
 
 
     @Override
-    public String printMatrix(SimilarityMatrix<T> matrix) {
+    public String printMatrix(SimilarityMatrix matrix) {
         StringBuilder b = new StringBuilder();
         float[][] similarityMatrix = matrix.getResults();
         int matrixSize = matrix.getSubmissions().size();

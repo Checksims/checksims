@@ -5,12 +5,12 @@ import java.text.DecimalFormat;
 /**
  * Output a similarity matrix as a matrix
  */
-public class SimilarityMatrixAsMatrixPrinter<T extends Comparable<T>> implements SimilarityMatrixPrinter<T> {
+public class SimilarityMatrixAsMatrixPrinter implements SimilarityMatrixPrinter {
     // TODO can this be a singleton? May need to instantiate various versions because of the generic...
     public SimilarityMatrixAsMatrixPrinter() {}
 
     @Override
-    public String printMatrix(SimilarityMatrix<T> matrix) {
+    public String printMatrix(SimilarityMatrix matrix) {
         StringBuilder b = new StringBuilder();
 
         float[][] results = matrix.getResults();

@@ -1,6 +1,6 @@
-package edu.wpi.checksims.util.file;
+package edu.wpi.checksims.util.Token;
 
-import edu.wpi.checksims.util.Token;
+import edu.wpi.checksims.util.token.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -12,14 +12,14 @@ import static org.junit.Assert.*;
 /**
  * Test that we can split files by whitespace
  */
-public class FileWhitespaceSplitterTest {
+public class FileWhitespaceTokenizerTest {
     private static List<String> empty;
     private static List<String> oneWord;
     private static List<String> twoWords;
     private static List<String> wordsSpaceSeparated;
     private static List<String> wordsTabSeparated;
     private static List<String> multipleLines;
-    private static FileWhitespaceSplitter s;
+    private static FileWhitespaceTokenizer s;
 
     @BeforeClass
     public static void setUp() {
@@ -41,12 +41,12 @@ public class FileWhitespaceSplitterTest {
         multipleLines.add("hello world");
         multipleLines.add("this is a test");
 
-        s = FileWhitespaceSplitter.getInstance();
+        s = FileWhitespaceTokenizer.getInstance();
     }
 
     @Test
     public void testEmptyReturnsEmpty() {
-        List<Token<String>> tokens = s.splitFile(empty);
+        TokenList tokens = s.splitFile(empty);
 
         assertNotNull(tokens);
         assertTrue(tokens.isEmpty());
@@ -54,10 +54,10 @@ public class FileWhitespaceSplitterTest {
 
     @Test
     public void testOneWordReturnsWordToken() {
-        List<Token<String>> tokens = s.splitFile(oneWord);
+        TokenList tokens = s.splitFile(oneWord);
 
-        List<Token<String>> expected = new LinkedList<>();
-        expected.add(new Token<>("hello"));
+        TokenList expected = new TokenList(TokenType.WHITESPACE);
+        expected.add(new WhitespaceToken("hello"));
 
         assertNotNull(tokens);
         assertFalse(tokens.isEmpty());
@@ -67,11 +67,11 @@ public class FileWhitespaceSplitterTest {
 
     @Test
     public void testTwoWordsReturnsTwoWordTokens() {
-        List<Token<String>> tokens = s.splitFile(twoWords);
+        TokenList tokens = s.splitFile(twoWords);
 
-        List<Token<String>> expected = new LinkedList<>();
-        expected.add(new Token<>("hello"));
-        expected.add(new Token<>("world"));
+        TokenList expected = new TokenList(TokenType.WHITESPACE);
+        expected.add(new WhitespaceToken("hello"));
+        expected.add(new WhitespaceToken("world"));
 
         assertNotNull(tokens);
         assertFalse(tokens.isEmpty());
@@ -81,15 +81,15 @@ public class FileWhitespaceSplitterTest {
 
     @Test
     public void testWordsSpaceSeparatedParsedCorrectly() {
-        List<Token<String>> tokens = s.splitFile(wordsSpaceSeparated);
+        TokenList tokens = s.splitFile(wordsSpaceSeparated);
 
-        List<Token<String>> expected = new LinkedList<>();
-        expected.add(new Token<>("hello"));
-        expected.add(new Token<>("world"));
-        expected.add(new Token<>("this"));
-        expected.add(new Token<>("is"));
-        expected.add(new Token<>("a"));
-        expected.add(new Token<>("test"));
+        TokenList expected = new TokenList(TokenType.WHITESPACE);
+        expected.add(new WhitespaceToken("hello"));
+        expected.add(new WhitespaceToken("world"));
+        expected.add(new WhitespaceToken("this"));
+        expected.add(new WhitespaceToken("is"));
+        expected.add(new WhitespaceToken("a"));
+        expected.add(new WhitespaceToken("test"));
 
         assertNotNull(tokens);
         assertFalse(tokens.isEmpty());
@@ -99,15 +99,15 @@ public class FileWhitespaceSplitterTest {
 
     @Test
     public void testWordsTabSeparatedParsedCorrectly() {
-        List<Token<String>> tokens = s.splitFile(wordsTabSeparated);
+        TokenList tokens = s.splitFile(wordsTabSeparated);
 
-        List<Token<String>> expected = new LinkedList<>();
-        expected.add(new Token<>("hello"));
-        expected.add(new Token<>("world"));
-        expected.add(new Token<>("this"));
-        expected.add(new Token<>("is"));
-        expected.add(new Token<>("a"));
-        expected.add(new Token<>("test"));
+        TokenList expected = new TokenList(TokenType.WHITESPACE);
+        expected.add(new WhitespaceToken("hello"));
+        expected.add(new WhitespaceToken("world"));
+        expected.add(new WhitespaceToken("this"));
+        expected.add(new WhitespaceToken("is"));
+        expected.add(new WhitespaceToken("a"));
+        expected.add(new WhitespaceToken("test"));
 
         assertNotNull(tokens);
         assertFalse(tokens.isEmpty());
@@ -117,15 +117,15 @@ public class FileWhitespaceSplitterTest {
 
     @Test
     public void testMultipleLinesParsedCorrectly() {
-        List<Token<String>> tokens = s.splitFile(multipleLines);
+        TokenList tokens = s.splitFile(multipleLines);
 
-        List<Token<String>> expected = new LinkedList<>();
-        expected.add(new Token<>("hello"));
-        expected.add(new Token<>("world"));
-        expected.add(new Token<>("this"));
-        expected.add(new Token<>("is"));
-        expected.add(new Token<>("a"));
-        expected.add(new Token<>("test"));
+        TokenList expected = new TokenList(TokenType.WHITESPACE);
+        expected.add(new WhitespaceToken("hello"));
+        expected.add(new WhitespaceToken("world"));
+        expected.add(new WhitespaceToken("this"));
+        expected.add(new WhitespaceToken("is"));
+        expected.add(new WhitespaceToken("a"));
+        expected.add(new WhitespaceToken("test"));
 
         assertNotNull(tokens);
         assertFalse(tokens.isEmpty());

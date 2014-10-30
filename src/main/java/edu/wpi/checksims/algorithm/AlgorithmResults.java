@@ -5,13 +5,13 @@ import edu.wpi.checksims.Submission;
 /**
  * Results for a pairwise comparison algorithm
  */
-public class AlgorithmResults<T extends Comparable<T>> {
-    public final Submission<T> a;
-    public final Submission<T> b;
+public class AlgorithmResults {
+    public final Submission a;
+    public final Submission b;
     public final int identicalTokensA;
     public final int identicalTokensB;
 
-    public AlgorithmResults(Submission<T> a, Submission<T> b, int identicalTokensA, int identicalTokensB) {
+    public AlgorithmResults(Submission a, Submission b, int identicalTokensA, int identicalTokensB) {
         this.a = a;
         this.b = b;
         this.identicalTokensA = identicalTokensA;

@@ -1,5 +1,6 @@
 package edu.wpi.checksims.algorithm;
 
+import com.google.common.collect.ImmutableList;
 import edu.wpi.checksims.Submission;
 
 import java.util.List;
@@ -7,18 +8,17 @@ import java.util.List;
 /**
  * A matrix of submissions, for reporting similarities
  */
-public class SimilarityMatrix<T extends Comparable<T>> {
-    private final List<Submission<T>> submissions;
+public class SimilarityMatrix {
+    private final List<Submission> submissions;
     private final float[][] results;
 
-    // TODO the list should probably be a set, but need a good equals() and hashCode() for Submission<T> first
-    public SimilarityMatrix(List<Submission<T>> submissions, PlagiarismDetector<T> algorithm) {
-        this.submissions = submissions;
-        this.results = getResults(submissions, algorithm);
+    private SimilarityMatrix(List<Submission> submissions, float[][] results) {
+        this.submissions = ImmutableList.copyOf(submissions);
+        this.results = results;
     }
 
     // TODO should really clone() this list, or set it to immutable
-    public List<Submission<T>> getSubmissions() {
+    public List<Submission> getSubmissions() {
         return this.submissions;
     }
 
@@ -36,11 +36,11 @@ public class SimilarityMatrix<T extends Comparable<T>> {
      * @param algorithm Algorithm to use when detecting plagiarism
      * @return Array of algorithm results, with results[i,j] being the results of comparing students i and j
      */
-    private float[][] getResults(List<Submission<T>> submissions, PlagiarismDetector<T> algorithm) {
+    public static SimilarityMatrix generate(List<Submission> submissions, PlagiarismDetector algorithm) {
         float[][] results = new float[submissions.size()][submissions.size()];
 
         // Get results for all possible pairs of submissions
-        List<AlgorithmResults<T>> algorithmResults = AlgorithmRunner.runAlgorithm(submissions, algorithm);
+        List<AlgorithmResults> algorithmResults = AlgorithmRunner.runAlgorithm(submissions, algorithm);
 
         // First, null the diagonal of the results array
         for(int i = 0; i < submissions.size(); i++) {
@@ -56,7 +56,7 @@ public class SimilarityMatrix<T extends Comparable<T>> {
             results[indexSecond][indexFirst] = result.percentMatchedB();
         });
 
-        return results;
+        return new SimilarityMatrix(submissions, results);
     }
 
     @Override
