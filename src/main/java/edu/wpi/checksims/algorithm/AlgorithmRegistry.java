@@ -63,6 +63,10 @@ public class AlgorithmRegistry {
             }
         });
 
+        if(detectors.isEmpty()) {
+            throw new RuntimeException("No plagiarism detection algorithms registered! Cannot continue!");
+        }
+
         // The final list should never change at runtime
         supportedAlgorithms = ImmutableList.copyOf(detectors);
     }

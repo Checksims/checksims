@@ -7,11 +7,20 @@ import java.text.DecimalFormat;
  */
 public class SimilarityMatrixThresholdPrinter implements SimilarityMatrixPrinter {
     private float threshold;
+    private static final float DEFAULT_THRESHOLD = 0.6f;
 
     public SimilarityMatrixThresholdPrinter(float threshold) {
         this.threshold = threshold;
     }
 
+    public static SimilarityMatrixThresholdPrinter getInstance() {
+        return new SimilarityMatrixThresholdPrinter(DEFAULT_THRESHOLD);
+    }
+
+    @Override
+    public String getName() {
+        return "threshold";
+    }
 
     @Override
     public String printMatrix(SimilarityMatrix matrix) {

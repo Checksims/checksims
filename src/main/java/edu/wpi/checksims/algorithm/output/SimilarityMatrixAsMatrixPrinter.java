@@ -19,6 +19,11 @@ public class SimilarityMatrixAsMatrixPrinter implements SimilarityMatrixPrinter 
     }
 
     @Override
+    public String getName() {
+        return "matrix";
+    }
+
+    @Override
     public String printMatrix(SimilarityMatrix matrix) {
         StringBuilder b = new StringBuilder();
 

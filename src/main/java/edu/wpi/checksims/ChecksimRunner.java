@@ -2,6 +2,7 @@ package edu.wpi.checksims;
 
 import edu.wpi.checksims.algorithm.AlgorithmRegistry;
 import edu.wpi.checksims.algorithm.PlagiarismDetector;
+import edu.wpi.checksims.algorithm.output.OutputRegistry;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrix;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrixPrinter;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrixThresholdPrinter;
@@ -117,8 +118,18 @@ public class ChecksimRunner {
         // TODO preprocessor parsing
         List<SubmissionPreprocessor> preprocessors = new LinkedList<>();
 
-        // TODO output method parsing
-        SimilarityMatrixPrinter outputPrinter = new SimilarityMatrixThresholdPrinter(0.5f);
+        SimilarityMatrixPrinter outputPrinter = null;
+        String similarityMatrixPrinterString = cli.getOptionValue("o");
+        if(similarityMatrixPrinterString == null) {
+            outputPrinter = OutputRegistry.getInstance().getDefaultStrategy();
+        } else {
+            try {
+                outputPrinter = OutputRegistry.getInstance().getOutputStrategy(similarityMatrixPrinterString);
+            } catch(ChecksimException e) {
+                System.err.println(e.getMessage());
+                System.exit(-1);
+            }
+        }
 
         ChecksimConfig config = new ChecksimConfig(algorithm, tokenization, preprocessors, submissionDirs, glob,
                 verboseLogging, outputPrinter, outputToFile, outputFileAsFile);
