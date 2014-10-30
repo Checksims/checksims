@@ -8,6 +8,7 @@ import edu.wpi.checksims.algorithm.output.SimilarityMatrixPrinter;
 import edu.wpi.checksims.algorithm.preprocessor.PreprocessSubmissions;
 import edu.wpi.checksims.algorithm.preprocessor.PreprocessorRegistry;
 import edu.wpi.checksims.algorithm.preprocessor.SubmissionPreprocessor;
+import edu.wpi.checksims.util.file.FileStringWriter;
 import edu.wpi.checksims.util.token.FileTokenizer;
 import edu.wpi.checksims.util.token.TokenType;
 import org.apache.commons.cli.*;
@@ -34,6 +35,7 @@ public class ChecksimRunner {
         Option out = new Option("o", "output", true, "output format");
         Option file = new Option("f", "file", true, "file to output to");
         Option preprocess = new Option("p", "preprocess", true, "preprocessors to apply");
+        Option jobs = new Option("j", "jobs", true, "number of threads to use");
         Option verbose = new Option("v", "verbose", false, "specify verbose output");
         Option help = new Option("h", "help", false, "show usage information");
 
@@ -42,6 +44,7 @@ public class ChecksimRunner {
         opts.addOption(out);
         opts.addOption(file);
         opts.addOption(preprocess);
+        opts.addOption(jobs);
         opts.addOption(verbose);
         opts.addOption(help);
 
@@ -110,13 +113,24 @@ public class ChecksimRunner {
             outputFileAsFile = new File(outputFile);
         }
 
+        String numJobs = cli.getOptionValue("j");
+        if(numJobs != null) {
+            int threads = Integer.parseInt(numJobs);
+
+            if(threads < 1) {
+                System.err.println("Must specify positive number of threads, instead got " + threads);
+                System.exit(-1);
+            }
+
+            System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "" + threads);
+        }
+
         boolean verboseLogging = false;
         // Parse verbose setting
         if(cli.hasOption("v")) {
             verboseLogging = true;
         }
 
-        // TODO preprocessor parsing
         List<SubmissionPreprocessor> preprocessors = new LinkedList<>();
         String allPreprocessors = cli.getOptionValue("p");
         if(allPreprocessors != null) {
@@ -177,7 +191,16 @@ public class ChecksimRunner {
 
         String output = config.outputPrinter.printMatrix(results);
 
-        // TODO write output to file code
+        if(config.outputToFile) {
+            try {
+                FileStringWriter.writeStringToFile(config.outputFile, output);
+            } catch (IOException e) {
+                System.err.println("Error printing output to file: " + e.getMessage());
+                System.exit(-1);
+            }
+        } else {
+            System.out.println(output);
+        }
 
         System.out.println(output);
     }
