@@ -2,6 +2,7 @@ package edu.wpi.checksims.algorithm;
 
 import edu.wpi.checksims.ChecksimException;
 import edu.wpi.checksims.Submission;
+import edu.wpi.checksims.util.token.TokenType;
 
 /**
  * Detect plagiarism between two submissions
@@ -19,6 +20,8 @@ public interface PlagiarismDetector {
      * @return Name of the plagiarism detector used to invoke it at the CLI
      */
     public String getName();
+
+    public TokenType getDefaultTokenType();
 
     /**
      * Apply a pairwise plagiarism detection algorithm

@@ -3,7 +3,6 @@ package edu.wpi.checksims.algorithm;
 import com.google.common.collect.ImmutableList;
 import edu.wpi.checksims.ChecksimException;
 import org.apache.commons.collections4.list.PredicatedList;
-import org.apache.commons.collections4.list.SetUniqueList;
 import org.reflections.Reflections;
 
 import java.lang.reflect.InvocationTargetException;

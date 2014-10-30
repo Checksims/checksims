@@ -7,6 +7,7 @@ import edu.wpi.checksims.algorithm.PlagiarismDetector;
 import edu.wpi.checksims.util.TwoDimArrayCoord;
 import edu.wpi.checksims.util.TwoDimIntArray;
 import edu.wpi.checksims.util.token.TokenList;
+import edu.wpi.checksims.util.token.TokenType;
 
 /**
  * Performs the actual Smith-Waterman algorithm
@@ -25,6 +26,11 @@ public class SmithWaterman implements PlagiarismDetector {
     @Override
     public String getName() {
         return "smithwaterman";
+    }
+
+    @Override
+    public TokenType getDefaultTokenType() {
+        return TokenType.WHITESPACE;
     }
 
     /**

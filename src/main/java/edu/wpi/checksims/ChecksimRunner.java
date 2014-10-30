@@ -28,6 +28,7 @@ public class ChecksimRunner {
         CommandLine cli = null;
 
         Option alg = new Option("a", "algorithm", true, "algorithm to use");
+        Option token = new Option("t", "token", true, "tokenization type to use");
         Option out = new Option("o", "output", true, "output format");
         Option file = new Option("f", "file", true, "file to output to");
         Option preprocess = new Option("p", "preprocess", true, "preprocessors to apply");
@@ -35,6 +36,7 @@ public class ChecksimRunner {
         Option help = new Option("h", "help", false, "show usage information");
 
         opts.addOption(alg);
+        opts.addOption(token);
         opts.addOption(out);
         opts.addOption(file);
         opts.addOption(preprocess);
@@ -83,6 +85,20 @@ public class ChecksimRunner {
             }
         }
 
+        String stringTokenization = cli.getOptionValue("t");
+        TokenType tokenization = null;
+        if(stringTokenization != null) {
+            try {
+                tokenization = TokenType.fromString(stringTokenization);
+            } catch(ChecksimException e) {
+                System.err.println(e.getMessage());
+                System.exit(-1);
+            }
+        } else {
+            // If the user didn't specify, use the algorithm's default tokenization
+            tokenization = algorithm.getDefaultTokenType();
+        }
+
         // Parse file output value
         boolean outputToFile = false;
         String outputFile = cli.getOptionValue("f");
@@ -97,9 +113,6 @@ public class ChecksimRunner {
         if(cli.hasOption("v")) {
             verboseLogging = true;
         }
-
-        // TODO tokenization parsing
-        TokenType tokenization = TokenType.WHITESPACE;
 
         // TODO preprocessor parsing
         List<SubmissionPreprocessor> preprocessors = new LinkedList<>();

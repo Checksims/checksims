@@ -6,6 +6,7 @@ import edu.wpi.checksims.algorithm.AlgorithmResults;
 import edu.wpi.checksims.algorithm.PlagiarismDetector;
 import edu.wpi.checksims.util.token.Token;
 import edu.wpi.checksims.util.token.TokenList;
+import edu.wpi.checksims.util.token.TokenType;
 import org.apache.commons.codec.binary.Hex;
 
 import java.security.MessageDigest;
@@ -50,6 +51,11 @@ public class LineSimilarityChecker implements PlagiarismDetector {
     @Override
     public String getName() {
         return "linecompare";
+    }
+
+    @Override
+    public TokenType getDefaultTokenType() {
+        return TokenType.LINE;
     }
 
     /**
