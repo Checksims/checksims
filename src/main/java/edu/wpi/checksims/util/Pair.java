@@ -55,6 +55,9 @@ public class Pair<T> {
             return false;
         }
 
+        // Due to type erasure, we can't cast to Pair<T>
+        // Ignore generated compiler warning
+        @SuppressWarnings("rawtypes")
         Pair otherPair = (Pair)other;
 
         return (otherPair.first.equals(first) && otherPair.second.equals(second));

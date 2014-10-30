@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
 public class TokenList extends PredicatedList<Token> {
     public final TokenType type;
 
+    private static final long serialVersionUID = 1L;
+
     public TokenList(TokenType type) {
         super(new LinkedList<>(), (token) -> token.getType().equals(type));
         this.type = type;
@@ -72,5 +74,10 @@ public class TokenList extends PredicatedList<Token> {
     @Override
     public String toString() {
         return "Token list of type " + type.toString() + " containing " + super.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        return type.hashCode() ^ super.hashCode();
     }
 }
