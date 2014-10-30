@@ -1,19 +1,15 @@
 package edu.wpi.checksims.algorithm.output;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import edu.wpi.checksims.ChecksimException;
-import org.apache.commons.collections4.list.PredicatedList;
-import org.reflections.Reflections;
+import edu.wpi.checksims.util.reflection.ReflectiveInstantiator;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Get valid
+ * Registry for valid output strategies
  */
 public class OutputRegistry {
     private final List<SimilarityMatrixPrinter> outputStrategies;
@@ -21,50 +17,22 @@ public class OutputRegistry {
     private static OutputRegistry instance;
 
     private OutputRegistry() {
-        // Ensure that output strategy names are globally unique
-        List<String> outputStrategyNames = new LinkedList<>();
-        List<SimilarityMatrixPrinter> outputStrategies = PredicatedList.predicatedList(new LinkedList<>(), (strat) -> {
-            if(outputStrategyNames.contains(strat.getName())) {
-                return false;
-            } else {
-                outputStrategyNames.add(strat.getName());
-                return true;
-            }
-        });
+        List<SimilarityMatrixPrinter> instances = ReflectiveInstantiator.reflectiveInstantiator("edu.wpi.checksims.algorithm.output", SimilarityMatrixPrinter.class);
 
-        // Reflect on edu.wpi.checksims.algorithm.output to find all valid output strategies
-        Reflections outputPackage = new Reflections("edu.wpi.checksims.algorithm.output");
-        Set<Class<? extends SimilarityMatrixPrinter>> allOutputPrinters = outputPackage.getSubTypesOf(SimilarityMatrixPrinter.class);
+        // Get a list without duplicates
+        // If it's a different size, then duplicates existed, which is bad
+        // Throw a RuntimeException for that!
+        ImmutableList<String> noDups = ImmutableSet.copyOf(instances.stream().map(SimilarityMatrixPrinter::getName).collect(Collectors.toList())).asList();
+        if(noDups.size() < instances.size()) {
+            throw new RuntimeException("Some algorithm names were not globally unique!");
+        }
 
-        allOutputPrinters.stream().forEach((strategy) -> {
-            // TODO log this
-            System.out.println("Initializing output strategy " + strategy.getName());
-            try {
-                Method getInstance = strategy.getMethod("getInstance");
-
-                Class<SimilarityMatrixPrinter> printerClass = SimilarityMatrixPrinter.class;
-                if(!printerClass.isAssignableFrom(getInstance.getReturnType())) {
-                    throw new RuntimeException("Output strategy " + strategy.getName() + " implements getInstance, but it does not return a SimilarityMatrixPrinter!");
-                }
-
-                // Invoke the method to produce a SimilarityMatrixPrinter
-                // Then add it to the output strategies list.
-                SimilarityMatrixPrinter printer = (SimilarityMatrixPrinter)getInstance.invoke(null);
-                outputStrategies.add(printer);
-            } catch (NoSuchMethodException e) {
-                // TODO better logging + handling
-                throw new RuntimeException("Output strategy " + strategy.getName() + " does not have a static getInstance method!");
-            } catch (InvocationTargetException | IllegalAccessException e) {
-                throw new RuntimeException("Error invoking getInstance method of " + strategy.getName() + ": " + e.getMessage());
-            }
-        });
-
-        if(outputStrategies.isEmpty()) {
+        if(instances.isEmpty()) {
             throw new RuntimeException("No providers for SimilarityMatrixPrinter present!");
         }
 
         // The algorithms list should not be changed after initialization
-        this.outputStrategies = ImmutableList.copyOf(outputStrategies);
+        this.outputStrategies = ImmutableList.copyOf(instances);
     }
 
     public static OutputRegistry getInstance() {

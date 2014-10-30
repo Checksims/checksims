@@ -16,7 +16,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Submission {
+public final class Submission {
     private final TokenList tokenList;
     private final String name;
 

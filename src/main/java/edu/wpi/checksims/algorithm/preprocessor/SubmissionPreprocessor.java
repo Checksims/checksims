@@ -10,5 +10,6 @@ import edu.wpi.checksims.Submission;
  * which this can act as via a method reference.
  */
 public interface SubmissionPreprocessor {
+    public String getName();
     public Submission process(Submission submission);
 }

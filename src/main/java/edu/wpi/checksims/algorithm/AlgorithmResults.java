@@ -5,7 +5,7 @@ import edu.wpi.checksims.Submission;
 /**
  * Results for a pairwise comparison algorithm
  */
-public class AlgorithmResults {
+public final class AlgorithmResults {
     public final Submission a;
     public final Submission b;
     public final int identicalTokensA;

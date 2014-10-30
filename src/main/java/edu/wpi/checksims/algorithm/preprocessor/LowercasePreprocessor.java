@@ -24,6 +24,11 @@ public class LowercasePreprocessor implements SubmissionPreprocessor {
     }
 
     @Override
+    public String getName() {
+        return "lowercase";
+    }
+
+    @Override
     public Submission process(Submission submission) {
         Supplier<TokenList> tokenListSupplier = () -> new TokenList(submission.getTokenList().type);
 

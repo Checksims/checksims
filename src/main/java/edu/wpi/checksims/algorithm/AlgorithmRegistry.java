@@ -1,15 +1,11 @@
 package edu.wpi.checksims.algorithm;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import edu.wpi.checksims.ChecksimException;
-import org.apache.commons.collections4.list.PredicatedList;
-import org.reflections.Reflections;
+import edu.wpi.checksims.util.reflection.ReflectiveInstantiator;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -21,50 +17,18 @@ public class AlgorithmRegistry {
     private static AlgorithmRegistry instance;
 
     private AlgorithmRegistry() {
-        // Ensure that no two algorithms have the same name
-        List<String> allAlgNames = new LinkedList<>();
-        List<PlagiarismDetector> detectors = PredicatedList.predicatedList(new LinkedList<>(), (detector) -> {
-            if(allAlgNames.contains(detector.getName())) {
-                return false;
-            } else {
-                allAlgNames.add(detector.getName());
-                return true;
-            }
-        });
-
-        // Use reflection to obtain a set of all classes implementing the PlagiarismDetector interface in the algorithm package
-        Reflections algorithmPackage = new Reflections("edu.wpi.checksims.algorithm");
-        Set<Class<? extends PlagiarismDetector>> allDetectors = algorithmPackage.getSubTypesOf(PlagiarismDetector.class);
-
-        // Move through
-        allDetectors.stream().forEach((alg) -> {
-            // TODO convert to logging
-            System.out.println("Initializing algorithm " + alg.getName());
-            try {
-                // We specify that all plagiarism detectors must have a getInstance() static method
-                // This returns a default instance of the algorithm.
-                Method getInstance = alg.getMethod("getInstance");
-
-                // The return type of getInstance must be a plagiarism detector
-                Class<PlagiarismDetector> plagiarismDetectorClass = PlagiarismDetector.class;
-                if(!plagiarismDetectorClass.isAssignableFrom(getInstance.getReturnType())) {
-                    throw new RuntimeException("Plagiarism detectors must implement a static getInstance() method returning a subtype of Plagiarism Detector");
-                }
-
-                // Invoke getInstance and add the returned detector to the list of available algorithms
-                PlagiarismDetector p = (PlagiarismDetector)getInstance.invoke(null);
-                detectors.add(p);
-            } catch (NoSuchMethodException e) {
-                throw new RuntimeException("All plagiarism detection algorithms must implement a static getInstance() method");
-            } catch (InvocationTargetException | IllegalAccessException e) {
-                throw new RuntimeException("Error invoking getInstance(): " + e.getMessage());
-            } catch (IllegalArgumentException e) {
-                throw new RuntimeException("Tried to load two plagiarism detectors with same name - names must be globally unique!");
-            }
-        });
+        List<PlagiarismDetector> detectors = ReflectiveInstantiator.reflectiveInstantiator("edu.wpi.checksims.algorithm", PlagiarismDetector.class);
 
         if(detectors.isEmpty()) {
             throw new RuntimeException("No plagiarism detection algorithms registered! Cannot continue!");
+        }
+
+        // Get a list without duplicates
+        // If it's a different size, then duplicates existed, which is bad
+        // Throw a RuntimeException for that!
+        ImmutableList<String> noDups = ImmutableSet.copyOf(detectors.stream().map(PlagiarismDetector::getName).collect(Collectors.toList())).asList();
+        if(noDups.size() < detectors.size()) {
+            throw new RuntimeException("Some algorithm names were not globally unique!");
         }
 
         // The final list should never change at runtime

@@ -5,6 +5,8 @@ import edu.wpi.checksims.algorithm.PlagiarismDetector;
 import edu.wpi.checksims.algorithm.output.OutputRegistry;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrix;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrixPrinter;
+import edu.wpi.checksims.algorithm.preprocessor.PreprocessSubmissions;
+import edu.wpi.checksims.algorithm.preprocessor.PreprocessorRegistry;
 import edu.wpi.checksims.algorithm.preprocessor.SubmissionPreprocessor;
 import edu.wpi.checksims.util.token.FileTokenizer;
 import edu.wpi.checksims.util.token.TokenType;
@@ -116,6 +118,19 @@ public class ChecksimRunner {
 
         // TODO preprocessor parsing
         List<SubmissionPreprocessor> preprocessors = new LinkedList<>();
+        String allPreprocessors = cli.getOptionValue("p");
+        if(allPreprocessors != null) {
+            String[] splitPreprocessors = allPreprocessors.split(",");
+            try {
+                for (String s : splitPreprocessors) {
+                    SubmissionPreprocessor p = PreprocessorRegistry.getInstance().getPreprocessor(s);
+                    preprocessors.add(p);
+                }
+            } catch(ChecksimException e) {
+                System.err.println(e.getMessage());
+                System.exit(-1);
+            }
+        }
 
         SimilarityMatrixPrinter outputPrinter = null;
         String similarityMatrixPrinterString = cli.getOptionValue("o");
@@ -152,7 +167,10 @@ public class ChecksimRunner {
             System.exit(-1);
         }
 
-        // TODO apply submission preprocessors
+        // Apply all preprocessors
+        for(SubmissionPreprocessor p : config.preprocessors) {
+            submissions = PreprocessSubmissions.process(p::process, submissions);
+        }
 
         // Apply algorithm to submission
         SimilarityMatrix results = SimilarityMatrix.generate(submissions, config.algorithm);
