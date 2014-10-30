@@ -68,10 +68,11 @@ public class AlgorithmRegistry {
      * @throws ChecksimException Thrown on no algorithm or more than one algorithm of that name existing
      */
     public PlagiarismDetector getAlgorithmInstance(String name) throws ChecksimException {
-        List<PlagiarismDetector> detectors = supportedAlgorithms.stream().filter((alg) -> alg.getName().equals(name)).collect(Collectors.toList());
+        String lowerName = name.toLowerCase(); // Ensure case insensitivity
+        List<PlagiarismDetector> detectors = supportedAlgorithms.stream().filter((alg) -> alg.getName().equals(lowerName)).collect(Collectors.toList());
 
         if(detectors.size() == 0) {
-            throw new ChecksimException("No algorithm with that name");
+            throw new ChecksimException("No algorithm with name " + name);
         } else if(detectors.size() > 1) {
             throw new ChecksimException("INTERNAL ERROR: two algorithms share the same name!");
         }
