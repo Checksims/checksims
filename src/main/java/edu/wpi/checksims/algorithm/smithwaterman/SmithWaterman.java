@@ -1,5 +1,6 @@
 package edu.wpi.checksims.algorithm.smithwaterman;
 
+import edu.wpi.checksims.ChecksimException;
 import edu.wpi.checksims.Submission;
 import edu.wpi.checksims.algorithm.AlgorithmResults;
 import edu.wpi.checksims.algorithm.PlagiarismDetector;
@@ -31,14 +32,20 @@ public class SmithWaterman implements PlagiarismDetector {
      * @return AlgorithmResults indicating number of matched tokens
      */
     @Override
-    public AlgorithmResults detectPlagiarism(Submission a, Submission b) {
+    public AlgorithmResults detectPlagiarism(Submission a, Submission b) throws ChecksimException {
+        if(!a.getTokenList().type.equals(b.getTokenList().type)) {
+            throw new ChecksimException("Token list type mismatch: submission " + a.getName() + " has type " +
+                    a.getTokenList().type.toString() + ", while submission " + b.getName() + " has type " +
+                    b.getTokenList().type.toString());
+        }
+
         // TODO add verbose option slash better logging
         System.out.println("Running Smith-Waterman plagiarism detection on submissions " + a.getName() + " and " + b.getName());
 
         return applySmithWatermanPlagiarismDetection(a, b, this.params);
     }
 
-    public static AlgorithmResults applySmithWatermanPlagiarismDetection(Submission a, Submission b, SmithWatermanParameters params) {
+    static AlgorithmResults applySmithWatermanPlagiarismDetection(Submission a, Submission b, SmithWatermanParameters params) {
         SmithWatermanResults firstRun = applySmithWaterman(a.getTokenList(), b.getTokenList(), params);
 
         if(firstRun == null || !firstRun.hasMatch()) {

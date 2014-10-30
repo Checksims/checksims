@@ -18,6 +18,11 @@ public class WhitespaceToken extends Token {
     }
 
     @Override
+    public Token lowerCase() {
+        return new WhitespaceToken(token.toLowerCase(), this.isValid());
+    }
+
+    @Override
     public TokenType getType() {
         return TokenType.WHITESPACE;
     }

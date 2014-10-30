@@ -59,6 +59,11 @@ public class LineSimilarityChecker implements PlagiarismDetector {
         TokenList linesA = a.getTokenList();
         TokenList linesB = b.getTokenList();
 
+        if(!linesA.type.equals(linesB.type)) {
+            throw new ChecksimException("Token list type mismatch: submission " + a.getName() + " has type " +
+                    linesA.type.toString() + ", while submission " + b.getName() + " has type " + linesB.type.toString());
+        }
+
         System.out.println("Running line similarity plagiarism detector on submissions " + a.getName() + " and " + b.getName());
 
         MessageDigest hasher;

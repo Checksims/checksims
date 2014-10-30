@@ -4,6 +4,9 @@ import edu.wpi.checksims.algorithm.SimilarityMatrix;
 import edu.wpi.checksims.algorithm.SimilarityMatrixPrinter;
 import edu.wpi.checksims.algorithm.SimilarityMatrixThresholdPrinter;
 import edu.wpi.checksims.algorithm.linesimilarity.LineSimilarityChecker;
+import edu.wpi.checksims.algorithm.preprocessor.LowercasePreprocessor;
+import edu.wpi.checksims.algorithm.preprocessor.PreprocessSubmissions;
+import edu.wpi.checksims.algorithm.preprocessor.SubmissionPreprocessor;
 import edu.wpi.checksims.algorithm.smithwaterman.SmithWaterman;
 import edu.wpi.checksims.util.token.FileLineTokenizer;
 import edu.wpi.checksims.util.token.FileWhitespaceTokenizer;
@@ -74,6 +77,10 @@ public class ChecksimRunner {
             submissionsLine.addAll(Submission.submissionsFromDir(f, glob, FileLineTokenizer.getInstance()));
         }
 
+        // Apply a lowercase preprocessor
+        SubmissionPreprocessor lowerCase = LowercasePreprocessor.getInstance();
+        List<Submission> preprocessedWhitespace = PreprocessSubmissions.process(lowerCase::process, submissionsWhitespace);
+
         //SimilarityMatrixPrinter<String> p = new SimilarityMatrixAsMatrixPrinter<>();
         SimilarityMatrixPrinter p = new SimilarityMatrixThresholdPrinter(0.50f);
 
@@ -81,7 +88,7 @@ public class ChecksimRunner {
         System.out.println("\n\nLine Similarity Results:");
         System.out.println(p.printMatrix(lineSimilarityMatrix));
 
-        SimilarityMatrix smithWatermanMatrix = SimilarityMatrix.generate(submissionsWhitespace, new SmithWaterman());
+        SimilarityMatrix smithWatermanMatrix = SimilarityMatrix.generate(preprocessedWhitespace, new SmithWaterman());
         System.out.println("Smith-Waterman Results:");
         System.out.println(p.printMatrix(smithWatermanMatrix));
 

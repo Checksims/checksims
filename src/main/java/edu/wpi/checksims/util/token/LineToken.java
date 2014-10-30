@@ -17,6 +17,11 @@ public class LineToken extends Token {
     }
 
     @Override
+    public Token lowerCase() {
+        return new LineToken(token.toLowerCase(), this.isValid());
+    }
+
+    @Override
     public TokenType getType() {
         return TokenType.LINE;
     }

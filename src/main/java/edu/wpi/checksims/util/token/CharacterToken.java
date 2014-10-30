@@ -17,6 +17,11 @@ public class CharacterToken extends Token {
     }
 
     @Override
+    public Token lowerCase() {
+        return new CharacterToken(Character.toLowerCase(token), this.isValid());
+    }
+
+    @Override
     public TokenType getType() {
         return TokenType.CHARACTER;
     }

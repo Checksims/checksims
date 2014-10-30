@@ -30,6 +30,8 @@ public abstract class Token {
         this.isValid = isValid;
     }
 
+    public abstract Token lowerCase();
+
     /**
      * FAILS IF EITHER TOKEN IS INVALID!
      *
