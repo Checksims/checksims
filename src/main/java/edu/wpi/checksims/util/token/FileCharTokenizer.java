@@ -3,7 +3,6 @@ package edu.wpi.checksims.util.token;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -30,8 +29,8 @@ public class FileCharTokenizer implements FileTokenizer {
             char[] chars = s.toCharArray();
 
             Arrays.stream(ArrayUtils.toObject(chars))
-                    .map((c) -> new CharacterToken(c))
-                    .forEachOrdered((token) -> toReturn.add(token));
+                    .map(CharacterToken::new)
+                    .forEachOrdered(toReturn::add);
         }
 
         return toReturn;

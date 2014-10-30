@@ -1,6 +1,5 @@
 package edu.wpi.checksims.util.token;
 
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -24,8 +23,8 @@ public class FileLineTokenizer implements FileTokenizer {
         TokenList toReturn = new TokenList(this.getType());
 
         strings.stream()
-                .map((str) -> new LineToken(str))
-                .forEachOrdered((token) -> toReturn.add(token));
+                .map(LineToken::new)
+                .forEachOrdered(toReturn::add);
 
         return toReturn;
     }

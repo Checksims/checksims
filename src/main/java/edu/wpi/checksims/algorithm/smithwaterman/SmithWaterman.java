@@ -8,8 +8,6 @@ import edu.wpi.checksims.util.TwoDimArrayCoord;
 import edu.wpi.checksims.util.TwoDimIntArray;
 import edu.wpi.checksims.util.token.TokenList;
 
-import java.util.List;
-
 /**
  * Performs the actual Smith-Waterman algorithm
  */

@@ -6,8 +6,17 @@ import java.text.DecimalFormat;
  * Output a similarity matrix as a matrix
  */
 public class SimilarityMatrixAsMatrixPrinter implements SimilarityMatrixPrinter {
-    // TODO can this be a singleton? May need to instantiate various versions because of the generic...
-    public SimilarityMatrixAsMatrixPrinter() {}
+    private static SimilarityMatrixAsMatrixPrinter instance;
+
+    private SimilarityMatrixAsMatrixPrinter() {}
+
+    public static SimilarityMatrixAsMatrixPrinter getInstance() {
+        if(instance == null) {
+            instance = new SimilarityMatrixAsMatrixPrinter();
+        }
+
+        return instance;
+    }
 
     @Override
     public String printMatrix(SimilarityMatrix matrix) {

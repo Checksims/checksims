@@ -1,7 +1,6 @@
 package edu.wpi.checksims.util.token;
 
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -29,8 +28,8 @@ public class FileWhitespaceTokenizer implements FileTokenizer {
 
             Arrays.stream(split)
                     .filter((str) -> !str.isEmpty())
-                    .map((str) -> new WhitespaceToken(str))
-                    .forEachOrdered((token) -> toReturn.add(token));
+                    .map(WhitespaceToken::new)
+                    .forEachOrdered(toReturn::add);
         }
 
         return toReturn;
