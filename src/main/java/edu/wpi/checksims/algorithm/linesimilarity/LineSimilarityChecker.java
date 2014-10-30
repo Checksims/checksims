@@ -142,21 +142,6 @@ public class LineSimilarityChecker implements PlagiarismDetector {
     }
 
     @Override
-    public boolean equals(Object other) {
-        if(!(other instanceof PlagiarismDetector)) {
-            return false;
-        }
-
-        return ((PlagiarismDetector) other).getName().equals(this.getName());
-    }
-
-    @Override
-    public int hashCode() {
-        // Singleton, so this doesn't matter at all.
-        return 42;
-    }
-
-    @Override
     public String toString() {
         return "Sole instance of the Line Similarity Counter algorithm";
     }

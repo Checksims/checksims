@@ -48,18 +48,13 @@ public class SmithWaterman implements PlagiarismDetector {
         return applySmithWatermanPlagiarismDetection(a, b, this.params);
     }
 
-    @Override
-    public boolean equals(Object other) {
-        if(!(other instanceof PlagiarismDetector)) {
-            return false;
-        }
-
-        return ((PlagiarismDetector) other).getName().equals(this.getName());
-    }
-
-    @Override
-    public int hashCode() {
-        return params.h ^ 2 * params.d ^ 3 * params.r;
+    /**
+     * Required by the PlagiarismDetector interface
+     *
+     * @return Default instance of the Smith-Waterman algorithm
+     */
+    public static SmithWaterman getInstance() {
+        return new SmithWaterman();
     }
 
     static AlgorithmResults applySmithWatermanPlagiarismDetection(Submission a, Submission b, SmithWatermanParameters params) {

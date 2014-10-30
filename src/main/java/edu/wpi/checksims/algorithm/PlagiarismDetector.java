@@ -5,6 +5,12 @@ import edu.wpi.checksims.Submission;
 
 /**
  * Detect plagiarism between two submissions
+ *
+ * NOTE that, in addition to the methods listed here, all plagiarism detectors MUST support a no-arguments getInstance()
+ * method, and be contained in edu.wpi.checksims.algorithm or a subpackage thereof.
+ *
+ * This is required as reflection is used to automatically detect and instantiate all plagiarism detection algorithms
+ * present at runtime.
  */
 public interface PlagiarismDetector {
     /**
