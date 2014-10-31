@@ -1,5 +1,8 @@
 package edu.wpi.checksims.util.file;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -14,9 +17,13 @@ public class FileLineReader {
     private FileLineReader() {}
 
     public static List<String> readFile(File f) throws IOException {
+        Logger logs = LoggerFactory.getLogger(FileLineReader.class);
+
         if(!f.exists() || !f.isFile()) {
             throw new IOException("File " + f.getName() + " does not exist or is not a file!");
         }
+
+        logs.debug("Reading file " + f.getPath());
 
         List<String> lines = new LinkedList<>();
 

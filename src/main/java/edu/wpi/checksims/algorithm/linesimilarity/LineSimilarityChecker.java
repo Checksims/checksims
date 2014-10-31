@@ -75,15 +75,13 @@ public class LineSimilarityChecker implements PlagiarismDetector {
                     linesA.type.toString() + ", while submission " + b.getName() + " has type " + linesB.type.toString());
         }
 
-        System.out.println("Running line similarity plagiarism detector on submissions " + a.getName() + " and " + b.getName());
-
         MessageDigest hasher;
 
         // Get a hashing instance
         try {
             hasher = MessageDigest.getInstance("SHA-512");
         } catch (NoSuchAlgorithmException e) {
-            throw new ChecksimException("Error instantiating SHA-512 hash algorithm, your JVM may not support it!");
+            throw new ChecksimException("Error instantiating SHA-512 hash algorithm: " + e.getMessage());
         }
 
         // Create a line database map
@@ -124,6 +122,7 @@ public class LineSimilarityChecker implements PlagiarismDetector {
                     continue;
                 }
 
+                // TODO convert this to characters - should differentiate between identical LONG lines, and identical SHORT lines
                 identicalLinesA += numLinesA;
                 identicalLinesB += numLinesB;
             }

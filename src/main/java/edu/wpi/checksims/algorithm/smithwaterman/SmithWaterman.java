@@ -48,9 +48,6 @@ public class SmithWaterman implements PlagiarismDetector {
                     b.getTokenList().type.toString());
         }
 
-        // TODO add verbose option slash better logging
-        System.out.println("Running Smith-Waterman plagiarism detection on submissions " + a.getName() + " and " + b.getName());
-
         return applySmithWatermanPlagiarismDetection(a, b, this.params);
     }
 

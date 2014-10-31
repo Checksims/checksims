@@ -12,20 +12,19 @@ import java.util.List;
 /**
  * Non-persistent configuration of Checksims
  */
-public class ChecksimConfig {
+public final class ChecksimConfig {
     public final PlagiarismDetector algorithm;
     public final TokenType tokenization;
     public final List<SubmissionPreprocessor> preprocessors;
     public final List<File> submissionDirectories;
     public final String globMatcher;
-    public final boolean verbose;
     public final SimilarityMatrixPrinter outputPrinter;
     public final boolean outputToFile;
     public final File outputFile;
 
     public ChecksimConfig(PlagiarismDetector algorithm, TokenType tokenization, List<SubmissionPreprocessor> preprocessors,
-                          List<File> submissionDirectories, String globMatcher, boolean verbose,
-                          SimilarityMatrixPrinter outputPrinter, boolean outputToFile, File outputFile) {
+                          List<File> submissionDirectories, String globMatcher, SimilarityMatrixPrinter outputPrinter,
+                          boolean outputToFile, File outputFile) {
         this.algorithm = algorithm;
         this.tokenization = tokenization;
         this.preprocessors = ImmutableList.copyOf(preprocessors);
@@ -34,7 +33,6 @@ public class ChecksimConfig {
         this.globMatcher = globMatcher;
         this.submissionDirectories = ImmutableList.copyOf(submissionDirectories);
 
-        this.verbose = verbose;
         this.outputPrinter = outputPrinter;
         this.outputToFile = outputToFile;
         this.outputFile = outputFile;

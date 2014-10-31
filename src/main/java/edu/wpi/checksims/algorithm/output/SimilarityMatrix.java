@@ -5,6 +5,8 @@ import edu.wpi.checksims.Submission;
 import edu.wpi.checksims.algorithm.AlgorithmResults;
 import edu.wpi.checksims.algorithm.AlgorithmRunner;
 import edu.wpi.checksims.algorithm.PlagiarismDetector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -41,6 +43,7 @@ public class SimilarityMatrix {
      */
     public static SimilarityMatrix generate(List<Submission> submissions, PlagiarismDetector algorithm) {
         float[][] results = new float[submissions.size()][submissions.size()];
+        Logger logs = LoggerFactory.getLogger(SimilarityMatrix.class);
 
         // Get results for all possible pairs of submissions
         List<AlgorithmResults> algorithmResults = AlgorithmRunner.runAlgorithm(submissions, algorithm);
@@ -58,6 +61,8 @@ public class SimilarityMatrix {
             results[indexFirst][indexSecond] = result.percentMatchedA();
             results[indexSecond][indexFirst] = result.percentMatchedB();
         });
+
+        logs.info("Done performing plagiarism detection");
 
         return new SimilarityMatrix(submissions, results);
     }
