@@ -436,6 +436,43 @@ Very promising abstract
 @is presented that it is actually effective, and indeed they do not test on
 @real-world data (only note that they intend to use it in their own courses)
 
+@article{joy1999,
+  title={Plagiarism in programming assignments},
+  author={Joy, Mike and Luck, Michael},
+  journal={Education, IEEE Transactions on},
+  volume={42},
+  number={2},
+  pages={129--133},
+  year={1999},
+  publisher={IEEE}
+}
+
+@Joy provides a definition of plagiarism, "Unacknowledged copying of documents
+@or programs", and names several potential causes of plagiarism.
+
+@Joy describes
+@two obfuscation techniques: lexical changes (comment changes, formatting,
+@changing identifier names, etc.) and structural changes (loop replacement, ifs
+@to cases, statement ordering, refactoring, etc.)
+
+@Joy describes two pair comparison techniques: comparing attribute counts, and
+@comparing structure.
+
+@Presents an algorithm called SHERLOCK, with the following requirements:
+@ - Must be reliable
+@ - Must be simple to change for a new language
+@ - Must have an "efficient interface"
+@ - Output must be clear to somene unfamiliar with the programs
+
+@ Incremental comparison: compare five times: in original form, with whitespace
+@ removed, with comments removed, with both removed, and tokenized. Looks for
+@ "runs" with a maximum allowed size and density of "anomalies". Looks for and
+@ reports maximum length runs.
+
+@ Presents a very interesting visualization with a point for each submission
+@ and similarities connected by lines; shorter lines correspond to closer
+@ matches.
+
 @inproceedings{kang06,
   title={PPChecker: Plagiarism pattern checker in document copy detection},
   author={Kang, NamOh and Gelbukh, Alexander and Han, SangYong},
@@ -782,5 +819,27 @@ Very promising abstract
   pages={140--146},
   year={1990},
   publisher={Br Computer Soc}
+}
+
+@article{wise92,
+  title={Detection of similarities in student programs: YAP'ing may be preferable to plague'ing},
+  author={Wise, Michael J},
+  journal={ACM SIGCSE Bulletin},
+  volume={24},
+  number={1},
+  pages={268--271},
+  year={1992},
+  publisher={ACM}
+}
+
+@inproceedings{wise96,
+  title={YAP3: Improved detection of similarities in computer program and other texts},
+  author={Wise, Michael J},
+  booktitle={ACM SIGCSE Bulletin},
+  volume={28},
+  number={1},
+  pages={130--134},
+  year={1996},
+  organization={ACM}
 }
 

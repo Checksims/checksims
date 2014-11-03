@@ -5,3 +5,63 @@
 \maketitle
 \end{document}
 
+\section{Definitions of plagiarism}
+Definitions of plagiarism are many and varied.
+
+% TODO list of definitions>
+Joy99: "Unacknowledged copying of documents or programs"
+Lauer: If students copy the same code from a board, it is kosher
+% TODO didn't we find a big UK paper trying to find a unified definition?
+
+%  Reasons for plagiarism
+%    Joy99
+%      "A weak student produces work in close collaboration with a colleague, in
+%        the belief that it is acceptable."
+%      "A weak student copies, and then edits, a colleage’s program, with or
+%        without the colleage’s permission, hoping that this will go unnoticed."
+%      "A poorly motivated (but not necessarily weak) student copies, and then
+%        edits, a colleague’s program, with the intention of minimizing the work
+%        needed."
+
+\section{Technical characteristics of plagiarism detection}
+\subsection{Human analysis requirement}
+The proliferation of plagiarism definitions creates a vague, confusing, and
+potentially dangerous situation for students. While mitigating the problems
+caused by this quagmire is outside the scope of this project, it is important
+to recognize that even a detector that is "perfect" (no false positives or
+false negatives) under one definition of plagiarism will not be perfect for a
+professor using a different definition. What this means is that in making a
+final determination on a suspicious pair, there is no substitute for a human.
+
+\subsection{High false positive tolerance}
+There is a silver lining, though: because a human is making the final
+determination, the cost of a false positive drops from a false accusation of
+plagiarism (which is huge) to a small amount of time for the course staff to
+review the match. The low cost of a false positive means we can use very
+sensitive algorithms and be relatively confident that we can catch (almost)
+all plagiarism.
+
+\subsection{Obfuscation Techniques}
+% parker89 describes 13 obfuscation techniques
+% TODO at least one of our papers discussed this in detail; just don't remember
+% which
+
+%  Source code specific
+%    Relatively easy to fool plaintext scanner
+%      1989 paper identifies 13 easy methods
+%    Parsing into tokens makes solution language-specific
+
+\section{Known Approaches}
+\subsection{Vector distance algorithms}
+\subsection{Document fingerprinting}
+\subsection{Common substring techniques}
+\subsection{Feature Analysis}
+
+%Substring
+%    Basis of Work: Irving '04 paper
+%    Tokenization Approaches - Whitespace vs Character
+%    Algorithm Complexity
+%  Longest Common Substring
+%    Want to implement - do we have time?
+%    Faster but less accurate than Smith-Waterman
+
