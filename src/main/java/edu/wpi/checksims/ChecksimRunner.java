@@ -1,6 +1,7 @@
 package edu.wpi.checksims;
 
 import edu.wpi.checksims.algorithm.AlgorithmRegistry;
+import edu.wpi.checksims.algorithm.AlgorithmRunner;
 import edu.wpi.checksims.algorithm.PlagiarismDetector;
 import edu.wpi.checksims.algorithm.output.OutputRegistry;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrix;
@@ -91,6 +92,19 @@ public class ChecksimRunner {
             PrintWriter systemErr = new PrintWriter(System.err, true);
 
             f.printHelp(systemErr, 80, "checksims [args] glob directory [directory2 ...]", "checksims: check similarity of student submissions", getOpts(), 2, 4, "");
+
+            System.err.println("\nSupported Plagiarism Detection Algorithms:");
+            AlgorithmRegistry.getInstance().getSupportedAlgorithmNames().stream().forEach((name) -> System.err.print(name + ", "));
+            System.err.println("\nDefault algorithm is " + AlgorithmRegistry.getInstance().getDefaultAlgorithmName());
+
+            System.err.println("\nSupported Output Strategies:");
+            OutputRegistry.getInstance().getAllOutputStrategyNames().stream().forEach((name) -> System.err.print(name + ", "));
+            System.err.println("\nDefault strategy is " + AlgorithmRegistry.getInstance().getDefaultAlgorithmName());
+
+            System.err.println("\nAvailable Preprocessors:");
+            PreprocessorRegistry.getInstance().getPreprocessorNames().stream().forEach((name) -> System.err.print(name + ", "));
+            System.err.println();
+
 
             // TODO print supported algorithms, output strategies, preprocessors
             // And defaults of those too!

@@ -32,6 +32,9 @@ public class ReflectiveInstantiator {
 
         List<T> allInstances = new LinkedList<>();
 
+        // Ensure no annoying logs
+        Reflections.log = null;
+
         Reflections searchPackage = new Reflections(packageName);
         Set<Class<? extends T>> subtypes = searchPackage.getSubTypesOf(subclassesOf);
 
