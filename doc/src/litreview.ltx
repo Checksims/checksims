@@ -1,14 +1,15 @@
 \documentclass{article}
 \author{Dolan Murvihill \and Matthew Heon}
 \title{Plagiarism detection in source code: A review of the literature}
+\newcommand{\vocab}[1]{
+  \textit{#1}}
 \begin{document}
 \maketitle
-\end{document}
 
 \section{Definitions of plagiarism}
 Definitions of plagiarism are many and varied.
 
-% TODO list of definitions>
+% TODO list of definitions
 Joy99: "Unacknowledged copying of documents or programs"
 Lauer: If students copy the same code from a board, it is kosher
 % TODO didn't we find a big UK paper trying to find a unified definition?
@@ -42,6 +43,10 @@ sensitive algorithms and be relatively confident that we can catch (almost)
 all plagiarism.
 
 \subsection{Obfuscation Techniques}
+Plagiarists often try to evade detection by obfuscating their copied document.
+In order to assist in developing countermeasures against obfuscation, some
+researchers have attempted to characterize these techniques. The best paper on
+this topic, by 
 % parker89 describes 13 obfuscation techniques
 % TODO at least one of our papers discussed this in detail; just don't remember
 % which
@@ -54,6 +59,33 @@ all plagiarism.
 \section{Known Approaches}
 \subsection{Vector distance algorithms}
 \subsection{Document fingerprinting}
+Document fingerprinting approaches require storing specific elements of one
+document or source file, and searching for those elements in another file. By
+far the most common document fingerprinting approach is called n-gram
+fingerprinting. The document is tokenized, and considered in sequences of $n$
+tokens, or \vocab{n-grams}. The n-grams overlap, so that there an $m$ character
+document will be considered as $m-n+1$ n-grams. The hashes of these n-grams are
+stored in a database and checked against those from other documents. The hashes
+are usually stored with a pointer to their occurrence to aid in detection.
+% TODO insert image
+Most plagiarism corpora are far too large to store all n-grams from all
+documents. Usually, a selection algorithm is used to select a subset of the
+n-grams to serve as the document's \vocab{fingerprints}, but that entails
+information loss: even word-for-word identical documents will only match if
+they both contain an n-gram that was selected as a fingerprint, so how the
+fingerprints are selected is very important. A very simple approach is to
+select n-grams whose hashes are divisible by some number $p$
+\cite{schleimer03}, but this technique can leave gaps of arbitrary length
+between fingerprints, so that a large chunk of plagiarized text might slip by.
+
+Schleimer, Wilkerson, and Aiken presented an alternative fingerprint selection
+algorithm in 2003 called \vocab{winnowing}. After dividing the document's
+tokens into n-grams, winnowing further divides the n-grams into \vocab{windows}
+of size $t$. Winnowing always selects the minimum hash from each window,
+guaranteeing that a match of $t$ or more consecutive tokens will be identified.
+
+% TODO illustration
+
 \subsection{Common substring techniques}
 \subsection{Feature Analysis}
 
@@ -65,3 +97,4 @@ all plagiarism.
 %    Want to implement - do we have time?
 %    Faster but less accurate than Smith-Waterman
 
+\end{document}
