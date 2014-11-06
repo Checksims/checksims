@@ -792,6 +792,25 @@ Very promising abstract
   year={1995}
 }
 
+@Presents SCAM, a vector distance approach to copy detection. Like previous
+@work, SCAM breaks documents into chunks and then compares the chunks for
+@overlap; but instead of chunking into sentences or paragraphs like previous
+@work, SCAM chunks by words. Most previous work in this area simply compared
+@the size of the overlap against the size of the document, but that doesn't
+@work if you are chunking by words; so the authors propose a new similarity
+@approach based on vector distances between word counts.
+
+@The authors reject the Vector Space Model and find a significant weakness with
+@the Cosine Similarity Measure; namely, that it performs poorly when word
+@frequency magnitudes differ significantly. They make an adjustment based on
+@word frequency and call their measure the Relative Frequency Model (RFM). A
+@full description can be found in the paper, but qualitatively, the RFM only
+@considers words whose frequencies are "similar" according to a tunable
+@parameter $\epsilon$.
+
+@The experimental results compared SCAM against a previous work, COPS, and were
+@very confusing and probably not that interesting anyway.
+
 @inproceedings{si97,
   title={Check: a document plagiarism detection system},
   author={Si, Antonio and Leong, Hong Va and Lau, Rynson WH},
