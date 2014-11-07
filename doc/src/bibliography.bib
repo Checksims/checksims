@@ -131,6 +131,20 @@
   year={1995},
   organization={ACM}
 }
+@Presents COPS, a vector distance copy detection approach based on chunking.
+@Brin et al. note that chunking approaches cannot make use of the underlying
+@structure of the document. A chunk is simply a group of units, which do have
+@some structural meaning (units are remarkably similar to "tokens" as we
+@describe them in other parts of the literature).
+
+@Brin et al. present four chunking strategies: one unit equals one chunk was
+@rejected for its high space requirement. Non-overlapping chunks were rejected
+@because of their phase dependence. All-overlapping chunks were rejected for
+@having the same space requirement as one-unit chunks, and because an attacker
+@could defeat it by changing one unit in each chunk. Expanding chunks until the
+@chunk hash is divisible by some number $p$; note the similarity to the
+@document fingerprinting approaches we have studied. The authors choose the
+@last strategy.
 
 @inproceedings{brixtel10,
   title={Language-independent clone detection applied to plagiarism detection},
