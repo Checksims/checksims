@@ -42,34 +42,48 @@ review the match. The low cost of a false positive means we can use very
 sensitive algorithms and be relatively confident that we can catch (almost)
 all plagiarism.
 
-\subsection{Obfuscation Techniques}
+\subsection{Obfuscation Techniques}Plagiarists often try to evade detection by
+obfuscating their copied document.
 Plagiarists often try to evade detection by obfuscating their copied document.
 In order to assist in developing countermeasures against obfuscation, some
 researchers have attempted to characterize these techniques. The best paper on
-this topic, by 
-% parker89 describes 13 obfuscation techniques
-% TODO at least one of our papers discussed this in detail; just don't remember
-% which
-
-%  Source code specific
-%    Relatively easy to fool plaintext scanner
-%      1989 paper identifies 13 easy methods
-%    Parsing into tokens makes solution language-specific
+this topic, by Parker, identifies six "levels" of obfuscation, from a straight,
+un-altered file copy (no obfuscation) to sophisticated attacks like refactoring
+while loops to for loops and other algebraic translations. Any decent
+plagiarism detector should be able to counter the lower level normalizations,
+but challenges like algebraic refactoring are more difficult for the
+implementor as well as the plagiarist.
 
 \section{Known Approaches}
 \subsection{Vector distance algorithms}
-%TODO COPS
-%TODO SCAM
+Vector distance algorithms take vectors of document characteristics and measure
+the distance between them. attempt to find the 
 \subsection{Document fingerprinting}
 Document fingerprinting approaches require storing specific elements of one
-document or source file, and searching for those elements in another file. By
-far the most common document fingerprinting approach is called n-gram
+document or source file, and searching for those elements in another file. One
+advantage of most document fingerprinting approaches is that the fingerprints
+can be stored in one place, requiring each document to be checked against one
+database ($O(n)$ time) rather than comparing each pair of documents ($O(n^2)$).
+
+\subsubsection{COpy Protection System (COPS)}
+A good example of a very old document fingerprinting system is COPS. COPS
+facilitates \vocab{ordinary operational tests}, including subset, related, and
+plagiarism. The system document into \vocab{units}, sequences of words
+separated by end-of-sentence markers, and then groups them into, \vocab{chunks}
+according to a \vocab{chunking strategy}. Hashes of the chunks were then stored
+and retrieved in the database. In COPS, chunks are not related to the
+underlying structure of the document.
+
+\subsubsection{n-gram fingerprinting}
+By far the most common document fingerprinting approach is called n-gram
 fingerprinting. The document is tokenized, and considered in sequences of $n$
 tokens, or \vocab{n-grams}. The n-grams overlap, so that there an $m$ character
 document will be considered as $m-n+1$ n-grams. The hashes of these n-grams are
 stored in a database and checked against those from other documents. The hashes
 are usually stored with a pointer to their occurrence to aid in detection.
-% TODO insert image
+
+[illustration here]
+
 Most plagiarism corpora are far too large to store all n-grams from all
 documents. Usually, a selection algorithm is used to select a subset of the
 n-grams to serve as the document's \vocab{fingerprints}, but that entails
@@ -86,9 +100,18 @@ tokens into n-grams, winnowing further divides the n-grams into \vocab{windows}
 of size $t$. Winnowing always selects the minimum hash from each window,
 guaranteeing that a match of $t$ or more consecutive tokens will be identified.
 
-% TODO illustration
+[illustration here]
+
+Winnowing has proven to be extremely powerful; it is used by the current
+industry standard source code similarity detector, MOSS, where the authors
+claim that "false positives appear to be non-existent, and the infrequent
+reports of false negatives have always been tracked back either to
+implementation bugs or user error" \cite{schleimer03}. We doubt the picture is
+that spectacular, but there is no doubt that MOSS is a very successful
+platform.
 
 \subsection{Common substring techniques}
+<explanation of Irving '04 paper
 \subsection{Feature Analysis}
 
 %Substring
