@@ -40,4 +40,9 @@ public class CharacterToken extends Token {
     public String toString() {
         return "A character tokenization containing " + token;
     }
+
+    @Override
+    public int hashCode() {
+        return (int)token;
+    }
 }

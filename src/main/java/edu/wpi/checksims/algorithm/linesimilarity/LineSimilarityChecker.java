@@ -1,7 +1,7 @@
 package edu.wpi.checksims.algorithm.linesimilarity;
 
 import edu.wpi.checksims.ChecksimException;
-import edu.wpi.checksims.Submission;
+import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.algorithm.AlgorithmResults;
 import edu.wpi.checksims.algorithm.PlagiarismDetector;
 import edu.wpi.checksims.util.token.Token;
@@ -22,6 +22,9 @@ import java.util.Map;
 public class LineSimilarityChecker implements PlagiarismDetector {
     private static LineSimilarityChecker instance;
 
+    /**
+     * Internal class for record-keeping - used to record a line at a specific location in a submission
+     */
     class SubmissionLine {
         public final int lineNum;
         public final Submission submission;
@@ -70,7 +73,7 @@ public class LineSimilarityChecker implements PlagiarismDetector {
         TokenList linesA = a.getTokenList();
         TokenList linesB = b.getTokenList();
 
-        if(!linesA.type.equals(linesB.type)) {
+        if(!a.getTokenType().equals(b.getTokenType())) {
             throw new ChecksimException("Token list type mismatch: submission " + a.getName() + " has type " +
                     linesA.type.toString() + ", while submission " + b.getName() + " has type " + linesB.type.toString());
         }
@@ -89,10 +92,10 @@ public class LineSimilarityChecker implements PlagiarismDetector {
         Map<String, List<SubmissionLine>> lineDatabase = new HashMap<>();
 
         // Hash all lines in A, and put them in the lines database
-        AddLinesToMap(linesA, lineDatabase, a, hasher);
+        addLinesToMap(linesA, lineDatabase, a, hasher);
 
         // Hash all lines in B, and put them in the lines database
-        AddLinesToMap(linesB, lineDatabase, b, hasher);
+        addLinesToMap(linesB, lineDatabase, b, hasher);
 
         // Number of matched lines contained in both
         int identicalLinesA = 0;
@@ -131,7 +134,7 @@ public class LineSimilarityChecker implements PlagiarismDetector {
         return new AlgorithmResults(a, b, identicalLinesA, identicalLinesB);
     }
 
-    void AddLinesToMap(TokenList lines, Map<String, List<SubmissionLine>> lineDatabase, Submission submitter, MessageDigest hasher) {
+    void addLinesToMap(TokenList lines, Map<String, List<SubmissionLine>> lineDatabase, Submission submitter, MessageDigest hasher) {
         for(int i = 0; i < lines.size(); i++) {
             Token token = lines.get(i);
 

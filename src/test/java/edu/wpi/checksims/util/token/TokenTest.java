@@ -1,8 +1,5 @@
-package edu.wpi.checksims.util.Token;
+package edu.wpi.checksims.util.token;
 
-import edu.wpi.checksims.util.token.CharacterToken;
-import edu.wpi.checksims.util.token.LineToken;
-import edu.wpi.checksims.util.token.WhitespaceToken;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

@@ -41,4 +41,9 @@ public class WhitespaceToken extends Token {
     public String toString() {
         return "A whitespace-delineated tokenization containing " + token;
     }
+
+    @Override
+    public int hashCode() {
+        return token.hashCode();
+    }
 }

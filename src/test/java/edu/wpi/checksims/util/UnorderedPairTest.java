@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
 /**
  * Tests for the Pair class
  */
-public class PairTest {
+public class UnorderedPairTest {
     private static List<String> empty;
     private static List<String> oneElement;
     private static List<String> twoElements;
@@ -45,10 +45,10 @@ public class PairTest {
 
     @Test
     public void testPairUnorderedEquality() {
-        Pair<String> ab = new Pair<>("a", "b");
-        Pair<String> ba = new Pair<>("b", "a");
-        Pair<String> bc = new Pair<>("b", "c");
-        Pair<String> cd = new Pair<>("c", "d");
+        UnorderedPair<String> ab = new UnorderedPair<>("a", "b");
+        UnorderedPair<String> ba = new UnorderedPair<>("b", "a");
+        UnorderedPair<String> bc = new UnorderedPair<>("b", "c");
+        UnorderedPair<String> cd = new UnorderedPair<>("c", "d");
 
         assertTrue(ab.equalsIgnoreOrder(ab));
         assertTrue(ab.equalsIgnoreOrder(ba));
@@ -58,7 +58,7 @@ public class PairTest {
 
     @Test
     public void testEmptyListReturnsEmpty() {
-        Set<Pair<String>> results = Pair.generatePairsFromList(empty);
+        Set<UnorderedPair<String>> results = UnorderedPair.generatePairsFromList(empty);
 
         assertNotNull(results);
         assertTrue(results.isEmpty());
@@ -66,7 +66,7 @@ public class PairTest {
 
     @Test
     public void testOneElementListReturnsEmpty() {
-        Set<Pair<String>> results = Pair.generatePairsFromList(oneElement);
+        Set<UnorderedPair<String>> results = UnorderedPair.generatePairsFromList(oneElement);
 
         assertNotNull(results);
         assertTrue(results.isEmpty());
@@ -74,9 +74,9 @@ public class PairTest {
 
     @Test
     public void testTwoElementListReturnsOnePair() {
-        Set<Pair<String>> results = Pair.generatePairsFromList(twoElements);
+        Set<UnorderedPair<String>> results = UnorderedPair.generatePairsFromList(twoElements);
 
-        Pair<String> expected = new Pair<>("1", "2");
+        UnorderedPair<String> expected = new UnorderedPair<>("1", "2");
 
         assertNotNull(results);
         assertFalse(results.isEmpty());
@@ -86,12 +86,12 @@ public class PairTest {
 
     @Test
     public void testThreeElementListReturnsThreePairs() {
-        Set<Pair<String>> results = Pair.generatePairsFromList(threeElements);
+        Set<UnorderedPair<String>> results = UnorderedPair.generatePairsFromList(threeElements);
 
-        Set<Pair<String>> expected = new HashSet<>();
-        expected.add(new Pair<>("1", "2"));
-        expected.add(new Pair<>("2", "3"));
-        expected.add(new Pair<>("1", "3"));
+        Set<UnorderedPair<String>> expected = new HashSet<>();
+        expected.add(new UnorderedPair<>("1", "2"));
+        expected.add(new UnorderedPair<>("2", "3"));
+        expected.add(new UnorderedPair<>("1", "3"));
 
         assertNotNull(results);
         assertFalse(results.isEmpty());
@@ -101,15 +101,15 @@ public class PairTest {
 
     @Test
     public void testFourElementListReturnsSixPairs() {
-        Set<Pair<String>> results = Pair.generatePairsFromList(fourElements);
+        Set<UnorderedPair<String>> results = UnorderedPair.generatePairsFromList(fourElements);
 
-        Set<Pair<String>> expected = new HashSet<>();
-        expected.add(new Pair<>("1", "2"));
-        expected.add(new Pair<>("1", "3"));
-        expected.add(new Pair<>("1", "4"));
-        expected.add(new Pair<>("2", "3"));
-        expected.add(new Pair<>("2", "4"));
-        expected.add(new Pair<>("3", "4"));
+        Set<UnorderedPair<String>> expected = new HashSet<>();
+        expected.add(new UnorderedPair<>("1", "2"));
+        expected.add(new UnorderedPair<>("1", "3"));
+        expected.add(new UnorderedPair<>("1", "4"));
+        expected.add(new UnorderedPair<>("2", "3"));
+        expected.add(new UnorderedPair<>("2", "4"));
+        expected.add(new UnorderedPair<>("3", "4"));
 
         assertNotNull(results);
         assertFalse(results.isEmpty());
@@ -119,27 +119,27 @@ public class PairTest {
 
     @Test
     public void testSetsOfPairsContainsSameElements() {
-        Pair<String> ab = new Pair<>("a", "b");
-        Pair<String> ba = new Pair<>("b", "a");
-        Pair<String> cd = new Pair<>("c", "d");
-        Pair<String> dc = new Pair<>("d", "c");
-        Pair<String> ef = new Pair<>("e", "f");
-        Pair<String> fg = new Pair<>("g", "h");
+        UnorderedPair<String> ab = new UnorderedPair<>("a", "b");
+        UnorderedPair<String> ba = new UnorderedPair<>("b", "a");
+        UnorderedPair<String> cd = new UnorderedPair<>("c", "d");
+        UnorderedPair<String> dc = new UnorderedPair<>("d", "c");
+        UnorderedPair<String> ef = new UnorderedPair<>("e", "f");
+        UnorderedPair<String> fg = new UnorderedPair<>("g", "h");
 
-        Set<Pair<String>> empty = new HashSet<>();
+        Set<UnorderedPair<String>> empty = new HashSet<>();
 
-        Set<Pair<String>> oneElt = new HashSet<>();
+        Set<UnorderedPair<String>> oneElt = new HashSet<>();
         oneElt.add(ab);
 
-        Set<Pair<String>> one = new HashSet<>();
+        Set<UnorderedPair<String>> one = new HashSet<>();
         one.add(ab);
         one.add(cd);
 
-        Set<Pair<String>> two = new HashSet<>();
+        Set<UnorderedPair<String>> two = new HashSet<>();
         two.add(ba);
         two.add(dc);
 
-        Set<Pair<String>> three = new HashSet<>();
+        Set<UnorderedPair<String>> three = new HashSet<>();
         three.add(ef);
         three.add(fg);
 
@@ -152,7 +152,7 @@ public class PairTest {
         assertFalse(setsOfPairsContainsSameElements(two, three));
     }
 
-    private static <T> boolean setsOfPairsContainsSameElements(Set<Pair<T>> one, Set<Pair<T>> two) {
+    private static <T> boolean setsOfPairsContainsSameElements(Set<UnorderedPair<T>> one, Set<UnorderedPair<T>> two) {
         if(one.size() != two.size()) {
             return false;
         }

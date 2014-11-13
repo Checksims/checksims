@@ -1,13 +1,14 @@
 package edu.wpi.checksims.algorithm.smithwaterman;
 
 import edu.wpi.checksims.ChecksimException;
-import edu.wpi.checksims.Submission;
+import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.algorithm.AlgorithmResults;
 import edu.wpi.checksims.algorithm.PlagiarismDetector;
 import edu.wpi.checksims.util.TwoDimArrayCoord;
 import edu.wpi.checksims.util.TwoDimIntArray;
 import edu.wpi.checksims.util.token.TokenList;
 import edu.wpi.checksims.util.token.TokenType;
+import edu.wpi.checksims.util.token.ValidityEnsuringToken;
 
 /**
  * Performs the actual Smith-Waterman algorithm
@@ -42,7 +43,7 @@ public class SmithWaterman implements PlagiarismDetector {
      */
     @Override
     public AlgorithmResults detectPlagiarism(Submission a, Submission b) throws ChecksimException {
-        if(!a.getTokenList().type.equals(b.getTokenList().type)) {
+        if(!a.getTokenType().equals(b.getTokenType())) {
             throw new ChecksimException("Token list type mismatch: submission " + a.getName() + " has type " +
                     a.getTokenList().type.toString() + ", while submission " + b.getName() + " has type " +
                     b.getTokenList().type.toString());
@@ -114,7 +115,7 @@ public class SmithWaterman implements PlagiarismDetector {
                 // Generate a prospective value for S[i,j] and M[i,j]
                 // The outermost if generates S[i,j]
                 // Based off this, we then generate M[i,j]
-                if(a.get(curr.x - 1).equals(b.get(curr.y - 1))) {
+                if(ValidityEnsuringToken.validityEnsuringToken(a.get(curr.x - 1)).equals(ValidityEnsuringToken.validityEnsuringToken(b.get(curr.y - 1)))) {
                     // If the two characters match, we increment S[i-1,j-1] by 1 to get the new S[i,j]
                     int sPredecessor = s.getValue(predecessor);
                     int mPredecessor = m.getValue(predecessor);

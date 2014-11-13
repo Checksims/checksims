@@ -1,7 +1,7 @@
 package edu.wpi.checksims.algorithm.output;
 
 import com.google.common.collect.ImmutableList;
-import edu.wpi.checksims.Submission;
+import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.algorithm.AlgorithmResults;
 import edu.wpi.checksims.algorithm.AlgorithmRunner;
 import edu.wpi.checksims.algorithm.PlagiarismDetector;
@@ -57,6 +57,12 @@ public class SimilarityMatrix {
         algorithmResults.stream().forEach((result) -> {
             int indexFirst = submissions.indexOf(result.a);
             int indexSecond = submissions.indexOf(result.b);
+
+            if(indexFirst == -1) {
+                throw new RuntimeException("Could not find index of submission " + result.a.getName());
+            } else if(indexSecond == -1) {
+                throw new RuntimeException("Could not find index of submission " + result.b.getName());
+            }
 
             results[indexFirst][indexSecond] = result.percentMatchedA();
             results[indexSecond][indexFirst] = result.percentMatchedB();

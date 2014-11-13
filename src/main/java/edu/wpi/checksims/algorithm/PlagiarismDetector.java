@@ -1,7 +1,7 @@
 package edu.wpi.checksims.algorithm;
 
 import edu.wpi.checksims.ChecksimException;
-import edu.wpi.checksims.Submission;
+import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.util.token.TokenType;
 
 /**

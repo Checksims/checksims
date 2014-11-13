@@ -1,6 +1,6 @@
 package edu.wpi.checksims.algorithm.output;
 
-import edu.wpi.checksims.Submission;
+import edu.wpi.checksims.submission.Submission;
 
 import java.text.DecimalFormat;
 import java.util.List;

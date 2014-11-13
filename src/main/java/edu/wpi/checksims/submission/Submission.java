@@ -1,9 +1,7 @@
-package edu.wpi.checksims;
+package edu.wpi.checksims.submission;
 
-import edu.wpi.checksims.util.token.Token;
-import edu.wpi.checksims.util.token.TokenList;
+import edu.wpi.checksims.util.token.*;
 import edu.wpi.checksims.util.file.FileLineReader;
-import edu.wpi.checksims.util.token.FileTokenizer;
 import org.apache.commons.collections4.list.SetUniqueList;
 
 import java.io.File;
@@ -15,8 +13,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
-public final class Submission {
+public class Submission {
     private final TokenList tokenList;
     private final String name;
 
@@ -37,6 +37,10 @@ public final class Submission {
         return tokenList.size();
     }
 
+    public TokenType getTokenType() {
+        return tokenList.type;
+    }
+
     @Override
     public String toString() {
         return "A submission with name " + name + " and " + getNumTokens() + " tokens";
@@ -55,9 +59,7 @@ public final class Submission {
 
     @Override
     public int hashCode() {
-        int hash = name.hashCode();
-
-        return tokenList.stream().mapToInt(Token::hashCode).reduce(hash, (x,y) -> (x + y));
+        return name.hashCode();
     }
 
     /**

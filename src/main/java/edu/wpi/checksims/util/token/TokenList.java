@@ -45,19 +45,7 @@ public class TokenList extends PredicatedList<Token> {
     public static TokenList cloneTokenList(TokenList cloneFrom) {
         Supplier<TokenList> tokenListSupplier = () -> new TokenList(cloneFrom.type);
 
-        return cloneFrom.stream().map((token) -> {
-            switch(cloneFrom.type) {
-                case CHARACTER:
-                    return new CharacterToken((char)token.getToken(), token.isValid());
-                case WHITESPACE:
-                    return new WhitespaceToken((String)token.getToken(), token.isValid());
-                case LINE:
-                    return new LineToken((String)token.getToken(), token.isValid());
-                default:
-                    // TODO make this neater
-                    throw new RuntimeException("Unrecognized tokenization type encountered!");
-            }
-        }).collect(Collectors.toCollection(tokenListSupplier));
+        return cloneFrom.stream().map(Token::cloneToken).collect(Collectors.toCollection(tokenListSupplier));
     }
 
     @Override

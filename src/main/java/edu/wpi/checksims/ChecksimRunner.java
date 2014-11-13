@@ -1,7 +1,6 @@
 package edu.wpi.checksims;
 
 import edu.wpi.checksims.algorithm.AlgorithmRegistry;
-import edu.wpi.checksims.algorithm.AlgorithmRunner;
 import edu.wpi.checksims.algorithm.PlagiarismDetector;
 import edu.wpi.checksims.algorithm.output.OutputRegistry;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrix;
@@ -9,6 +8,7 @@ import edu.wpi.checksims.algorithm.output.SimilarityMatrixPrinter;
 import edu.wpi.checksims.algorithm.preprocessor.PreprocessSubmissions;
 import edu.wpi.checksims.algorithm.preprocessor.PreprocessorRegistry;
 import edu.wpi.checksims.algorithm.preprocessor.SubmissionPreprocessor;
+import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.util.file.FileStringWriter;
 import edu.wpi.checksims.util.token.FileTokenizer;
 import edu.wpi.checksims.util.token.TokenType;

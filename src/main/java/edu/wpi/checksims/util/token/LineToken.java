@@ -40,4 +40,9 @@ public class LineToken extends Token {
     public String toString() {
         return "A newline-delineated tokenization containing " + token;
     }
+
+    @Override
+    public int hashCode() {
+        return token.hashCode();
+    }
 }
