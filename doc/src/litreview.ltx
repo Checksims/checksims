@@ -1,12 +1,31 @@
 \documentclass{article}
 \author{Dolan Murvihill \and Matthew Heon}
-\title{Plagiarism detection in source code: A review of the literature}
+\title{Program Similarity Detection: A review of the literature}
 \newcommand{\vocab}[1]{
   \textit{#1}}
 \begin{document}
 \maketitle
 
-\section{Definitions of plagiarism}
+Detecting similarities between computer programs and source code is a
+well-established problem with many applications.
+
+\section{Applications}
+\subsection{Code Clone Detection}
+\subsection{Plagiarism/Copyright Infringement Detection}
+\subsection{Malware Analysis}
+\subsection{Dead Code Detection}
+\section{Plagiarism Detection}
+Plagiarism is the use of another person's work without proper attribution. In
+academia, plagiarism is considered a serious integrity violation that is often
+penalized with the failure of an assignment or course, and sometimes even
+expulsion. Especially in introductory courses, course staff must spend a
+significant amount of time looking for relatively unsophisticated plagiarism.
+Similarity detection can reduce the amount of time spent on checking for
+plagiarism by focusing the course staff on more similar programs without
+requiring a pass through the others. Automated similarity measurements can also
+improve detection rates by finding similarities that may not be obvious to the
+naked eye.
+
 Definitions of plagiarism are many and varied.
 
 % TODO list of definitions
@@ -24,7 +43,11 @@ Lauer: If students copy the same code from a board, it is kosher
 %        edits, a colleague’s program, with the intention of minimizing the work
 %        needed."
 
-\section{Technical characteristics of plagiarism detection}
+The plagiarism detection field contains a number of papers focused on detecting
+plagiarism in natural language. Much of this literature applies to source code
+plagiarism as well, but we tried to focus on papers that were oriented toward
+source code.
+
 \subsection{Human analysis requirement}
 The proliferation of plagiarism definitions creates a vague, confusing, and
 potentially dangerous situation for students. While mitigating the problems
@@ -38,18 +61,17 @@ final determination on a suspicious pair, there is no substitute for a human.
 There is a silver lining, though: because a human is making the final
 determination, the cost of a false positive drops from a false accusation of
 plagiarism (which is huge) to a small amount of time for the course staff to
-review the match. The low cost of a false positive means we can use very
-sensitive algorithms and be relatively confident that we can catch (almost)
-all plagiarism.
+review the match. The low cost of a false positive means the checker can use
+very sensitive algorithms and be relatively confident that it can catch
+(almost) all plagiarism.
 
-\subsection{Obfuscation Techniques}Plagiarists often try to evade detection by
-obfuscating their copied document.
+\subsection{Obfuscation Techniques}
 Plagiarists often try to evade detection by obfuscating their copied document.
 In order to assist in developing countermeasures against obfuscation, some
 researchers have attempted to characterize these techniques. The best paper on
 this topic, by Parker, identifies six "levels" of obfuscation, from a straight,
 un-altered file copy (no obfuscation) to sophisticated attacks like refactoring
-while loops to for loops and other algebraic translations. Any decent
+while loops to for loops and other algebraic translations \cite{parker89}. Any decent
 plagiarism detector should be able to counter the lower level normalizations,
 but challenges like algebraic refactoring are more difficult for the
 implementor as well as the plagiarist.
@@ -57,7 +79,7 @@ implementor as well as the plagiarist.
 \section{Known Approaches}
 \subsection{Vector distance algorithms}
 Vector distance algorithms take vectors of document characteristics and measure
-the distance between them. attempt to find the 
+the distance between them.
 \subsection{Document fingerprinting}
 Document fingerprinting approaches require storing specific elements of one
 document or source file, and searching for those elements in another file. One
@@ -111,7 +133,7 @@ that spectacular, but there is no doubt that MOSS is a very successful
 platform.
 
 \subsection{Common substring techniques}
-<explanation of Irving '04 paper
+<explanation of Irving '04 paper>
 \subsection{Feature Analysis}
 
 %Substring
