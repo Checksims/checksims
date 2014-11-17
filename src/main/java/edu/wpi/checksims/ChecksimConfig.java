@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import edu.wpi.checksims.algorithm.PlagiarismDetector;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrixPrinter;
 import edu.wpi.checksims.algorithm.preprocessor.SubmissionPreprocessor;
-import edu.wpi.checksims.util.token.TokenType;
+import edu.wpi.checksims.token.TokenType;
 
 import java.io.File;
 import java.util.List;

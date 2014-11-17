@@ -18,6 +18,8 @@ public final class AlgorithmResults {
         this.identicalTokensB = identicalTokensB;
     }
 
+    // TODO may be desirable to ensure that identicalTokensA and identicalTokensB are never over the number of tokens in the submission?
+
     public float percentMatchedA() {
         return ((float)identicalTokensA) / a.getNumTokens();
     }

@@ -1,4 +1,4 @@
-package edu.wpi.checksims.util.token;
+package edu.wpi.checksims.token;
 
 /**
  * Interface for comparable tokens of various types

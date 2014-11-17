@@ -1,7 +1,7 @@
 package edu.wpi.checksims.algorithm.preprocessor;
 
 import edu.wpi.checksims.submission.Submission;
-import edu.wpi.checksims.util.token.*;
+import edu.wpi.checksims.token.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

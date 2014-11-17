@@ -1,8 +1,8 @@
 package edu.wpi.checksims.submission;
 
-import edu.wpi.checksims.util.token.TokenList;
-import edu.wpi.checksims.util.token.TokenType;
-import edu.wpi.checksims.util.token.ValidityEnsuringToken;
+import edu.wpi.checksims.token.TokenList;
+import edu.wpi.checksims.token.TokenType;
+import edu.wpi.checksims.token.ValidityEnsuringToken;
 
 import java.util.function.Supplier;
 import java.util.stream.Collectors;

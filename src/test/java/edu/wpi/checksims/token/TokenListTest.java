@@ -1,4 +1,4 @@
-package edu.wpi.checksims.util.token;
+package edu.wpi.checksims.token;
 
 import org.junit.Before;
 import org.junit.Test;

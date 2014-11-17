@@ -1,4 +1,4 @@
-package edu.wpi.checksims.util.token;
+package edu.wpi.checksims.token;
 
 /**
  * Token containing a string representing a single line in the submission

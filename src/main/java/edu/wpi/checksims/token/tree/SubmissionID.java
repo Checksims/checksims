@@ -1,4 +1,4 @@
-package edu.wpi.checksims.util.token.tree;
+package edu.wpi.checksims.token.tree;
 
 /**
  * Which submission we are working with in the token tree

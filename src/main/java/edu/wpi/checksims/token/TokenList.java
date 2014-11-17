@@ -1,4 +1,4 @@
-package edu.wpi.checksims.util.token;
+package edu.wpi.checksims.token;
 
 import com.google.common.collect.ImmutableList;
 import org.apache.commons.collections4.list.PredicatedList;

@@ -1,7 +1,8 @@
 package edu.wpi.checksims.submission;
 
-import edu.wpi.checksims.util.token.*;
+import edu.wpi.checksims.token.*;
 import edu.wpi.checksims.util.file.FileLineReader;
+import edu.wpi.checksims.token.tokenizer.FileTokenizer;
 import org.apache.commons.collections4.list.SetUniqueList;
 
 import java.io.File;
@@ -13,8 +14,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 public class Submission {
     private final TokenList tokenList;

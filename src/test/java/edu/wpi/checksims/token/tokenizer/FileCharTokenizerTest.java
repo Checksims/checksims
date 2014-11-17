@@ -1,5 +1,8 @@
-package edu.wpi.checksims.util.token;
+package edu.wpi.checksims.token.tokenizer;
 
+import edu.wpi.checksims.token.CharacterToken;
+import edu.wpi.checksims.token.TokenList;
+import edu.wpi.checksims.token.TokenType;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

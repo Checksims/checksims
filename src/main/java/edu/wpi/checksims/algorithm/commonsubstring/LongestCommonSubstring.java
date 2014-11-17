@@ -4,12 +4,12 @@ import edu.wpi.checksims.ChecksimException;
 import edu.wpi.checksims.algorithm.AlgorithmResults;
 import edu.wpi.checksims.algorithm.PlagiarismDetector;
 import edu.wpi.checksims.submission.Submission;
-import edu.wpi.checksims.util.token.Token;
-import edu.wpi.checksims.util.token.TokenList;
-import edu.wpi.checksims.util.token.TokenType;
-import edu.wpi.checksims.util.token.ValidityIgnoringToken;
-import edu.wpi.checksims.util.token.tree.SuffixTreeNode;
-import edu.wpi.checksims.util.token.tree.SuffixTreeRoot;
+import edu.wpi.checksims.token.Token;
+import edu.wpi.checksims.token.TokenList;
+import edu.wpi.checksims.token.TokenType;
+import edu.wpi.checksims.token.ValidityIgnoringToken;
+import edu.wpi.checksims.token.tree.SuffixTreeNode;
+import edu.wpi.checksims.token.tree.SuffixTreeRoot;
 import org.apache.commons.lang3.tuple.Triple;
 
 import java.util.Collections;
@@ -50,6 +50,11 @@ public class LongestCommonSubstring implements PlagiarismDetector {
     public AlgorithmResults detectPlagiarism(Submission a, Submission b) throws ChecksimException {
         if (!a.getTokenType().equals(b.getTokenType())) {
             throw new ChecksimException("Token type mismatch between submissions " + a.getName() + " and " + b.getName());
+        }
+
+        // No point building the tree is one of the submissions was empty
+        if(a.getTokenList().isEmpty() || b.getTokenList().isEmpty()) {
+            return new AlgorithmResults(a, b, 0, 0);
         }
 
         Triple<Submission, Submission, Integer> onePassResult = onePassLCS(a, b);

@@ -1,14 +1,14 @@
-package edu.wpi.checksims.util.token;
+package edu.wpi.checksims.token;
 
 /**
- * Token which ignores validity when comparing
+ * Token which will only be equal to other tokens which are valid
  *
- * Decorates other tokens to override their equals() method
+ * Decorates other tokens to override their equals() methods
  */
-public class ValidityIgnoringToken extends Token {
+public class ValidityEnsuringToken extends Token {
     private final Token wrappedToken;
 
-    private ValidityIgnoringToken(Token wrappedToken) {
+    private ValidityEnsuringToken(Token wrappedToken) {
         super(wrappedToken.isValid());
         this.wrappedToken = wrappedToken;
     }
@@ -43,14 +43,6 @@ public class ValidityIgnoringToken extends Token {
         return wrappedToken.lowerCase();
     }
 
-    /**
-     * FALSE IF EITHER TOKEN IS INVALID!
-     *
-     * This means that two tokens which are completely identical, but both invalid, are not considered equal!
-     *
-     * @param other Object to compare to
-     * @return True if object compared to is a Token with same type and equiv. tokenization value
-     */
     @Override
     public boolean equals(Object other) {
         if(!(other instanceof Token)) {
@@ -59,7 +51,7 @@ public class ValidityIgnoringToken extends Token {
 
         Token otherToken = (Token)other;
 
-        return (otherToken.getType().equals(this.getType())) && (otherToken.getToken().equals(this.getToken()));
+        return (otherToken.getType().equals(this.getType())) && (otherToken.getToken().equals(this.getToken())) && this.isValid() && otherToken.isValid();
     }
 
     @Override
@@ -67,7 +59,7 @@ public class ValidityIgnoringToken extends Token {
         return wrappedToken.getToken().hashCode();
     }
 
-    public static ValidityIgnoringToken validityIgnoringToken(Token toWrap) {
-        return new ValidityIgnoringToken(toWrap);
+    public static ValidityEnsuringToken validityEnsuringToken(Token toWrap) {
+        return new ValidityEnsuringToken(toWrap);
     }
 }

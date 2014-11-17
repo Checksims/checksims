@@ -1,10 +1,10 @@
-package edu.wpi.checksims.util.token.tree;
+package edu.wpi.checksims.token.tree;
 
 import com.google.common.collect.ImmutableList;
 import edu.wpi.checksims.ChecksimException;
-import edu.wpi.checksims.util.token.Token;
-import edu.wpi.checksims.util.token.TokenList;
-import edu.wpi.checksims.util.token.TokenType;
+import edu.wpi.checksims.token.Token;
+import edu.wpi.checksims.token.TokenList;
+import edu.wpi.checksims.token.TokenType;
 import org.apache.commons.collections4.list.SetUniqueList;
 
 import java.util.Collections;

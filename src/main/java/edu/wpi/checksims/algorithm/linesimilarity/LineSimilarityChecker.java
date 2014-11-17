@@ -4,9 +4,9 @@ import edu.wpi.checksims.ChecksimException;
 import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.algorithm.AlgorithmResults;
 import edu.wpi.checksims.algorithm.PlagiarismDetector;
-import edu.wpi.checksims.util.token.Token;
-import edu.wpi.checksims.util.token.TokenList;
-import edu.wpi.checksims.util.token.TokenType;
+import edu.wpi.checksims.token.Token;
+import edu.wpi.checksims.token.TokenList;
+import edu.wpi.checksims.token.TokenType;
 import org.apache.commons.codec.binary.Hex;
 
 import java.security.MessageDigest;

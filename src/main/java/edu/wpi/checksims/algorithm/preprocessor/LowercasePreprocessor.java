@@ -1,8 +1,8 @@
 package edu.wpi.checksims.algorithm.preprocessor;
 
 import edu.wpi.checksims.submission.Submission;
-import edu.wpi.checksims.util.token.Token;
-import edu.wpi.checksims.util.token.TokenList;
+import edu.wpi.checksims.token.Token;
+import edu.wpi.checksims.token.TokenList;
 
 import java.util.function.Supplier;
 import java.util.stream.Collectors;

@@ -1,8 +1,8 @@
-package edu.wpi.checksims.util.token.tree;
+package edu.wpi.checksims.token.tree;
 
 import edu.wpi.checksims.ChecksimException;
 import edu.wpi.checksims.submission.Submission;
-import edu.wpi.checksims.util.token.TokenType;
+import edu.wpi.checksims.token.TokenType;
 
 /**
  * Root of a suffix tree of tokens
