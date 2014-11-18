@@ -8,6 +8,8 @@ import edu.wpi.checksims.algorithm.PlagiarismDetector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -43,20 +45,23 @@ public class SimilarityMatrix {
      */
     public static SimilarityMatrix generate(List<Submission> submissions, PlagiarismDetector algorithm) {
         float[][] results = new float[submissions.size()][submissions.size()];
+        List<Submission> submissionsSorted = new LinkedList<>(submissions);
         Logger logs = LoggerFactory.getLogger(SimilarityMatrix.class);
 
+        Collections.sort(submissionsSorted);
+
         // Get results for all possible pairs of submissions
-        List<AlgorithmResults> algorithmResults = AlgorithmRunner.runAlgorithm(submissions, algorithm);
+        List<AlgorithmResults> algorithmResults = AlgorithmRunner.runAlgorithm(submissionsSorted, algorithm);
 
         // First, null the diagonal of the results array
-        for(int i = 0; i < submissions.size(); i++) {
+        for(int i = 0; i < submissionsSorted.size(); i++) {
             results[i][i] = 0.00f; // Same submission, ignore
         }
 
         // For each result, fill corresponding spots in the results matrix
         algorithmResults.stream().forEach((result) -> {
-            int indexFirst = submissions.indexOf(result.a);
-            int indexSecond = submissions.indexOf(result.b);
+            int indexFirst = submissionsSorted.indexOf(result.a);
+            int indexSecond = submissionsSorted.indexOf(result.b);
 
             if(indexFirst == -1) {
                 throw new RuntimeException("Could not find index of submission " + result.a.getName());
@@ -70,7 +75,7 @@ public class SimilarityMatrix {
 
         logs.info("Done performing plagiarism detection");
 
-        return new SimilarityMatrix(submissions, results);
+        return new SimilarityMatrix(submissionsSorted, results);
     }
 
     @Override

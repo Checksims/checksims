@@ -64,6 +64,11 @@ public class ValidityIgnoringSubmission extends Submission {
         return thisIgnoringValidity.equals(otherSubmission.getTokenList());
     }
 
+    @Override
+    public int compareTo(Submission other) {
+        return wrappedSubmission.compareTo(other);
+    }
+
     public static ValidityIgnoringSubmission validityIgnoringSubmission(Submission toWrap) {
         return new ValidityIgnoringSubmission(toWrap);
     }

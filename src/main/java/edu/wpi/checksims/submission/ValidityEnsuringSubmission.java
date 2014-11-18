@@ -64,6 +64,11 @@ public class ValidityEnsuringSubmission extends Submission {
         return thisEnforcingValidity.equals(otherSubmission.getTokenList());
     }
 
+    @Override
+    public int compareTo(Submission other) {
+        return wrappedSubmission.compareTo(other);
+    }
+
     public static ValidityEnsuringSubmission validityEnsuringSubmission(Submission toWrap) {
         return new ValidityEnsuringSubmission(toWrap);
     }

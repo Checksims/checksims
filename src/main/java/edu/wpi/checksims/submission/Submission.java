@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Submission {
+public class Submission implements Comparable<Submission> {
     private final TokenList tokenList;
     private final String name;
 
@@ -59,6 +59,11 @@ public class Submission {
     @Override
     public int hashCode() {
         return name.hashCode();
+    }
+
+    @Override
+    public int compareTo(Submission other) {
+        return name.compareTo(other.getName());
     }
 
     /**
