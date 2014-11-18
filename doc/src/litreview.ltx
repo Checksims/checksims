@@ -1,0 +1,147 @@
+\documentclass{article}
+\author{Dolan Murvihill \and Matthew Heon}
+\title{Program Similarity Detection: A review of the literature}
+\newcommand{\vocab}[1]{
+  \textit{#1}}
+\begin{document}
+\maketitle
+
+Detecting similarities between computer programs and source code is a
+well-established problem with many applications.
+
+\section{Applications}
+\subsection{Code Clone Detection}
+\subsection{Plagiarism/Copyright Infringement Detection}
+\subsection{Malware Analysis}
+\subsection{Dead Code Detection}
+\section{Plagiarism Detection}
+Plagiarism is the use of another person's work without proper attribution. In
+academia, plagiarism is considered a serious integrity violation that is often
+penalized with the failure of an assignment or course, and sometimes even
+expulsion. Especially in introductory courses, course staff must spend a
+significant amount of time looking for relatively unsophisticated plagiarism.
+Similarity detection can reduce the amount of time spent on checking for
+plagiarism by focusing the course staff on more similar programs without
+requiring a pass through the others. Automated similarity measurements can also
+improve detection rates by finding similarities that may not be obvious to the
+naked eye.
+
+Definitions of plagiarism are many and varied.
+
+% TODO list of definitions
+Joy99: "Unacknowledged copying of documents or programs"
+Lauer: If students copy the same code from a board, it is kosher
+% TODO didn't we find a big UK paper trying to find a unified definition?
+
+%  Reasons for plagiarism
+%    Joy99
+%      "A weak student produces work in close collaboration with a colleague, in
+%        the belief that it is acceptable."
+%      "A weak student copies, and then edits, a colleage’s program, with or
+%        without the colleage’s permission, hoping that this will go unnoticed."
+%      "A poorly motivated (but not necessarily weak) student copies, and then
+%        edits, a colleague’s program, with the intention of minimizing the work
+%        needed."
+
+The plagiarism detection field contains a number of papers focused on detecting
+plagiarism in natural language. Much of this literature applies to source code
+plagiarism as well, but we tried to focus on papers that were oriented toward
+source code.
+
+\subsection{Human analysis requirement}
+The proliferation of plagiarism definitions creates a vague, confusing, and
+potentially dangerous situation for students. While mitigating the problems
+caused by this quagmire is outside the scope of this project, it is important
+to recognize that even a detector that is "perfect" (no false positives or
+false negatives) under one definition of plagiarism will not be perfect for a
+professor using a different definition. What this means is that in making a
+final determination on a suspicious pair, there is no substitute for a human.
+
+\subsection{High false positive tolerance}
+There is a silver lining, though: because a human is making the final
+determination, the cost of a false positive drops from a false accusation of
+plagiarism (which is huge) to a small amount of time for the course staff to
+review the match. The low cost of a false positive means the checker can use
+very sensitive algorithms and be relatively confident that it can catch
+(almost) all plagiarism.
+
+\subsection{Obfuscation Techniques}
+Plagiarists often try to evade detection by obfuscating their copied document.
+In order to assist in developing countermeasures against obfuscation, some
+researchers have attempted to characterize these techniques. The best paper on
+this topic, by Parker, identifies six "levels" of obfuscation, from a straight,
+un-altered file copy (no obfuscation) to sophisticated attacks like refactoring
+while loops to for loops and other algebraic translations \cite{parker89}. Any decent
+plagiarism detector should be able to counter the lower level normalizations,
+but challenges like algebraic refactoring are more difficult for the
+implementor as well as the plagiarist.
+
+\section{Known Approaches}
+\subsection{Vector distance algorithms}
+Vector distance algorithms take vectors of document characteristics and measure
+the distance between them.
+\subsection{Document fingerprinting}
+Document fingerprinting approaches require storing specific elements of one
+document or source file, and searching for those elements in another file. One
+advantage of most document fingerprinting approaches is that the fingerprints
+can be stored in one place, requiring each document to be checked against one
+database ($O(n)$ time) rather than comparing each pair of documents ($O(n^2)$).
+
+\subsubsection{COpy Protection System (COPS)}
+A good example of a very old document fingerprinting system is COPS. COPS
+facilitates \vocab{ordinary operational tests}, including subset, related, and
+plagiarism. The system document into \vocab{units}, sequences of words
+separated by end-of-sentence markers, and then groups them into, \vocab{chunks}
+according to a \vocab{chunking strategy}. Hashes of the chunks were then stored
+and retrieved in the database. In COPS, chunks are not related to the
+underlying structure of the document.
+
+\subsubsection{n-gram fingerprinting}
+By far the most common document fingerprinting approach is called n-gram
+fingerprinting. The document is tokenized, and considered in sequences of $n$
+tokens, or \vocab{n-grams}. The n-grams overlap, so that there an $m$ character
+document will be considered as $m-n+1$ n-grams. The hashes of these n-grams are
+stored in a database and checked against those from other documents. The hashes
+are usually stored with a pointer to their occurrence to aid in detection.
+
+[illustration here]
+
+Most plagiarism corpora are far too large to store all n-grams from all
+documents. Usually, a selection algorithm is used to select a subset of the
+n-grams to serve as the document's \vocab{fingerprints}, but that entails
+information loss: even word-for-word identical documents will only match if
+they both contain an n-gram that was selected as a fingerprint, so how the
+fingerprints are selected is very important. A very simple approach is to
+select n-grams whose hashes are divisible by some number $p$
+\cite{schleimer03}, but this technique can leave gaps of arbitrary length
+between fingerprints, so that a large chunk of plagiarized text might slip by.
+
+Schleimer, Wilkerson, and Aiken presented an alternative fingerprint selection
+algorithm in 2003 called \vocab{winnowing}. After dividing the document's
+tokens into n-grams, winnowing further divides the n-grams into \vocab{windows}
+of size $t$. Winnowing always selects the minimum hash from each window,
+guaranteeing that a match of $t$ or more consecutive tokens will be identified.
+
+[illustration here]
+
+Winnowing has proven to be extremely powerful; it is used by the current
+industry standard source code similarity detector, MOSS, where the authors
+claim that "false positives appear to be non-existent, and the infrequent
+reports of false negatives have always been tracked back either to
+implementation bugs or user error" \cite{schleimer03}. We doubt the picture is
+that spectacular, but there is no doubt that MOSS is a very successful
+platform.
+
+\subsection{Common substring techniques}
+<explanation of Irving '04 paper>
+\subsection{Feature Analysis}
+
+%Substring
+%    Basis of Work: Irving '04 paper
+%    Tokenization Approaches - Whitespace vs Character
+%    Algorithm Complexity
+%  Longest Common Substring
+%    Want to implement - do we have time?
+%    Faster but less accurate than Smith-Waterman
+
+\end{document}
