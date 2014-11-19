@@ -6,11 +6,13 @@ LATEX_BUILD=$(LATEX_ROOT)/build
 LATEX_BUILD_ARGS=-outdir=$(LATEX_DIST) -pdf
 BIBLIOGRAPHY=$(LATEX_SRC)/bibliography.bib
 
-all: doc litreview
+all: doc litreview methodology
 
 doc: $(LATEX_DIST)/requirements.pdf mvaux
 
 litreview: $(LATEX_DIST)/litreview.pdf mvaux
+
+methodology: $(LATEX_DIST)/methodology.pdf mvaux
 
 mvaux:
 	mv $(LATEX_DIST)/*.aux $(LATEX_BUILD) || true
@@ -23,3 +25,5 @@ $(LATEX_DIST)/requirements.pdf: $(LATEX_SRC)/requirements.ltx
 $(LATEX_DIST)/litreview.pdf: $(LATEX_SRC)/litreview.ltx $(BIBLIOGRAPHY)
 	$(LATEX) $(LATEX_BUILD_ARGS) $(LATEX_SRC)/litreview.ltx
 
+$(LATEX_DIST)/methodology.pdf: $(LATEX_SRC)/methodology.ltx $(BIBLIOGRAPHY)
+	$(LATEX) $(LATEX_BUILD_ARGS) $(LATEX_SRC)/methodology.ltx
