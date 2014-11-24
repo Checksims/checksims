@@ -48,7 +48,8 @@ public class SimilarityMatrix {
         List<Submission> submissionsSorted = new LinkedList<>(submissions);
         Logger logs = LoggerFactory.getLogger(SimilarityMatrix.class);
 
-        Collections.sort(submissionsSorted);
+        logs.debug("Sorting submissions prior to algorithm pass...");
+        Collections.sort(submissionsSorted, (a, b) -> a.getName().compareTo(b.getName()));
 
         // Get results for all possible pairs of submissions
         List<AlgorithmResults> algorithmResults = AlgorithmRunner.runAlgorithm(submissionsSorted, algorithm);

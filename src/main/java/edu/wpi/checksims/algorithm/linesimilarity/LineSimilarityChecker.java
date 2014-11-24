@@ -72,6 +72,8 @@ public class LineSimilarityChecker implements PlagiarismDetector {
     public AlgorithmResults detectPlagiarism(Submission a, Submission b) throws ChecksimException {
         TokenList linesA = a.getTokenList();
         TokenList linesB = b.getTokenList();
+        TokenList finalA = TokenList.cloneTokenList(linesA);
+        TokenList finalB = TokenList.cloneTokenList(linesB);
 
         if(!a.getTokenType().equals(b.getTokenType())) {
             throw new ChecksimException("Token list type mismatch: submission " + a.getName() + " has type " +
@@ -125,13 +127,23 @@ public class LineSimilarityChecker implements PlagiarismDetector {
                     continue;
                 }
 
-                // TODO convert this to characters - should differentiate between identical LONG lines, and identical SHORT lines
+                // Set matches invalid
+                for(SubmissionLine s : lineDatabase.get(key)) {
+                    if(s.submission.equals(a)) {
+                        finalA.get(s.lineNum).setValid(false);
+                    } else if(s.submission.equals(b)) {
+                        finalB.get(s.lineNum).setValid(false);
+                    } else {
+                        throw new RuntimeException("Unreachable code!");
+                    }
+                }
+
                 identicalLinesA += numLinesA;
                 identicalLinesB += numLinesB;
             }
         }
 
-        return new AlgorithmResults(a, b, identicalLinesA, identicalLinesB);
+        return new AlgorithmResults(a, b, identicalLinesA, identicalLinesB, finalA, finalB);
     }
 
     void addLinesToMap(TokenList lines, Map<String, List<SubmissionLine>> lineDatabase, Submission submitter, MessageDigest hasher) {

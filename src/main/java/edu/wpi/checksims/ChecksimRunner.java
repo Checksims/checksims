@@ -1,6 +1,7 @@
 package edu.wpi.checksims;
 
 import edu.wpi.checksims.algorithm.AlgorithmRegistry;
+import edu.wpi.checksims.algorithm.CommonCodeRemover;
 import edu.wpi.checksims.algorithm.PlagiarismDetector;
 import edu.wpi.checksims.algorithm.output.OutputRegistry;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrix;
@@ -40,6 +41,7 @@ public class ChecksimRunner {
         Option jobs = new Option("j", "jobs", true, "number of threads to use");
         Option verbose = new Option("v", "verbose", false, "specify verbose output");
         Option help = new Option("h", "help", false, "show usage information");
+        Option common = new Option("c", "common", true, "remove common code contained in given directory");
 
         opts.addOption(alg);
         opts.addOption(token);
@@ -49,6 +51,7 @@ public class ChecksimRunner {
         opts.addOption(jobs);
         opts.addOption(verbose);
         opts.addOption(help);
+        opts.addOption(common);
 
         return opts;
     }
@@ -158,6 +161,17 @@ public class ChecksimRunner {
             tokenization = algorithm.getDefaultTokenType();
         }
 
+        // Parse common code detection
+        boolean removeCommonCode = cli.hasOption("c");
+        File commonCodeDirectory = null;
+        // TODO may be desirable for this to be configurable
+        // For now default to the same algorithm used for actual detection
+        PlagiarismDetector commonCodeRemovalAlgorithm = algorithm;
+        if(removeCommonCode) {
+            commonCodeDirectory = new File(cli.getOptionValue("c"));
+            logs.info("Removing common code (given in directory " + commonCodeDirectory.getName() + ")");
+        }
+
         // Parse file output value
         boolean outputToFile = cli.hasOption("f");
         File outputFileAsFile = null;
@@ -203,7 +217,7 @@ public class ChecksimRunner {
             outputPrinter = OutputRegistry.getInstance().getDefaultStrategy();
         }
 
-        ChecksimConfig config = new ChecksimConfig(algorithm, tokenization, preprocessors, submissionDirs, glob,
+        ChecksimConfig config = new ChecksimConfig(algorithm, tokenization, preprocessors, submissionDirs, removeCommonCode, commonCodeRemovalAlgorithm, commonCodeDirectory, glob,
                 outputPrinter, outputToFile, outputFileAsFile);
 
         runChecksims(config);
@@ -218,11 +232,25 @@ public class ChecksimRunner {
 
         try {
             for (File f : config.submissionDirectories) {
-                submissions.addAll(Submission.submissionsFromDir(f, config.globMatcher, tokenizer));
+                submissions.addAll(Submission.submissionListFromDir(f, config.globMatcher, tokenizer));
             }
         } catch(IOException e) {
             logs.error("Error creating submissions from directory!");
             throw new RuntimeException(e);
+        }
+
+        // If we are performing common code detection...
+        if(config.removeCommonCode) {
+            // Create a submission for the common code
+            Submission common;
+            try {
+                common = Submission.submissionFromDir(config.commonCodeDirectory, config.globMatcher, tokenizer);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            // Perform common code removal before preprocessor application
+            submissions = CommonCodeRemover.removeCommonCodeFromSubmissionsInList(submissions, common, config.commonCodeRemovalAlgorithm);
         }
 
         // Apply all preprocessors

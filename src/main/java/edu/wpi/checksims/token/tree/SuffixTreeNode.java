@@ -24,7 +24,7 @@ public class SuffixTreeNode extends SuffixTreeShared {
     private boolean isValid;
 
     public SuffixTreeNode(Token content) {
-        this(content, SetUniqueList.setUniqueList(new LinkedList<>()), new LinkedList<>());
+        this(content, SetUniqueList.setUniqueList(new LinkedList<>()), SetUniqueList.setUniqueList(new LinkedList<>()));
     }
 
     private SuffixTreeNode(Token content, List<Integer> occurrencesA, List<Integer> occurrencesB) {

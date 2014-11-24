@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Submission implements Comparable<Submission> {
+public class Submission {
     private final TokenList tokenList;
     private final String name;
 
@@ -61,11 +61,6 @@ public class Submission implements Comparable<Submission> {
         return name.hashCode();
     }
 
-    @Override
-    public int compareTo(Submission other) {
-        return name.compareTo(other.getName());
-    }
-
     /**
      * Generate a list of all student submissions from a directory
      *
@@ -78,7 +73,7 @@ public class Submission implements Comparable<Submission> {
      * @return Set of submissions including all unique nonempty submissions in the given directory
      * @throws IOException Thrown on error interacting with file or filesystem
      */
-    public static List<Submission> submissionsFromDir(File directory, String glob, FileTokenizer splitter) throws IOException {
+    public static List<Submission> submissionListFromDir(File directory, String glob, FileTokenizer splitter) throws IOException {
         List<Submission> submissions = SetUniqueList.setUniqueList(new LinkedList<>());
 
         if(!directory.exists() || !directory.isDirectory()) {

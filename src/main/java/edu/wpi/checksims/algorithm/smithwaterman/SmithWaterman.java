@@ -66,18 +66,20 @@ public class SmithWaterman implements PlagiarismDetector {
 
         if(firstRun == null || !firstRun.hasMatch()) {
             // No similarities found on first run, no need to loop
-            return new AlgorithmResults(a, b, 0, 0);
+            return new AlgorithmResults(a, b, 0, 0, a.getTokenList(), b.getTokenList());
         }
 
         // Represents the total portions of the tokenization lists matched by the Smith-Waterman algorithm
         int totalOverlay = 0;
         SmithWatermanResults currResults = firstRun;
+        TokenList newA = currResults.setMatchInvalidA();
+        TokenList newB = currResults.setMatchInvalidB();
 
         while(currResults.getMatchLength() >= params.matchSizeThreshold) {
             totalOverlay += currResults.getMatchLength();
 
-            TokenList newA = currResults.setMatchInvalidA();
-            TokenList newB = currResults.setMatchInvalidB();
+            newA = currResults.setMatchInvalidA();
+            newB = currResults.setMatchInvalidB();
 
             currResults = applySmithWaterman(newA, newB, params);
         }
@@ -86,7 +88,7 @@ public class SmithWaterman implements PlagiarismDetector {
         // We report it regardless
         totalOverlay += currResults.getMatchLength();
 
-        return new AlgorithmResults(a, b, totalOverlay, totalOverlay);
+        return new AlgorithmResults(a, b, totalOverlay, totalOverlay, newA, newB);
     }
 
     static SmithWatermanResults applySmithWaterman(TokenList a, TokenList b, SmithWatermanParameters params) {

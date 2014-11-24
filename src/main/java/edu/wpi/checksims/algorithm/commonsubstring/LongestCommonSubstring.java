@@ -8,6 +8,7 @@ import edu.wpi.checksims.token.Token;
 import edu.wpi.checksims.token.TokenList;
 import edu.wpi.checksims.token.TokenType;
 import edu.wpi.checksims.token.ValidityIgnoringToken;
+import edu.wpi.checksims.token.tree.SubmissionID;
 import edu.wpi.checksims.token.tree.SuffixTreeNode;
 import edu.wpi.checksims.token.tree.SuffixTreeRoot;
 import org.apache.commons.lang3.tuple.Triple;
@@ -54,7 +55,7 @@ public class LongestCommonSubstring implements PlagiarismDetector {
 
         // No point building the tree is one of the submissions was empty
         if(a.getTokenList().isEmpty() || b.getTokenList().isEmpty()) {
-            return new AlgorithmResults(a, b, 0, 0);
+            return new AlgorithmResults(a, b, 0, 0, a.getTokenList(), b.getTokenList());
         }
 
         Triple<Submission, Submission, Integer> onePassResult = onePassLCS(a, b);
@@ -62,7 +63,7 @@ public class LongestCommonSubstring implements PlagiarismDetector {
         // if we got no matches, no point continuing
         // Return an empty AlgorithmResults
         if (onePassResult.getRight() == 0) {
-            return new AlgorithmResults(a, b, 0, 0);
+            return new AlgorithmResults(a, b, 0, 0, a.getTokenList(), b.getTokenList());
         }
 
         Triple<Submission, Submission, Integer> current = onePassResult;
@@ -73,7 +74,7 @@ public class LongestCommonSubstring implements PlagiarismDetector {
             totalMatched += current.getRight();
         }
 
-        return new AlgorithmResults(a, b, totalMatched, totalMatched);
+        return new AlgorithmResults(a, b, totalMatched, totalMatched, current.getLeft().getTokenList(), current.getMiddle().getTokenList());
     }
 
     static Triple<Submission, Submission, Integer> onePassLCS(Submission a, Submission b) throws ChecksimException {

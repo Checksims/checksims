@@ -22,7 +22,7 @@ public class SimilarityMatrixThresholdPrinter implements SimilarityMatrixPrinter
         return new SimilarityMatrixThresholdPrinter(DEFAULT_THRESHOLD);
     }
 
-    class SimilarityEntry implements Comparable<SimilarityEntry> {
+    class SimilarityEntry {
         public final Submission submissionA;
         public final Submission submissionB;
         public final float matchPercentA;
@@ -50,11 +50,6 @@ public class SimilarityMatrixThresholdPrinter implements SimilarityMatrixPrinter
         @Override
         public int hashCode() {
             return (int)(1000 * matchPercentA + 100 * matchPercentB);
-        }
-
-        @Override
-        public int compareTo(SimilarityEntry other) {
-            return (int)(100 * (matchPercentA - other.matchPercentA));
         }
     }
 
@@ -102,7 +97,7 @@ public class SimilarityMatrixThresholdPrinter implements SimilarityMatrixPrinter
 
         // Sort low to high
         // Then reverse to get expected high to low ordering
-        Collections.sort(highestEntries);
+        Collections.sort(highestEntries, (sortA, sortB) -> new Float(sortA.matchPercentA).compareTo(new Float(sortB.matchPercentA)));
         Collections.reverse(highestEntries);
 
         for(SimilarityEntry e : highestEntries) {
