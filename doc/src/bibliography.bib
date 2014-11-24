@@ -17,6 +17,15 @@ GNU GPL licensed Java 1.5 source code plagiarism detection software dating to
   year={2005}
 }
 
+@article{baker93,
+  title={A program for identifying duplicated code},
+  author={Baker, Brenda S},
+  journal={Computing Science and Statistics},
+  pages={49--49},
+  year={1993},
+  publisher={PROCEEDINGS PUBLISHED BY VARIOUS PUBLISHERS}
+}
+
 @inproceedings{baker95,
   title={On finding duplication and near-duplication in large software systems},
   author={Baker, Brenda S},
@@ -192,6 +201,17 @@ which new submissions can be compared against, in a very efficient manner (so
 as to scale to many thousands or tens of thousands of submissions). Very
 advanced database retrieval techniques I did not understand in the slightest
 discussed for majority of paper.
+
+@article{buss94,
+  title={Investigating reverse engineering technologies for the CAS program understanding project},
+  author={Buss, E and De Mori, Renato and Gentleman, W. Morven and Henshaw, John and Johnson, Howard and Kontogiannis, Kostas and Merlo, Ettore and Muller, HA and Mylopoulos, John and Paul, Santanu and others},
+  journal={IBM Systems Journal},
+  volume={33},
+  number={3},
+  pages={477--500},
+  year={1994},
+  publisher={IBM}
+}
 
 @article{chen04,
   title={Shared information and program plagiarism detection},
@@ -444,6 +464,24 @@ though. Worth looking into.
   year={1994},
   organization={IEEE}
 }
+
+Presents a tool for locating similarities in text, including source code. The
+tool works in six steps:
+1. Perform text-to-text transformations on each file
+2. Break the text into potentially overlapping substrings
+3. Generate a database of "raw matches" by finding the substrings that match
+4. Iterate to improve the matches
+5. Perform task-specific data reduction
+6. Summarize high-level matches
+
+Steps 2-4 work only on exact matches, so any partial matching must be done via
+normalization in step 1. Common transformations include white space removal,
+comment removal, and identifier renaming. Steps 2-4 have the advantage of being
+language-agnostic. Note that this approach is reminiscent of the document
+fingerprinting approaches to plagiarism detection.
+
+They seem to have used Karp-Rabin string matching and document fingerprinting
+like Schleimer et al. I will add more as I continue reading the paper.
 
 @inproceedings{jones01,
   title={Metrics based plagarism monitoring},
