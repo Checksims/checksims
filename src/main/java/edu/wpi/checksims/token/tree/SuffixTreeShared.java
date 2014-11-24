@@ -3,6 +3,7 @@ package edu.wpi.checksims.token.tree;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import edu.wpi.checksims.ChecksimException;
+import edu.wpi.checksims.token.ConcreteToken;
 import edu.wpi.checksims.token.Token;
 import edu.wpi.checksims.token.TokenType;
 
@@ -42,7 +43,7 @@ public abstract class SuffixTreeShared {
         return ImmutableList.copyOf(children.values());
     }
 
-    public SuffixTreeNode addChild(Token t) throws ChecksimException {
+    public SuffixTreeNode addChild(ConcreteToken t) throws ChecksimException {
         if(!t.getType().equals(getTokenType())) {
             throw new ChecksimException("Token type mismatch adding token to suffix tree: expected " + getTokenType() + ", found " + t.getType());
         }

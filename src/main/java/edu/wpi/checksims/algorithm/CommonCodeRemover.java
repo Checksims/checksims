@@ -17,17 +17,13 @@ import java.util.stream.Collectors;
  * Remove common code from submissions
  */
 public class CommonCodeRemover {
-    private static Logger logs;
+    private static final Logger logs = LoggerFactory.getLogger(CommonCodeRemover.class);
 
     private CommonCodeRemover() {}
 
     public static List<Submission> removeCommonCodeFromSubmissionsInList(List<Submission> removeFrom, Submission common, PlagiarismDetector algorithm) {
         if(removeFrom.isEmpty()) {
             return removeFrom;
-        }
-
-        if(logs == null) {
-            logs = LoggerFactory.getLogger(CommonCodeRemover.class);
         }
 
         AtomicInteger submissionsProcessed = new AtomicInteger(0);
@@ -51,10 +47,6 @@ public class CommonCodeRemover {
     }
 
     public static Submission removeCommonCodeFromSubmission(Submission in, Submission common, PlagiarismDetector algorithm) throws ChecksimException {
-        if(logs == null) {
-            logs = LoggerFactory.getLogger(CommonCodeRemover.class);
-        }
-
         logs.trace("Performing common code removal on submission " + in.getName());
 
         AlgorithmResults results = algorithm.detectPlagiarism(in, common);

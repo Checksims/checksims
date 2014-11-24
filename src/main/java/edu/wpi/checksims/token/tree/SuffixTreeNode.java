@@ -83,10 +83,6 @@ public class SuffixTreeNode extends SuffixTreeShared {
         return isValid;
     }
 
-    public void setValid(boolean isValid) {
-        this.isValid = isValid;
-    }
-
     public int getMaxSharedDepth() {
         if(!this.isShared() || !this.isValid()) {
             return 0;

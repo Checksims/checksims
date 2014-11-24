@@ -1,8 +1,8 @@
 package edu.wpi.checksims.token.tokenizer;
 
+import edu.wpi.checksims.token.ConcreteToken;
 import edu.wpi.checksims.token.TokenList;
 import edu.wpi.checksims.token.TokenType;
-import edu.wpi.checksims.token.WhitespaceToken;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -59,7 +59,7 @@ public class FileWhitespaceTokenizerTest {
         TokenList tokens = s.splitFile(oneWord);
 
         TokenList expected = new TokenList(TokenType.WHITESPACE);
-        expected.add(new WhitespaceToken("hello"));
+        expected.add(new ConcreteToken("hello", TokenType.WHITESPACE));
 
         assertNotNull(tokens);
         assertFalse(tokens.isEmpty());
@@ -72,8 +72,8 @@ public class FileWhitespaceTokenizerTest {
         TokenList tokens = s.splitFile(twoWords);
 
         TokenList expected = new TokenList(TokenType.WHITESPACE);
-        expected.add(new WhitespaceToken("hello"));
-        expected.add(new WhitespaceToken("world"));
+        expected.add(new ConcreteToken("hello", TokenType.WHITESPACE));
+        expected.add(new ConcreteToken("world", TokenType.WHITESPACE));
 
         assertNotNull(tokens);
         assertFalse(tokens.isEmpty());
@@ -86,12 +86,12 @@ public class FileWhitespaceTokenizerTest {
         TokenList tokens = s.splitFile(wordsSpaceSeparated);
 
         TokenList expected = new TokenList(TokenType.WHITESPACE);
-        expected.add(new WhitespaceToken("hello"));
-        expected.add(new WhitespaceToken("world"));
-        expected.add(new WhitespaceToken("this"));
-        expected.add(new WhitespaceToken("is"));
-        expected.add(new WhitespaceToken("a"));
-        expected.add(new WhitespaceToken("test"));
+        expected.add(new ConcreteToken("hello", TokenType.WHITESPACE));
+        expected.add(new ConcreteToken("world", TokenType.WHITESPACE));
+        expected.add(new ConcreteToken("this", TokenType.WHITESPACE));
+        expected.add(new ConcreteToken("is", TokenType.WHITESPACE));
+        expected.add(new ConcreteToken("a", TokenType.WHITESPACE));
+        expected.add(new ConcreteToken("test", TokenType.WHITESPACE));
 
         assertNotNull(tokens);
         assertFalse(tokens.isEmpty());
@@ -104,12 +104,12 @@ public class FileWhitespaceTokenizerTest {
         TokenList tokens = s.splitFile(wordsTabSeparated);
 
         TokenList expected = new TokenList(TokenType.WHITESPACE);
-        expected.add(new WhitespaceToken("hello"));
-        expected.add(new WhitespaceToken("world"));
-        expected.add(new WhitespaceToken("this"));
-        expected.add(new WhitespaceToken("is"));
-        expected.add(new WhitespaceToken("a"));
-        expected.add(new WhitespaceToken("test"));
+        expected.add(new ConcreteToken("hello", TokenType.WHITESPACE));
+        expected.add(new ConcreteToken("world", TokenType.WHITESPACE));
+        expected.add(new ConcreteToken("this", TokenType.WHITESPACE));
+        expected.add(new ConcreteToken("is", TokenType.WHITESPACE));
+        expected.add(new ConcreteToken("a", TokenType.WHITESPACE));
+        expected.add(new ConcreteToken("test", TokenType.WHITESPACE));
 
         assertNotNull(tokens);
         assertFalse(tokens.isEmpty());
@@ -122,12 +122,12 @@ public class FileWhitespaceTokenizerTest {
         TokenList tokens = s.splitFile(multipleLines);
 
         TokenList expected = new TokenList(TokenType.WHITESPACE);
-        expected.add(new WhitespaceToken("hello"));
-        expected.add(new WhitespaceToken("world"));
-        expected.add(new WhitespaceToken("this"));
-        expected.add(new WhitespaceToken("is"));
-        expected.add(new WhitespaceToken("a"));
-        expected.add(new WhitespaceToken("test"));
+        expected.add(new ConcreteToken("hello", TokenType.WHITESPACE));
+        expected.add(new ConcreteToken("world", TokenType.WHITESPACE));
+        expected.add(new ConcreteToken("this", TokenType.WHITESPACE));
+        expected.add(new ConcreteToken("is", TokenType.WHITESPACE));
+        expected.add(new ConcreteToken("a", TokenType.WHITESPACE));
+        expected.add(new ConcreteToken("test", TokenType.WHITESPACE));
 
         assertNotNull(tokens);
         assertFalse(tokens.isEmpty());

@@ -1,67 +1,49 @@
 package edu.wpi.checksims.token;
 
 /**
- * Interface for comparable tokens of various types
+ * Interface for Tokens, to enable decorators
  */
-public abstract class Token {
-    private boolean isValid;
-
-    public Token(boolean isValid) {
-        this.isValid = isValid;
-    }
-
-    public abstract TokenType getType();
-
-    public abstract Object getToken();
-
-    public abstract String getTokenAsString();
+public interface Token {
+    /**
+     * @return Lexeme used to represent this token
+     */
+    int getLexeme();
 
     /**
-     * @return Whether this tokenization is valid
+     * @return Type of this token
      */
-    public boolean isValid() {
-        return isValid;
-    }
+    TokenType getType();
 
     /**
-     * @param isValid New value for validity of this tokenization
+     * @return Object representing the token itself
      */
-    public void setValid(boolean isValid) {
-        this.isValid = isValid;
-    }
-
-    public abstract Token lowerCase();
+    Object getToken();
 
     /**
-     * @param other Object to compare to
-     * @return True if object compared to is a Token with same type and equiv. tokenization value
+     * @return String representation of the token
      */
-    @Override
-    public boolean equals(Object other) {
-        if(!(other instanceof Token)) {
-            return false;
-        }
+    String getTokenAsString();
 
-        Token otherToken = (Token)other;
+    /**
+     * @return Whether this token is valid
+     */
+    boolean isValid();
 
-        return (otherToken.getType().equals(this.getType())) && (otherToken.getToken().equals(this.getToken())) && (otherToken.isValid() == this.isValid());
-    }
+    /**
+     * @param isValid New value for token validity
+     */
+    void setValid(boolean isValid);
+
+    /**
+     * @return Lowercase version of this token - matching type and validity
+     */
+    Token lowerCase();
 
     /**
      * @param token Token to clone
-     * @return Clone of token toClone()
+     * @return Clone of token
      */
     public static Token cloneToken(Token token) {
-        switch(token.getType()) {
-            case CHARACTER:
-                return new CharacterToken((char)token.getToken(), token.isValid());
-            case WHITESPACE:
-                return new WhitespaceToken((String)token.getToken(), token.isValid());
-            case LINE:
-                return new LineToken((String)token.getToken(), token.isValid());
-            default:
-                // TODO make this neater
-                throw new RuntimeException("Unrecognized tokenization type encountered!");
-        }
+        return ConcreteToken.cloneToken(token);
     }
 }

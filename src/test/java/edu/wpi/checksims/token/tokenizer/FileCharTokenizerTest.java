@@ -1,6 +1,6 @@
 package edu.wpi.checksims.token.tokenizer;
 
-import edu.wpi.checksims.token.CharacterToken;
+import edu.wpi.checksims.token.ConcreteToken;
 import edu.wpi.checksims.token.TokenList;
 import edu.wpi.checksims.token.TokenType;
 import org.junit.BeforeClass;
@@ -55,11 +55,11 @@ public class FileCharTokenizerTest {
         TokenList results = c.splitFile(oneWord);
 
         TokenList expected = new TokenList(TokenType.CHARACTER);
-        expected.add(new CharacterToken('h'));
-        expected.add(new CharacterToken('e'));
-        expected.add(new CharacterToken('l'));
-        expected.add(new CharacterToken('l'));
-        expected.add(new CharacterToken('o'));
+        expected.add(new ConcreteToken('h', TokenType.CHARACTER));
+        expected.add(new ConcreteToken('e', TokenType.CHARACTER));
+        expected.add(new ConcreteToken('l', TokenType.CHARACTER));
+        expected.add(new ConcreteToken('l', TokenType.CHARACTER));
+        expected.add(new ConcreteToken('o', TokenType.CHARACTER));
 
         assertNotNull(results);
         assertFalse(results.isEmpty());
@@ -72,17 +72,17 @@ public class FileCharTokenizerTest {
         TokenList results = c.splitFile(twoWords);
 
         TokenList expected = new TokenList(TokenType.CHARACTER);
-        expected.add(new CharacterToken('h'));
-        expected.add(new CharacterToken('e'));
-        expected.add(new CharacterToken('l'));
-        expected.add(new CharacterToken('l'));
-        expected.add(new CharacterToken('o'));
-        expected.add(new CharacterToken(' '));
-        expected.add(new CharacterToken('w'));
-        expected.add(new CharacterToken('o'));
-        expected.add(new CharacterToken('r'));
-        expected.add(new CharacterToken('l'));
-        expected.add(new CharacterToken('d'));
+        expected.add(new ConcreteToken('h', TokenType.CHARACTER));
+        expected.add(new ConcreteToken('e', TokenType.CHARACTER));
+        expected.add(new ConcreteToken('l', TokenType.CHARACTER));
+        expected.add(new ConcreteToken('l', TokenType.CHARACTER));
+        expected.add(new ConcreteToken('o', TokenType.CHARACTER));
+        expected.add(new ConcreteToken(' ', TokenType.CHARACTER));
+        expected.add(new ConcreteToken('w', TokenType.CHARACTER));
+        expected.add(new ConcreteToken('o', TokenType.CHARACTER));
+        expected.add(new ConcreteToken('r', TokenType.CHARACTER));
+        expected.add(new ConcreteToken('l', TokenType.CHARACTER));
+        expected.add(new ConcreteToken('d', TokenType.CHARACTER));
 
         assertNotNull(results);
         assertFalse(results.isEmpty());
@@ -95,16 +95,16 @@ public class FileCharTokenizerTest {
         TokenList results = c.splitFile(withTabs);
 
         TokenList expected = new TokenList(TokenType.CHARACTER);
-        expected.add(new CharacterToken('w'));
-        expected.add(new CharacterToken('i'));
-        expected.add(new CharacterToken('t'));
-        expected.add(new CharacterToken('h'));
-        expected.add(new CharacterToken('\t'));
-        expected.add(new CharacterToken('t'));
-        expected.add(new CharacterToken('a'));
-        expected.add(new CharacterToken('b'));
-        expected.add(new CharacterToken('s'));
-        expected.add(new CharacterToken('\t'));
+        expected.add(new ConcreteToken('w', TokenType.CHARACTER));
+        expected.add(new ConcreteToken('i', TokenType.CHARACTER));
+        expected.add(new ConcreteToken('t', TokenType.CHARACTER));
+        expected.add(new ConcreteToken('h', TokenType.CHARACTER));
+        expected.add(new ConcreteToken('\t', TokenType.CHARACTER));
+        expected.add(new ConcreteToken('t', TokenType.CHARACTER));
+        expected.add(new ConcreteToken('a', TokenType.CHARACTER));
+        expected.add(new ConcreteToken('b', TokenType.CHARACTER));
+        expected.add(new ConcreteToken('s', TokenType.CHARACTER));
+        expected.add(new ConcreteToken('\t', TokenType.CHARACTER));
 
         assertNotNull(results);
         assertFalse(results.isEmpty());
@@ -117,16 +117,16 @@ public class FileCharTokenizerTest {
         TokenList results = c.splitFile(multipleStrings);
 
         TokenList expected = new TokenList(TokenType.CHARACTER);
-        expected.add(new CharacterToken('h'));
-        expected.add(new CharacterToken('e'));
-        expected.add(new CharacterToken('l'));
-        expected.add(new CharacterToken('l'));
-        expected.add(new CharacterToken('o'));
-        expected.add(new CharacterToken('w'));
-        expected.add(new CharacterToken('o'));
-        expected.add(new CharacterToken('r'));
-        expected.add(new CharacterToken('l'));
-        expected.add(new CharacterToken('d'));
+        expected.add(new ConcreteToken('h', TokenType.CHARACTER));
+        expected.add(new ConcreteToken('e', TokenType.CHARACTER));
+        expected.add(new ConcreteToken('l', TokenType.CHARACTER));
+        expected.add(new ConcreteToken('l', TokenType.CHARACTER));
+        expected.add(new ConcreteToken('o', TokenType.CHARACTER));
+        expected.add(new ConcreteToken('w', TokenType.CHARACTER));
+        expected.add(new ConcreteToken('o', TokenType.CHARACTER));
+        expected.add(new ConcreteToken('r', TokenType.CHARACTER));
+        expected.add(new ConcreteToken('l', TokenType.CHARACTER));
+        expected.add(new ConcreteToken('d', TokenType.CHARACTER));
 
         assertNotNull(results);
         assertFalse(results.isEmpty());

@@ -5,42 +5,9 @@ package edu.wpi.checksims.token;
  *
  * Decorates other tokens to override their equals() methods
  */
-public class ValidityEnsuringToken extends Token {
-    private final Token wrappedToken;
-
-    private ValidityEnsuringToken(Token wrappedToken) {
-        super(wrappedToken.isValid());
-        this.wrappedToken = wrappedToken;
-    }
-
-    @Override
-    public boolean isValid() {
-        return wrappedToken.isValid();
-    }
-
-    @Override
-    public void setValid(boolean valid) {
-        wrappedToken.setValid(valid);
-    }
-
-    @Override
-    public TokenType getType() {
-        return wrappedToken.getType();
-    }
-
-    @Override
-    public Object getToken() {
-        return wrappedToken.getToken();
-    }
-
-    @Override
-    public String getTokenAsString() {
-        return wrappedToken.getTokenAsString();
-    }
-
-    @Override
-    public Token lowerCase() {
-        return wrappedToken.lowerCase();
+public class ValidityEnsuringToken extends AbstractTokenDecorator {
+    public ValidityEnsuringToken(Token wrappedToken) {
+        super(wrappedToken);
     }
 
     @Override
@@ -51,15 +18,6 @@ public class ValidityEnsuringToken extends Token {
 
         Token otherToken = (Token)other;
 
-        return (otherToken.getType().equals(this.getType())) && (otherToken.getToken().equals(this.getToken())) && this.isValid() && otherToken.isValid();
-    }
-
-    @Override
-    public int hashCode() {
-        return wrappedToken.getToken().hashCode();
-    }
-
-    public static ValidityEnsuringToken validityEnsuringToken(Token toWrap) {
-        return new ValidityEnsuringToken(toWrap);
+        return otherToken.getType().equals(this.getType()) && otherToken.getLexeme() == this.getLexeme() && otherToken.isValid() && this.isValid();
     }
 }

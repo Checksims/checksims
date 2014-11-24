@@ -1,6 +1,6 @@
 package edu.wpi.checksims.token.tokenizer;
 
-import edu.wpi.checksims.token.LineToken;
+import edu.wpi.checksims.token.ConcreteToken;
 import edu.wpi.checksims.token.TokenList;
 import edu.wpi.checksims.token.TokenType;
 
@@ -27,7 +27,7 @@ public class FileLineTokenizer implements FileTokenizer {
         TokenList toReturn = new TokenList(this.getType());
 
         strings.stream()
-                .map(LineToken::new)
+                .map((str) -> new ConcreteToken(str, TokenType.LINE))
                 .forEachOrdered(toReturn::add);
 
         return toReturn;

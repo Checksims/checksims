@@ -59,7 +59,7 @@ public class ValidityIgnoringSubmission extends Submission {
 
         Supplier<TokenList> tokenListSupplier = () -> new TokenList(this.getTokenType());
 
-        TokenList thisIgnoringValidity = wrappedSubmission.getTokenList().stream().map(ValidityIgnoringToken::validityIgnoringToken).collect(Collectors.toCollection(tokenListSupplier));
+        TokenList thisIgnoringValidity = wrappedSubmission.getTokenList().stream().map(ValidityIgnoringToken::new).collect(Collectors.toCollection(tokenListSupplier));
 
         return thisIgnoringValidity.equals(otherSubmission.getTokenList());
     }

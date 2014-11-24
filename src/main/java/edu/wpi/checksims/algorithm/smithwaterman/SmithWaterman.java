@@ -117,7 +117,7 @@ public class SmithWaterman implements PlagiarismDetector {
                 // Generate a prospective value for S[i,j] and M[i,j]
                 // The outermost if generates S[i,j]
                 // Based off this, we then generate M[i,j]
-                if(ValidityEnsuringToken.validityEnsuringToken(a.get(curr.x - 1)).equals(ValidityEnsuringToken.validityEnsuringToken(b.get(curr.y - 1)))) {
+                if(new ValidityEnsuringToken(a.get(curr.x - 1)).equals(b.get(curr.y - 1))) {
                     // If the two characters match, we increment S[i-1,j-1] by 1 to get the new S[i,j]
                     int sPredecessor = s.getValue(predecessor);
                     int mPredecessor = m.getValue(predecessor);

@@ -28,38 +28,38 @@ public class TestLowercasePreprocessor {
         emptyListCharacter = new Submission("Empty Character List", empty);
 
         TokenList oneElementChar = new TokenList(TokenType.CHARACTER);
-        oneElementChar.add(new CharacterToken('A'));
+        oneElementChar.add(new ConcreteToken('A', TokenType.CHARACTER));
         oneElementListCharacter = new Submission("One element character list", oneElementChar);
 
         TokenList oneElementCharLower = new TokenList(TokenType.CHARACTER);
-        oneElementCharLower.add(new CharacterToken('a'));
+        oneElementCharLower.add(new ConcreteToken('a', TokenType.CHARACTER));
         oneElementListCharacterIsLowerCase = new Submission("One element lowercase character list", oneElementCharLower);
 
         TokenList oneElementWhitespace = new TokenList(TokenType.WHITESPACE);
-        oneElementWhitespace.add(new WhitespaceToken("HELLO"));
+        oneElementWhitespace.add(new ConcreteToken("HELLO", TokenType.WHITESPACE));
         oneElementListWhitespace = new Submission("One element whitespace list", oneElementWhitespace);
 
         TokenList oneElementWhitespaceLower = new TokenList(TokenType.WHITESPACE);
-        oneElementWhitespaceLower.add(new WhitespaceToken("hello"));
+        oneElementWhitespaceLower.add(new ConcreteToken("hello", TokenType.WHITESPACE));
         oneElementListWhitespaceIsLowerCase = new Submission("One element lowercase whitespace list", oneElementWhitespaceLower);
 
         TokenList oneElementLine = new TokenList(TokenType.LINE);
-        oneElementLine.add(new LineToken("HELLO WORLD"));
+        oneElementLine.add(new ConcreteToken("HELLO WORLD", TokenType.LINE));
         oneElementListLine = new Submission("One element line list", oneElementLine);
 
         TokenList oneElementLineLower = new TokenList(TokenType.LINE);
-        oneElementLineLower.add(new LineToken("hello world"));
+        oneElementLineLower.add(new ConcreteToken("hello world", TokenType.LINE));
         oneElementListLineIsLowerCase = new Submission("One element lowercase line list", oneElementLineLower);
 
         TokenList twoElementMixedChar = new TokenList(TokenType.CHARACTER);
-        twoElementMixedChar.add(new CharacterToken('H'));
-        twoElementMixedChar.add(new CharacterToken('e'));
+        twoElementMixedChar.add(new ConcreteToken('H', TokenType.CHARACTER));
+        twoElementMixedChar.add(new ConcreteToken('e', TokenType.CHARACTER));
         twoElementListCharacter = new Submission("Two element character list", twoElementMixedChar);
 
         TokenList threeElementMixedChar = new TokenList(TokenType.CHARACTER);
-        threeElementMixedChar.add(new CharacterToken('H'));
-        threeElementMixedChar.add(new CharacterToken('e'));
-        threeElementMixedChar.add(new CharacterToken('L'));
+        threeElementMixedChar.add(new ConcreteToken('H', TokenType.CHARACTER));
+        threeElementMixedChar.add(new ConcreteToken('e', TokenType.CHARACTER));
+        threeElementMixedChar.add(new ConcreteToken('L', TokenType.CHARACTER));
         threeElementListCharacter = new Submission("Three element character list", threeElementMixedChar);
 
         instance = LowercasePreprocessor.getInstance();
@@ -151,8 +151,8 @@ public class TestLowercasePreprocessor {
         Submission result = instance.process(twoElementListCharacter);
 
         TokenList expectedList = new TokenList(TokenType.CHARACTER);
-        expectedList.add(new CharacterToken('h'));
-        expectedList.add(new CharacterToken('e'));
+        expectedList.add(new ConcreteToken('h', TokenType.CHARACTER));
+        expectedList.add(new ConcreteToken('e', TokenType.CHARACTER));
         Submission expected = new Submission(twoElementListCharacter.getName(), expectedList);
 
         assertNotNull(result);
@@ -166,9 +166,9 @@ public class TestLowercasePreprocessor {
         Submission result = instance.process(threeElementListCharacter);
 
         TokenList expectedList = new TokenList(TokenType.CHARACTER);
-        expectedList.add(new CharacterToken('h'));
-        expectedList.add(new CharacterToken('e'));
-        expectedList.add(new CharacterToken('l'));
+        expectedList.add(new ConcreteToken('h', TokenType.CHARACTER));
+        expectedList.add(new ConcreteToken('e', TokenType.CHARACTER));
+        expectedList.add(new ConcreteToken('l', TokenType.CHARACTER));
         Submission expected = new Submission(threeElementListCharacter.getName(), expectedList);
 
         assertNotNull(result);

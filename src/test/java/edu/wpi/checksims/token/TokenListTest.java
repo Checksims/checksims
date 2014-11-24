@@ -19,12 +19,12 @@ public class TokenListTest {
 
     @Before
     public void setUp() {
-        CharacterToken a = new CharacterToken('a');
-        CharacterToken b = new CharacterToken('b');
-        CharacterToken c = new CharacterToken('c');
-        WhitespaceToken w = new WhitespaceToken("whitespace");
-        LineToken l = new LineToken("line line line");
-        CharacterToken inval = new CharacterToken('i', false);
+        ConcreteToken a = new ConcreteToken('a', TokenType.CHARACTER);
+        ConcreteToken b = new ConcreteToken('b', TokenType.CHARACTER);
+        ConcreteToken c = new ConcreteToken('c', TokenType.CHARACTER);
+        ConcreteToken w = new ConcreteToken("whitespace", TokenType.WHITESPACE);
+        ConcreteToken l = new ConcreteToken("line line line", TokenType.LINE);
+        ConcreteToken inval = new ConcreteToken('i', TokenType.CHARACTER, false);
 
         emptyCharacter = new TokenList(TokenType.CHARACTER);
 
@@ -53,7 +53,7 @@ public class TokenListTest {
 
     @Test
     public void TestAddValidTypeToEmpty() {
-        emptyCharacter.add(new CharacterToken('a'));
+        emptyCharacter.add(new ConcreteToken('a', TokenType.CHARACTER));
 
         assertNotNull(emptyCharacter);
         assertFalse(emptyCharacter.isEmpty());
@@ -63,12 +63,12 @@ public class TokenListTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void TestAddInvalidTypeToEmpty() {
-        emptyCharacter.add(new WhitespaceToken("hello"));
+        emptyCharacter.add(new ConcreteToken("hello", TokenType.WHITESPACE));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void TestAddOtherInvalidTypeToEmpty() {
-        emptyCharacter.add(new LineToken("hello world"));
+        emptyCharacter.add(new ConcreteToken("hello world", TokenType.LINE));
     }
 
     @Test

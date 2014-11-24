@@ -4,11 +4,7 @@ import edu.wpi.checksims.ChecksimException;
 import edu.wpi.checksims.algorithm.AlgorithmResults;
 import edu.wpi.checksims.algorithm.PlagiarismDetector;
 import edu.wpi.checksims.submission.Submission;
-import edu.wpi.checksims.token.Token;
-import edu.wpi.checksims.token.TokenList;
-import edu.wpi.checksims.token.TokenType;
-import edu.wpi.checksims.token.ValidityIgnoringToken;
-import edu.wpi.checksims.token.tree.SubmissionID;
+import edu.wpi.checksims.token.*;
 import edu.wpi.checksims.token.tree.SuffixTreeNode;
 import edu.wpi.checksims.token.tree.SuffixTreeRoot;
 import org.apache.commons.lang3.tuple.Triple;
@@ -105,7 +101,7 @@ public class LongestCommonSubstring implements PlagiarismDetector {
         for(SuffixTreeNode matchNode : lcsMatch) {
             Token submissionTokenA = toModifyA.get(submissionIndexA);
             Token submissionTokenB = toModifyB.get(submissionIndexB);
-            Token matchToken = ValidityIgnoringToken.validityIgnoringToken(matchNode.getContent());
+            Token matchToken = new ValidityIgnoringToken(matchNode.getContent());
 
             if (!matchToken.equals(submissionTokenA)) {
                 throw new ChecksimException("Token mismatch at index " + submissionIndexA + " of submission " +

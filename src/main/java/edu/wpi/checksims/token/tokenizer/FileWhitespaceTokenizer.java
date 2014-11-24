@@ -1,8 +1,8 @@
 package edu.wpi.checksims.token.tokenizer;
 
+import edu.wpi.checksims.token.ConcreteToken;
 import edu.wpi.checksims.token.TokenList;
 import edu.wpi.checksims.token.TokenType;
-import edu.wpi.checksims.token.WhitespaceToken;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,7 +32,7 @@ public class FileWhitespaceTokenizer implements FileTokenizer {
 
             Arrays.stream(split)
                     .filter((str) -> !str.isEmpty())
-                    .map(WhitespaceToken::new)
+                    .map((str) -> new ConcreteToken(str, TokenType.WHITESPACE))
                     .forEachOrdered(toReturn::add);
         }
 

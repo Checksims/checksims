@@ -59,7 +59,7 @@ public class ValidityEnsuringSubmission extends Submission {
 
         Supplier<TokenList> tokenListSupplier = () -> new TokenList(this.getTokenType());
 
-        TokenList thisEnforcingValidity = wrappedSubmission.getTokenList().stream().map(ValidityEnsuringToken::validityEnsuringToken).collect(Collectors.toCollection(tokenListSupplier));
+        TokenList thisEnforcingValidity = wrappedSubmission.getTokenList().stream().map(ValidityEnsuringToken::new).collect(Collectors.toCollection(tokenListSupplier));
 
         return thisEnforcingValidity.equals(otherSubmission.getTokenList());
     }

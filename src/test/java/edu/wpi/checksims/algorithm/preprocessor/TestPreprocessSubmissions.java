@@ -1,7 +1,7 @@
 package edu.wpi.checksims.algorithm.preprocessor;
 
 import edu.wpi.checksims.submission.Submission;
-import edu.wpi.checksims.token.LineToken;
+import edu.wpi.checksims.token.ConcreteToken;
 import edu.wpi.checksims.token.TokenList;
 import edu.wpi.checksims.token.TokenType;
 import org.junit.BeforeClass;
@@ -23,11 +23,11 @@ public class TestPreprocessSubmissions {
     @BeforeClass
     public static void setUp() {
         TokenList tokensA = new TokenList(TokenType.LINE);
-        tokensA.add(new LineToken("Submission A"));
+        tokensA.add(new ConcreteToken("Submission A", TokenType.LINE));
         Submission a = new Submission("A", tokensA);
 
         TokenList tokensB = new TokenList(TokenType.LINE);
-        tokensB.add(new LineToken("Submission B"));
+        tokensB.add(new ConcreteToken("Submission B", TokenType.LINE));
         Submission b = new Submission("B", tokensB);
 
         empty = new LinkedList<>();

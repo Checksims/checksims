@@ -1,6 +1,6 @@
 package edu.wpi.checksims.token.tokenizer;
 
-import edu.wpi.checksims.token.CharacterToken;
+import edu.wpi.checksims.token.ConcreteToken;
 import edu.wpi.checksims.token.TokenList;
 import edu.wpi.checksims.token.TokenType;
 import org.apache.commons.lang3.ArrayUtils;
@@ -32,7 +32,7 @@ public class FileCharTokenizer implements FileTokenizer {
             char[] chars = s.toCharArray();
 
             Arrays.stream(ArrayUtils.toObject(chars))
-                    .map(CharacterToken::new)
+                    .map((character) -> new ConcreteToken(character, TokenType.CHARACTER))
                     .forEachOrdered(toReturn::add);
         }
 

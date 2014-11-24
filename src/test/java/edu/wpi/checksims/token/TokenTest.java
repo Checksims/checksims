@@ -10,8 +10,8 @@ import static org.junit.Assert.*;
 public class TokenTest {
     @Test
     public void TestCharacterTokenLowercase() {
-        CharacterToken upper = new CharacterToken('H');
-        CharacterToken lower = new CharacterToken('h');
+        ConcreteToken upper = new ConcreteToken('H', TokenType.CHARACTER);
+        ConcreteToken lower = new ConcreteToken('h', TokenType.CHARACTER);
 
         assertEquals(lower.lowerCase(), lower);
         assertEquals(upper.lowerCase(), lower);
@@ -19,8 +19,8 @@ public class TokenTest {
 
     @Test
     public void TestWhitespaceTokenLowercase() {
-        WhitespaceToken upper = new WhitespaceToken("HELLO");
-        WhitespaceToken lower = new WhitespaceToken("hello");
+        ConcreteToken upper = new ConcreteToken("HELLO", TokenType.WHITESPACE);
+        ConcreteToken lower = new ConcreteToken("hello", TokenType.WHITESPACE);
 
         assertEquals(lower.lowerCase(), lower);
         assertEquals(upper.lowerCase(), lower);
@@ -28,8 +28,8 @@ public class TokenTest {
 
     @Test
     public void TestLineTokenLowercase() {
-        LineToken upper = new LineToken("Hello World");
-        LineToken lower = new LineToken("hello world");
+        ConcreteToken upper = new ConcreteToken("Hello World", TokenType.LINE);
+        ConcreteToken lower = new ConcreteToken("hello world", TokenType.LINE);
 
         assertEquals(lower.lowerCase(), lower);
         assertEquals(upper.lowerCase(), lower);

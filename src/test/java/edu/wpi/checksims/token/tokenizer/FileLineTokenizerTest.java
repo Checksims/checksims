@@ -1,6 +1,6 @@
 package edu.wpi.checksims.token.tokenizer;
 
-import edu.wpi.checksims.token.LineToken;
+import edu.wpi.checksims.token.ConcreteToken;
 import edu.wpi.checksims.token.TokenList;
 import edu.wpi.checksims.token.TokenType;
 import org.junit.BeforeClass;
@@ -47,7 +47,7 @@ public class FileLineTokenizerTest {
         TokenList results = l.splitFile(oneString);
 
         TokenList expected = new TokenList(TokenType.LINE);
-        expected.add(new LineToken("hello"));
+        expected.add(new ConcreteToken("hello", TokenType.LINE));
 
         assertNotNull(results);
         assertFalse(results.isEmpty());
@@ -60,8 +60,8 @@ public class FileLineTokenizerTest {
         TokenList results = l.splitFile(twoStrings);
 
         TokenList expected = new TokenList(TokenType.LINE);
-        expected.add(new LineToken("hello"));
-        expected.add(new LineToken("world"));
+        expected.add(new ConcreteToken("hello", TokenType.LINE));
+        expected.add(new ConcreteToken("world", TokenType.LINE));
 
         assertNotNull(results);
         assertFalse(results.isEmpty());
