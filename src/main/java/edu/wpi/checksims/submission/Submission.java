@@ -1,8 +1,9 @@
 package edu.wpi.checksims.submission;
 
-import edu.wpi.checksims.token.*;
-import edu.wpi.checksims.util.file.FileLineReader;
+import edu.wpi.checksims.token.TokenList;
+import edu.wpi.checksims.token.TokenType;
 import edu.wpi.checksims.token.tokenizer.FileTokenizer;
+import edu.wpi.checksims.util.file.FileLineReader;
 import org.apache.commons.collections4.list.SetUniqueList;
 
 import java.io.File;
@@ -15,51 +16,31 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Submission {
-    private final TokenList tokenList;
-    private final String name;
+/**
+ * Interface for Submissions
+ *
+ * Also contains factory methods for submissions
+ */
+public interface Submission {
+    /**
+     * @return List of tokens forming the body of this submission
+     */
+    TokenList getTokenList();
 
-    public Submission(String name, TokenList tokens) {
-        this.name = name;
-        this.tokenList = TokenList.immutableCopy(tokens);
-    }
+    /**
+     * @return Name of this submission
+     */
+    String getName();
 
-    public TokenList getTokenList() {
-        return tokenList;
-    }
+    /**
+     * @return Number of tokens in this submission's token list
+     */
+    int getNumTokens();
 
-    public String getName() {
-        return name;
-    }
-
-    public int getNumTokens() {
-        return tokenList.size();
-    }
-
-    public TokenType getTokenType() {
-        return tokenList.type;
-    }
-
-    @Override
-    public String toString() {
-        return "A submission with name " + name + " and " + getNumTokens() + " tokens";
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if(!(other instanceof Submission)) {
-            return false;
-        }
-
-        Submission otherSubmission = (Submission)other;
-
-        return otherSubmission.getName().equals(this.name) && otherSubmission.getNumTokens() == this.getNumTokens() && otherSubmission.getTokenList().equals(this.tokenList);
-    }
-
-    @Override
-    public int hashCode() {
-        return name.hashCode();
-    }
+    /**
+     * @return Type of token contained in this submission
+     */
+    TokenType getTokenType();
 
     /**
      * Generate a list of all student submissions from a directory
@@ -71,7 +52,7 @@ public class Submission {
      * @param glob Match pattern used to identify files to include in submission
      * @param splitter Tokenizes files to produce Token Lists for a submission
      * @return Set of submissions including all unique nonempty submissions in the given directory
-     * @throws IOException Thrown on error interacting with file or filesystem
+     * @throws java.io.IOException Thrown on error interacting with file or filesystem
      */
     public static List<Submission> submissionListFromDir(File directory, String glob, FileTokenizer splitter) throws IOException {
         List<Submission> submissions = SetUniqueList.setUniqueList(new LinkedList<>());
@@ -124,7 +105,7 @@ public class Submission {
      * @param glob Match pattern used to identify files to include
      * @return List of all matching files in this directory and subdirectories
      */
-    private static List<File> getAllMatchingFiles(File directory, String glob) {
+    static List<File> getAllMatchingFiles(File directory, String glob) {
         List<File> allFiles = new LinkedList<>();
 
         // Add this directory
@@ -146,7 +127,7 @@ public class Submission {
      * @param glob Match pattern used to identify files to include
      * @return Array of files which match in this single directory
      */
-    private static File[] getMatchingFilesFromDir(File directory, String glob) {
+    static File[] getMatchingFilesFromDir(File directory, String glob) {
         PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:" + glob);
 
         return directory.listFiles((f) -> matcher.matches(Paths.get(f.getAbsolutePath()).getFileName()));
@@ -173,6 +154,6 @@ public class Submission {
             tokenList.addAll(splitter.splitFile(FileLineReader.readFile(f)));
         }
 
-        return new Submission(name, tokenList);
+        return new ConcreteSubmission(name, tokenList);
     }
 }

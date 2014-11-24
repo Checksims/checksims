@@ -5,7 +5,7 @@ package edu.wpi.checksims.token;
  *
  * Decorates other tokens to override their equals() method
  */
-public class ValidityIgnoringToken extends AbstractTokenDecorator {
+public final class ValidityIgnoringToken extends AbstractTokenDecorator {
     public ValidityIgnoringToken(Token wrappedToken) {
         super(wrappedToken);
     }

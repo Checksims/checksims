@@ -1,5 +1,6 @@
 package edu.wpi.checksims.algorithm.preprocessor;
 
+import edu.wpi.checksims.submission.ConcreteSubmission;
 import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.token.ConcreteToken;
 import edu.wpi.checksims.token.TokenList;
@@ -24,11 +25,11 @@ public class TestPreprocessSubmissions {
     public static void setUp() {
         TokenList tokensA = new TokenList(TokenType.LINE);
         tokensA.add(new ConcreteToken("Submission A", TokenType.LINE));
-        Submission a = new Submission("A", tokensA);
+        Submission a = new ConcreteSubmission("A", tokensA);
 
         TokenList tokensB = new TokenList(TokenType.LINE);
         tokensB.add(new ConcreteToken("Submission B", TokenType.LINE));
-        Submission b = new Submission("B", tokensB);
+        Submission b = new ConcreteSubmission("B", tokensB);
 
         empty = new LinkedList<>();
 
@@ -60,9 +61,9 @@ public class TestPreprocessSubmissions {
 
     @Test
     public void testOneSubmissionRename() {
-        List<Submission> results = PreprocessSubmissions.process((s) -> new Submission("renamed", s.getTokenList()), oneSubmission);
+        List<Submission> results = PreprocessSubmissions.process((s) -> new ConcreteSubmission("renamed", s.getTokenList()), oneSubmission);
 
-        Submission expected = new Submission("renamed", oneSubmission.get(0).getTokenList());
+        Submission expected = new ConcreteSubmission("renamed", oneSubmission.get(0).getTokenList());
 
         assertNotNull(results);
         assertEquals(results.size(), 1);
@@ -81,11 +82,11 @@ public class TestPreprocessSubmissions {
 
     @Test
     public void testTwoSubmissionRename() {
-        List<Submission> results = PreprocessSubmissions.process((s) -> new Submission("renamed " + s.getName(), s.getTokenList()), twoSubmissions);
+        List<Submission> results = PreprocessSubmissions.process((s) -> new ConcreteSubmission("renamed " + s.getName(), s.getTokenList()), twoSubmissions);
 
         List<Submission> expected = new LinkedList<>();
-        expected.add(new Submission("renamed " + twoSubmissions.get(0).getName(), twoSubmissions.get(0).getTokenList()));
-        expected.add(new Submission("renamed " + twoSubmissions.get(1).getName(), twoSubmissions.get(1).getTokenList()));
+        expected.add(new ConcreteSubmission("renamed " + twoSubmissions.get(0).getName(), twoSubmissions.get(0).getTokenList()));
+        expected.add(new ConcreteSubmission("renamed " + twoSubmissions.get(1).getName(), twoSubmissions.get(1).getTokenList()));
 
         assertNotNull(results);
         assertEquals(results.size(), 2);

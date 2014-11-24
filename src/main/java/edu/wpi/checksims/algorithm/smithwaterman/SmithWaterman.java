@@ -1,14 +1,14 @@
 package edu.wpi.checksims.algorithm.smithwaterman;
 
 import edu.wpi.checksims.ChecksimException;
-import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.algorithm.AlgorithmResults;
 import edu.wpi.checksims.algorithm.PlagiarismDetector;
-import edu.wpi.checksims.util.TwoDimArrayCoord;
-import edu.wpi.checksims.util.TwoDimIntArray;
+import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.token.TokenList;
 import edu.wpi.checksims.token.TokenType;
 import edu.wpi.checksims.token.ValidityEnsuringToken;
+import edu.wpi.checksims.util.TwoDimArrayCoord;
+import edu.wpi.checksims.util.TwoDimIntArray;
 
 /**
  * Performs the actual Smith-Waterman algorithm
@@ -106,8 +106,15 @@ public class SmithWaterman implements PlagiarismDetector {
         TwoDimIntArray m = new TwoDimIntArray(width, height);
 
         // Iterate through and fill arrays
-        for(int i = 1; i < width; i++) {
-            for(int j = 1; j < height; j++) {
+        smithWatermanComputeArraySubset(1, width, 1, height, a, b, params, s, m);
+
+        return new SmithWatermanResults(s, a, b);
+    }
+
+    static void smithWatermanComputeArraySubset(int startWidth, int endWidth, int startHeight, int endHeight,
+                                                TokenList a, TokenList b, SmithWatermanParameters params, TwoDimIntArray s, TwoDimIntArray m) {
+        for(int i = startWidth; i < endWidth; i++) {
+            for(int j = startHeight; j < endHeight; j++) {
                 TwoDimArrayCoord curr = new TwoDimArrayCoord(i, j);
                 TwoDimArrayCoord predecessor = new TwoDimArrayCoord(i - 1, j - 1);
 
@@ -167,7 +174,5 @@ public class SmithWaterman implements PlagiarismDetector {
                 m.setValue(newM, curr);
             }
         }
-
-        return new SmithWatermanResults(s, a, b);
     }
 }

@@ -1,6 +1,7 @@
 package edu.wpi.checksims.algorithm;
 
 import edu.wpi.checksims.ChecksimException;
+import edu.wpi.checksims.submission.ConcreteSubmission;
 import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.token.Token;
 import edu.wpi.checksims.token.TokenList;
@@ -62,6 +63,6 @@ public class CommonCodeRemover {
         DecimalFormat d = new DecimalFormat("###.00");
         logs.trace("Submission " + in.getName() + " contained " + d.format(100 * results.percentMatchedA()) + "% common code");
 
-        return new Submission(in.getName(), finalList);
+        return new ConcreteSubmission(in.getName(), finalList);
     }
 }

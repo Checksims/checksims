@@ -1,9 +1,10 @@
 package edu.wpi.checksims.algorithm.linesimilarity;
 
 import edu.wpi.checksims.ChecksimException;
-import edu.wpi.checksims.submission.Submission;
+import edu.wpi.checksims.submission.ConcreteSubmission;
 import edu.wpi.checksims.algorithm.AlgorithmResults;
 import edu.wpi.checksims.algorithm.PlagiarismDetector;
+import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.token.Token;
 import edu.wpi.checksims.token.TokenList;
 import edu.wpi.checksims.token.TokenType;

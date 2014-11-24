@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Interface for comparable tokens of various types
  */
-public class ConcreteToken implements Token {
+public final class ConcreteToken implements Token {
     private static final BiMap<Object, Integer> lexemeMap = Maps.synchronizedBiMap(HashBiMap.create());
     private static final AtomicInteger lexemeIndex = new AtomicInteger();
 

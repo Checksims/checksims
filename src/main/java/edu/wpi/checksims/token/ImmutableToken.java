@@ -5,7 +5,7 @@ import org.apache.commons.lang.NotImplementedException;
 /**
  * An immutable view of a token
  */
-public class ImmutableToken extends AbstractTokenDecorator {
+public final class ImmutableToken extends AbstractTokenDecorator {
     public ImmutableToken(Token wrappedToken) {
         super(wrappedToken);
     }

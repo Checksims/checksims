@@ -3,6 +3,7 @@ package edu.wpi.checksims.algorithm.commonsubstring;
 import edu.wpi.checksims.ChecksimException;
 import edu.wpi.checksims.algorithm.AlgorithmResults;
 import edu.wpi.checksims.algorithm.PlagiarismDetector;
+import edu.wpi.checksims.submission.ConcreteSubmission;
 import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.token.*;
 import edu.wpi.checksims.token.tree.SuffixTreeNode;
@@ -120,7 +121,7 @@ public class LongestCommonSubstring implements PlagiarismDetector {
             submissionIndexB++;
         }
 
-        return Triple.of(new Submission(a.getName(), toModifyA), new Submission(b.getName(), toModifyB), lcsMatch.size());
+        return Triple.of(new ConcreteSubmission(a.getName(), toModifyA), new ConcreteSubmission(b.getName(), toModifyB), lcsMatch.size());
     }
 
     static List<SuffixTreeNode> getLCS(SuffixTreeRoot root) throws ChecksimException {
