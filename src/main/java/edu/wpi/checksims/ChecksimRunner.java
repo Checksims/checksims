@@ -102,7 +102,7 @@ public class ChecksimRunner {
 
             System.err.println("\nSupported Output Strategies:");
             OutputRegistry.getInstance().getAllOutputStrategyNames().stream().forEach((name) -> System.err.print(name + ", "));
-            System.err.println("\nDefault strategy is " + AlgorithmRegistry.getInstance().getDefaultAlgorithmName());
+            System.err.println("\nDefault strategy is " + OutputRegistry.getInstance().getDefaultStrategyName());
 
             System.err.println("\nAvailable Preprocessors:");
             PreprocessorRegistry.getInstance().getPreprocessorNames().stream().forEach((name) -> System.err.print(name + ", "));
