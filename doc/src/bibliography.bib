@@ -212,6 +212,71 @@ discussed for majority of paper.
   year={1994},
   publisher={IBM}
 }
+Presents various reverse engineering assistance techniques designed to assist
+with program understanding. Used IBM SQL/DS, a large tool written in the
+proprietary PL/AS language, as a reference system. The program undertook seven
+top-level goals:
+1. Detect uninitialized data, pointer errors, and memory leaks
+2. Detect data type mismatches
+3. Find incomplete uses of record fields
+4. Find similar code fragments
+5. Localize algorithmic plans
+6. Recognize inefficient or high-complexity code
+7. Predict the impact of change.
+
+We are only interested in goal number 4, and those headings are the only ones
+we read.
+
+The heading "Pattern Matching" in the background was fairly useful. They
+mention a few methods:
+
+ - Text analysis: The huge advantage of text analysis, of course, is that it is
+   language-independent. Interesting quote: "For some understanding purposes,
+   less analysis is better; syntactic and semantic analysis can actually
+   information content in the code, such as formatting, identifier choices,
+   white space, and commentary. Evidence to identify instances of cut-and-paste
+   is lost as a result of syntactic analysis. The text analysis research
+   occurred at IBM and was done by Johnson, who coauthored this paper as well
+   as others in this bibliography.
+ - Syntactic analysis: This research occurred at the University of Michigan and
+   did not seem to be interested in detecting cloned code. However, the results
+   might be at least somewhat applicable. The authors complain about existing
+   (mostly text-based and graph-based) search tools, and then present SCRUPLE,
+   a pattern-based query system with a powerful pattern language that allows
+   the programmer to search, for instance, for three nested loops in order to
+   find a matrix multiplication.
+ - Semantic analysis: This research occurred at McGill, and clone detection was
+   just one of their goals. The McGill research focuses on representing code as
+   a vector of complexity metrics; close vectors are more likely to be similar
+   (this is a classic vector distance algorithm). The McGill research uses five
+   metrics:
+    1. Number of functions called
+    2. Ratio of input-output variables to fanout
+    3. McCabe's cyclomatic complexity
+    4. Albrecht's function-point quality metric
+    5. Henry-Kafura's information flow quality metric
+   The researchers measure distance based on Euclidean distance and clustering
+   thresholds on each axis. Needless to say, this approach is language-
+   dependent.
+
+
+Text analysis found 727 copied lines out of a 51,655 line sample of source code
+from SQL/DS. The processing took two hours. They say that subgroup's research
+is now focused on finding approximate matches, implying to me that their
+findings include only exact matches. Syntactic analysis was not used to detect
+program similarity, and no quantitative results were presented for semantic
+analysis. The authors present a few qualitative takeaways:
+
+1. Domain-specific knowledge is critical in easing the interpretation of large
+   software systems
+2. Program representations for efficient queries are essential
+3. Many kinds of approaches are needed in a comprehensive reverse engineering
+   approach
+4. An extensible approach is needed to consolidate these diverse approaches
+   into a unified framework
+
+They closed with a discussion of how they integrated their tool into SQL/DS,
+which is not very interesting to us.
 
 @article{chen04,
   title={Shared information and program plagiarism detection},
@@ -455,6 +520,15 @@ A similarity detection algorithm for plaintexts intended for plagiarism
 detection. According to conclusion, very accurate, but slow - perhaps too slow
 for anything but very small batches of files. This does describe our situation,
 though. Worth looking into.
+
+@inproceedings{johnson93,
+  title={Identifying redundancy in source code using fingerprints},
+  author={Johnson, J Howard},
+  booktitle={Proceedings of the 1993 conference of the Centre for Advanced Studies on Collaborative research: software engineering-Volume 1},
+  pages={171--183},
+  year={1993},
+  organization={IBM Press}
+}
 
 @inproceedings{johnson94,
   title={Substring matching for clone detection and change tracking},
