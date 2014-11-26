@@ -629,8 +629,31 @@ Presents an algorithm called SHERLOCK, with the following requirements:
   year={1987},
   publisher={IBM}
 }
-Not available online; Gordon Library has a microfiche copy and a paper copy
-for in-library use.
+
+This is a seminal paper that is cited by almost every article in this
+bibliography. It seems that almost all program similarity detection tools use
+Karp-Rabin string matching to search for and verify matches.
+
+Presents a generalized string-matching algorithm that works in "real time"
+(there is a formal definition of that, but I have not reached it yet) and in
+a constant number of registers. It requires keeping a substring in memory of
+the same length as the one you are searching for. Authors claim that it seems
+to be competitive on classical strings only for larger substring sizes, but it
+has a huge advantage in being able to search 2D arrays, higher dimensional
+arrays, and even irregular shapes with the same mathematical background.
+
+First presents a generalization of all string matching problems, and explains
+how the simple pattern-matching problem we are interested in fits that framework.
+TODO explain the framework here
+It also provides an example of how a 2D array fits the framework, but we are
+not interested in that. I have not yet finished reading the paper, but a
+description of the relevant stuff will go here.
+
+We should also check out the prior work to see if it may be useful to us.
+
+
+This article is not available online; Gordon Library has a microfiche copy and
+a paper copy for in-library use.
 
 @incollection{khanna07,
   title={A formal investigation of diff3},
