@@ -9,11 +9,16 @@
 \begin{document}
 \fullcite{ahtiainen06}
 
+GNU GPL licensed Java 1.5 source code plagiarism detection software dating to
+2006. No evidence of active development after this point.
+
 \fullcite{aiken05}
 
 \fullcite{baker93}
 
 \fullcite{baker95}
+Presents Dup, a tool for locating instances of duplication or near-duplication
+in a large software system.
 
 \fullcite{baker98}
 
@@ -28,13 +33,70 @@ identical in low-level CS!). Mention at most.
 
 \fullcite{beth14}
 
+Beth measures the performance of four approaches to plagiarism detection
+against a simulated corpus of plagiarized C programs using five distinct
+obfuscation techniques: comment alteration, whitespace padding, identifier
+renaming, code reordering, and refactoring algebraic expressions. The project
+measures the effectiveness of Levenshtein edit distance (in source and in the
+LLVM intermediate representation bitcode), tree edit distance in the abstract
+syntax tree, graph edit distance in the control flow graphs, and w-shingling*,
+both in the source and in the IR bitcode. The algorithms are also checked
+against an unrelated piece of source code (to check for false positives), and
+their performance was also compared with the performance of MOSS, the state of
+the art plagiarism detection service provided by Stanford).
+
+The author limited the corpus to C programs, but believes the results will be
+similar for any compiler which uses the LLVM toolchain. The corpus is, however,
+very small, and perhaps not too realistic. The results are certainly not
+conclusive, but they provide a decent starting point.
+
+It seems that most approaches detect some attacks well, but not others. The
+author had comments and whitespace removed before running the checks, so both
+of those approaches did poorly. It seems that changes to order and nomenclature
+are best detected when checking compiler-generated structures rather than the
+source itself. w-shingling against the LLVM Intermediate Result performed ``the
+best''.
+
+``w-shingling measures the proportion of n-gram sequences two documents have in
+common to the total number of n-gram sequences that occur in either document''.
+Beth speculates that MOSS uses a similar n-gram fingerprinting retrieval
+system called winnowing.
+
+In the introduction, the author differentiated ``code clone detection'' from
+``source code plagiarism detection'', but did not elaborate. Perhaps we should
+look more closely into the difference.
+
 \fullcite{bowyer99}
+
+Old paper (1999) but very relevant as it directly discusses plagiarism in a
+programming class setting. Describes MOSS, a web-based plagiarism detection
+service still made available by Stanford (upwards of a decade after initial
+inception). MOSS does not provide details of algorithms used internally,
+does not provide source code, but does provide what would seem to be a useful
+benchmark for usability given its popularity.
 
 \fullcite{braumoeller01}
 
 \fullcite{brin95}
 
+Presents COPS, a fingerprinting copy detection approach based on chunking.
+Brin et al. note that chunking approaches cannot make use of the underlying
+structure of the document. A chunk is simply a group of units, which do have
+some structural meaning (units are remarkably similar to ``tokens'' as we
+describe them in other parts of the literature).
+
+Brin et al. present four chunking strategies: one unit equals one chunk was
+rejected for its high space requirement. Non-overlapping chunks were rejected
+because of their phase dependence. All-overlapping chunks were rejected for
+having the same space requirement as one-unit chunks, and because an attacker
+could defeat it by changing one unit in each chunk. Expanding chunks until the
+chunk hash is divisible by some number $p$; note the similarity to the
+document fingerprinting approaches we have studied. The authors choose the
+last strategy.
+
 \fullcite{brixtel10}
+
+Very promising abstract
 
 \fullcite{broder97}
 
@@ -42,17 +104,106 @@ identical in low-level CS!). Mention at most.
 
 \fullcite{burrows07}
 
+Focused on efficiency over large data sets. Details indexing algorithms adapted
+from genomic information retrieval for maintaining a database of source code
+which new submissions can be compared against, in a very efficient manner (so
+as to scale to many thousands or tens of thousands of submissions). Very
+advanced database retrieval techniques I did not understand in the slightest
+discussed for majority of paper.
+
 \fullcite{buss94}
+
+Presents various reverse engineering assistance techniques designed to assist
+with program understanding. Used IBM SQL/DS, a large tool written in the
+proprietary PL/AS language, as a reference system. The program undertook seven
+top-level goals:
+1. Detect uninitialized data, pointer errors, and memory leaks
+2. Detect data type mismatches
+3. Find incomplete uses of record fields
+4. Find similar code fragments
+5. Localize algorithmic plans
+6. Recognize inefficient or high-complexity code
+7. Predict the impact of change.
+
+We are only interested in goal number 4, and those headings are the only ones
+we read.
+
+The heading ``Pattern Matching'' in the background was fairly useful. They
+mention a few methods:
+
+ - Text analysis: The huge advantage of text analysis, of course, is that it is
+   language-independent. Interesting quote: ``For some understanding purposes,
+   less analysis is better; syntactic and semantic analysis can actually
+   information content in the code, such as formatting, identifier choices,
+   white space, and commentary. Evidence to identify instances of cut-and-paste
+   is lost as a result of syntactic analysis.'' The text analysis research
+   occurred at IBM and was done by Johnson, who coauthored this paper as well
+   as others in this bibliography.
+ - Syntactic analysis: This research occurred at the University of Michigan and
+   did not seem to be interested in detecting cloned code. However, the results
+   might be at least somewhat applicable. The authors complain about existing
+   (mostly text-based and graph-based) search tools, and then present SCRUPLE,
+   a pattern-based query system with a powerful pattern language that allows
+   the programmer to search, for instance, for three nested loops in order to
+   find a matrix multiplication.
+ - Semantic analysis: This research occurred at McGill, and clone detection was
+   just one of their goals. The McGill research focuses on representing code as
+   a vector of complexity metrics; close vectors are more likely to be similar
+   (this is a classic vector distance algorithm). The McGill research uses five
+   metrics:
+    1. Number of functions called
+    2. Ratio of input-output variables to fanout
+    3. McCabe's cyclomatic complexity
+    4. Albrecht's function-point quality metric
+    5. Henry-Kafura's information flow quality metric
+   The researchers measure distance based on Euclidean distance and clustering
+   thresholds on each axis. Needless to say, this approach is language-
+   dependent.
+
+
+Text analysis found 727 copied lines out of a 51,655 line sample of source code
+from SQL/DS. The processing took two hours. They say that subgroup's research
+is now focused on finding approximate matches, implying to me that their
+findings include only exact matches. Syntactic analysis was not used to detect
+program similarity, and no quantitative results were presented for semantic
+analysis. The authors present a few qualitative takeaways:
+
+1. Domain-specific knowledge is critical in easing the interpretation of large
+   software systems
+2. Program representations for efficient queries are essential
+3. Many kinds of approaches are needed in a comprehensive reverse engineering
+   approach
+4. An extensible approach is needed to consolidate these diverse approaches
+   into a unified framework
+
+They closed with a discussion of how they integrated their tool into SQL/DS,
+which is not very interesting to us.
 
 \fullcite{chen04}
 
+Attempts to “take a step back” and develop a universal measure for the
+amount of information shared between 2 sequences (be they DNA, text, or source
+code) which can then be used to make a determination on plagiarism. However, to
+make use of this algorithm, the program must be parsed into tokens to remove
+whitespace issues (amongst other reasons). Solution is named SID - Software
+Integrity Diagnosis. I can find no information on current development (paper
+dated 2004), and the official website no longer exists. No evidence source code
+was ever released.
+
 \fullcite{ciesielski08}
+Discusses the use of genetic algorithms to tune an existing algorithm for
+plagiarism detection (Okapi) for optimum accuracy, and furthermore uses
+particle swarm genetic optimization to devise novel formulas for plagiarism
+detection.
 
 \fullcite{clough00}
+
 
 \fullcite{clough02}
 
 \fullcite{clough03}
+
+According to abstract, focuses on natural language.
 
 \fullcite{clough09}
 
@@ -60,9 +211,18 @@ identical in low-level CS!). Mention at most.
 
 \fullcite{cosma06}
 
+A survey of UK academics focused not on how to detect plagiarism, but what it
+is in the context of source code and programming classes. Useful for abstract/
+introduction, not really useful otherwise as Prof. Lauer has provided his own
+definition, and that’s what we’re working with for this project.
+
 \fullcite{cosma12}
 
 \fullcite{crochemore01}
+
+Efficient solution to Longest Common Subsequence problem, which has important
+implications for plagiarism detection (though it cannot cope with comments,
+whitespace, etc on its own).
 
 \fullcite{donaldson81}
 
@@ -76,7 +236,20 @@ identical in low-level CS!). Mention at most.
 
 \fullcite{gabel08}
 
+Not a proper discussion of plagiarism detection, but still very applicable.
+This presents a scalable approach to identifying ``semantic codes'' -
+semantically equivalent source code blocks (here presented in the context of
+the detection of dead/redundant code, but plagiarism applications are obvious).
+Based on construction of a syntax tree in a form very similar to a function
+call graph.
+
 \fullcite{gitchell99}
+
+A functional description of the previously-described Sim utility. No
+significant details of the algorithm are mentioned which are not expanded on in
+the first paper, but it does mention a worthwhile statistic: Sim is $O(S^2)$
+complexity, where $S$ is the size of the parse tree of the program being
+processed. This, perhaps, places the scalability papers in a better context?
 
 \fullcite{grozea09}
 
@@ -84,29 +257,128 @@ identical in low-level CS!). Mention at most.
 
 \fullcite{hoad03}
 
+A textual approach to source code plagiarism detection based on a
+``fingerprinting'' method - in keeping with out ``line-by-line checksum'' examples,
+but more adaptable (can cross multiple lines, etc). Apparently, fingerprinting
+is not as good as some other methods, though - their conclusion mentions the
+existing ``Identity Algorithm'' is more accurate in their testing.
+
 \fullcite{hordijk08}
 
 \fullcite{irving04}
+
+A similarity detection algorithm for plaintexts intended for plagiarism
+detection. According to conclusion, very accurate, but slow - perhaps too slow
+for anything but very small batches of files. This does describe our situation,
+though. Worth looking into.
 
 \fullcite{johnson93}
 
 \fullcite{johnson94}
 
+Presents a tool for locating similarities in text, including source code. The
+tool works in six steps:
+1. Perform text-to-text transformations on each file
+2. Break the text into potentially overlapping substrings
+3. Generate a database of ``raw matches'' by finding the substrings that match
+4. Iterate to improve the matches
+5. Perform task-specific data reduction
+6. Summarize high-level matches
+
+Steps 2-4 work only on exact matches, so any partial matching must be done via
+normalization in step 1. Common transformations include white space removal,
+comment removal, and identifier renaming. Steps 2-4 have the advantage of being
+language-agnostic. Note that this approach is reminiscent of the document
+fingerprinting approaches to plagiarism detection.
+
+They seem to have used Karp-Rabin string matching and document fingerprinting
+like Schleimer et al. I will add more as I continue reading the paper.
+
 \fullcite{jones01}
 
+A developed example of what I earlier termed a ``feature comparison'' - creates
+and examines ``profiles'' of program features (line count, number of unique
+tokens, average line length, number of spaces, that sort of thing). No evidence
+is presented that it is actually effective, and indeed they do not test on
+real-world data (only note that they intend to use it in their own courses)
+
 \fullcite{joy1999}
+
+Joy provides a definition of plagiarism, ``Unacknowledged copying of documents
+or programs'', and names several potential causes of plagiarism.
+
+Joy describes
+two obfuscation techniques: lexical changes (comment changes, formatting,
+changing identifier names, etc.) and structural changes (loop replacement, ifs
+to cases, statement ordering, refactoring, etc.)
+
+Joy describes two pair comparison techniques: comparing attribute counts, and
+comparing structure.
+
+Presents an algorithm called SHERLOCK, with the following requirements:
+ - Must be reliable
+ - Must be simple to change for a new language
+ - Must have an ``efficient interface''
+ - Output must be clear to somene unfamiliar with the programs
+
+ Incremental comparison: compare five times: in original form, with whitespace
+ removed, with comments removed, with both removed, and tokenized. Looks for
+ ``runs'' with a maximum allowed size and density of ``anomalies''. Looks for and
+ reports maximum length runs.
+
+ Presents a very interesting visualization with a point for each submission
+ and similarities connected by lines; shorter lines correspond to closer
+ matches.
 
 \fullcite{kang06}
 
 \fullcite{karp87}
 
+This is a seminal paper that is cited by almost every article in this
+bibliography. It seems that almost all program similarity detection tools use
+Karp-Rabin string matching to search for and verify matches.
+
+Presents a generalized string-matching algorithm that works in ``real time''
+(there is a formal definition of that, but I have not reached it yet) and in
+a constant number of registers. It requires keeping a substring in memory of
+the same length as the one you are searching for. Authors claim that it seems
+to be competitive on classical strings only for larger substring sizes, but it
+has a huge advantage in being able to search 2D arrays, higher dimensional
+arrays, and even irregular shapes with the same mathematical background.
+
+First presents a generalization of all string matching problems, and explains
+how the simple pattern-matching problem we are interested in fits that framework.
+TODO explain the framework here
+It also provides an example of how a 2D array fits the framework, but we are
+not interested in that. I have not yet finished reading the paper, but a
+description of the relevant stuff will go here.
+
+We should also check out the prior work to see if it may be useful to us.
+
+This article is not available online; Gordon Library has a microfiche copy and
+a paper copy for in-library use.
+
 \fullcite{khanna07}
+
+A discussion of Diff3, a 3-way version of the conventional Diff algorithm. This
+could be used for plagiarism detection (detect similarities between 2 files
+that are not shared by a third [given reference code shared by all students]).
 
 \fullcite{koss12}
 
 \fullcite{krinke10}
 
+Another paper that doesn't really solve the plagiarism prolem, and instead
+attempts to find duplicate/dead code. This one is interesting because of its
+categorization metrics, though - it attempts to classify code as either a
+straight duplicate, close copy, or unclassifiable (some duplicated code, but
+not enough to conclusively classify). This might be worth carrying over into
+our work.
+
 \fullcite{lancaster05}
+Entirely devoted to producing a taxonomy of plagiarism detection solutions -
+existing software, types of detection engine, etc. Going to be VERY useful
+writing literature survey.
 
 \fullcite{liu06}
 
@@ -114,13 +386,33 @@ identical in low-level CS!). Mention at most.
 
 \fullcite{manber94}
 
+I came across a claim that detecting copies of continuous data is harder than
+in the discrete domain; it cited this paper.
+
 \fullcite{mork99}
 
 \fullcite{murugesan10}
 
+Attempts to detect similar documents when the text of the document is not
+available, for instance, when checking for plagiarism between conferences with
+confidential systems. Not relevant enough, since we should have access to our
+full corpus.
+
 \fullcite{parker89}
 
 \fullcite{potthast10}
+
+Potthast et al. formalize a plagiarism as a 4-tuple consisting of the
+plagiarizing document, the copied document, and the plagiarized and original
+passages within each. They then explain that it is impossible to find an
+adequate source of ``true'' plagiarized material for a number of valid reasons,
+and describe three ways of generating a corpus: pay humans to plagiarize, use
+sources of legitimately copied material such as wire stories, or use an
+algorithm to mutate the document.
+
+They present PAN-PC-10, a plagiarism corpus created with Mechanical Turk and an
+algorithmic approach. They compare the corpus with existing corpori Clough09
+and METER, but stop short of claiming that any one database is the best.
 
 \fullcite{potthast10competition}
 
@@ -144,7 +436,94 @@ identical in low-level CS!). Mention at most.
 
 \fullcite{schleimer03}
 
+Schleimer et al. present a document fingerprinting algorithm called winnowing,
+and describe its use in Stanford's MOSS service. They describe the concept of
+``k-gram filtering'', where a document of n tokens is described as a sequence of
+(n-k+1) overlapping k-grams, with a k-gram being a sequence of k tokens. In
+k-gram filtering, each k-gram is hashed, and stored, with its document ID and
+location, in a lookup table. The k-grams are reduced to a smaller list using a
+filtering algorithm, and future documents can be checked against this corpus of
+document ``fingerprints''.
+
+Note that our current LineCompare code is an implementation of k-gram
+filtering; in LineCompare, each line is a token, a document is represented as a
+sequence of 1-grams, and the 1-grams are filtered using the identity function.
+Since k-gram filtering (referred to by most other literature as ``n-gram''
+filtering) seems to be very prevalent in the literature, we should consider
+refactoring our implementation to be a more general framework.
+
+According to the paper, current (at publication) k-gram filters suffer from a
+number of disadvantages. The biggest one is that the filter used is typically a
+mod-p filter; a mod-p filter accepts a k-gram x if H(x) is congruent to zero
+mod p. Mod-p filters are weak because the fingerprints selected from the
+document are uneven - there could be huge runs of n-grams that do not hash to
+zero mod p. In principle, the maximum ``gap width'' in a document is unbounded,
+and in practice it is often longer than most web pages. Mod-p especially chokes
+on low-entropy data - a long string of zeroes, for instance, will either go
+completely unfingerprinted, or fingerprinted every single time.
+
+The paper's contribution is winnowing, a k-gram filter that guarantees an upper
+bound on the distance between fingerprints in a document. That means that a
+copy which is longer than the maximum gap width is guaranteed to be detected.
+Winnowing has achieved widespread adoption, including by MOSS, and its merit
+has caused this paper to rack up 711 citations on Google Scholar.
+
+Schleimer, et al. introduce the concept of a ``local algorithm'', which selects a
+document fingerprint from a ``window'' of consecutive k-grams with length w. An
+algorithm is local if it meets two conditions:
+1. For each possible window, the algorithm selects at least one fingerprint
+   from within that window, and
+2. The choice depends only on the contents of that window, not on any other.
+
+The authors demonstrate that if two documents are compared with a k-gram filter
+using a local algorithm with window size w, the comparison will detect at least
+one k-gram from each shared substring of length w+k-1. The minimum density
+(asymptotic proportion of fingerprinted k-grams to total k-grams) of a local
+fingerprint selection algorithm is 1.5/(w+1). Winnowing has an asymptotic
+density of 2/(w+1), leading the authors to claim it is ``within 33% of optimal''.
+
+The related work describes the Karp-Rabin algorithm, which finds occurrences of
+a substring in a larger string; it seems pretty fundamental. SCAM uses vector
+distance between documents to find copies. Baker presents a concept called
+``parameterized matches'', which can rename parameters to be equal and more
+easily detect copies that way.
+
+They ran winnowing (w=100) and mod-50 on random data and found that both came
+very close to their expected density. Against a corpus of a half million web
+pages, they found that both came close to their expected density, but that
+mod-50 was highly non-uniform. There was a run of 29,900 non-whitespace,
+non-tag characters without a fingerprint from mod-50. The probability of that
+happening in a random terabyte of data is 10e-220.
+
+Winnowing ended up fingerprinting extremely densely in low-entropy data, so the
+authors presented a very minor adjustment called ``robust winnowing'' to correct
+it. Robust winnowing is not a local algorithm, but performed better than
+winnowing.
+
+The authors concluded with some linguistic analysis of the web which we don't
+care about, and several extremely useful implementation suggestions.
+
 \fullcite{shivakumar95}
+
+Presents SCAM, a vector distance approach to copy detection. Like previous
+work, SCAM breaks documents into chunks and then compares the chunks for
+overlap; but instead of chunking into sentences or paragraphs like previous
+work, SCAM chunks by words. Most previous work in this area simply compared
+the size of the overlap against the size of the document, but that doesn't
+work if you are chunking by words; so the authors propose a new similarity
+approach based on vector distances between word counts.
+
+The authors reject the Vector Space Model and find a significant weakness with
+the Cosine Similarity Measure; namely, that it performs poorly when word
+frequency magnitudes differ significantly. They make an adjustment based on
+word frequency and call their measure the Relative Frequency Model (RFM). A
+full description can be found in the paper, but qualitatively, the RFM only
+considers words whose frequencies are ``similar'' according to a tunable
+parameter $\epsilon$.
+
+The experimental results compared SCAM against a previous work, COPS, and were
+very confusing and probably not that interesting anyway.
+
 
 \fullcite{si97}
 
