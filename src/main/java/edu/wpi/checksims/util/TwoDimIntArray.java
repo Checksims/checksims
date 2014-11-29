@@ -29,18 +29,10 @@ public class TwoDimIntArray {
     }
 
     public int getValue(TwoDimArrayCoord coord) {
-        if(coord.x >= width || coord.y >= height) {
-            throw new RuntimeException("Coordinate is out of array bounds"); // TODO convert to checked
-        }
-
         return array[coord.x][coord.y];
     }
 
     public void setValue(int value, TwoDimArrayCoord coord) {
-        if(coord.x >= width || coord.y >= height) {
-            throw new RuntimeException("Coordinate is out of array bounds"); // TODO convert to checked
-        }
-
         // Ensure we always have the largest value placed into the array
         if(!maxSet || max <= value) {
             max = value;
@@ -87,8 +79,6 @@ public class TwoDimIntArray {
      * @return Maximum value of predecessors of coord in this array
      */
     public int getMaxOfPredecessors(TwoDimArrayCoord coord) {
-        int[] toSort = new int[3];
-
         // TODO investigate performance implications of checking cord.x and coord.y here
 
         int a = array[coord.x - 1][coord.y - 1];

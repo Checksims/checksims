@@ -1,12 +1,13 @@
 package edu.wpi.checksims.algorithm.linesimilarity;
 
 import edu.wpi.checksims.ChecksimException;
-import edu.wpi.checksims.Submission;
+import edu.wpi.checksims.submission.ConcreteSubmission;
 import edu.wpi.checksims.algorithm.AlgorithmResults;
 import edu.wpi.checksims.algorithm.PlagiarismDetector;
-import edu.wpi.checksims.util.token.Token;
-import edu.wpi.checksims.util.token.TokenList;
-import edu.wpi.checksims.util.token.TokenType;
+import edu.wpi.checksims.submission.Submission;
+import edu.wpi.checksims.token.Token;
+import edu.wpi.checksims.token.TokenList;
+import edu.wpi.checksims.token.TokenType;
 import org.apache.commons.codec.binary.Hex;
 
 import java.security.MessageDigest;
@@ -22,6 +23,9 @@ import java.util.Map;
 public class LineSimilarityChecker implements PlagiarismDetector {
     private static LineSimilarityChecker instance;
 
+    /**
+     * Internal class for record-keeping - used to record a line at a specific location in a submission
+     */
     class SubmissionLine {
         public final int lineNum;
         public final Submission submission;
@@ -69,13 +73,13 @@ public class LineSimilarityChecker implements PlagiarismDetector {
     public AlgorithmResults detectPlagiarism(Submission a, Submission b) throws ChecksimException {
         TokenList linesA = a.getTokenList();
         TokenList linesB = b.getTokenList();
+        TokenList finalA = TokenList.cloneTokenList(linesA);
+        TokenList finalB = TokenList.cloneTokenList(linesB);
 
-        if(!linesA.type.equals(linesB.type)) {
+        if(!a.getTokenType().equals(b.getTokenType())) {
             throw new ChecksimException("Token list type mismatch: submission " + a.getName() + " has type " +
                     linesA.type.toString() + ", while submission " + b.getName() + " has type " + linesB.type.toString());
         }
-
-        System.out.println("Running line similarity plagiarism detector on submissions " + a.getName() + " and " + b.getName());
 
         MessageDigest hasher;
 
@@ -83,7 +87,7 @@ public class LineSimilarityChecker implements PlagiarismDetector {
         try {
             hasher = MessageDigest.getInstance("SHA-512");
         } catch (NoSuchAlgorithmException e) {
-            throw new ChecksimException("Error instantiating SHA-512 hash algorithm, your JVM may not support it!");
+            throw new ChecksimException("Error instantiating SHA-512 hash algorithm: " + e.getMessage());
         }
 
         // Create a line database map
@@ -91,10 +95,10 @@ public class LineSimilarityChecker implements PlagiarismDetector {
         Map<String, List<SubmissionLine>> lineDatabase = new HashMap<>();
 
         // Hash all lines in A, and put them in the lines database
-        AddLinesToMap(linesA, lineDatabase, a, hasher);
+        addLinesToMap(linesA, lineDatabase, a, hasher);
 
         // Hash all lines in B, and put them in the lines database
-        AddLinesToMap(linesB, lineDatabase, b, hasher);
+        addLinesToMap(linesB, lineDatabase, b, hasher);
 
         // Number of matched lines contained in both
         int identicalLinesA = 0;
@@ -124,15 +128,26 @@ public class LineSimilarityChecker implements PlagiarismDetector {
                     continue;
                 }
 
+                // Set matches invalid
+                for(SubmissionLine s : lineDatabase.get(key)) {
+                    if(s.submission.equals(a)) {
+                        finalA.get(s.lineNum).setValid(false);
+                    } else if(s.submission.equals(b)) {
+                        finalB.get(s.lineNum).setValid(false);
+                    } else {
+                        throw new RuntimeException("Unreachable code!");
+                    }
+                }
+
                 identicalLinesA += numLinesA;
                 identicalLinesB += numLinesB;
             }
         }
 
-        return new AlgorithmResults(a, b, identicalLinesA, identicalLinesB);
+        return new AlgorithmResults(a, b, identicalLinesA, identicalLinesB, finalA, finalB);
     }
 
-    void AddLinesToMap(TokenList lines, Map<String, List<SubmissionLine>> lineDatabase, Submission submitter, MessageDigest hasher) {
+    void addLinesToMap(TokenList lines, Map<String, List<SubmissionLine>> lineDatabase, Submission submitter, MessageDigest hasher) {
         for(int i = 0; i < lines.size(); i++) {
             Token token = lines.get(i);
 

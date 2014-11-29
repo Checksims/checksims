@@ -56,7 +56,7 @@ public class OutputRegistry {
         return matchingStrategies.get(0);
     }
 
-    public List<String> getAllOutputStrategyName() {
+    public List<String> getAllOutputStrategyNames() {
         return outputStrategies.stream().map(SimilarityMatrixPrinter::getName).collect(Collectors.toList());
     }
 

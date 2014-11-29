@@ -1,7 +1,8 @@
 package edu.wpi.checksims.algorithm.preprocessor;
 
-import edu.wpi.checksims.Submission;
-import edu.wpi.checksims.util.token.*;
+import edu.wpi.checksims.submission.ConcreteSubmission;
+import edu.wpi.checksims.submission.Submission;
+import edu.wpi.checksims.token.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -25,42 +26,42 @@ public class TestLowercasePreprocessor {
     @BeforeClass
     public static void setUp() {
         TokenList empty = new TokenList(TokenType.CHARACTER);
-        emptyListCharacter = new Submission("Empty Character List", empty);
+        emptyListCharacter = new ConcreteSubmission("Empty Character List", empty);
 
         TokenList oneElementChar = new TokenList(TokenType.CHARACTER);
-        oneElementChar.add(new CharacterToken('A'));
-        oneElementListCharacter = new Submission("One element character list", oneElementChar);
+        oneElementChar.add(new ConcreteToken('A', TokenType.CHARACTER));
+        oneElementListCharacter = new ConcreteSubmission("One element character list", oneElementChar);
 
         TokenList oneElementCharLower = new TokenList(TokenType.CHARACTER);
-        oneElementCharLower.add(new CharacterToken('a'));
-        oneElementListCharacterIsLowerCase = new Submission("One element lowercase character list", oneElementCharLower);
+        oneElementCharLower.add(new ConcreteToken('a', TokenType.CHARACTER));
+        oneElementListCharacterIsLowerCase = new ConcreteSubmission("One element lowercase character list", oneElementCharLower);
 
         TokenList oneElementWhitespace = new TokenList(TokenType.WHITESPACE);
-        oneElementWhitespace.add(new WhitespaceToken("HELLO"));
-        oneElementListWhitespace = new Submission("One element whitespace list", oneElementWhitespace);
+        oneElementWhitespace.add(new ConcreteToken("HELLO", TokenType.WHITESPACE));
+        oneElementListWhitespace = new ConcreteSubmission("One element whitespace list", oneElementWhitespace);
 
         TokenList oneElementWhitespaceLower = new TokenList(TokenType.WHITESPACE);
-        oneElementWhitespaceLower.add(new WhitespaceToken("hello"));
-        oneElementListWhitespaceIsLowerCase = new Submission("One element lowercase whitespace list", oneElementWhitespaceLower);
+        oneElementWhitespaceLower.add(new ConcreteToken("hello", TokenType.WHITESPACE));
+        oneElementListWhitespaceIsLowerCase = new ConcreteSubmission("One element lowercase whitespace list", oneElementWhitespaceLower);
 
         TokenList oneElementLine = new TokenList(TokenType.LINE);
-        oneElementLine.add(new LineToken("HELLO WORLD"));
-        oneElementListLine = new Submission("One element line list", oneElementLine);
+        oneElementLine.add(new ConcreteToken("HELLO WORLD", TokenType.LINE));
+        oneElementListLine = new ConcreteSubmission("One element line list", oneElementLine);
 
         TokenList oneElementLineLower = new TokenList(TokenType.LINE);
-        oneElementLineLower.add(new LineToken("hello world"));
-        oneElementListLineIsLowerCase = new Submission("One element lowercase line list", oneElementLineLower);
+        oneElementLineLower.add(new ConcreteToken("hello world", TokenType.LINE));
+        oneElementListLineIsLowerCase = new ConcreteSubmission("One element lowercase line list", oneElementLineLower);
 
         TokenList twoElementMixedChar = new TokenList(TokenType.CHARACTER);
-        twoElementMixedChar.add(new CharacterToken('H'));
-        twoElementMixedChar.add(new CharacterToken('e'));
-        twoElementListCharacter = new Submission("Two element character list", twoElementMixedChar);
+        twoElementMixedChar.add(new ConcreteToken('H', TokenType.CHARACTER));
+        twoElementMixedChar.add(new ConcreteToken('e', TokenType.CHARACTER));
+        twoElementListCharacter = new ConcreteSubmission("Two element character list", twoElementMixedChar);
 
         TokenList threeElementMixedChar = new TokenList(TokenType.CHARACTER);
-        threeElementMixedChar.add(new CharacterToken('H'));
-        threeElementMixedChar.add(new CharacterToken('e'));
-        threeElementMixedChar.add(new CharacterToken('L'));
-        threeElementListCharacter = new Submission("Three element character list", threeElementMixedChar);
+        threeElementMixedChar.add(new ConcreteToken('H', TokenType.CHARACTER));
+        threeElementMixedChar.add(new ConcreteToken('e', TokenType.CHARACTER));
+        threeElementMixedChar.add(new ConcreteToken('L', TokenType.CHARACTER));
+        threeElementListCharacter = new ConcreteSubmission("Three element character list", threeElementMixedChar);
 
         instance = LowercasePreprocessor.getInstance();
     }
@@ -78,7 +79,7 @@ public class TestLowercasePreprocessor {
     public void TestOneElementCharacterLowercase() {
         Submission result = instance.process(oneElementListCharacter);
 
-        Submission expected = new Submission(oneElementListCharacter.getName(), oneElementListCharacterIsLowerCase.getTokenList());
+        Submission expected = new ConcreteSubmission(oneElementListCharacter.getName(), oneElementListCharacterIsLowerCase.getTokenList());
 
         assertNotNull(result);
         assertFalse(result.getTokenList().isEmpty());
@@ -102,7 +103,7 @@ public class TestLowercasePreprocessor {
     public void TestOneElementWhitespaceLowercase() {
         Submission result = instance.process(oneElementListWhitespace);
 
-        Submission expected = new Submission(oneElementListWhitespace.getName(), oneElementListWhitespaceIsLowerCase.getTokenList());
+        Submission expected = new ConcreteSubmission(oneElementListWhitespace.getName(), oneElementListWhitespaceIsLowerCase.getTokenList());
 
         assertNotNull(result);
         assertFalse(result.getTokenList().isEmpty());
@@ -126,7 +127,7 @@ public class TestLowercasePreprocessor {
     public void TestOneElementLineLowercase() {
         Submission result = instance.process(oneElementListLine);
 
-        Submission expected = new Submission(oneElementListLine.getName(), oneElementListLineIsLowerCase.getTokenList());
+        Submission expected = new ConcreteSubmission(oneElementListLine.getName(), oneElementListLineIsLowerCase.getTokenList());
 
         assertNotNull(result);
         assertFalse(result.getTokenList().isEmpty());
@@ -151,9 +152,9 @@ public class TestLowercasePreprocessor {
         Submission result = instance.process(twoElementListCharacter);
 
         TokenList expectedList = new TokenList(TokenType.CHARACTER);
-        expectedList.add(new CharacterToken('h'));
-        expectedList.add(new CharacterToken('e'));
-        Submission expected = new Submission(twoElementListCharacter.getName(), expectedList);
+        expectedList.add(new ConcreteToken('h', TokenType.CHARACTER));
+        expectedList.add(new ConcreteToken('e', TokenType.CHARACTER));
+        Submission expected = new ConcreteSubmission(twoElementListCharacter.getName(), expectedList);
 
         assertNotNull(result);
         assertFalse(result.getTokenList().isEmpty());
@@ -166,10 +167,10 @@ public class TestLowercasePreprocessor {
         Submission result = instance.process(threeElementListCharacter);
 
         TokenList expectedList = new TokenList(TokenType.CHARACTER);
-        expectedList.add(new CharacterToken('h'));
-        expectedList.add(new CharacterToken('e'));
-        expectedList.add(new CharacterToken('l'));
-        Submission expected = new Submission(threeElementListCharacter.getName(), expectedList);
+        expectedList.add(new ConcreteToken('h', TokenType.CHARACTER));
+        expectedList.add(new ConcreteToken('e', TokenType.CHARACTER));
+        expectedList.add(new ConcreteToken('l', TokenType.CHARACTER));
+        Submission expected = new ConcreteSubmission(threeElementListCharacter.getName(), expectedList);
 
         assertNotNull(result);
         assertFalse(result.getTokenList().isEmpty());

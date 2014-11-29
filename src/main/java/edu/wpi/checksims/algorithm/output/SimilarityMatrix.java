@@ -1,11 +1,15 @@
 package edu.wpi.checksims.algorithm.output;
 
 import com.google.common.collect.ImmutableList;
-import edu.wpi.checksims.Submission;
+import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.algorithm.AlgorithmResults;
 import edu.wpi.checksims.algorithm.AlgorithmRunner;
 import edu.wpi.checksims.algorithm.PlagiarismDetector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -41,25 +45,38 @@ public class SimilarityMatrix {
      */
     public static SimilarityMatrix generate(List<Submission> submissions, PlagiarismDetector algorithm) {
         float[][] results = new float[submissions.size()][submissions.size()];
+        List<Submission> submissionsSorted = new LinkedList<>(submissions);
+        Logger logs = LoggerFactory.getLogger(SimilarityMatrix.class);
+
+        logs.debug("Sorting submissions prior to algorithm pass...");
+        Collections.sort(submissionsSorted, (a, b) -> a.getName().compareTo(b.getName()));
 
         // Get results for all possible pairs of submissions
-        List<AlgorithmResults> algorithmResults = AlgorithmRunner.runAlgorithm(submissions, algorithm);
+        List<AlgorithmResults> algorithmResults = AlgorithmRunner.runAlgorithm(submissionsSorted, algorithm);
 
         // First, null the diagonal of the results array
-        for(int i = 0; i < submissions.size(); i++) {
+        for(int i = 0; i < submissionsSorted.size(); i++) {
             results[i][i] = 0.00f; // Same submission, ignore
         }
 
         // For each result, fill corresponding spots in the results matrix
         algorithmResults.stream().forEach((result) -> {
-            int indexFirst = submissions.indexOf(result.a);
-            int indexSecond = submissions.indexOf(result.b);
+            int indexFirst = submissionsSorted.indexOf(result.a);
+            int indexSecond = submissionsSorted.indexOf(result.b);
+
+            if(indexFirst == -1) {
+                throw new RuntimeException("Could not find index of submission " + result.a.getName());
+            } else if(indexSecond == -1) {
+                throw new RuntimeException("Could not find index of submission " + result.b.getName());
+            }
 
             results[indexFirst][indexSecond] = result.percentMatchedA();
             results[indexSecond][indexFirst] = result.percentMatchedB();
         });
 
-        return new SimilarityMatrix(submissions, results);
+        logs.info("Done performing plagiarism detection");
+
+        return new SimilarityMatrix(submissionsSorted, results);
     }
 
     @Override

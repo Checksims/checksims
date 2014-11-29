@@ -1,0 +1,276 @@
+\documentclass{article}
+\author{Dolan Murvihill \and Matthew Heon}
+\title{Program Similarity Detection: Experimental Methodology}
+\begin{document}
+\maketitle
+
+\section{Need for Evaluation}
+Once programming for our similarity-detection application was complete, the
+next logical step was to test it to ensure functionality. Furthermore, given
+our stated goals with regards to false positive and negatives (tolerance for
+high false positive rate, but a strong desire to avoid false negatives), tuning
+algorithms and output strategies in support of this goal was also desirable.
+Given this, we sought to obtain suitable test data for use in verifying our
+implementation.
+
+\section{Data Sources}
+Obtaining source code with known similarities is not an easy task, however.
+Given the intended use of our program, the most relevant source code would be
+from student assignments in computer science courses at WPI, and in particular
+from intro-level courses. Using this as test data does, however, prove
+problematic for several reasons, detailed below.
+
+Existing similarity detectors for textual works often use sets of
+procedurally generated works, with known degrees of similarity, to asses the
+functioning of their programs. This presents another potential source of data,
+though again not without issues.
+
+\subsection{Student Code}
+Source code from students in Computer Science classes is an attractive test
+data option at first glance. This most closely matches the intended use case
+for Checksims - the identification of similar code submissions for programming
+projects. A set of test data built from submissions from previous offerrings of
+the same classes that Checksims may be deployed in will most closely mirror its
+use in the real world. 
+
+Using student code does, however, provide a number of strong disadvantages.
+The first of these is a substantial privacy concern. Student submissions are
+typically only available to the course staff (a professor and typically several
+teaching assistants). The students, when submitting, were not notified that
+their programs might be used in an academic study. Furthermore, it might be
+possible to obtain an approximation of a student's grade based on their
+submission, compromising their academic privacy.
+
+These concerns do not apply to a member of the course staff, who already have
+access to student source code and grades. Fortuitously, one of the authors was
+an undergraduate teaching assistant for the WPI Computer Science department
+while this project was completed. Unfortunately, the other author was not,
+which meant that any results obtained by this method could not be shared even
+within the team - and even if both team members were able to share this
+information, it would not be able to be published.
+
+In addition to privacy concerns, student code presents another obstacle.
+Prior to this project, there was no similarity detection system in common use
+in the WPI Computer Science department. Consequently, aside from occasional
+submissions which were overly similar identified by course staff, there is no
+concerte record of which submissions within a group are similar. Any results on
+such code will have no baseline to compare against.
+
+Despite these obstacles, student code remained the most desirable source of
+test data. By using an anonymization script to alleviate privacy concerns and
+verifying results against output of a known-working similarity detector, we
+were able to obtain a body of student submissions to intro-level CS courses
+which could be used to test Checksims.
+
+\subsubsection{Anonymization Script}
+Student code has the potential to compromise the privacy of the submitting
+student if it can be identified who submitted the assignment. If, however,
+any \textit{Personally Identifiable Information}, or PII, can be removed from
+the submissions, privacy concerns can be mostly alleviated.
+
+After an examination of a number of student submissions that one of the authors
+already had access to, it was concluded that the vast majority of identifying
+information in source code is contained in comments. While it might be possible
+to determine the author from variable naming convention and code style, comments
+often contained the full name of the author and a very distinct writing style.
+After discussing the matter with several professors, it was determined that
+student code could be distributed to the group if it was first anonymized by
+removing comments, and then verified by a professor to ensure that no obvious
+identifying information remained.
+
+% Cite interview with Fisler?
+
+A script was constructed to accomplish this goal in a largely-automated fashion
+to make it feasible to obtain large bodies of test code. Written in Bash, it
+leveraged a preexisting script that leverages regular expressions to remove
+C and C++ style comments.
+
+% TODO add citation for remcomms sed script
+
+Given the nature of the script, its use is limited to submissions using one of
+the C family of languages (C, C++, and Java being the most typically used).
+
+Using this script, a large volume of test code was obtained from several past
+offerrings of CS2301 (Systems Programming for Non-Majors, taught in C) and
+CS2303 (Systems Programming Concepts, taught in C and C++). All programming
+assignments for 8 previous offerings of these courses were obtained, totalling
+to over 357 thousand lines of code (as computed by David A. Wheeler's
+``SLOCCount'' program).
+
+% TODO make this a subsubsubsection
+\paragraph{Accuracy Without Comments}
+Given that anonymized student code tests were performed on submissions stripped
+of comments, the question is raised as to whether this is a reasonable set of
+data to compare against. Actual source code will, in all likelyhood, have a
+sizable number of comments. The absence of comments has the potential to
+substantially alter results - for example, two submissions which differed only
+by comments would appear as 100\% similar when, with comments, they might only
+be 70\% to 80\%. Indeed, there is the potential that removing comments might
+increase the accuracy of a similarity detection program. Work on this matter
+remains outside the scope of this paper, however; our use of source code
+without comments was forced by previously-mentioned circumstances, and we use
+it on the assumption that it represents code encountered in the real world with
+a reasonable degree of accuracy.
+
+\subsubsection{Baseline Output}
+A baseline to compare against was necessary to truly use student code as test
+data for Checksims. While the output of the program can be investigated to
+verify that any reported similarities do exist and weed out false positives, it
+is impossible to identify false negatives without baseline output identifying
+all similar submissions. Given that we characterize false negatives as a very
+undesirable characteristic, it is thus necessary that we possess the means to
+verify they are not present.
+
+A manual investigation of an assignment would certainly prove the most precise
+manner of identifying similarities. However, as previously mentioned, our
+obtained test data exceeds 357,000 lines of code, rendering a manual audit of
+all test data impossible in a reasonable timeframe. Even auditing a single
+nontrivial assignment would prove extremely time consuming, given class sizes
+of 40 to 60 students for most of the test data. It would be possible to audit
+only a subset, but this greatly reduces the utility of having such a large
+volume of test data.
+
+An alternative to manual auditing would be to use an existing piece of
+similarity detection software to provide baseline results. However, no existing
+piece of software truly matches the definition of similarity used when building
+Checksims. This could lead to a great number of false positives (for a less
+stringent definition) or negatives (for a more stringent definition).
+
+Given that it is possible to manually review results to identify false
+positives (and doing so is far less time intensive than a manual audit), we
+chose to use a similarity detection program with a less stringent definition
+of similarity to obtain baseline results, then manually remove false positives.
+In doing so, we would also obtain a figure for the number of false positives
+such a system would produce if used in place of Checksims, providing insight as
+to how necessary the construction of a new system was.
+
+% TODO reference MOSS section of lit review here
+We chose to use MOSS to generate our baseline results. MOSS is, as previously
+mentioned, is a freely available similarity detection service intended for
+identifying academic dishonesty, and is known to have a less stringent
+definition of similarity than the one used to construct Checksims. Furthermore,
+MOSS is considered a benchmark in similarity detection by many. Numerous papers
+on new art in similarity detection will compare their results against MOSS. By
+doing the same, we can obtain a measure of our output quality compared against
+what is almost an industry standard.
+% TODO cite papers which compare against MOSS
+
+It is noteworthy that using MOSS for baseline results will not completely
+remove false negatives as a factor. Similar code not noticed by MOSS will not
+be present in our baseline results, and thus will be completely ignored if
+not detected by Checksims as well. We judge this not particularly likely, given
+the quality and maturity of the algorithms used by MOSS; and, should any
+similarities be missed, this too is acceptable, as we are not aiming to produce
+a program which exceeds an industry-benchmark solution in accuracy.
+
+\subsection{Simulated Similarity}
+Most textual similarity detectors are tested and tuned with
+procedurally generated sets of work containing deliberately-inserted
+similarities. A number of such corpuses are freely available online. These
+offer the advantage of easy verifiability - unlike student submissions, there
+is a well-defined set of similarities in the submission, so output can easily
+be verified. There are no privacy concerns, because the test data was
+``written'' procedurally by a program.
+
+These simulated corpuses only exist for plaintext, however, where our search is
+for simikarity in source code. Consequently, we do not feel that these corpuses
+are especially helpful for testing the overall functionality of Checksims.
+They have been incorporated into the project as unit tests for individual
+algorithms, providing a verifiable set of results we can test for; they were
+not used in full-scale functional testing.
+
+\section{Experiments}
+Having obtained a large volume of test data, several experiments were then
+planned to provide full-scale functional testing of Checksims. Comparisons
+between the two shipped algorithms, Line Comparison and Smith-Waterman, 
+provided the benefits and disadvantages of both algorithms. Comparisons against
+MOSS provided proof of low false negative rate and a benchmark against a
+proven similarity detection program. Together, these experiments provided data
+to prove that Checksims was ready for real-world use.
+
+\subsection{Algorithm Comparisons}
+Checksims presently provides two algorithms for similarity detection,
+Smith-Waterman and Line Comparison (both detailed previously). The first set
+of tests on Checksims focused on comparing these two algorithms to gauge their
+sensitivity and runtime.
+
+From our research, we could form hypotheses on the behavior of both algorithms.
+Smith-Waterman, guaranteed to find the most efficient local alignment of
+strings, should be more accurate by far than Line Comparison, which will fail
+to identify lines that differ by even one character. However, Smith-Waterman's
+exponential runtime and large computational requirements should mean that it is
+slower by far than Line Comparison.
+
+We hope to verify our use cases for these algorithms with this experiment.
+Smith-Waterman is hypothesized to trade speed for accuracy, and Line Comparison
+accuracy for speed; if both hypotheses are correct, then each algorithm has a
+use case and should be included in the final release. If, however, one of the
+algorithms does not provide its claimed advantage, there is no reason for its
+inclusion, and it can be removed from the final release.
+
+To perform this experiment, Checksims was run twice on every assignment in our
+test data, once using each algorithm. The default tokenization strategy was
+used for both (whitespace tokenization for Smith-Waterman and line 
+tokenization for Line Comparison). Output was saved to a unique file for each
+assignment, and program runtime saved to another file. From these, results were
+computed. No false positive tests were performed - we simply investigated
+which results were reported by one algorithm but not the other, which were
+shared, and how long the algorithms took to run.
+
+\subsection{MOSS Comparison}
+We aimed to glean several things by comparing the output of Checksims and MOSS
+on several assignments. By comparing the number of false positives produced by
+both programs, we aimed to determine whether MOSS (and its less stringent
+definition of similarity) produced an inordinate number of false positives
+(as compared to Checksims). Furthermore, we aimed to verify that Checksims
+contained few (or no) false negatives.
+
+To perform this experiment, we first identified a number of assignments from
+the test data which the algorithm comparisons experiments showed had a great
+number of similarities or almost no similarities. Three of each were chosen and
+given to MOSS to perform detection on (given that MOSS is a free service, and
+not particularly fast, we did not wish to place undue demands on it by running
+our entire set of test data through).
+
+The MOSS results for the chosen assignments were then investigated to identify
+false positives - similarities identified by MOSS which did not match our
+definition of similarity. The number of false positives (and the original
+number of results) were reported, and the false positives thrown out. The
+Checksims results from the previous experiment for both algorithms were then
+run through the same process, with false positives being identified and thrown
+out, and the number of overall matches and false positives being recorded.
+Based on this, the number of false positives in the results of MOSS and
+Checksims (both algorithms) can be compared, both in absolute terms and as a
+percentage of results recorded. Finally, the results were overlaid to see
+which matches are missing from either program - what MOSS found but Checksims
+did not, or Checksims found but MOSS did not.
+
+\section{Real-World Usage}
+During development, Checksims was used in real-world situations on two
+occasions. Course staff (including one of the authors) made use of development
+versions of the program to attempt to identify academic dishonesty in
+student submissions in ongoing courses. Though results from these real-world
+uses cannot be published due to aforementioned privacy concerns, they provided
+valuable insight into how Checksims would be used in typical class.
+
+\subsection{Embedded Design Course}
+The first usage of Checksims was by an Electrical and Computer Engineering
+teaching assistant, Nicholas DeMarinis. On the course staff of a course making
+extensive use of microcontrollers and C code, he became concerned that some
+of his students may have been collaborating above and beyond was was allowed by
+course rules. He requested an early version of Checksims to verify his
+suspicions, which the authors provided. Though we are unaware of what results
+he obtained through its application, he provided valuable feedback on improving
+the usability of the program.
+
+\subsection{Assembly and Computer Organization}
+A nearly-complete version of Checksims was applied to the first assignment in a
+course which one of the authors, Matthew Heon, was acting as a teaching
+assistant for. This assignment was an excercise in optimization and bitwise
+operations, and was composed of a relatively small C project with a great
+deal of common code. Checksims detected three students with extremely similar
+submissions who would not otherwise have been identified, given that the
+assignment was graded programmatically, with very little human interaction
+between course staff and student submissions.
+
+\end{document}

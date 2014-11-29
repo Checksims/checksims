@@ -1,7 +1,6 @@
 package edu.wpi.checksims.algorithm.preprocessor;
 
-import edu.wpi.checksims.Submission;
-
+import edu.wpi.checksims.submission.Submission;
 
 /**
  * Interface for submission preprocessors which act on submissions

@@ -1,13 +1,14 @@
 package edu.wpi.checksims.algorithm.smithwaterman;
 
 import edu.wpi.checksims.ChecksimException;
-import edu.wpi.checksims.Submission;
 import edu.wpi.checksims.algorithm.AlgorithmResults;
 import edu.wpi.checksims.algorithm.PlagiarismDetector;
+import edu.wpi.checksims.submission.Submission;
+import edu.wpi.checksims.token.TokenList;
+import edu.wpi.checksims.token.TokenType;
+import edu.wpi.checksims.token.ValidityEnsuringToken;
 import edu.wpi.checksims.util.TwoDimArrayCoord;
 import edu.wpi.checksims.util.TwoDimIntArray;
-import edu.wpi.checksims.util.token.TokenList;
-import edu.wpi.checksims.util.token.TokenType;
 
 /**
  * Performs the actual Smith-Waterman algorithm
@@ -42,14 +43,11 @@ public class SmithWaterman implements PlagiarismDetector {
      */
     @Override
     public AlgorithmResults detectPlagiarism(Submission a, Submission b) throws ChecksimException {
-        if(!a.getTokenList().type.equals(b.getTokenList().type)) {
+        if(!a.getTokenType().equals(b.getTokenType())) {
             throw new ChecksimException("Token list type mismatch: submission " + a.getName() + " has type " +
                     a.getTokenList().type.toString() + ", while submission " + b.getName() + " has type " +
                     b.getTokenList().type.toString());
         }
-
-        // TODO add verbose option slash better logging
-        System.out.println("Running Smith-Waterman plagiarism detection on submissions " + a.getName() + " and " + b.getName());
 
         return applySmithWatermanPlagiarismDetection(a, b, this.params);
     }
@@ -68,18 +66,20 @@ public class SmithWaterman implements PlagiarismDetector {
 
         if(firstRun == null || !firstRun.hasMatch()) {
             // No similarities found on first run, no need to loop
-            return new AlgorithmResults(a, b, 0, 0);
+            return new AlgorithmResults(a, b, 0, 0, a.getTokenList(), b.getTokenList());
         }
 
         // Represents the total portions of the tokenization lists matched by the Smith-Waterman algorithm
         int totalOverlay = 0;
         SmithWatermanResults currResults = firstRun;
+        TokenList newA = currResults.setMatchInvalidA();
+        TokenList newB = currResults.setMatchInvalidB();
 
         while(currResults.getMatchLength() >= params.matchSizeThreshold) {
             totalOverlay += currResults.getMatchLength();
 
-            TokenList newA = currResults.setMatchInvalidA();
-            TokenList newB = currResults.setMatchInvalidB();
+            newA = currResults.setMatchInvalidA();
+            newB = currResults.setMatchInvalidB();
 
             currResults = applySmithWaterman(newA, newB, params);
         }
@@ -88,7 +88,7 @@ public class SmithWaterman implements PlagiarismDetector {
         // We report it regardless
         totalOverlay += currResults.getMatchLength();
 
-        return new AlgorithmResults(a, b, totalOverlay, totalOverlay);
+        return new AlgorithmResults(a, b, totalOverlay, totalOverlay, newA, newB);
     }
 
     static SmithWatermanResults applySmithWaterman(TokenList a, TokenList b, SmithWatermanParameters params) {
@@ -106,8 +106,15 @@ public class SmithWaterman implements PlagiarismDetector {
         TwoDimIntArray m = new TwoDimIntArray(width, height);
 
         // Iterate through and fill arrays
-        for(int i = 1; i < width; i++) {
-            for(int j = 1; j < height; j++) {
+        smithWatermanComputeArraySubset(1, width, 1, height, a, b, params, s, m);
+
+        return new SmithWatermanResults(s, a, b);
+    }
+
+    static void smithWatermanComputeArraySubset(int startWidth, int endWidth, int startHeight, int endHeight,
+                                                TokenList a, TokenList b, SmithWatermanParameters params, TwoDimIntArray s, TwoDimIntArray m) {
+        for(int i = startWidth; i < endWidth; i++) {
+            for(int j = startHeight; j < endHeight; j++) {
                 TwoDimArrayCoord curr = new TwoDimArrayCoord(i, j);
                 TwoDimArrayCoord predecessor = new TwoDimArrayCoord(i - 1, j - 1);
 
@@ -117,7 +124,7 @@ public class SmithWaterman implements PlagiarismDetector {
                 // Generate a prospective value for S[i,j] and M[i,j]
                 // The outermost if generates S[i,j]
                 // Based off this, we then generate M[i,j]
-                if(a.get(curr.x - 1).equals(b.get(curr.y - 1))) {
+                if(new ValidityEnsuringToken(a.get(curr.x - 1)).equals(b.get(curr.y - 1))) {
                     // If the two characters match, we increment S[i-1,j-1] by 1 to get the new S[i,j]
                     int sPredecessor = s.getValue(predecessor);
                     int mPredecessor = m.getValue(predecessor);
@@ -167,7 +174,5 @@ public class SmithWaterman implements PlagiarismDetector {
                 m.setValue(newM, curr);
             }
         }
-
-        return new SmithWatermanResults(s, a, b);
     }
 }

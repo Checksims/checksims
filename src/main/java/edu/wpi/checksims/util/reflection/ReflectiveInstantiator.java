@@ -1,6 +1,8 @@
 package edu.wpi.checksims.util.reflection;
 
 import org.reflections.Reflections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -26,15 +28,20 @@ public class ReflectiveInstantiator {
      * @return List of instances of classes extending/implementing subclassesOf
      */
     public static <T> List<T> reflectiveInstantiator(String packageName, Class<T> subclassesOf) {
+        Logger logs = LoggerFactory.getLogger(ReflectiveInstantiator.class);
+
         List<T> allInstances = new LinkedList<>();
+
+        // Ensure no annoying logs
+        Reflections.log = null;
 
         Reflections searchPackage = new Reflections(packageName);
         Set<Class<? extends T>> subtypes = searchPackage.getSubTypesOf(subclassesOf);
 
         // Iterate through all of the subclasses
         subtypes.stream().forEach((type) -> {
-            // TODO proper logging
-            System.out.println("Initializing class " + type.getName());
+            logs.debug("Initializing class " + type.getName());
+
             try {
                 // Get getInstance method of the class
                 Method getInstance = type.getMethod("getInstance");

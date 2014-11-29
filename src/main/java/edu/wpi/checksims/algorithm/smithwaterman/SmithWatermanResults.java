@@ -1,6 +1,6 @@
 package edu.wpi.checksims.algorithm.smithwaterman;
 
-import edu.wpi.checksims.util.token.TokenList;
+import edu.wpi.checksims.token.TokenList;
 import edu.wpi.checksims.util.TwoDimArrayCoord;
 import edu.wpi.checksims.util.TwoDimIntArray;
 

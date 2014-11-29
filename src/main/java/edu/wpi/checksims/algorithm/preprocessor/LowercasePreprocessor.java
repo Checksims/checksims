@@ -1,8 +1,9 @@
 package edu.wpi.checksims.algorithm.preprocessor;
 
-import edu.wpi.checksims.Submission;
-import edu.wpi.checksims.util.token.Token;
-import edu.wpi.checksims.util.token.TokenList;
+import edu.wpi.checksims.submission.ConcreteSubmission;
+import edu.wpi.checksims.submission.Submission;
+import edu.wpi.checksims.token.Token;
+import edu.wpi.checksims.token.TokenList;
 
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -32,6 +33,6 @@ public class LowercasePreprocessor implements SubmissionPreprocessor {
     public Submission process(Submission submission) {
         Supplier<TokenList> tokenListSupplier = () -> new TokenList(submission.getTokenList().type);
 
-        return new Submission(submission.getName(), submission.getTokenList().stream().map(Token::lowerCase).collect(Collectors.toCollection(tokenListSupplier)));
+        return new ConcreteSubmission(submission.getName(), submission.getTokenList().stream().map(Token::lowerCase).collect(Collectors.toCollection(tokenListSupplier)));
     }
 }

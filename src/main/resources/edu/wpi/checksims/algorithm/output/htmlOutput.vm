@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Similarity Detection Results</title>
+
+    <style type="text/css">
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        td, th {
+            text-align: center;
+            padding: 15px;
+        }
+
+        td.error {
+            background-color: #99CCFF;
+        }
+
+        td.same {
+            background-color: #003333;
+        }
+
+        td.lvl0 {
+            background-color: #FFFFCC;
+        }
+
+        td.lvl1 {
+            background-color: #FFFF99;
+        }
+
+        td.lvl2 {
+            background-color: #FFFF66;
+        }
+
+        td.lvl3 {
+            background-color: #FFFF33;
+        }
+
+        td.lvl4 {
+            background-color: #FFFF00;
+        }
+
+        td.lvl5 {
+            background-color: #FFCC33;
+        }
+
+        td.lvl6 {
+            background-color: #FFCC00;
+        }
+
+        td.lvl7 {
+            background-color: #FF9900;
+        }
+
+        td.lvl8 {
+            background-color: #FF6600;
+        }
+
+        td.lvl9 {
+            background-color: #FF3300;
+        }
+    </style>
+</head>
+
+<body>
+    <table>
+        <tr>
+            <!-- Empty first cell, as this is an axis -->
+            <th></th>
+            <!-- Names of each student, one per axis -->
+            #foreach ($student in $students)
+                <th>
+                    $student.getName()
+                </th>
+            #end
+        </tr>
+        <!-- Remainer of the table is formatted as follows: -->
+        <!-- One header cell, containing name of a submission -->
+        <!-- A number of normal cells, with ID corresponding to intensity, containing a float -->
+        #set($counterOuter = 0)
+        #foreach ($row in $resultArray)
+            <tr>
+                <th>
+                    $students.get($counterOuter).getName()
+                </th>
+                #set($counterInner = 0)
+                #foreach ($float in $row)
+                    #if($counterInner == $counterOuter)
+                        <td class="same"></td>
+                    #else
+                        #if($float < 0.0)
+                            #set($class = "error")
+                        #elseif($float < 0.1)
+                            #set($class = "lvl0")
+                        #elseif($float < 0.2)
+                            #set($class = "lvl1")
+                        #elseif($float < 0.3)
+                            #set($class = "lvl2")
+                        #elseif($float < 0.4)
+                            #set($class = "lvl3")
+                        #elseif($float < 0.5)
+                            #set($class = "lvl4")
+                        #elseif($float < 0.6)
+                            #set($class = "lvl5")
+                        #elseif($float < 0.7)
+                            #set($class = "lvl6")
+                        #elseif($float < 0.8)
+                            #set($class = "lvl7")
+                        #elseif($float < 0.9)
+                            #set($class = "lvl8")
+                        #elseif($float <= 1.0)
+                            #set($class = "lvl9")
+                        #else
+                            #set($class = "error")
+                        #end
+                        <td class=$class>
+                            $floatFormatter.format($float)
+                        </td>
+                    #end
+                    #set($counterInner = $counterInner + 1)
+                #end
+                #set( $counterOuter = $counterOuter + 1 )
+            </tr>
+        #end
+    </table>
+</body>
+</html>
