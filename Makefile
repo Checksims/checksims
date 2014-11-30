@@ -21,7 +21,8 @@ $(LATEX_DIST)/litreview.pdf: $(LATEX_SRC)/litreview.ltx $(BIBLIOGRAPHY)
 	$(LATEX) $(LATEX_BUILD_ARGS) $(LATEX_SRC)/litreview.ltx
 	$(LATEX) $(LATEX_BUILD_ARGS) -c $(LATEX_SRC)/litreview.ltx
 
-$(LATEX_DIST)/annotebib.pdf: $(LATEX_SRC)/annotebib.ltx $(BIBLIOGRAPHY)
+$(LATEX_DIST)/annotebib.pdf: $(LATEX_SRC)/annotebib.ltx \
+  $(LATEX_SRC)/numeric-annote.bbx $(BIBLIOGRAPHY)
 	$(LATEX) $(LATEX_BUILD_ARGS) $(LATEX_SRC)/annotebib.ltx
 	$(LATEX) $(LATEX_BUILD_ARGS) -c $(LATEX_SRC)/annotebib.ltx
 
