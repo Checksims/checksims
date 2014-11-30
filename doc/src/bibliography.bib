@@ -455,250 +455,250 @@
     call graph.}
 }
 @inproceedings{gitchell99,
-  title={Sim: a utility for detecting similarity in computer programs},
-  author={Gitchell, David and Tran, Nicholas},
-  booktitle={ACM SIGCSE Bulletin},
+  title={sim: a utility for detecting similarity in computer programs},
+  author={gitchell, david and tran, nicholas},
+  booktitle={acm sigcse bulletin},
   volume={31},
   number={1},
   pages={266--270},
   year={1999},
-  organization={ACM},
+  organization={acm},
   annote={
-    A functional description of the previously-described Sim utility. No
+    a functional description of the previously-described sim utility. no
     significant details of the algorithm are mentioned which are not expanded on in
-    the first paper, but it does mention a worthwhile statistic: Sim is $O(S^2)$
-    complexity, where S is the size of the parse tree of the program being
-    processed. This, perhaps, places the scalability papers in a better context?}
+    the first paper, but it does mention a worthwhile statistic: sim is $o(s^2)$
+    complexity, where s is the size of the parse tree of the program being
+    processed. this, perhaps, places the scalability papers in a better context?}
 }
 @inproceedings{grozea09,
-  title={ENCOPLOT: Pairwise sequence matching in linear time applied to plagiarism detection},
-  author={Grozea, Cristian and Gehl, Christian and Popescu, Marius},
-  booktitle={3rd PAN Workshop. Uncovering Plagiarism, Authorship and Social Software Misuse},
+  title={encoplot: pairwise sequence matching in linear time applied to plagiarism detection},
+  author={grozea, cristian and gehl, christian and popescu, marius},
+  booktitle={3rd pan workshop. uncovering plagiarism, authorship and social software misuse},
   pages={10},
   year={2009},
   annote={}
 }
 @inproceedings{heintze96,
-  title={Scalable document fingerprinting},
-  author={Heintze, Nevin and others},
-  booktitle={1996 USENIX workshop on electronic commerce},
+  title={scalable document fingerprinting},
+  author={heintze, nevin and others},
+  booktitle={1996 usenix workshop on electronic commerce},
   volume={3},
   number={1},
   year={1996},
   annote={}
 }
 @article{hoad03,
-  title={Methods for identifying versioned and plagiarized documents},
-  author={Hoad, Timothy C and Zobel, Justin},
-  journal={Journal of the American society for information science and technology},
+  title={methods for identifying versioned and plagiarized documents},
+  author={hoad, timothy c and zobel, justin},
+  journal={journal of the american society for information science and technology},
   volume={54},
   number={3},
   pages={203--215},
   year={2003},
-  publisher={Wiley Online Library},
+  publisher={wiley online library},
   annote={
-    A textual approach to source code plagiarism detection based on a
+    a textual approach to source code plagiarism detection based on a
     ``fingerprinting'' method - in keeping with out ``line-by-line checksum'' examples,
-    but more adaptable (can cross multiple lines, etc). Apparently, fingerprinting
+    but more adaptable (can cross multiple lines, etc). apparently, fingerprinting
     is not as good as some other methods, though - their conclusion mentions the
-    existing ``Identity Algorithm'' is more accurate in their testing.}
+    existing ``identity algorithm'' is more accurate in their testing.}
 }
 @article{hordijk08,
-  title={Structured Review of Code Clone Literature},
-  author={Hordijk, Wiebe and Ponisio, Mar{'\i}a Laura and Wieringa, Roel},
+  title={structured review of code clone literature},
+  author={hordijk, wiebe and ponisio, mar{'\i}a laura and wieringa, roel},
   year={2008},
-  publisher={Centre for Telematics and Information Technology, University of Twente},
+  publisher={centre for telematics and information technology, university of twente},
   annote={}
 }
 @article{irving04,
-  title={Plagiarism and collusion detection using the Smith-Waterman algorithm},
-  author={Irving, Robert W},
-  journal={University of Glasgow},
+  title={plagiarism and collusion detection using the smith-waterman algorithm},
+  author={irving, robert w},
+  journal={university of glasgow},
   year={2004},
   annote={
-    A similarity detection algorithm for plaintexts intended for plagiarism
-    detection. According to conclusion, very accurate, but slow - perhaps too slow
-    for anything but very small batches of files. This does describe our situation,
-    though. Worth looking into.}
+    a similarity detection algorithm for plaintexts intended for plagiarism
+    detection. according to conclusion, very accurate, but slow - perhaps too slow
+    for anything but very small batches of files. this does describe our situation,
+    though. worth looking into.}
 }
 @inproceedings{johnson93,
-  title={Identifying redundancy in source code using fingerprints},
-  author={Johnson, J Howard},
-  booktitle={Proceedings of the 1993 conference of the Centre for Advanced Studies on Collaborative research: software engineering-Volume 1},
+  title={identifying redundancy in source code using fingerprints},
+  author={johnson, j howard},
+  booktitle={proceedings of the 1993 conference of the centre for advanced studies on collaborative research: software engineering-volume 1},
   pages={171--183},
   year={1993},
-  organization={IBM Press},
+  organization={ibm press},
   annote={}
 }
 @inproceedings{johnson94,
-  title={Substring matching for clone detection and change tracking},
-  author={Johnson, J Howard},
-  booktitle={Software Maintenance, 1994. Proceedings., International Conference on},
+  title={substring matching for clone detection and change tracking},
+  author={johnson, j howard},
+  booktitle={software maintenance, 1994. proceedings., international conference on},
   pages={120--126},
   year={1994},
-  organization={IEEE},
+  organization={ieee},
   annote={
-    Presents a tool for locating similarities in text, including source code. The
+    presents a tool for locating similarities in text, including source code. the
     tool works in six steps:
-    1. Perform text-to-text transformations on each file
-    2. Break the text into potentially overlapping substrings
-    3. Generate a database of ``raw matches'' by finding the substrings that match
-    4. Iterate to describe the matches more concisely
-    5. Perform task-specific data reduction
-    6. Summarize high-level matches
+    1. perform text-to-text transformations on each file
+    2. break the text into potentially overlapping substrings
+    3. generate a database of ``raw matches'' by finding the substrings that match
+    4. iterate to describe the matches more concisely
+    5. perform task-specific data reduction
+    6. summarize high-level matches
     
-    Steps 2-4 work only on exact matches, so any partial matching must be done via
-    normalization in step 1. Common transformations include white space removal,
-    comment removal, and identifier renaming. Steps 2-4 have the advantage of being
-    language-agnostic. Note that this approach is reminiscent of the document
-    fingerprinting approaches to plagiarism detection. Step 3 is done by
-    Karp-Rabin string matching \cite{karp87}. In step 4, they perform tasks
+    steps 2-4 work only on exact matches, so any partial matching must be done via
+    normalization in step 1. common transformations include white space removal,
+    comment removal, and identifier renaming. steps 2-4 have the advantage of being
+    language-agnostic. note that this approach is reminiscent of the document
+    fingerprinting approaches to plagiarism detection. step 3 is done by
+    karp-rabin string matching \cite{karp87}. in step 4, they perform tasks
     such as merging consecutive matches and other ``lossless'' compression
-    strategies. Step 5 is where one might perform ``lossy'' compression, such
+    strategies. step 5 is where one might perform ``lossy'' compression, such
     as eliminating certain text (like, for instance, a copyright notice) that
     is expected to be cloned.
 
-    The authors tested their prototype on GCC, versions 2.5.8 and 2.3.3; both
+    the authors tested their prototype on gcc, versions 2.5.8 and 2.3.3; both
     releases together total 1440 files with a combined size of 40 megabytes.
-    They found a total of 988 ``clusters'', or matched substrings. 315 of these
-    clusters were of type ``ABX'' (contained in one file from each release) or
-    type ``AB='' (contained in one file from each release with the same name).
-    These represent code that was not changed between releases, or that was
-    moved to a different location. There were a very large number of ABX
-    clusters as a result of a large naming convention change done by the GCC
-    team between the two releases. They identified some software cloning, and
-    areas of massive changes. The authors reported very few nonsense matches.}
+    they found a total of 988 ``clusters'', or matched substrings. 315 of these
+    clusters were of type ``abx'' (contained in one file from each release) or
+    type ``ab='' (contained in one file from each release with the same name).
+    these represent code that was not changed between releases, or that was
+    moved to a different location. there were a very large number of abx
+    clusters as a result of a large naming convention change done by the gcc
+    team between the two releases. they identified some software cloning, and
+    areas of massive changes. the authors reported very few nonsense matches.}
 }
 @inproceedings{jones01,
-  title={Metrics based plagarism monitoring},
-  author={Jones, Edward L},
-  booktitle={Journal of Computing Sciences in Colleges},
+  title={metrics based plagarism monitoring},
+  author={jones, edward l},
+  booktitle={journal of computing sciences in colleges},
   volume={16},
   number={4},
   pages={253--261},
   year={2001},
-  organization={Consortium for Computing Sciences in Colleges},
+  organization={consortium for computing sciences in colleges},
   annote={
-    A developed example of what I earlier termed a ``feature comparison'' - creates
+    a developed example of what i earlier termed a ``feature comparison'' - creates
     and examines ``profiles'' of program features (line count, number of unique
-    tokens, average line length, number of spaces, that sort of thing). No evidence
+    tokens, average line length, number of spaces, that sort of thing). no evidence
     is presented that it is actually effective, and indeed they do not test on
     real-world data (only note that they intend to use it in their own courses)}
 }
 @article{joy1999,
-  title={Plagiarism in programming assignments},
-  author={Joy, Mike and Luck, Michael},
-  journal={Education, IEEE Transactions on},
+  title={plagiarism in programming assignments},
+  author={joy, mike and luck, michael},
+  journal={education, ieee transactions on},
   volume={42},
   number={2},
   pages={129--133},
   year={1999},
-  publisher={IEEE},
+  publisher={ieee},
   annote={
     
-    Joy provides a definition of plagiarism, ``Unacknowledged copying of documents
+    joy provides a definition of plagiarism, ``unacknowledged copying of documents
     or programs'', and names several potential causes of plagiarism.
     
-    Joy describes
+    joy describes
     two obfuscation techniques: lexical changes (comment changes, formatting,
     changing identifier names, etc.) and structural changes (loop replacement, ifs
     to cases, statement ordering, refactoring, etc.)
     
-    Joy describes two pair comparison techniques: comparing attribute counts, and
+    joy describes two pair comparison techniques: comparing attribute counts, and
     comparing structure.
     
-    Presents an algorithm called SHERLOCK, with the following requirements:
-     - Must be reliable
-     - Must be simple to change for a new language
-     - Must have an ``efficient interface''
-     - Output must be clear to somene unfamiliar with the programs
+    presents an algorithm called sherlock, with the following requirements:
+     - must be reliable
+     - must be simple to change for a new language
+     - must have an ``efficient interface''
+     - output must be clear to somene unfamiliar with the programs
     
-     Incremental comparison: compare five times: in original form, with whitespace
-     removed, with comments removed, with both removed, and tokenized. Looks for
-     ``runs'' with a maximum allowed size and density of ``anomalies''. Looks for and
+     incremental comparison: compare five times: in original form, with whitespace
+     removed, with comments removed, with both removed, and tokenized. looks for
+     ``runs'' with a maximum allowed size and density of ``anomalies''. looks for and
      reports maximum length runs.
     
-     Presents a very interesting visualization with a point for each submission
+     presents a very interesting visualization with a point for each submission
      and similarities connected by lines; shorter lines correspond to closer
      matches.}
 }
 @inproceedings{kang06,
-  title={PPChecker: Plagiarism pattern checker in document copy detection},
-  author={Kang, NamOh and Gelbukh, Alexander and Han, SangYong},
-  booktitle={Text, Speech and Dialogue},
+  title={ppchecker: plagiarism pattern checker in document copy detection},
+  author={kang, namoh and gelbukh, alexander and han, sangyong},
+  booktitle={text, speech and dialogue},
   pages={661--667},
   year={2006},
-  organization={Springer},
+  organization={springer},
   annote={}
 }
 @article{karp87,
-  title={Efficient randomized pattern-matching algorithms},
-  author={Karp, Richard M and Rabin, Michael O},
-  journal={IBM Journal of Research and Development},
+  title={efficient randomized pattern-matching algorithms},
+  author={karp, richard m and rabin, michael o},
+  journal={ibm journal of research and development},
   volume={31},
   number={2},
   pages={249--260},
   year={1987},
-  publisher={IBM},
+  publisher={ibm},
   annote={
     
-    This is a seminal paper that is cited by almost every article in this
-    bibliography. It seems that almost all program similarity detection tools use
-    Karp-Rabin string matching to search for and verify matches.
+    this is a seminal paper that is cited by almost every article in this
+    bibliography. it seems that almost all program similarity detection tools use
+    karp-rabin string matching to search for and verify matches.
     
-    Presents a generalized string-matching algorithm that works in ``real time''
-    (there is a formal definition of that, but I have not reached it yet) and in
-    a constant number of registers. It requires keeping a substring in memory of
-    the same length as the one you are searching for. Authors claim that it seems
+    presents a generalized string-matching algorithm that works in ``real time''
+    (there is a formal definition of that, but i have not reached it yet) and in
+    a constant number of registers. it requires keeping a substring in memory of
+    the same length as the one you are searching for. authors claim that it seems
     to be competitive on classical strings only for larger substring sizes, but it
-    has a huge advantage in being able to search 2D arrays, higher dimensional
+    has a huge advantage in being able to search 2d arrays, higher dimensional
     arrays, and even irregular shapes with the same mathematical background.
     
-    First presents a generalization of all string matching problems, and explains
+    first presents a generalization of all string matching problems, and explains
     how the simple pattern-matching problem we are interested in fits that framework.
-    TODO explain the framework here
-    It also provides an example of how a 2D array fits the framework, but we are
-    not interested in that. I have not yet finished reading the paper, but a
+    todo explain the framework here
+    it also provides an example of how a 2d array fits the framework, but we are
+    not interested in that. i have not yet finished reading the paper, but a
     description of the relevant stuff will go here.
     
-    We should also check out the prior work to see if it may be useful to us.
+    we should also check out the prior work to see if it may be useful to us.
     
     
-    This article is not available online; Gordon Library has a microfiche copy and
+    this article is not available online; gordon library has a microfiche copy and
     a paper copy for in-library use.}
 }
 @incollection{khanna07,
-  title={A formal investigation of diff3},
-  author={Khanna, Sanjeev and Kunal, Keshav and Pierce, Benjamin C},
-  booktitle={FSTTCS 2007: Foundations of Software Technology and Theoretical Computer Science},
+  title={a formal investigation of diff3},
+  author={khanna, sanjeev and kunal, keshav and pierce, benjamin c},
+  booktitle={fsttcs 2007: foundations of software technology and theoretical computer science},
   pages={485--496},
   year={2007},
-  publisher={Springer},
+  publisher={springer},
   annote={
-    A discussion of Diff3, a 3-way version of the conventional Diff algorithm. This
+    a discussion of diff3, a 3-way version of the conventional diff algorithm. this
     could be used for plagiarism detection (detect similarities between 2 files
     that are not shared by a third [given reference code shared by all students]).}
 }
 @phdthesis{koss12,
-  title={Authorship is Continuous: Detecting Plagiarism in Student Code Assignments with Version Control},
-  author={Koss, Ian Mathias},
+  title={authorship is continuous: detecting plagiarism in student code assignments with version control},
+  author={koss, ian mathias},
   year={2012},
-  school={Florida Institute of Technology},
+  school={florida institute of technology},
   annote={}
 }
 @inproceedings{krinke10,
-  title={Distinguishing copies from originals in software clones},
-  author={Krinke, Jens and Gold, Nicolas and Jia, Yue and Binkley, David},
-  booktitle={Proceedings of the 4th International Workshop on Software Clones},
+  title={distinguishing copies from originals in software clones},
+  author={krinke, jens and gold, nicolas and jia, yue and binkley, david},
+  booktitle={proceedings of the 4th international workshop on software clones},
   pages={41--48},
   year={2010},
-  organization={ACM},
+  organization={acm},
   annote={
-    Another paper that doesn't really solve the plagiarism prolem, and instead
-    attempts to find duplicate/dead code. This one is interesting because of its
+    another paper that doesn't really solve the plagiarism prolem, and instead
+    attempts to find duplicate/dead code. this one is interesting because of its
     categorization metrics, though - it attempts to classify code as either a
     straight duplicate, close copy, or unclassifiable (some duplicated code, but
-    not enough to conclusively classify). This might be worth carrying over into
+    not enough to conclusively classify). this might be worth carrying over into
     our work.}
 }
 @article{lancaster05,
