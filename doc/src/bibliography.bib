@@ -212,25 +212,28 @@
   year={1994},
   publisher={IBM},
   annote={
+    \setlength{\parskip}{1.5ex}
     Presents various reverse engineering assistance techniques designed to assist
     with program understanding. Used IBM SQL/DS, a large tool written in the
     proprietary PL/AS language, as a reference system. The program undertook seven
     top-level goals:
-    1. Detect uninitialized data, pointer errors, and memory leaks
-    2. Detect data type mismatches
-    3. Find incomplete uses of record fields
-    4. Find similar code fragments
-    5. Localize algorithmic plans
-    6. Recognize inefficient or high-complexity code
-    7. Predict the impact of change.
+    \begin{enumerate}
+    \item Detect uninitialized data, pointer errors, and memory leaks
+    \item Detect data type mismatches
+    \item Find incomplete uses of record fields
+    \item Find similar code fragments
+    \item Localize algorithmic plans
+    \item Recognize inefficient or high-complexity code
+    \item Predict the impact of change.
+    \end{enumerate}
     
     We are only interested in goal number 4, and those headings are the only ones
     we read.
     
     The heading ``Pattern Matching'' in the background was fairly useful. They
     mention a few methods:
-    
-     - Text analysis: The huge advantage of text analysis, of course, is that it is
+    \begin{itemize}
+    \item Text analysis: The huge advantage of text analysis, of course, is that it is
        language-independent. Interesting quote: ``For some understanding purposes,
        less analysis is better; syntactic and semantic analysis can actually
        information content in the code, such as formatting, identifier choices,
@@ -238,26 +241,29 @@
        is lost as a result of syntactic analysis.'' The text analysis research
        occurred at IBM and was done by Johnson, who coauthored this paper as well
        as others in this bibliography.
-     - Syntactic analysis: This research occurred at the University of Michigan and
+    \item Syntactic analysis: This research occurred at the University of Michigan and
        did not seem to be interested in detecting cloned code. However, the results
        might be at least somewhat applicable. The authors complain about existing
        (mostly text-based and graph-based) search tools, and then present SCRUPLE,
        a pattern-based query system with a powerful pattern language that allows
        the programmer to search, for instance, for three nested loops in order to
        find a matrix multiplication.
-     - Semantic analysis: This research occurred at McGill, and clone detection was
+    \item Semantic analysis: This research occurred at McGill, and clone detection was
        just one of their goals. The McGill research focuses on representing code as
        a vector of complexity metrics; close vectors are more likely to be similar
        (this is a classic vector distance algorithm). The McGill research uses five
        metrics:
-        1. Number of functions called
-        2. Ratio of input-output variables to fanout
-        3. McCabe's cyclomatic complexity
-        4. Albrecht's function-point quality metric
-        5. Henry-Kafura's information flow quality metric
-       The researchers measure distance based on Euclidean distance and clustering
-       thresholds on each axis. Needless to say, this approach is language-
-       dependent.
+       \begin{enumerate}
+       \item Number of functions called
+       \item Ratio of input-output variables to fanout
+       \item McCabe's cyclomatic complexity
+       \item Albrecht's function-point quality metric
+       \item Henry-Kafura's information flow quality metric
+       \end{enumerate}
+       The researchers measure distance in two ways: by Euclidean distance, and
+       by clustering thresholds on each axis. Needless to say, this approach is
+       language-dependent.
+    \end{itemize}
     
     
     Text analysis found 727 copied lines out of a 51,655 line sample of source code
@@ -266,14 +272,16 @@
     findings include only exact matches. Syntactic analysis was not used to detect
     program similarity, and no quantitative results were presented for semantic
     analysis. The authors present a few qualitative takeaways:
-    
-    1. Domain-specific knowledge is critical in easing the interpretation of large
-       software systems
-    2. Program representations for efficient queries are essential
-    3. Many kinds of approaches are needed in a comprehensive reverse engineering
-       approach
-    4. An extensible approach is needed to consolidate these diverse approaches
-       into a unified framework
+   
+    \begin{enumerate} 
+    \item Domain-specific knowledge is critical in easing the interpretation of large
+    software systems
+    \item Program representations for efficient queries are essential
+    \item Many kinds of approaches are needed in a comprehensive reverse engineering
+    approach
+    \item An extensible approach is needed to consolidate these diverse approaches
+    into a unified framework
+    \end{enumerate}
     
     They closed with a discussion of how they integrated their tool into SQL/DS,
     which is not very interesting to us.}
@@ -538,6 +546,7 @@
   year={1994},
   organization={ieee},
   annote={
+    \setlength{\parskip}{1.5ex}
     presents a tool for locating similarities in text, including source code. the
     tool works in six steps:
     1. perform text-to-text transformations on each file
@@ -546,7 +555,7 @@
     4. iterate to describe the matches more concisely
     5. perform task-specific data reduction
     6. summarize high-level matches
-    
+    \par
     steps 2-4 work only on exact matches, so any partial matching must be done via
     normalization in step 1. common transformations include white space removal,
     comment removal, and identifier renaming. steps 2-4 have the advantage of being
@@ -633,8 +642,8 @@
 }
 @article{karp87,
   title={efficient randomized pattern-matching algorithms},
-  author={karp, richard m and rabin, michael o},
-  journal={ibm journal of research and development},
+  author={Karp, Richard M. and Rabin, Michael O.},
+  journal={IBM journal of research and development},
   volume={31},
   number={2},
   pages={249--260},
@@ -647,25 +656,50 @@
     karp-rabin string matching to search for and verify matches.
     
     presents a generalized string-matching algorithm that works in ``real time''
-    (there is a formal definition of that, but i have not reached it yet) and in
-    a constant number of registers. it requires keeping a substring in memory of
-    the same length as the one you are searching for. authors claim that it seems
-    to be competitive on classical strings only for larger substring sizes, but it
-    has a huge advantage in being able to search 2d arrays, higher dimensional
-    arrays, and even irregular shapes with the same mathematical background.
+    (each bit of input can be processed as soon as it comes in and requires
+    constant time) and in a constant number of registers. it requires keeping a
+    substring in memory of the same length as the one you are searching for.
+    authors claim that it seems to be competitive on classical strings only
+    for larger substring sizes, but it has a huge advantage in being able to
+    search 2d arrays, higher dimensional arrays, and even irregular shapes
+    with the same mathematical background.
+
+    "The idea of using fingerprinting techniques for string-matching problems
+    is not new. Many such techniques based on check sums and hash functions can
+    be found in the literature. What is new is the particular way of choosing
+    the fingerprinting functions at run time. This randomization technique
+    permits us to establish very strong properties of our algorithms, even if
+    the input data are chosen by an intelligent adversary who knows the nature
+    of the algorithm."
     
     first presents a generalization of all string matching problems, and explains
-    how the simple pattern-matching problem we are interested in fits that framework.
+    how the simple pattern-matching problem we are interested in fits that
+    framework.
     todo explain the framework here
     it also provides an example of how a 2d array fits the framework, but we are
     not interested in that. i have not yet finished reading the paper, but a
     description of the relevant stuff will go here.
-    
-    we should also check out the prior work to see if it may be useful to us.
-    
-    
-    this article is not available online; gordon library has a microfiche copy and
-    a paper copy for in-library use.}
+
+    Karp and Rabin present three algorithms for deciding whether there is a
+    match given an input string $X$ of length $n$, an output string $Y$, a
+    finite set of fingerprinting functions $S$, and a set of valid indices $R$.
+    Brief descriptions follow:
+
+    \begin{itemize}
+      \item Computes $k$ fingerprinting functions on each substring of length
+        $n$ in $Y$. If they all report a match, halts immediately. This
+        algorithm can report a false match, but only if all $k$ fingerprint
+        functions collide.
+      \item Computes only one fingerprint function on each substring of length
+        $n$ in $Y$, but goes back and verifies the string after a match; false
+        matches are caught and discarded.
+      \item Same as above, but changes to a different fingerprinting function
+        after a false match.
+    \end{itemize}
+
+    The rest of the paper introduces and thoroughly explores the properties of
+    several fingerprinting functions. The details are outside the scope of this
+    project.}
 }
 @incollection{khanna07,
   title={a formal investigation of diff3},
