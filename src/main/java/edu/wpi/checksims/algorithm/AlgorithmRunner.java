@@ -33,7 +33,9 @@ public class AlgorithmRunner {
                 int curProcessed = submissionsProcessed.incrementAndGet();
                 logs.info("Processing submission pair " + curProcessed + "/" + allPairs.size());
 
-                logs.trace("Running " + algorithm.getName() + " on submissions " + pair.first.getName() + " and " + pair.second.getName());
+                logs.trace("Running " + algorithm.getName() + " on submissions " + pair.first.getName() +
+                        "(" + pair.first.getNumTokens() + " tokens) and " + pair.second.getName() + " (" +
+                        pair.second.getNumTokens() + " tokens)");
 
                 AlgorithmResults result = algorithm.detectPlagiarism(pair.first, pair.second);
 
