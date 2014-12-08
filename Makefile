@@ -6,7 +6,7 @@ LATEX_BUILD=$(LATEX_ROOT)/build
 LATEX_BUILD_ARGS=-outdir=$(LATEX_DIST) -pdf --shell-escape
 BIBLIOGRAPHY=$(LATEX_SRC)/bibliography.bib
 
-all: doc litreview methodology userguide devguide approach
+all: doc litreview methodology userguide devguide approach main
 
 doc: $(LATEX_DIST)/requirements.pdf mvaux
 
@@ -19,6 +19,8 @@ userguide: $(LATEX_DIST)/user_guide.pdf mvaux
 devguide: $(LATEX_DIST)/developer_guide.pdf mvaux
 
 approach: $(LATEX_DIST)/approach.pdf mvaux
+
+main: $(LATEX_DIST)/main.pdf mvaux
 
 mvaux:
 	mv $(LATEX_DIST)/*.aux $(LATEX_BUILD) || true
@@ -42,6 +44,9 @@ $(LATEX_DIST)/developer_guide.pdf: $(LATEX_SRC)/developer_guide.ltx
 
 $(LATEX_DIST)/approach.pdf: $(LATEX_SRC)/approach.ltx $(LATEX_SRC)/architecture.pdf $(BIBLIOGRAPHY)
 	$(LATEX) $(LATEX_BUILD_ARGS) $(LATEX_SRC)/approach.ltx
+
+$(LATEX_DIST)/main.pdf: $(LATEX_SRC)/main.ltx
+	$(LATEX) $(LATEX_BUILD_ARGS) $(LATEX_SRC)/main.ltx
 
 clean:
 	rm -rf $(LATEX_DIST) $(LATEX_BUILD)

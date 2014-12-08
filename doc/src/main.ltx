@@ -1,0 +1,59 @@
+\documentclass[12pt]{article}
+
+\usepackage{graphicx}
+\usepackage{rotating}
+\usepackage[margin=1in]{geometry}
+\setcounter{tocdepth}{5}
+\setcounter{secnumdepth}{5}
+
+\author{Dolan Murvihill \and Matthew Heon}
+\title{Software Similarity Detection}
+
+\begin{document}
+
+% Center the title page
+\null
+\nointerlineskip
+\vfill
+\let\snewpage \newpage
+\let\newpage \relax
+\maketitle
+\let \newpage \snewpage
+\vfill 
+\newpage
+
+% Center the abstract
+\topskip0pt
+\vspace*{\fill}
+\begin{abstract}
+TO DO TO DO TO DO TO DO TO DO TO DO TO DO
+\end{abstract}
+\vspace*{\fill}
+\newpage
+
+% Insert table of concepts
+\tableofcontents
+\newpage
+
+\section{Introduction}
+TO DO
+
+\section{Literature Review}
+TO DO
+
+% Our Approach
+\input{doc/src/approach.ltx}
+
+% Experimental Verification
+\input{doc/src/methodology.ltx}
+
+\section{Results}
+TO DO
+
+\section{Conclusion}
+TO DO
+
+\bibliographystyle{plain}
+\bibliography{doc/src/bibliography}
+
+\end{document}

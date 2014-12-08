@@ -1,12 +1,3 @@
-\documentclass[12pt]{article}
-\usepackage{graphicx}
-\usepackage{rotating}
-\usepackage[margin=1in]{geometry}
-\author{Dolan Murvihill \and Matthew Heon}
-\title{Program Similarity Detection: Our Approach - Checksims}
-\begin{document}
-\maketitle
-
 \section{Requirements}
 When we first began to design our solution to discovering similarities in
 software, we naturally began by developing a list of requirements which would
@@ -71,7 +62,7 @@ desirable, we decided that simplicity was the overriding concern, to ensure we
 would actually have time to fully implement the solution. Furthermore, an 
 open-source, client-based solution offers the ability for technically capable
 users to easily modify our solution to meet their own  needs. Finally, a 
-client-based solution is transparent in its operation - there is no magic
+client-based solution is transparent in its operation --- there is no magic
 occurring ``behind the curtain'' on server-side, and any results can be
 independently verified.
 
@@ -369,5 +360,3 @@ Some output strategies will print the similarity matrix itself, possibly with
 visual aids to ``call out'' unusually large similarities. For example, the
 \texttt{HTML} output strategy produces a web page containing a similarity
 matrix with cells color-coded to identify how similar the submissions are.
-
-\end{document}
