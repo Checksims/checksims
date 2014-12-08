@@ -2,9 +2,17 @@
 
 \usepackage{graphicx}
 \usepackage{rotating}
+\usepackage[bibstyle=../src/numeric-annote]{biblatex}
+\usepackage{scrextend}
+\usepackage[T1]{fontenc}
+
 \usepackage[margin=1in]{geometry}
+
 \setcounter{tocdepth}{5}
 \setcounter{secnumdepth}{5}
+
+\addbibresource{../src/bibliography.bib}
+\nocite{*}
 
 \author{Dolan Murvihill \and Matthew Heon}
 \title{Software Similarity Detection}
@@ -42,10 +50,10 @@ TO DO
 TO DO
 
 % Our Approach
-\input{doc/src/approach.ltx}
+\input{../src/approach.ltx}
 
 % Experimental Verification
-\input{doc/src/methodology.ltx}
+\input{../src/methodology.ltx}
 
 \section{Results}
 TO DO
@@ -53,7 +61,7 @@ TO DO
 \section{Conclusion}
 TO DO
 
-\bibliographystyle{plain}
-\bibliography{doc/src/bibliography}
+% Bibliography
+\printbibliography
 
 \end{document}
