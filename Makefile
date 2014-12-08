@@ -3,50 +3,28 @@ LATEX_ROOT=doc
 LATEX_SRC=$(LATEX_ROOT)/src
 LATEX_DIST=$(LATEX_ROOT)/dist
 LATEX_BUILD=$(LATEX_ROOT)/build
-LATEX_BUILD_ARGS=-outdir=$(LATEX_DIST) -pdf --shell-escape
+LATEX_BUILD_ARGS=-bibtex -pdf -outdir=../dist -cd
 BIBLIOGRAPHY=$(LATEX_SRC)/bibliography.bib
 
-all: doc litreview methodology userguide devguide approach main
+all: builddir main userguide devguide
 
-doc: $(LATEX_DIST)/requirements.pdf mvaux
+builddir:
+	mkdir -p $(LATEX_DIST)
 
-litreview: $(LATEX_DIST)/litreview.pdf mvaux
+main: $(LATEX_DIST)/main.pdf
 
-methodology: $(LATEX_DIST)/methodology.pdf mvaux
+userguide: $(LATEX_DIST)/user_guide.pdf
 
-userguide: $(LATEX_DIST)/user_guide.pdf mvaux
+devguide: $(LATEX_DIST)/developer_guide.pdf
 
-devguide: $(LATEX_DIST)/developer_guide.pdf mvaux
-
-approach: $(LATEX_DIST)/approach.pdf mvaux
-
-main: $(LATEX_DIST)/main.pdf mvaux
-
-mvaux:
-	mv $(LATEX_DIST)/*.aux $(LATEX_BUILD) || true
-	mv $(LATEX_DIST)/*.log $(LATEX_BUILD) || true
-	mv $(LATEX_DIST)/*.fls $(LATEX_BUILD) || true
-
-$(LATEX_DIST)/requirements.pdf: $(LATEX_SRC)/requirements.ltx
-	$(LATEX) $(LATEX_BUILD_ARGS) $(LATEX_SRC)/requirements.ltx
-
-$(LATEX_DIST)/litreview.pdf: $(LATEX_SRC)/litreview.ltx $(BIBLIOGRAPHY)
-	$(LATEX) $(LATEX_BUILD_ARGS) $(LATEX_SRC)/litreview.ltx
-
-$(LATEX_DIST)/methodology.pdf: $(LATEX_SRC)/methodology.ltx $(BIBLIOGRAPHY)
-	$(LATEX) $(LATEX_BUILD_ARGS) $(LATEX_SRC)/methodology.ltx
+$(LATEX_DIST)/main.pdf: $(LATEX_SRC)/main.ltx $(LATEX_SRC)/approach.ltx $(LATEX_SRC)/methodology.ltx
+	$(LATEX) $(LATEX_BUILD_ARGS) $(LATEX_SRC)/main.ltx
 
 $(LATEX_DIST)/user_guide.pdf: $(LATEX_SRC)/user_guide.ltx
 	$(LATEX) $(LATEX_BUILD_ARGS) $(LATEX_SRC)/user_guide.ltx
 
 $(LATEX_DIST)/developer_guide.pdf: $(LATEX_SRC)/developer_guide.ltx
 	$(LATEX) $(LATEX_BUILD_ARGS) $(LATEX_SRC)/developer_guide.ltx
-
-$(LATEX_DIST)/approach.pdf: $(LATEX_SRC)/approach.ltx $(LATEX_SRC)/architecture.pdf $(BIBLIOGRAPHY)
-	$(LATEX) $(LATEX_BUILD_ARGS) $(LATEX_SRC)/approach.ltx
-
-$(LATEX_DIST)/main.pdf: $(LATEX_SRC)/main.ltx
-	$(LATEX) $(LATEX_BUILD_ARGS) $(LATEX_SRC)/main.ltx
 
 clean:
 	rm -rf $(LATEX_DIST) $(LATEX_BUILD)

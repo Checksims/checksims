@@ -1,6 +1,8 @@
 \documentclass{article}
 \author{Dolan Murvihill \and Matthew Heon}
 \title{Program Similarity Detection: A review of the literature}
+\usepackage{biblatex}
+\addbibresource{bibliography.bib}
 \newcommand{\vocab}[1]{
   \textit{#1}}
 \begin{document}
@@ -11,7 +13,46 @@ well-established problem with many applications.
 
 \section{Applications}
 \subsection{Code Clone Detection}
-\subsection{Plagiarism/Copyright Infringement Detection}
+Duplicated source code is considered harmful by broad consensus among the
+software community, for a number of reasons:
+\begin{itemize}
+\item Any further changes, especially bug fixes, must me made in both clones;
+      often they are
+\item [TODO complete this list]
+\end{itemize}
+
+Nevertheless, software developers often duplicate code in order to speed up
+development, perform experimental changes without impacting existing code, or
+to allow two branches to evolve independently \cite{baker95}. Sometimes these
+changes are unintentionally left in the source code and cause trouble later.
+Software developers would like to reduce the amount of duplicate code in their
+software in order to reduce maintenance costs, and the field of \vocab{code
+clone detection} has arisen to help locate duplication.
+
+One of the earliest code clone detectors is Dup. Dup's goal is to find code
+that is "substantially the same line by line except for global substitutions"
+\cite{baker95}. Dup's results were promising for 1995: When run on the source
+code for the X Window System, it located 2487 matches of length 30 or more, and
+expected that 12\% of the current source code could be eliminated by rewriting
+\cite{baker95}. In another system, it found that "two whole directories of 800
+lines were \ldots the same except for a systematic change of parameter names
+and a line break"\cite{baker95}.
+
+Dup's approach is to locate "maximal exact or parameterized matches" greater
+than a threshold length. A \vocab{maximal exact match} means both sections of
+text are character for character the same, but the previous and next lines do
+not match. \vocab{Parameterized matches}, or P-matches, occur when a one-to-one
+mapping of parameter names can transform one section into the other. Dup's
+P-matching algorithm is language-dependent and must be modified to support
+different types of identifiers.
+
+Dup also includes some other rules to account for oddities like the fact that
+even non-duplicate case statements look very similar to one another, or that
+a closing brace at the start of a match usually does not belong to duplicated
+code.
+
+[detailed description of p-matching detection]
+
 \subsection{Malware Analysis}
 \subsection{Dead Code Detection}
 \section{Plagiarism Detection}
@@ -44,9 +85,9 @@ Lauer: If students copy the same code from a board, it is kosher
 %        needed."
 
 The plagiarism detection field contains a number of papers focused on detecting
-plagiarism in natural language. Much of this literature applies to source code
-plagiarism as well, but we tried to focus on papers that were oriented toward
-source code.
+plagiarism in natural language. Much natural language plagiarism detection
+research can be used for source code plagiarism as well, but we tried to focus
+on papers that were oriented toward source code.
 
 \subsection{Human analysis requirement}
 The proliferation of plagiarism definitions creates a vague, confusing, and
@@ -144,4 +185,5 @@ platform.
 %    Want to implement - do we have time?
 %    Faster but less accurate than Smith-Waterman
 
+\printbibliography
 \end{document}
