@@ -22,7 +22,7 @@ public class CommonCodeRemover {
 
     private CommonCodeRemover() {}
 
-    public static List<Submission> removeCommonCodeFromSubmissionsInList(List<Submission> removeFrom, Submission common, PlagiarismDetector algorithm) {
+    public static List<Submission> removeCommonCodeFromSubmissionsInList(List<Submission> removeFrom, Submission common, SimilarityDetector algorithm) {
         if(removeFrom.isEmpty()) {
             return removeFrom;
         }
@@ -47,10 +47,10 @@ public class CommonCodeRemover {
         return toReturn;
     }
 
-    public static Submission removeCommonCodeFromSubmission(Submission in, Submission common, PlagiarismDetector algorithm) throws ChecksimException {
+    public static Submission removeCommonCodeFromSubmission(Submission in, Submission common, SimilarityDetector algorithm) throws ChecksimException {
         logs.trace("Performing common code removal on submission " + in.getName());
 
-        AlgorithmResults results = algorithm.detectPlagiarism(in, common);
+        AlgorithmResults results = algorithm.detectSimilarity(in, common);
 
         // The results contains two TokenLists, representing the final state of the submissions after similarity detection
         // All common code should be marked invalid for the input submission's final list

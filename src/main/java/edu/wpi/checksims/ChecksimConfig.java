@@ -1,7 +1,7 @@
 package edu.wpi.checksims;
 
 import com.google.common.collect.ImmutableList;
-import edu.wpi.checksims.algorithm.PlagiarismDetector;
+import edu.wpi.checksims.algorithm.SimilarityDetector;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrixPrinter;
 import edu.wpi.checksims.algorithm.preprocessor.SubmissionPreprocessor;
 import edu.wpi.checksims.token.TokenType;
@@ -13,20 +13,20 @@ import java.util.List;
  * Non-persistent configuration of Checksims
  */
 public final class ChecksimConfig {
-    public final PlagiarismDetector algorithm;
+    public final SimilarityDetector algorithm;
     public final TokenType tokenization;
     public final List<SubmissionPreprocessor> preprocessors;
     public final List<File> submissionDirectories;
     public final boolean removeCommonCode;
-    public final PlagiarismDetector commonCodeRemovalAlgorithm;
+    public final SimilarityDetector commonCodeRemovalAlgorithm;
     public final File commonCodeDirectory;
     public final String globMatcher;
     public final SimilarityMatrixPrinter outputPrinter;
     public final boolean outputToFile;
     public final File outputFile;
 
-    public ChecksimConfig(PlagiarismDetector algorithm, TokenType tokenization, List<SubmissionPreprocessor> preprocessors,
-                          List<File> submissionDirectories, boolean removeCommonCode, PlagiarismDetector commonCodeRemovalAlgorithm,
+    public ChecksimConfig(SimilarityDetector algorithm, TokenType tokenization, List<SubmissionPreprocessor> preprocessors,
+                          List<File> submissionDirectories, boolean removeCommonCode, SimilarityDetector commonCodeRemovalAlgorithm,
                           File commonCodeDirectory, String globMatcher, SimilarityMatrixPrinter outputPrinter,
                           boolean outputToFile, File outputFile) {
         this.algorithm = algorithm;

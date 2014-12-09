@@ -5,17 +5,17 @@ import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.token.TokenType;
 
 /**
- * Detect plagiarism between two submissions
+ * Detect similarities between two submissions
  *
  * NOTE that, in addition to the methods listed here, all plagiarism detectors MUST support a no-arguments getInstance()
  * method, and be contained in edu.wpi.checksims.algorithm or a subpackage thereof.
  *
- * This is required as reflection is used to automatically detect and instantiate all plagiarism detection algorithms
+ * This is required as reflection is used to automatically detect and instantiate all similarity detection algorithms
  * present at runtime.
  */
-public interface PlagiarismDetector {
+public interface SimilarityDetector {
     /**
-     * MUST BE UNIQUE FOR EACH PLAGIARISM DETECTOR
+     * MUST BE UNIQUE FOR EACH SIMILARITY DETECTOR
      *
      * @return Name of the plagiarism detector used to invoke it at the CLI
      */
@@ -24,7 +24,7 @@ public interface PlagiarismDetector {
     public TokenType getDefaultTokenType();
 
     /**
-     * Apply a pairwise plagiarism detection algorithm
+     * Apply a pairwise similarity detection algorithm
      *
      * Token list types of A and B must match
      *
@@ -33,5 +33,5 @@ public interface PlagiarismDetector {
      * @return Similarity results of comparing submissions A and B
      * @throws ChecksimException Thrown on algorithm error or mismatched tokenization list types
      */
-    public AlgorithmResults detectPlagiarism(Submission a, Submission b) throws ChecksimException;
+    public AlgorithmResults detectSimilarity(Submission a, Submission b) throws ChecksimException;
 }

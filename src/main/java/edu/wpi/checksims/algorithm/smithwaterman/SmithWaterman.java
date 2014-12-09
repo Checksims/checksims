@@ -2,7 +2,7 @@ package edu.wpi.checksims.algorithm.smithwaterman;
 
 import edu.wpi.checksims.ChecksimException;
 import edu.wpi.checksims.algorithm.AlgorithmResults;
-import edu.wpi.checksims.algorithm.PlagiarismDetector;
+import edu.wpi.checksims.algorithm.SimilarityDetector;
 import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.token.TokenList;
 import edu.wpi.checksims.token.TokenType;
@@ -13,7 +13,7 @@ import edu.wpi.checksims.util.TwoDimIntArray;
 /**
  * Performs the actual Smith-Waterman algorithm
  */
-public class SmithWaterman implements PlagiarismDetector {
+public class SmithWaterman implements SimilarityDetector {
     private final SmithWatermanParameters params;
 
     public SmithWaterman(SmithWatermanParameters params) {
@@ -42,7 +42,7 @@ public class SmithWaterman implements PlagiarismDetector {
      * @return AlgorithmResults indicating number of matched tokens
      */
     @Override
-    public AlgorithmResults detectPlagiarism(Submission a, Submission b) throws ChecksimException {
+    public AlgorithmResults detectSimilarity(Submission a, Submission b) throws ChecksimException {
         if(!a.getTokenType().equals(b.getTokenType())) {
             throw new ChecksimException("Token list type mismatch: submission " + a.getName() + " has type " +
                     a.getTokenList().type.toString() + ", while submission " + b.getName() + " has type " +

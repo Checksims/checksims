@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class AlgorithmRunner {
     private AlgorithmRunner() {}
 
-    public static List<AlgorithmResults> runAlgorithm(List<Submission> submissions, PlagiarismDetector algorithm) {
+    public static List<AlgorithmResults> runAlgorithm(List<Submission> submissions, SimilarityDetector algorithm) {
         Logger logs = LoggerFactory.getLogger(AlgorithmRunner.class);
         AtomicInteger submissionsProcessed = new AtomicInteger(0);
         long startTime = System.currentTimeMillis();
@@ -37,7 +37,7 @@ public class AlgorithmRunner {
                         "(" + pair.first.getNumTokens() + " tokens) and " + pair.second.getName() + " (" +
                         pair.second.getNumTokens() + " tokens)");
 
-                AlgorithmResults result = algorithm.detectPlagiarism(pair.first, pair.second);
+                AlgorithmResults result = algorithm.detectSimilarity(pair.first, pair.second);
 
                 results.add(result);
             } catch(ChecksimException e) {

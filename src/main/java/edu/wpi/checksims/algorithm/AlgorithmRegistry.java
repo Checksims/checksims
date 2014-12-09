@@ -12,12 +12,12 @@ import java.util.stream.Collectors;
  * Registry for all supported plagiarism detection algorithms
  */
 public class AlgorithmRegistry {
-    private final List<PlagiarismDetector> supportedAlgorithms;
+    private final List<SimilarityDetector> supportedAlgorithms;
 
     private static AlgorithmRegistry instance;
 
     private AlgorithmRegistry() {
-        List<PlagiarismDetector> detectors = ReflectiveInstantiator.reflectiveInstantiator("edu.wpi.checksims.algorithm", PlagiarismDetector.class);
+        List<SimilarityDetector> detectors = ReflectiveInstantiator.reflectiveInstantiator("edu.wpi.checksims.algorithm", SimilarityDetector.class);
 
         if(detectors.isEmpty()) {
             throw new RuntimeException("No plagiarism detection algorithms registered! Cannot continue!");
@@ -26,7 +26,7 @@ public class AlgorithmRegistry {
         // Get a list without duplicates
         // If it's a different size, then duplicates existed, which is bad
         // Throw a RuntimeException for that!
-        ImmutableList<String> noDups = ImmutableSet.copyOf(detectors.stream().map(PlagiarismDetector::getName).collect(Collectors.toList())).asList();
+        ImmutableList<String> noDups = ImmutableSet.copyOf(detectors.stream().map(SimilarityDetector::getName).collect(Collectors.toList())).asList();
         if(noDups.size() < detectors.size()) {
             throw new RuntimeException("Some algorithm names were not globally unique!");
         }
@@ -48,7 +48,7 @@ public class AlgorithmRegistry {
      *
      * @return Default plagiarism detection algorithm
      */
-    public PlagiarismDetector getDefaultAlgorithm() {
+    public SimilarityDetector getDefaultAlgorithm() {
         return supportedAlgorithms.get(0);
     }
 
@@ -63,7 +63,7 @@ public class AlgorithmRegistry {
      * @return List of names of supported algorithms
      */
     public List<String> getSupportedAlgorithmNames() {
-        return supportedAlgorithms.stream().map(PlagiarismDetector::getName).collect(Collectors.toList());
+        return supportedAlgorithms.stream().map(SimilarityDetector::getName).collect(Collectors.toList());
     }
 
     /**
@@ -73,9 +73,9 @@ public class AlgorithmRegistry {
      * @return Plagiarism detection algorithm of that name
      * @throws ChecksimException Thrown on no algorithm or more than one algorithm of that name existing
      */
-    public PlagiarismDetector getAlgorithmInstance(String name) throws ChecksimException {
+    public SimilarityDetector getAlgorithmInstance(String name) throws ChecksimException {
         String lowerName = name.toLowerCase(); // Ensure case insensitivity
-        List<PlagiarismDetector> detectors = supportedAlgorithms.stream().filter((alg) -> alg.getName().equals(lowerName)).collect(Collectors.toList());
+        List<SimilarityDetector> detectors = supportedAlgorithms.stream().filter((alg) -> alg.getName().equals(lowerName)).collect(Collectors.toList());
 
         if(detectors.size() == 0) {
             throw new ChecksimException("No algorithm with name " + name);

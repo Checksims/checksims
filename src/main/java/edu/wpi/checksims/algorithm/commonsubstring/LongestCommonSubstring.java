@@ -2,7 +2,7 @@ package edu.wpi.checksims.algorithm.commonsubstring;
 
 import edu.wpi.checksims.ChecksimException;
 import edu.wpi.checksims.algorithm.AlgorithmResults;
-import edu.wpi.checksims.algorithm.PlagiarismDetector;
+import edu.wpi.checksims.algorithm.SimilarityDetector;
 import edu.wpi.checksims.submission.ConcreteSubmission;
 import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.token.*;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 /**
  * Suffix Tree-based Longest Common Substring
  */
-public class LongestCommonSubstring implements PlagiarismDetector {
+public class LongestCommonSubstring implements SimilarityDetector {
     public final int Threshold = 5;
 
     private static LongestCommonSubstring instance;
@@ -45,7 +45,7 @@ public class LongestCommonSubstring implements PlagiarismDetector {
     }
 
     @Override
-    public AlgorithmResults detectPlagiarism(Submission a, Submission b) throws ChecksimException {
+    public AlgorithmResults detectSimilarity(Submission a, Submission b) throws ChecksimException {
         if (!a.getTokenType().equals(b.getTokenType())) {
             throw new ChecksimException("Token type mismatch between submissions " + a.getName() + " and " + b.getName());
         }

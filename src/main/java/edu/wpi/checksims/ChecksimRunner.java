@@ -2,7 +2,7 @@ package edu.wpi.checksims;
 
 import edu.wpi.checksims.algorithm.AlgorithmRegistry;
 import edu.wpi.checksims.algorithm.CommonCodeRemover;
-import edu.wpi.checksims.algorithm.PlagiarismDetector;
+import edu.wpi.checksims.algorithm.SimilarityDetector;
 import edu.wpi.checksims.algorithm.output.OutputRegistry;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrix;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrixPrinter;
@@ -136,7 +136,7 @@ public class ChecksimRunner {
         }
 
         // Parse plagiarism detection algorithm
-        PlagiarismDetector algorithm;
+        SimilarityDetector algorithm;
         if(cli.hasOption("a")) {
             try {
                 algorithm = AlgorithmRegistry.getInstance().getAlgorithmInstance(cli.getOptionValue("a"));
@@ -166,7 +166,7 @@ public class ChecksimRunner {
         File commonCodeDirectory = null;
         // TODO may be desirable for this to be configurable
         // For now default to the same algorithm used for actual detection
-        PlagiarismDetector commonCodeRemovalAlgorithm = algorithm;
+        SimilarityDetector commonCodeRemovalAlgorithm = algorithm;
         if(removeCommonCode) {
             commonCodeDirectory = new File(cli.getOptionValue("c"));
             logs.info("Removing common code (given in directory " + commonCodeDirectory.getName() + ")");

@@ -1,9 +1,8 @@
 package edu.wpi.checksims.algorithm.linesimilarity;
 
 import edu.wpi.checksims.ChecksimException;
-import edu.wpi.checksims.submission.ConcreteSubmission;
 import edu.wpi.checksims.algorithm.AlgorithmResults;
-import edu.wpi.checksims.algorithm.PlagiarismDetector;
+import edu.wpi.checksims.algorithm.SimilarityDetector;
 import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.token.Token;
 import edu.wpi.checksims.token.TokenList;
@@ -20,7 +19,7 @@ import java.util.Map;
 /**
  * Implements a line-by-line similarity checker
  */
-public class LineSimilarityChecker implements PlagiarismDetector {
+public class LineSimilarityChecker implements SimilarityDetector {
     private static LineSimilarityChecker instance;
 
     /**
@@ -70,7 +69,7 @@ public class LineSimilarityChecker implements PlagiarismDetector {
      * @return Number of identical lines in both submissions
      */
     @Override
-    public AlgorithmResults detectPlagiarism(Submission a, Submission b) throws ChecksimException {
+    public AlgorithmResults detectSimilarity(Submission a, Submission b) throws ChecksimException {
         TokenList linesA = a.getTokenList();
         TokenList linesB = b.getTokenList();
         TokenList finalA = TokenList.cloneTokenList(linesA);

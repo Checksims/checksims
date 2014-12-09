@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.algorithm.AlgorithmResults;
 import edu.wpi.checksims.algorithm.AlgorithmRunner;
-import edu.wpi.checksims.algorithm.PlagiarismDetector;
+import edu.wpi.checksims.algorithm.SimilarityDetector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +43,7 @@ public class SimilarityMatrix {
      * @param algorithm Algorithm to use when detecting plagiarism
      * @return Array of algorithm results, with results[i,j] being the results of comparing students i and j
      */
-    public static SimilarityMatrix generate(List<Submission> submissions, PlagiarismDetector algorithm) {
+    public static SimilarityMatrix generate(List<Submission> submissions, SimilarityDetector algorithm) {
         float[][] results = new float[submissions.size()][submissions.size()];
         List<Submission> submissionsSorted = new LinkedList<>(submissions);
         Logger logs = LoggerFactory.getLogger(SimilarityMatrix.class);
