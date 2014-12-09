@@ -165,8 +165,14 @@ public class ChecksimRunner {
         boolean removeCommonCode = cli.hasOption("c");
         File commonCodeDirectory = null;
         // TODO may be desirable for this to be configurable
-        // For now default to the same algorithm used for actual detection
-        SimilarityDetector commonCodeRemovalAlgorithm = algorithm;
+        // For now default to linecompare
+        SimilarityDetector commonCodeRemovalAlgorithm;
+        try {
+            commonCodeRemovalAlgorithm = AlgorithmRegistry.getInstance().getAlgorithmInstance("linecompare");
+        } catch(ChecksimException e) {
+            logs.error("Cannot obtain instance of linecompare algorithm!");
+            throw new RuntimeException(e);
+        }
         if(removeCommonCode) {
             commonCodeDirectory = new File(cli.getOptionValue("c"));
             logs.info("Removing common code (given in directory " + commonCodeDirectory.getName() + ")");
@@ -238,6 +244,8 @@ public class ChecksimRunner {
             logs.error("Error creating submissions from directory!");
             throw new RuntimeException(e);
         }
+
+        logs.trace("Loaded " + submissions.size() + " submissions for testing.");
 
         // If we are performing common code detection...
         if(config.removeCommonCode) {

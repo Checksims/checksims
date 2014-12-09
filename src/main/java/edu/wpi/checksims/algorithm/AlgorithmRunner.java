@@ -49,7 +49,7 @@ public class AlgorithmRunner {
         long endTime = System.currentTimeMillis();
         long timeElapsed = endTime - startTime;
 
-        logs.info("Finished plagiarism detection in " + timeElapsed + " ms");
+        logs.info("Finished similarity detection in " + timeElapsed + " ms");
 
         return results;
     }

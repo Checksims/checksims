@@ -74,7 +74,7 @@ public class SimilarityMatrix {
             results[indexSecond][indexFirst] = result.percentMatchedB();
         });
 
-        logs.info("Done performing plagiarism detection");
+        logs.info("Done performing similarity detection");
 
         return new SimilarityMatrix(submissionsSorted, results);
     }
