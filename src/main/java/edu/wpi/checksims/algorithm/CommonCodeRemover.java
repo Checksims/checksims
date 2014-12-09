@@ -3,6 +3,7 @@ package edu.wpi.checksims.algorithm;
 import edu.wpi.checksims.ChecksimException;
 import edu.wpi.checksims.submission.ConcreteSubmission;
 import edu.wpi.checksims.submission.Submission;
+import edu.wpi.checksims.submission.ValidityIgnoringSubmission;
 import edu.wpi.checksims.token.Token;
 import edu.wpi.checksims.token.TokenList;
 import org.slf4j.Logger;
@@ -56,15 +57,26 @@ public class CommonCodeRemover {
 
         // The results contains two TokenLists, representing the final state of the submissions after similarity detection
         // All common code should be marked invalid for the input submission's final list
-        TokenList listWithCommonInvalid = results.finalListA;
+        TokenList listWithCommonInvalid;
+        float percentMatched;
+        int identTokens;
+        if(new ValidityIgnoringSubmission(results.a).equals(in)) {
+            listWithCommonInvalid = results.finalListA;
+            percentMatched = results.percentMatchedA();
+            identTokens = results.identicalTokensA;
+        } else {
+            listWithCommonInvalid = results.finalListB;
+            percentMatched = results.percentMatchedB();
+            identTokens = results.identicalTokensB;
+        }
 
         // Construct a new list without the invalid tokens
         Supplier<TokenList> tokenListSupplier = () -> new TokenList(listWithCommonInvalid.type);
         TokenList finalList = listWithCommonInvalid.stream().filter(Token::isValid).collect(Collectors.toCollection(tokenListSupplier));
 
         DecimalFormat d = new DecimalFormat("###.00");
-        logs.trace("Submission " + in.getName() + " contained " + d.format(100 * results.percentMatchedA()) + "% common code");
-        logs.trace("Removed " + results.identicalTokensA + " common tokens (of " + in.getNumTokens() + " total)");
+        logs.trace("Submission " + in.getName() + " contained " + d.format(100 * percentMatched) + "% common code");
+        logs.trace("Removed " + identTokens + " common tokens (of " + in.getNumTokens() + " total)");
 
         return new ConcreteSubmission(in.getName(), finalList);
     }
