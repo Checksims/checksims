@@ -35,11 +35,7 @@ public class CommonCodeRemover {
             try {
                 logs.info("Removing common code from submission " + submissionsProcessed.incrementAndGet() + "/" + removeFrom.size());
 
-                Submission finalizedSubmission = removeCommonCodeFromSubmission(submission, common, algorithm);
-                int tokensRemoved = finalizedSubmission.getNumTokens() - submission.getNumTokens();
-
-                logs.trace("Removed " + tokensRemoved + " tokens from submission " + submission.getName());
-                return finalizedSubmission;
+                return removeCommonCodeFromSubmission(submission, common, algorithm);
             } catch(ChecksimException e) {
                 throw new RuntimeException(e);
             }
@@ -68,6 +64,7 @@ public class CommonCodeRemover {
 
         DecimalFormat d = new DecimalFormat("###.00");
         logs.trace("Submission " + in.getName() + " contained " + d.format(100 * results.percentMatchedA()) + "% common code");
+        logs.trace("Removed " + results.identicalTokensA + " common tokens (of " + in.getNumTokens() + " total)");
 
         return new ConcreteSubmission(in.getName(), finalList);
     }
