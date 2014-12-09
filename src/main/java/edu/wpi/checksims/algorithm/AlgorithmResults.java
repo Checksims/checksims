@@ -27,10 +27,18 @@ public final class AlgorithmResults {
     // TODO may be desirable to ensure that identicalTokensA and identicalTokensB are never over the number of tokens in the submission?
 
     public float percentMatchedA() {
+        if(a.getNumTokens() == 0) {
+            return 0.0f;
+        }
+
         return ((float)identicalTokensA) / a.getNumTokens();
     }
 
     public float percentMatchedB() {
+        if(a.getNumTokens() == 0) {
+            return 0.0f;
+        }
+
         return ((float)identicalTokensB) / b.getNumTokens();
     }
 
