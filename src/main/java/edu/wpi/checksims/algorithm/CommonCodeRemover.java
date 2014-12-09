@@ -24,6 +24,7 @@ public class CommonCodeRemover {
 
     public static List<Submission> removeCommonCodeFromSubmissionsInList(List<Submission> removeFrom, Submission common, SimilarityDetector algorithm) {
         if(removeFrom.isEmpty()) {
+            logs.debug("No submissions to perform common code removal on!");
             return removeFrom;
         }
 
@@ -34,7 +35,11 @@ public class CommonCodeRemover {
             try {
                 logs.info("Removing common code from submission " + submissionsProcessed.incrementAndGet() + "/" + removeFrom.size());
 
-                return removeCommonCodeFromSubmission(submission, common, algorithm);
+                Submission finalizedSubmission = removeCommonCodeFromSubmission(submission, common, algorithm);
+                int tokensRemoved = finalizedSubmission.getNumTokens() - submission.getNumTokens();
+
+                logs.trace("Removed " + tokensRemoved + " tokens from submission " + submission.getName());
+                return finalizedSubmission;
             } catch(ChecksimException e) {
                 throw new RuntimeException(e);
             }
@@ -43,6 +48,7 @@ public class CommonCodeRemover {
         long endTime = System.currentTimeMillis();
         long elapsedTime = endTime - startTime;
         logs.info("Common code removal took " + elapsedTime + "ms");
+
 
         return toReturn;
     }
