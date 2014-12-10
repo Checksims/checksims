@@ -6,7 +6,15 @@ LATEX_BUILD=$(LATEX_ROOT)/build
 LATEX_BUILD_ARGS=-bibtex -pdf -outdir=../dist -cd
 BIBLIOGRAPHY=$(LATEX_SRC)/bibliography.bib
 
-all: builddir main userguide devguide
+all: docs jar
+
+jar:
+	mvn compile package
+
+test:
+	mvn compile test
+
+docs: main userguide devguide
 
 builddir:
 	mkdir -p $(LATEX_DIST)
@@ -28,3 +36,4 @@ $(LATEX_DIST)/developer_guide.pdf: $(LATEX_SRC)/developer_guide.ltx
 
 clean:
 	rm -rf $(LATEX_DIST) $(LATEX_BUILD)
+	mvn clean
