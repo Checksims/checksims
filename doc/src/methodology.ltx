@@ -217,9 +217,9 @@ deployment for use by WPI course staff.
 
 
 \subsection{Algorithm Comparisons}
-Checksims presently provides two algorithms for similarity detection,
+\textit{Checksims} presently provides two algorithms for similarity detection,
 \textit{Line Comparison} and \textit{Smith-Waterman} (detailed in 
-\ref{linecompare} and \ref{smithwaterman}. The first set of tests on
+\ref{sec:linecompare} and \ref{sec:smithwaterman}). The first set of tests on
 \textit{Checksims} focused on comparing these two algorithms to gauge their
 sensitivity and runtime.
 
@@ -272,14 +272,15 @@ The MOSS results for the chosen assignments were then investigated to identify
 false positives --- similarities identified by MOSS which did not match our
 definition of similarity. The number of false positives (and the original
 number of results) were reported, and the false positives thrown out. The
-Checksims results from the previous experiment for both algorithms were then
-run through the same process, with false positives being identified and thrown
-out, and the number of overall matches and false positives being recorded.
-Based on this, the number of false positives in the results of MOSS and
-Checksims (both algorithms) can be compared, both in absolute terms and as a
-percentage of results recorded. Finally, the results were overlaid to see
-which matches are missing from either program --- what MOSS found but
-\textit{Checksims} did not, or \textit{Checksims} found but MOSS did not.
+\textit{Checksims} results from the previous experiment for both algorithms
+were then run through the same process, with false positives being identified
+and thrown out, and the number of overall matches and false positives being
+recorded. Based on this, the number of false positives in the results of MOSS
+and \textit{Checksims} (both algorithms) can be compared, both in absolute
+terms and as a percentage of results recorded. Finally, the results were
+overlaid to see which matches are missing from either program --- what MOSS
+found but \textit{Checksims} did not, or \textit{Checksims} found but MOSS did
+not.
 
 
 \subsection{Real-World Usage}
@@ -307,11 +308,11 @@ this writing.
 
 
 \subsubsection{Assembly and Computer Organization}
-A nearly-complete version of Checksims was applied to the first assignment in a
-course for which one of the authors, Matthew Heon, was a teaching assistant.
-This assignment was an excercise in optimization and bitwise operations, and
-was composed of a relatively small C project with a great deal of common code.
-Checksims detected three students with extremely similar submissions who would
-not otherwise have been identified, given that the assignment was graded
-programmatically, with very little human interaction between course staff and
-student submissions.
+A nearly-complete version of \textit{Checksims} was applied to the first
+assignment in a course for which one of the authors, Matthew Heon, was a
+teaching assistant. This assignment was an excercise in optimization and
+bitwise operations, and was composed of a relatively small C project with a
+great deal of common code. \textit{Checksims} detected three students with
+extremely similar submissions who would not otherwise have been identified,
+given that the assignment was graded programmatically, with very little human
+interaction between course staff and student submissions.
