@@ -1,26 +1,112 @@
+\section{Definitions}
+Several terms are fundamental to the field of similarity detection which are
+not in common use. We provide definitions for them here, to ensure that readers
+of this report have an understanding of essential terms.
+
+\begin{itemize}
+\item The terms \textit{academic dishonesty} and \textit{unauthorized copying}
+	are used throughout this paper to refer to the use of another's work
+	without permission (in this context, typically by students). This is often
+	referred to as ``cheating'' or ``plagiarism'' in general use, but we
+	deliberately avoid these terms where possible, as they can be perceived to
+	be controversial or judgmental.
+\item A \textit{corpus} is a body of work. A corpus may contain work from many
+	people. A typical corpus in the world of academic dishonesty detection
+	might be all the student submissions for a specific assignment
+\item Similarities between works contained within a single corpus are referred
+	to as \textit{intra-corpal similarities}. Similarities between a work in a
+	corpus and works not contained within a corpus are referred to as
+	\textit{extra-corpal similarities}.
+\end{itemize}
+
+
 \section{Literature Review}
 TODO TODO TODO TODO TODO TODO TODO
 
-\subsection{Definitions}
-TODO
-% Corpus - collection of submitted work
-
-
 \subsection{Academic Dishonesty}
-TODO
-% includes both intra-corpal similarity (similarities within same assignment)
-% and similarities outside of the corpus (previous year's assignments, Github)
-% Cite joy1999
-% Cite cosma06
-% Cite lancaster05
+\label{sec:dishonesty}
+Before proceeding with a review of techniques for detecting academic
+dishonesty, it is important to have a definition of what academic dishonesty
+is. There have been a number of scholarly attempts to provide a definition for
+the term (and the associated term ``plagiarism'', which we will avoid). Thomas
+Lancaster, in a 2005 survey of similarity detection systems, defines academic
+dishonesty as ``The process by which students submit work for academic credit
+which contains other people's  unacknowledged words or ideas''
+\cite{lancaster05}. This provides a solid foundation, but there is still a
+question of what specific acts constitute academic dishonesty.
+
+The question of academic dishonesty has been further complicated by the
+emergence of code-hosting websites such as Github and Bitbucket, and Q\&A
+sites such as Stack Overflow. Students may host code they wrote for a class on
+Github, where it may be copied without permission by their classmates (or
+students in another class who were given the same assignment). Almost all would
+agree that the student who copied the given code without permission was guilty
+of unauthorized copying, but some argue that the student who originally hosted
+the code is guilty of academic dishonesty for enabling copying to take place
+\cite{cosma06}. In the case of Stack Overflow, students may ask questions on
+the appropriate course of action to take to complete an assignment. The answers
+they receive might include example source code, and most would agree that
+copying this example code constitutes academic dishonesty. However, some
+professors feel that the use of any information (even hints as to algorithms,
+or pseudocode versions of a solution) obtained from such a source constitutes
+academic dishonesty. Every instructor will likely have a different definition
+of which of these offenses is a case of academic dishonesty, complicating the
+creation of tools to assist in detecting them.
+
+A 2006 survey of professors in the UK on academic dishonesty produced a large
+body of results for what professors perceive is (and is not) unauthorized
+copying \cite{cosma06}. The sharing of source code, comments, overall design,
+documentation, and user interface were all near-universally perceived to be
+unauthorized copying amongst respondents to the survey. Specifically for source
+code, use of code from other sources without acknowledgment (even if the source
+code was adapted to the student's specific application, or rewritten from
+another language) wass again near-universally considered to be academic
+dishonesty. Here, however, many respondents noted that the degree of adaptation
+was an important factor, noting that while 100\% similarity was almost
+certainly indicate of unauthorized copying, there was a point at which the
+changes to the code would cause it to no longer be academic dishonesty (though
+what this point was varied from respondent to respondent). A majority of
+respondents indicated that most every offense involving the unauthorized
+duplication of source code could, indeed, be considered academic dishonesty
+given the right circumstances, save cases where the code copied was written by
+the submitting student. In such cases (for example, the submission of an
+assignment written previously for a different class, with slight
+modifications), most respondents answered that it was a violation of course
+policy, but not a matter of academic dishonesty.
+% TODO should cite joy1999
+
 
 \subsubsection{Our Working Definition}
-TODO
-% No cites just give Lauer's def
+This project was not developed to use any of the definitions listed in
+\ref{sec:dishonesty}. Rather, it was created to serve the needs of one specific
+professor, and his definition of academic dishonesty. Professor Lauer provided
+the authors with his definition of what constitutes academic dishonesty at the
+start of this project, and it is the one which was used during our development
+and writing. This section provides this working definition of academic
+dishonesty and unauthorized copying.
+
+Professor Lauer considers the collaboration of students on a whiteboard to be
+perfectly acceptable during assignments. Students can collaboratively develop
+pseudocode-level descriptions of the appropriate solution to an assignment, and
+then translate this pseudocode into a working program independently. The direct
+copying of source code is, however, prohibited - each student must write their
+program independently, though again they may reference a shared pseudocode
+solution. In Professor Lauer's view, this ensures that the code must ``pass
+through the brain'' - the students will gain more understanding by typing
+independently than by copying code directly. Thus, the direct copying of code
+from other sources is considered by Professor Lauer to be academic dishonesty,
+while solutions being identical at the pseudocode level is not considered to be
+problematic.
+
+Using source code from the web follows much the same rules as collaborating
+with other students. The use of preexisting pseudocode (or using existing code
+as pseudocode) is considered acceptable, so long as the student types their own
+solution, and do not copy wholesale a solution from the internet.
+
 
 \subsection{Applications}
 TODO
-% Filler/intro paragraph to why people care about this crap
+% Filler / intro paragraph to why people care about this crap
 
 \subsubsection{Code Clone Detection}
 TODO
@@ -90,6 +176,7 @@ copying.
 \item Introducing non-structured statements
 \item Combining original and copied program fragments
 \end{enumerate}
+% TODO could use another para here to smooth the transition?
 
 
 \subsection{Algorithms}
@@ -258,6 +345,7 @@ TODO
 TODO
 
 \subsection{MOSS}
+\label{sec:moss}
 TODO
 % Cite schleimer03
 % Cite beth14
