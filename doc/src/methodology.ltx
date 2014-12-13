@@ -24,7 +24,7 @@ Source code from students in Computer Science classes is an attractive test
 data option at first glance. This most closely matches the intended use case
 for Checksims --- the identification of similar code submissions for
 programming projects. A set of test data built from submissions from previous
-offerrings of the same classes that Checksims may be deployed in will most
+offerings of the same classes that Checksims may be deployed in will most
 closely mirror its use in the real world. 
 
 Using student code does, however, provide a number of strong disadvantages.
@@ -50,7 +50,7 @@ In addition to privacy concerns, student code presents another obstacle.
 Prior to this project, there was no similarity detection system in common use
 in the WPI Computer Science department. Consequently, aside from occasional
 submissions which were overly similar identified by course staff, there is no
-concerte record of which submissions within a group are similar. Any results on
+concrete record of which submissions within a group are similar. Any results on
 such code will have no baseline to compare against.
 
 Despite these obstacles, student code remained the most desirable source of
@@ -97,9 +97,9 @@ Given the nature of the script, its use is limited to submissions using one of
 the C family of languages (C, C++, and Java being the most typically used).
 
 Using this script, a large volume of test code was obtained from several past
-offerrings of CS2301 (Systems Programming for Non-Majors, taught in C) and
+offerings of CS2301 (Systems Programming for Non-Majors, taught in C) and
 CS2303 (Systems Programming Concepts, taught in C and C++). All programming
-assignments for 8 previous offerings of these courses were obtained, totalling
+assignments for 8 previous offerings of these courses were obtained, totaling
 to over 357 thousand lines of code (as computed by David A. Wheeler's
 ``SLOCCount'' program). TODO average submission size, average students per
 class.
@@ -113,7 +113,7 @@ own citation format or bow to the author's wishes here?)
 \subparagraph{Accuracy Without Comments}
 Given that anonymized student code tests were performed on submissions stripped
 of comments, the question is raised as to whether this is a reasonable set of
-data to compare against. Actual source code will, in all likelyhood, have a
+data to compare against. Actual source code will, in all likelihood, have a
 sizable number of comments. The absence of comments has the potential to
 substantially alter results --- for example, two submissions which differed
 only by comments would appear as 100\% similar when, with comments, they might
@@ -220,7 +220,7 @@ deployment for use by WPI course staff.
 \textit{Checksims} presently provides two algorithms for similarity detection,
 \textit{Line Comparison} and \textit{Smith-Waterman} (detailed in 
 \ref{sec:linecompare} and \ref{sec:smithwaterman}). The first set of tests on
-\textit{Checksims} focused on comparing these two algorithms to gauge their
+\textit{Checksims} focused on comparing these two algorithms to measure their
 sensitivity and runtime.
 
 From our research, we could form hypotheses on the behavior of both algorithms.
