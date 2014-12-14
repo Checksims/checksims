@@ -4,13 +4,7 @@ TODO INTRO
 \subsection{Algorithm Comparison}
 TODO INTRO HERE
 
-\begin{figure}
-\centering
-\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{algorithmcompare.pdf}
-\caption{Results detected by \textit{Line Comparison} and \textit{Smith Waterman} across all assignments}
-\label{fig:algocompare}
-\end{figure}
-
+\subsubsection{Overall Results Detected}
 Figure~\ref{fig:algocompare} shows all results from applying both algorithms
 to every assignment in the test data. Results under 70\% are not shown, as they
 are less interesting (a far lower proportion will be cases of unauthorized
@@ -31,11 +25,13 @@ again, we cannot prove this with only these results).
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{smithwatermanruntime.pdf}
-\caption{Runtime of the Smith-Waterman algorithm on our sample data. Each data point is one anonymized assignment.}
-\label{fig:smithwatermanruntime}
+\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{algorithmcompare.pdf}
+\caption{Results detected by \textit{Line Comparison} and \textit{Smith Waterman} across all assignments}
+\label{fig:algocompare}
 \end{figure}
 
+
+\subsubsection{Runtime Comparison}
 Figure~\ref{fig:smithwatermanruntime} shows the runtime of the
 \textit{Smith-Waterman} algorithm for every assignment in our dataset. No
 assignment took over 2400 seconds (40 minutes) to complete, and the vast
@@ -65,7 +61,44 @@ for this assignment were perhaps 100 lines of code, and 300 to 400 tokens in
 size. By removing these two assignments from the comparison, we were able to
 reduce the runtime of Smith-Waterman to around one minute.
 
-TODO ANALYZE SPECIFIC ASSIGNMENTS
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{smithwatermanruntime.pdf}
+\caption{Runtime of the Smith-Waterman algorithm on our sample data. Each data point is one anonymized assignment.}
+\label{fig:smithwatermanruntime}
+\end{figure}
+
+
+\subsubsection{Algorithm Comparison}
+Figure~\ref{fig:resultsbyalgo} shows the results from 6 randomly-selected
+assignments from the overall dataset. The results are grouped by assignment,
+and show how many results were detected by each algorithm for each of the
+assignments. It is immediately clear that, for two of the six assignments, the
+results for \textit{Line Comparison} are strict subsets of those from
+\textit{Smith-Waterman}. However, the trend is somewhat reversed for
+assignments three and five, where a majority of results were detected by
+\textit{Line Comparison} and not by \textit{Smith-Waterman}. Manual review of
+these results indicates that most of these results are cases of one student
+submitting very little to no code (typically in the dozens of lines, with many
+being trivially simple - for example, \} or \texttt{return;}). Many of these
+lines are also contained in larger assignments, so the trivial assignment
+appears to be very similar to larger assignments to \textit{Line Comparison}
+(the larger assignments typically display inverse similarities which are very
+small --- 5 to 20\% being common). \textit{Smith-Waterman} has awareness of the
+ordering of tokens within a document, and consequently will ignore trivial
+sequences like \texttt{\{ return; \}} if they are not present in the submission
+being compared to in an almost-identical form. Through this, we can conclude
+that almost all results detected by \textit{Line Comparison} but not
+\textit{Smith-Waterman} are false positives, providing further evidence for the
+accuracy of the \textit{Smith-Waterman} algorithm.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{resultsbyalgo.pdf}
+\caption{Detection Algorithm Results for 6 Selected Assignments}
+\label{fig:resultsbyalgo}
+\end{figure}
+
 
 \subsection{MOSS Comparison}
 TODO GRAPHS AND ANALYSIS
