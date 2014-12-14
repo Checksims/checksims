@@ -33,6 +33,14 @@ attention of course staff for manual review). This matches our hypothesis that
 \textit{Smith-Waterman} is the more accurate of the two algorithms (though,
 again, we cannot prove this with only these results).
 
+It is noteworthy that we removed common code from all assignments in our test
+data which we knew to contain it. In several cases, we were unable to obtain
+the common code from the instructors who gave the assignment. For these cases,
+we identified one student who had 100\% similarity to all others. On further
+examination, these students typically had submitted no code save the common
+starter code. Consequently, we were able to use their submissions as common
+code for these assignments.
+
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{algorithmcompare.pdf}
@@ -41,12 +49,68 @@ again, we cannot prove this with only these results).
 \end{figure}
 
 
+\paragraph{Previous Undiscovered Academic Dishonesty}
+As Figure~\ref{fig:algcompare} shows, the \textit{Smith-Waterman} algorithm
+identified 17 cases of 100\% similarity, and a further 35 over 90\%. As was
+mentioned in Section~\ref{sec:anon}, all our test data is taken from actual
+courses --- previous offering of low-level Computer Science classes. Given
+this, we can assume that the results in Figure~\ref{fig:algcompare} represent
+a large number of cases of academic dishonesty, though we cannot say how many
+of the reported results are actually cases of academic dishonesty. We can,
+however, draw reasonable inferences.
+
+The 100\% results are almost certainly cases of academic dishonesty. The notion
+that two students could have typed in 100\% identical code separately is
+absurd. We investigated several of these pairs, and all we found were what we
+consider to be academic dishonesty. Results from the 90\% to 99\% range are
+also nearly-certain cases of academic dishonesty. We reviewed 6 of these pairs
+of assignments, and found that all of them match our definition of academic
+dishonesty.
+
+The 70\% to 89\% range, however, contains a number of similarities which may
+not be caused by academic dishonesty. In some cases, students implemented the
+same algorithm in very similar ways. Given that there are not many ways to
+write a simple algorithm (for example, Bubblesort), especially if typical loop
+counter conventions (\texttt{i} for outermost loop, \texttt{j} for next
+innermost, etc) are followed. Six of the nine courses we obtained code from
+were offerings of CS2301, an intro-level course targeted at non-Computer
+Science majors. Most assignments for CS2301 will be very simple, requiring only
+trivial algorithms (without much variation in algorithm choice or
+implementation). Furthermore, Professor Lauer permits the copying of algorithms
+out of the textbook, so students may end up with completely identical versions
+of simple functions (like binary tree insertion). Given this, many similarities
+in the 70\% to 89\% range may have produced their code independently, but using
+very similar algorithms and pseudocode --- perfectly acceptable, according to
+Professor Lauer.
+
+The potential difference between the two assignments which form our test data
+is emphasized by the graph in Figure~\ref{fig:classcompare}. Almost all
+similarities identified are from CS2301, despite it only containing
+approximately 70\% of our test code. Given this, the smaller similarities seen
+may well be due to the reasons identified in the previous paragraph.
+
+Even discounting a large number of the similarities present as potentially not
+cases of academic dishonesty, our results do paint a concerning picture of
+undetected past incidences of academic dishonesty within CS2301. Many of these
+courses were taught by Professor Lauer, and he can confirm that almost none of
+the near-certain cases we identified (90\% and higher) were caught. We hope
+that the deployment of \textit{Checksims} may be able to reduce these numbers
+as word of its use spreads.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{classcompare.pdf}
+\caption{Results in Figure~\ref{fig:algocompare} split by course}
+\label{fig:classcompare}
+\end{figure}
+
+
 \subsubsection{Runtime Comparison}
 Figure~\ref{fig:smithwatermanruntime} shows the runtime of the
 \textit{Smith-Waterman} algorithm for every assignment in our dataset. No
 assignment took over 2400 seconds (40 minutes) to complete, and the vast
 majority finished in under 360 seconds (6 minutes). We originally intended to
-produce a comparitive graph also showing results from \textit{Line Comparison},
+produce a comparative graph also showing results from \textit{Line Comparison},
 but the results from that algorithm were sufficiently similar that we did not
 deem it necessary to graph them. No assignment took longer than 1 second to
 complete using \textit{Line Comparison}; the graph, compared to the results
@@ -112,3 +176,37 @@ accuracy of the \textit{Smith-Waterman} algorithm.
 
 \subsection{MOSS Comparison}
 TODO GRAPHS AND ANALYSIS
+
+\section{Real-World Usage}
+During development, \textit{Checksims} was used in real-world situations on two
+occasions. Course staff (including one of the authors) made use of development
+versions of the program to attempt to identify academic dishonesty in
+student submissions in ongoing courses. Though results from these real-world
+uses cannot be published due to aforementioned privacy concerns, they provided
+valuable insight into how \textit{Checksims} would be used in typical class.
+
+
+\subsubsection{Embedded Design Course}
+The first usage of \textit{Checksims} was by an Electrical and Computer
+Engineering teaching assistant, Nicholas DeMarinis. On the course staff of a
+course making extensive use of microcontrollers and C code, he became
+concerned that some of his students may have been collaborating above and
+beyond was was allowed by course rules. He requested an early version of
+\textit{Checksims} to verify his suspicions, which the authors provided.
+Though we are unaware of what results he obtained through its application, he
+provided valuable feedback on improving the usability of the program. He
+requested the ability to remove common code from a submission and an output
+format suitable for import into a spreadsheet program for performing statistics
+calculations, both of which are present in \textit{Checksims} as of the time of
+this writing.
+
+
+\subsubsection{Assembly and Computer Organization}
+A nearly-complete version of \textit{Checksims} was applied to the first
+assignment in a course for which one of the authors, Matthew Heon, was a
+teaching assistant. This assignment was an excercise in optimization and
+bitwise operations, and was composed of a relatively small C project with a
+great deal of common code. \textit{Checksims} detected three students with
+extremely similar submissions who would not otherwise have been identified,
+given that the assignment was graded programmatically, with very little human
+interaction between course staff and student submissions.
