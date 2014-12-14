@@ -181,15 +181,17 @@ copying.
 
 \subsection{Algorithms}
 Previous research into similarity detection has produced a number of algorithms
-suitable for use in identifying similarities in source code. Our research
-determined that there are general classes into which these algorithms fall:
-Vector-Distance algorithms, Fingerprinting algorithms, and Document
-Fingerprinting (similar to, but distinct from, general fingerprinting
-algorithms).
+suitable for use in identifying similarities in source code.  Overall, these
+algorithms can be grouped into two broad classifications: feature and
+structural comparisons. Feature comparison algorithms build a profile of
+various attributes of the input documents (for example, number of distinct
+tokens, overall word count, average number of characters per line) and
+compares the profiles of submissions to determine if they are unusually
+similar. Structural comparisons will compare the structure of submissions ---
+for example, comparing the specific tokens that form the inputs 
+\cite{arwin2006plagiarism}. Within structural comparisons, there are two broad
+subcategories: Vector-Distance algorithms and Fingerprinting algorithms.
 % Lancaster05 good citation for here
-% Cite arwin2006plagiarism
-
-TODO TRANSITION
 
 
 \subsubsection{Syntax Awareness in Comparison}
@@ -230,9 +232,15 @@ be undetectable \cite{whale1990identification} \cite{arwin2006plagiarism}
 
 
 \subsubsection{Vector-Distance Algorithms}
-TODO
-% Can probably cite lancaster05?
-% Need more cites
+Vector-distance algorithms seek to compare a number of inputs (typically 2)
+and identify the number of edits that must be made to transform one of the
+inputs into the other(s). The complement of this is the number of things that
+did not need to be changed --- the similarities between the two documents.
+Vector-Distance algorithms are typically the slowest of all similarity
+detection algorithms, but have the potential to identify the best possible
+match between inputs, whereas fingerprinting and feature comparison may not
+identify the best possible match (but typically will execute faster).
+
 
 \paragraph{Smith-Waterman Algorithm}
 \label{sec:smithwatermanlit}
@@ -285,8 +293,29 @@ removing the need for recomputation of the unchanged parts of the array.
 
 
 \subsubsection{Fingerprinting Algorithms}
-TODO
-% Should include Karp-Rabin here - citation karp87
+Fingerprinting algorithms (also known as \textit{feature extraction
+algorithms}) seek to extract a number of \textit{fingerprints} (or 
+\textit{features}) which can be used to identify a document. These
+\textit{fingerprints} are then added to a database (with a list of references
+back to the inputs which contained them). To identify similarities, an input's
+\textit{fingerprints} are computed, added to the database, and then looked up
+to see whether any submissions other than the current one have the same
+\textit{fingerprints} \cite{hoad03}.
+
+\textit{Fingerprints} are typically the hashes of one or more tokens of the
+input. Typically, before being inserted into the database, a small subset of
+all tokens is selected, and the rest are discarded; this is done to reduce the
+number of entries required in the database. A typical solution might be to
+discard all hashes except those which equal 0 modulo a certain number
+\cite{schleimer03}.
+
+The prototypical fingerprinting algorithm is Karp-Rabin string matching.
+Karp-Rabin generates ``rolling hashes'' of the two input submissions (the
+hash of characters $N$ to $M$ of the input, then the hash of characters $N + 1$
+to $M + 1$, and so on). The sets of hashes for the inputs are checked against
+each other, and the matches are used to percent of the documents which match
+\cite{karp87}.
+
 
 \paragraph{n-Gram Fingerprinting}
 \label{sec:ngram}
@@ -329,10 +358,11 @@ it is a very successful system (indeed, it is considered the state of the art
 as of 2014 \cite{beth14}).
 
 
-\subsubsection{Document Fingerprinting}
+\subsubsection{Feature Comparison}
 TODO
 % Reference is jones01
 % Cite lancaster05
+% Cite arwin2006plagiarism
 
 
 \subsubsection{Other Approaches}
@@ -350,6 +380,7 @@ TODO
 % Cite schleimer03
 % Cite beth14
 % Cite bowyer99
+% Cite aiken05
 
 \subsection{JPlag}
 TODO
