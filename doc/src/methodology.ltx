@@ -243,13 +243,14 @@ To perform this experiment, \textit{Checksims} was run twice on every
 assignment in our test data, once using each algorithm. The default
 tokenization strategy was used for both algorithms. Output was saved to a
 unique file for each assignment, and program runtime saved to another file.
-From these, results were computed. No false positive tests were performed ---
-we simply investigated which results were reported by one algorithm but not
-the other, which were shared, and how long the algorithms took to run. We
-compared the results of each algorithm for each assignment and determined how
-many similarities were identified by both algorithms, and how many were
-identified by one algorithm but not the other. Results were then tabulated
-across all assignments.
+From these, results were computed. Results with similarities under 70\% were
+immediately discarded, to limit the amount of checks which would have to be
+done. Results over 70\% were reported for both algorithms over all assignments.
+Subsequently, we identified four assignments with a large number of
+similarities, and compared the results for the \textit{Smith-Waterman} and
+\textit{Line Comparison} algorithms - how many results were shared between
+them, and how many were caught by only one algorithm. No false positive testing
+was performed.
 
 
 \subsection{MOSS Comparison}
@@ -263,7 +264,7 @@ false negatives.
 
 To perform this experiment, we first identified a number of assignments from
 our test data which had a very large number, or almost no, similarities
-(according to data from the previous experiment). Three of each were chosen and
+(according to data from the previous experiment). Two of each were chosen and
 given to MOSS to perform detection on (given that MOSS is a free service, and
 not particularly fast, we did not wish to place undue demands on it by running
 our entire set of test data through).

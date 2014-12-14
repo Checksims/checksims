@@ -1,2 +1,71 @@
 \section{Results}
-TO DO TO DO TO DO
+TODO INTRO
+
+\subsection{Algorithm Comparison}
+TODO INTRO HERE
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{algorithmcompare.pdf}
+\caption{Results detected by \textit{Line Comparison} and \textit{Smith Waterman} across all assignments}
+\label{fig:algocompare}
+\end{figure}
+
+Figure~\ref{fig:algocompare} shows all results from applying both algorithms
+to every assignment in the test data. Results under 70\% are not shown, as they
+are less interesting (a far lower proportion will be cases of unauthorized
+copying) and they are orders of magnitude more than the significant results. It
+is clear that \textit{Smith-Waterman} is a far more sensitive algorithm than
+\textit{Line Comparison}, detecting a great many more instances in every range
+save 100\% similarity (which both algorithms should be able to detect easily).
+This sensitivity is not necessarily an indicator of accuracy, however; it is
+possible that all of the results reported by \textit{Smith-Waterman} are simply
+false positives. Given the obvious limitations of the \textit{Line Comparison}
+algorithm (detailed in Section~\ref{sec:linecompare}), we do not believe this
+to be the case. A large number of the additional results found by
+\textit{Smith-Waterman} are almost certainly real instances of unauthorized
+copying (or, at the least, cases which should have been brought to the
+attention of course staff for manual review). This matches our hypothesis that
+\textit{Smith-Waterman} is the more accurate of the two algorithms (though,
+again, we cannot prove this with only these results).
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{smithwatermanruntime.pdf}
+\caption{Runtime of the Smith-Waterman algorithm on our sample data. Each data point is one anonymized assignment.}
+\label{fig:smithwatermanruntime}
+\end{figure}
+
+Figure~\ref{fig:smithwatermanruntime} shows the runtime of the
+\textit{Smith-Waterman} algorithm for every assignment in our dataset. No
+assignment took over 2400 seconds (40 minutes) to complete, and the vast
+majority finished in under 360 seconds (6 minutes). We originally intended to
+produce a comparitive graph also showing results from \textit{Line Comparison},
+but the results from that algorithm were sufficiently similar that we did not
+deem it necessary to graph them. No assignment took longer than 1 second to
+complete using \textit{Line Comparison}; the graph, compared to the results
+from \textit{Smith-Waterman}, would be a flat line slightly above 0. This
+supports our hypothesis that \textit{Line Comparison} is the faster of the two
+algorithms, and confirms its usefulness as a fast initial pass to identify
+highly similar submissions.
+
+It is noteworthy that, while no assignment shown completed in over 2400 seconds
+(40 minutes), we were forced to manually intervene on one occasion. The
+algorithm hung for 4 hours performing similarity detection on one pair of
+students on one assignment in our sample data (and likely would have run much
+longer, had we not ended it prematurely). We investigated the assignment more
+closely, and found that two students had submitted an unorthodox solution using
+large sets of lookup tables. The two assignments were sufficiently different to
+remove unauthorized copying as a factor; we believe they both came upon the
+solution independently. The pair of assignments using these lookup tables were
+approximately 3000 and 3500 lines each, and were approximately 13000 and 15000
+tokens after being run through the default tokenizer of the
+\textit{Smith-Waterman} algorithm. In comparison, typical student submissions
+for this assignment were perhaps 100 lines of code, and 300 to 400 tokens in
+size. By removing these two assignments from the comparison, we were able to
+reduce the runtime of Smith-Waterman to around one minute.
+
+TODO ANALYZE SPECIFIC ASSIGNMENTS
+
+\subsection{MOSS Comparison}
+TODO GRAPHS AND ANALYSIS
