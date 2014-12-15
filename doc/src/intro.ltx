@@ -1,23 +1,23 @@
 \section{Introduction}
 \label{sec:intro}
 Over the past year, we have heard reports of a number of cases of academic
-dishonesty occurring at WPI. Specifically, most of these have concerned the
-unauthorized and unacknowledged copying of source code within the Electrical
-and Computer Engineering and Computer Science departments. The first reports
-came from Nicholas DeMarinis, a Teaching Assistant in the Electrical and
-Computer Engineering department, who noticed several instances of source code
-which he considered to be suspiciously similar in an embedded systems
-programming course. He identified several cases of academic dishonesty,
+dishonesty occurring at Worcester Polytechnic Institute. Specifically, most of
+these have concerned the unauthorized and unacknowledged copying of source code
+within the Electrical and Computer Engineering and Computer Science departments.
+The first reports came from Nicholas DeMarinis, a Teaching Assistant in the
+Electrical and Computer Engineering department, who noticed several instances
+of source code which he considered to be suspiciously similar in an embedded
+systems programming course. He identified several cases of academic dishonesty,
 including one where the students had extensively obfuscated the copied code.
 
-Meanwhile, Professor Lauer of the Computer Science department found several
-instances of academic dishonesty in his own courses. A member of the course
-staff of a low-level programming class he was teaching found a pair of students
-who submitted near-identical assignments, which he brought to Professor Lauer's
-attention. Several assignments later, another member of the course staff
-identified another set of students with very similar assignments --- this time,
-by noticing that both students had submitted assignments which had identical,
-incorrect output.
+Meanwhile, Professor Hugh C. Lauer of the Computer Science department found
+several instances of academic dishonesty in his own courses. A member of the
+course staff of a low-level programming class he was teaching found a pair of
+students who submitted near-identical assignments, which he brought to
+Professor Lauer's attention. Several assignments later, another member of the
+course staff identified another set of students with very similar assignments
+--- this time, by noticing that both students had submitted assignments which
+had identical, incorrect output.
 
 In both of these cases, the identification of academic dishonesty largely
 occurred due to luck. Both courses had more than one teaching assistant; if
@@ -37,3 +37,33 @@ Given this, Professor Lauer commissioned the authors to construct a system for
 automatically detecting suspicious assignments, with the intent of integrating
 it into his low-level courses as a tool to identify which assignments required
 manual review.
+
+
+\subsubsection{What is Academic Dishonesty}
+\label{sec:lauerdishonesty}
+The authors felt that, as they were developing software to detect academic
+dishonesty, it was important to know what academic dishonesty is. Professor
+Lauer provided us with his definition of what is and is not permissable, and
+we used this definition when determining what we should and should not detect.
+A wider discussion of varying definitions is contained in \ref{sec:dishonesty}
+in the literature review, but this is the working definition we used when
+building our solution.
+
+Professor Lauer considers the collaboration of students on a whiteboard to be
+perfectly acceptable during assignments (indeed, it may be actively encouraged,
+depending on the course). Students can collaboratively develop pseudocode-level
+descriptions of the appropriate solution to an assignment, and then translate
+this pseudocode into a working program independently. The direct copying of
+source code is, however, prohibited --- each student must write their program
+independently, though again they may reference a shared pseudocode solution. In
+Professor Lauer's view, this ensures that the code must 
+``pass through the brain'' --- the students will gain more understanding by
+typing independently than by copying code directly. Thus, the direct copying of
+code from other sources is considered by Professor Lauer to be academic
+dishonesty, while solutions being identical at the pseudocode level are
+generally not considered problems.
+
+Using source code from the web follows much the same rules as collaborating
+with other students. The use of preexisting pseudocode (or using existing code
+as pseudocode) is considered acceptable, so long as the student types their own
+solution, and do not copy wholesale a solution from the internet.
