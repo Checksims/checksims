@@ -94,7 +94,6 @@ features without needing to make significant changes to the core program,
 increasing productivity and decreasing the likelihood of introducing bugs.
 
 \subsection{Architecture}
-
 % Architecture Diagram
 \begin{sidewaysfigure}
 \centering
@@ -109,18 +108,22 @@ accepts a number of student submissions as input, and returns usable output.
 The overall architecture is shown in Figure~\ref{fig:architecture} and
 described below.
 
-Student submissions are accepted by the tokenizer. The tokenizer will identify
-all files within the submission, apply a tokenizing algorithm to them, and
-yield the resultant tokenized submissions. These tokenized submissions are
-then passed into a common code remover, which removes code designated as common
-from all tokenized submissions to ensure it is not matched. One or more
-preprocessors are then applied to the tokenized submissions, transforming the
-tokens to increase comparison accuracy. Submissions are then grouped by an
-algorithm which generates all possible unique, unordered pairs of submissions.
-A user-defined similarity detection algorithm is then run on all groups, and
-the results are parsed into a similarity matrix. This similarity matrix is then
-passed to a user-defined output strategy, which produces a human-readable form
-of the output for parsing.
+\begin{enumerate}
+  \item Student submissions are accepted by the tokenizer. The tokenizer will
+        identify all files within the submission, apply a tokenizing algorithm
+        to them, and yield the resultant tokenized submissions.
+  \item The tokenized submissions are then passed into a common code remover,
+        which removes code designated as ``common'' from all tokenized
+        submissions to ensure it is not matched.
+  \item One or more preprocessors are applied to the tokenized
+        submissions, transforming the tokens to increase comparison accuracy.
+  \item Submissions are then grouped by an algorithm which generates all
+        possible unique, unordered pairs of submissions. A user-defined
+        similarity detection algorithm is then run on all groups, and the
+        results are parsed into a similarity matrix.
+  \item The similarity matrix is then passed to a user-defined output strategy,
+        which produces a human-readable form of the output for parsing.
+\end{enumerate}
 
 % TODO WRITE THIS
 
