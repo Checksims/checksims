@@ -42,9 +42,11 @@ not in common use. For clarity, we provide definitions for them here.
 We conducted a review of existing literature on similarity detection and
 academic dishonesty to inform our requirements and design. The
 results of this survey are contained in this section, and focus on three
-areas of inquiry: what is academic dishonesty, what are algorithms for
-detecting academic dishonesty, and what preexisting solutions are there that
-might also solve the specific problems which were the impetus for our solution.
+areas of inquiry: what is academic dishonesty (Section~\ref{sec:dishonesty}),
+what algorithms exist for detecting academic dishonesty
+(Section~\ref{sec:algo}), and what preexisting solutions are there that might
+also solve the specific problems which were the impetus for our solution
+(Section~\ref{sec:existing}).
 
 \subsection{Academic Dishonesty}
 \label{sec:dishonesty}
@@ -196,6 +198,7 @@ copying. It is presented in order of sophistication, least to greatest.
 
 
 \subsection{Algorithms}
+\label{sec:algo}
 Previous research into similarity detection has produced a number of algorithms
 suitable for use in identifying similarities in source code.  Overall, these
 algorithms can be grouped into two broad classifications: feature comparisons
@@ -429,6 +432,7 @@ TODO
 
 
 \subsection{Existing Solutions}
+\label{sec:existing}
 A number of programs exist for finding similarities between source code. Some
 of these, like MOSS, are intended for use in detecting academic dishonesty; our
 search focused on these programs. Our search was complicated by the lack of
