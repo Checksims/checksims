@@ -1,77 +1,73 @@
 \section{Requirements}
 \label{sec:requirements}
-When we first began to design our solution to discovering similarities in
-software, we naturally began by developing a list of requirements which would
-have to be met. Some of these were solicited from our advisor (the intended
-audience of the program), while others came from our literature review. These
-requirements are summarized below and drove the decisions which created our
-solution.
-
+The first step in any software engineering project is determining the key
+requirements. Our requirements came from discussions with our advisor (the
+primary customer), and from our literature review. The requirements we
+designed are summarized below and drove the decisions we made during
+implementation.
+ 
 From Professor Lauer, we obtained the requirement that whatever we produce must
-be easy to use. The program should be able to be used by course staff with
-very little or no training, and should produce output which can be easily
-interpreted. The output itself does not need to be a definitive determination
-of academic wrongdoing; instead, it simply needed to flag suspicious
-submissions for further review by course staff. The detector needed to be
-complete and usable inside of seven weeks, placing a severe time limit on
-implementation and encouraging the implementation of a relatively small set of
-features. Given this time constraint and the potential that the detector would
-be used for a number of classes taught using varying languages, it was also
-desirable that the detector not attempt to perform language-specific analysis
-of the source code, but instead only interpret submissions as plaintext.
-Finally, the detector should be made to match Professor Lauer's specific
-definition of similarity and academic dishonesty, which is very permissive of
-relatively similar code so long as it was typed in separately. This meant that
-some types of similarity detection (for example, detecting 
-semantically-identical code segments) are far less useful, as they match
-activities which are considered perfectly acceptable by Professor Lauer.
-
+be easy to use. The program should be usable by course staff with very little
+or no training, and should produce output which can easily be interpreted.
+The output itself should not be a definitive accusation of academic wrongdoing;
+instead, it simply should flag suspicious submissions for further review by
+course staff. The detector should to be complete and usable within seven weeks,
+placing a severe time limit on implementation and encouraging the
+implementation of a relatively small set of features. Given the time constraint
+and the potential that the detector would be used for a number of classes
+taught using various languages, it was also desirable that the detector not
+attempt to perform language-specific analysis of the source code, but instead
+only interpret submissions as plaintext. Finally, the detector should be made
+to match Professor Lauer's specific definition of similarity and academic
+dishonesty, which is very permissive of relatively similar code so long as it
+was typed in separately. The relaxed detection environment meant that some
+types of similarity detection (for example, detecting  semantically-identical
+code segments) are far less useful, as they match activities which are
+considered perfectly acceptable by Professor Lauer.
+  
 From our literature review, we determined that source code similarity detection
 tools almost universally parse input submissions into syntax trees, as it
 is very easy to disguise (intentionally or unintentionally) similar code
 through a number of small tweaks (swapping argument or operand order, for
-example). This is obviously in conflict with the requirement introduced in the
-previous paragraph that the system produced should operate on plaintext only.
-The plaintext requirement was the overriding concern --- syntax-based parsing
-limits the amount of languages that can be used with a detector, and would also
-be difficult to implement given our time constraints. Given this, many of the
-algorithms and innovations of existing software similarity detection research
-are not suitable for our use. Instead, we sought to identify methods used for
+example). It was apparent to us that performing any kind of syntax tree
+analysis was incompatible with the previous requirement that the system
+produced should operate on plaintext only. The plaintext requirement was the
+overriding concern --- syntax-based parsing limits the number of languages
+that can be used with a detector, and would also be difficult to implement
+given our time constraints. Instead, we sought to identify methods used for
 similarity detection in plaintext submissions which could be sufficiently
 accurate and run in a reasonable amount of time.
 
-These requirements seem to lead to a product which is small in scope,
+The requirements seem to lead to a product which is small in scope,
 implementing only a subset of the functionality which might eventually be
-desirable. Given this, we required that our solution be modular and easily
-extensible. While we might not be able to implement all features we desired,
-the work could be passed on to future MQP teams to drive implementation of
-other features. Proper documentation and unit testing of all produced source
-code, and emphasis on extendability when designing the architecture, were
+desirable, We required that our solution be modular and easily extensible.
+While we might not be able to implement all features we desired, we could pass
+on the ability to quickly implement new features to future MQP teams, or to the
+open source community. Proper documentation and unit testing of all produced
+source code, and emphasis on extendability when designing the architecture, were
 decided to be priorities.
 
 % Reference to MOSS in lit review
 We decided to implement a client-based solution (as opposed to a hosted
-solution, similar to MOSS). This offers a number of benefits, most notably as a
-time-saving measure. We wanted to keep the frontend and user-interface code as
+solution such as MOSS), to keep the frontend and user-interface code as
 simple as possible to ensure that as much time as possible was spent working on
 the backend code to accomplish similarity detection. A client-based solution
 does have the notable disadvantage of not having access to the data of all
-users, limiting the dataset available to compare against (only a single
+users, limiting the data set available to compare against (only a single
 professor's assignments, for example, instead of those of an entire school).
-While this is certainly desirable, we decided that simplicity was the
-overriding concern, to ensure we would actually have time to fully implement
+While a larger data set is certainly desirable, we decided that simplicity
+was more important, to ensure we would actually have time to fully implement
 the solution. Furthermore, an open-source, client-based solution offers the
 ability for technically capable users to easily modify our solution to meet
 their own  needs. Finally, a client-based solution is transparent in its
-operation --- there is no magic occurring ``behind the curtain'' on 
-server-side, and any results can be independently verified.
-
-Finally, we decided to create a require that our similarity detection tool be
-capable of running on all common operating systems. Though we do not believe
-that data on operating system preferences among WPI course staff exists, we
-have anecdotal evidence to suggest that Windows, Mac OS X, and Linux are all
-used regularly. Given this, we did not want to mandate that our software run on
-a specific operating system.
+require operation --- there is no magic occurring ``behind the curtain'' on
+the server-side, and any results can be independently verified.
+ 
+Our last major requirement was that our similarity detection tool be capable of
+running on all common operating systems. Though we do not believe that data
+on operating system preferences among WPI course staff exists, we know of
+course staff who use each of Windows, Mac OS X, and Linux regularly.
+Given this, we did not want to mandate that our software run on a specific operating system.
 
 We decided not to require a graphical interface, despite its positive
 implications for usability. Given our time constraints, implementation of a
@@ -90,13 +86,12 @@ arbitrary number of student submissions within a single assignment, and
 produces output which can be used to easily determine which submissions are
 unusually similar.
 
-\textit{Checksims} uses a simple, modular design designed for easy
-extensibility. It is designed to be trivially easy to create a add a new
-similarity detection algorithm or output strategy without significant changes
-to the program. This will enable future projects to expand on our work and
-offer further features without needing to make significant changes to the core
-program, increasing productivity and decreasing the likelihood of introducing
-bugs.
+\textit{Checksims} uses a simple, modular architecture designed for easy
+extensibility. It is designed to be trivially to add a new similarity
+detection algorithm or output strategy without significant changes to the
+program thus enabling future projects to expand on our work and offer further
+features without needing to make significant changes to the core program,
+increasing productivity and decreasing the likelihood of introducing bugs.
 
 \subsection{Architecture}
 
