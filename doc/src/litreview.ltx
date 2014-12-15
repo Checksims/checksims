@@ -368,8 +368,8 @@ from every document in the database. Usually, a small subset of all hashes are
 selected through an algorithm; these will serve as the document's
 \textit{fingerprints}. This does entail some information loss; even
 word-for-word identical documents will only match if they both contain an
-\textit{n-gram} that was selected as a fingerprint, so how the fingerprints
-are selected is very important. A very simple approach is to select
+\textit{n-gram} that was selected as a fingerprint. The fingerprint selection
+algorithm is consequently very important. A very simple approach is to select
 \textit{n-grams} whose hashes are divisible by some number $p$
 \cite{schleimer03}, but this technique can leave gaps of arbitrary length
 between fingerprints, so that a large chunk of similar text might slip by.
