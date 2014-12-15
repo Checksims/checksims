@@ -1,0 +1,225 @@
+\documentclass{article}
+\usepackage{url}
+\title{Checksims: A Developer's Guide}
+\author{Dolan Murvihill \and Matthew Heon}
+\begin{document}
+\maketitle
+
+\section{Obtaining the Source}
+The source code for \textit{Checksims} is available on Github, at the following
+URL:
+\\
+\\
+\indent
+\url{https://github.com/mheon/checksims/}.
+\\
+
+The source can be checked out using
+Git via the instructions located on the Github webpage, which are duplicated
+here for convenience:
+% TO DO it's likely migrating to a different location on Github!
+\\
+\\
+\indent
+\texttt{git clone https://github.com/mheon/checksims.git}
+\\
+
+\section{Building Checksims}
+Building \textit{Checksims} has two requirements: a Java 8 JDK, and version 3
+of Apache Maven. Configuration of a Maven install is beyond the scope of this
+document, but it can be easily obtained on Linux via your distribution's
+package manager, and OS X and Windows installers are available at the follwoing
+location:
+\\
+\\
+\indent
+\url{https://maven.apache.org/download.cgi}
+\\
+
+Maven itself is written in Java, and the provided Jar files should be
+cross-platform.
+
+Please note that JDK 8 or later is a buildtime and runtime requirement. Earlier
+versions of the JDK will not be able to build and run Checksims. Most testing
+was performed using the Oracle JDK across Linux and OS X, but other
+configurations (Linux/OS X + OpenJDK 8, Windows) should be supported without
+issue.
+
+\textit{Checksims} uses the typical Maven lifecycle commands for building.
+Again, a full review of Maven's capabilities is outside the scope of this
+document, but critical commands for building and testing will be briefly
+reviewed. Please note that all commands shown below are assumed to be run in
+the root of the cloned repository, and all paths given are relative to this
+directory.
+
+To run unit tests:
+\\
+\\
+\indent
+\texttt{mvn clean test}
+\\
+
+To build an executable Jar file:
+\\
+\\
+\indent
+\texttt{mvn clean compile package}
+\\
+
+Build artifacts (executable Jars) will be placed in the \texttt{target/}
+directory. By default, two Jars will be produced: one with, and one without,
+dependencies included. They are easily differentiated - the Jar with
+dependencies included will be named as follows:
+\\
+\\
+\indent
+\texttt{checksims-VERSION-with-dependencies.jar}
+\\
+
+Where VERSION is the current version number (1.0 at time of this writing).
+
+\section{Contributing: Modifying the Source}
+Checksims is fairly well documented and ships with unit tests, to enable ease
+of modifications. Furthermore, measures have been taken to make the addition
+of new algorithms, preprocessors, and output strategies especially easy. This
+section details the project structure to ease understanding of the source code
+and provide the location of critical project components.
+
+\subsection{Directory Structure}
+Checksims is structured as a typical Maven project; again, full description of
+this format is beyond the scope of the document, but important locations will
+be summarized.
+
+All source code (production and test) is contained in the \texttt{src/}
+directory. Test-only code is found in \texttt{src/test/java/}, while main code
+is located in \texttt{src/main/java}. Runtime resources (non-java source files,
+for example the template for generating HTML output) are located in the
+\texttt{src/main/resources/} directory.
+
+Source files are contained in package-appropriate subdirectories of these main
+directories. In the case of a source file named \texttt{ChecksimRunner.java} in
+package \texttt{edu.wpi.checksims}, the location of this file would be:
+\\
+\\
+\indent
+\texttt{src/main/java/edu/wpi/checksims/ChecksimRunner.java}.
+\\
+
+Most Java IDEs should have the ability to import a Maven project; this should
+pick up all source directories automatically.
+
+\subsection{Source Structure}
+This section contains a description of the package and source structure of the
+project.
+% TODO expand
+
+\subsubsection{Package Structure}
+The root package for \textit{Checksims} is \texttt{edu.wpi.checksims}, with a
+number of subpackages, described below.
+
+The \texttt{algorithm} subpackage contains core similarity detection
+functionality. All similarity detection algorithms (and the root interface
+\texttt{PlagiarismDetector} which all detection algorithms implement) are
+contained within algorithm. All algorithms at time of writing (Longest Common
+Substring, Line Similarity, and Smith-Waterman) are contained within
+appropriately-named subpackages(for example, \texttt{algorithm/smithwaterman}
+for the Smith-Waterman algorithm). The overall \texttt{algorithm} package also
+contains the \texttt{output} subpackage, containing all valid output strategies
+and the \texttt{SimilarityMatrixPrinter} interface which all output strategies
+implement. Finally, the \texttt{algorithm} package also contains the
+\texttt{preprocessor} subpackage, containing all supporting preprocessor
+algorithms for token lists.
+
+The \texttt{submission} subpackage contains code relating to the creation of
+submissions from directories and files on disk. All concrete classes within are
+final; this part of the interface is considered stable, and should not require
+much modification or extension.
+
+The \texttt{token} subpackage contains code relating to tokenization of files
+and tokens generated. Several data structures for tokens, including
+\texttt{TokenList} (implementing List<Token>) and trees of arbitrary arity
+(contained in the \texttt{tree} subpackage), are included here. Concrete
+implementations of tokens themselves are final; again, this is considered a
+stable part of the interface.
+
+The \texttt{util} subpackage contains general utility code.
+
+\subsubsection{Code Structure}
+The entry point of \textit{Checksims} is contained in the
+\texttt{ChecksimRunner} class in the root package. This class contains both
+argument parsing and the \texttt{runChecksims} method, which controls the
+core functionality of the program.
+
+\texttt{runChecksims} begins by initializing a list of submissions from the
+given directory, generating one submission per subdirectory of the given
+assignment directory(s). After the list of all submissions has been built,
+common code detection and removal is performed (if requested by the user).
+Preprocessors requested are then applied, sequentially, on each submission.
+Finally, \texttt{SimilarityMatrix.generate()} is called, creating a results
+matrix.
+
+\texttt{SimilarityMatrix.generate()} generates a list of all unique unordered
+pairs of student submissions, then applies a given pairwise similarity
+detection algorithm to each submission. The results are then collated to
+produce the similarity matrix: a 2-dimensional array of floats, representing
+the similarity of each assignment when compared with each other assignment.
+
+The generated similarity matrix is then passed to an output strategy to
+generate human-readable results. These are then printed (to \texttt{STDOUT}
+or, if requested, to a file), and the program exits.
+
+\textit{Checksims} includes a number of library dependencies. The most
+important of these are the Apache Commons and Google Guava libraries. These do
+overlap to an extent, but utilities from both are used throughout. In cases
+where both libraries provide overlapping functionality, the version provided by
+Apache Commons was preferred, though this is not a hard rule - if the API
+offered by Guava was felt to be superior, it was used instead. Finally, the
+Apache Velocity templating library is including to make the creation of complex
+output possible (for example, the included HTML output strategy). As in all
+Maven projects, the build process and dependencies are controlled by the 
+\texttt{pom.xml} file in the root of the repository.
+
+\subsection{Adding an Algorithm}
+This section details the process of adding a similarity detection algorithm,
+though the process is very similar for a preprocessor or output strategy.
+
+All similarity detection algorithms must be contained in package
+\texttt{algorithm} or a subpackage thereof. The core
+interface is \texttt{PlagiarismDetector}, requiring three methods:
+\texttt{getName()}, \texttt{getDefaultTokenType()}, and
+\texttt{detectPlagiarism}.
+
+The \texttt{getName()} method returns the name of the algorithm, as the user
+will type it in on the command line. This must be a unique string (no two
+algorithms may have the same name), and it is highly recommended that it not
+contain spaces.
+
+The \texttt{getDefaultTokenType()} method returns the default tokenization used
+by the algorithm. There are three supported tokenizations in \textit{Checksims}
+at the time of this writing: Line, Whitespace, and Character. Each breaks
+submitted files up different (by newline, by whitespace character, and into
+individual characters) to produce tokens. The returned token type from this
+method will be the default for this algorithm (this can be overridden by the
+user at runtime, however).
+
+The \texttt{detectPlagiarism()} method accepts a pair of student submissions,
+performs similarity detection, and returns an \texttt{AlgorithmResults} object
+representing the results of the detection. Exceptions are permitted to be
+thrown on internal algorithm errors.
+
+Algorithms must also implement a static \texttt{getInstance()} method taking
+no arguments and returning an instance (preferably a singleton) of the
+algorithm. All detection algorithms are automatically loaded at runtime using
+reflection using this method. As a result of this, no work is required to
+make an algorithm available outside of writing it and placing it in the
+\texttt{algorithm} package; all implementors of \texttt{PlagiarismDetector}
+will be scanned via reflection and loaded automatically.
+
+When writing algorithms, please make them thread-safe within a single instance
+of the class. Similarity detection is by default performed multi-threaded,
+with all threads using the same instance. Consequently, making implementors
+synchronized is inadvisable. Instead, attempt to confine all mutable state to
+the \texttt{detectPlagiarism} method (and any helpers), avoiding class-level
+mutable data. 
+
+\end{document}

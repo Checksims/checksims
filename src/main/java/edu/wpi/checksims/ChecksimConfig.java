@@ -1,7 +1,28 @@
+/*
+ * CDDL HEADER START
+ *
+ * The contents of this file are subject to the terms of the
+ * Common Development and Distribution License (the "License").
+ * You may not use this file except in compliance with the License.
+ *
+ * See LICENSE.txt included in this distribution for the specific
+ * language governing permissions and limitations under the License.
+ *
+ * When distributing Covered Code, include this CDDL HEADER in each
+ * file and include the License file at LICENSE.txt.
+ * If applicable, add the following below this CDDL HEADER, with the
+ * fields enclosed by brackets "[]" replaced with your own identifying
+ * information: Portions Copyright [yyyy] [name of copyright owner]
+ *
+ * CDDL HEADER END
+ *
+ * Copyright (c) 2014 Matthew Heon and Dolan Murvihill
+ */
+
 package edu.wpi.checksims;
 
 import com.google.common.collect.ImmutableList;
-import edu.wpi.checksims.algorithm.PlagiarismDetector;
+import edu.wpi.checksims.algorithm.SimilarityDetector;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrixPrinter;
 import edu.wpi.checksims.algorithm.preprocessor.SubmissionPreprocessor;
 import edu.wpi.checksims.token.TokenType;
@@ -13,20 +34,20 @@ import java.util.List;
  * Non-persistent configuration of Checksims
  */
 public final class ChecksimConfig {
-    public final PlagiarismDetector algorithm;
+    public final SimilarityDetector algorithm;
     public final TokenType tokenization;
     public final List<SubmissionPreprocessor> preprocessors;
     public final List<File> submissionDirectories;
     public final boolean removeCommonCode;
-    public final PlagiarismDetector commonCodeRemovalAlgorithm;
+    public final SimilarityDetector commonCodeRemovalAlgorithm;
     public final File commonCodeDirectory;
     public final String globMatcher;
     public final SimilarityMatrixPrinter outputPrinter;
     public final boolean outputToFile;
     public final File outputFile;
 
-    public ChecksimConfig(PlagiarismDetector algorithm, TokenType tokenization, List<SubmissionPreprocessor> preprocessors,
-                          List<File> submissionDirectories, boolean removeCommonCode, PlagiarismDetector commonCodeRemovalAlgorithm,
+    public ChecksimConfig(SimilarityDetector algorithm, TokenType tokenization, List<SubmissionPreprocessor> preprocessors,
+                          List<File> submissionDirectories, boolean removeCommonCode, SimilarityDetector commonCodeRemovalAlgorithm,
                           File commonCodeDirectory, String globMatcher, SimilarityMatrixPrinter outputPrinter,
                           boolean outputToFile, File outputFile) {
         this.algorithm = algorithm;

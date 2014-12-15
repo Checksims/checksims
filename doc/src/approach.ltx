@@ -1,0 +1,373 @@
+\section{Requirements}
+\label{sec:requirements}
+When we first began to design our solution to discovering similarities in
+software, we naturally began by developing a list of requirements which would
+have to be met. Some of these were solicited from our advisor (the intended
+audience of the program), while others came from our literature review. These
+requirements are summarized below and drove the decisions which created our
+solution.
+
+From Professor Lauer, we obtained the requirement that whatever we produce must
+be easy to use. The program should be able to be used by course staff with
+very little or no training, and should produce output which can be easily
+interpreted. The output itself does not need to be a definitive determination
+of academic wrongdoing; instead, it simply needed to flag suspicious
+submissions for further review by course staff. The detector needed to be
+complete and usable inside of seven weeks, placing a severe time limit on
+implementation and encouraging the implementation of a relatively small set of
+features. Given this time constraint and the potential that the detector would
+be used for a number of classes taught using varying languages, it was also
+desirable that the detector not attempt to perform language-specific analysis
+of the source code, but instead only interpret submissions as plaintext.
+Finally, the detector should be made to match Professor Lauer's specific
+definition of similarity and academic dishonesty, which is very permissive of
+relatively similar code so long as it was typed in separately. This meant that
+some types of similarity detection (for example, detecting 
+semantically-identical code segments) are far less useful, as they match
+activities which are considered perfectly acceptable by Professor Lauer.
+
+From our literature review, we determined that source code similarity detection
+tools almost universally parse input submissions into syntax trees, as it
+is very easy to disguise (intentionally or unintentionally) similar code
+through a number of small tweaks (swapping argument or operand order, for
+example). This is obviously in conflict with the requirement introduced in the
+previous paragraph that the system produced should operate on plaintext only.
+The plaintext requirement was the overriding concern --- syntax-based parsing
+limits the amount of languages that can be used with a detector, and would also
+be difficult to implement given our time constraints. Given this, many of the
+algorithms and innovations of existing software similarity detection research
+are not suitable for our use. Instead, we sought to identify methods used for
+similarity detection in plaintext submissions which could be sufficiently
+accurate and run in a reasonable amount of time.
+
+These requirements seem to lead to a product which is small in scope,
+implementing only a subset of the functionality which might eventually be
+desirable. Given this, we required that our solution be modular and easily
+extensible. While we might not be able to implement all features we desired,
+the work could be passed on to future MQP teams to drive implementation of
+other features. Proper documentation and unit testing of all produced source
+code, and emphasis on extendability when designing the architecture, were
+decided to be priorities.
+
+% Reference to MOSS in lit review
+We decided to implement a client-based solution (as opposed to a hosted
+solution, similar to MOSS). This offers a number of benefits, most notably as a
+time-saving measure. We wanted to keep the frontend and user-interface code as
+simple as possible to ensure that as much time as possible was spent working on
+the backend code to accomplish similarity detection. A client-based solution
+does have the notable disadvantage of not having access to the data of all
+users, limiting the dataset available to compare against (only a single
+professor's assignments, for example, instead of those of an entire school).
+While this is certainly desirable, we decided that simplicity was the
+overriding concern, to ensure we would actually have time to fully implement
+the solution. Furthermore, an open-source, client-based solution offers the
+ability for technically capable users to easily modify our solution to meet
+their own  needs. Finally, a client-based solution is transparent in its
+operation --- there is no magic occurring ``behind the curtain'' on 
+server-side, and any results can be independently verified.
+
+Finally, we decided to create a require that our similarity detection tool be
+capable of running on all common operating systems. Though we do not believe
+that data on operating system preferences among WPI course staff exists, we
+have anecdotal evidence to suggest that Windows, Mac OS X, and Linux are all
+used regularly. Given this, we did not want to mandate that our software run on
+a specific operating system.
+
+We decided not to require a graphical interface, despite its positive
+implications for usability. Given our time constraints, implementation of a
+full GUI was hard to justify. Furthermore, given the limited complexity of the
+features we intended to implement, we felt that a command-line interface would
+be more than sufficient to provide an easy-to-use interface for our solution.
+
+
+\section{Our Approach}
+\label{sec:approach}
+Our approach to similarity detection is named \textit{Checksims}, and was
+built to fulfill all requirements outlined above. \textit{Checksims} is a
+client-based Java application implementing a pair of similarity detection
+algorithms and several output formats. It performs similarity detection on an
+arbitrary number of student submissions within a single assignment, and
+produces output which can be used to easily determine which submissions are
+unusually similar.
+
+\textit{Checksims} uses a simple, modular design designed for easy
+extensibility. It is designed to be trivially easy to create a add a new
+similarity detection algorithm or output strategy without significant changes
+to the program. This will enable future projects to expand on our work and
+offer further features without needing to make significant changes to the core
+program, increasing productivity and decreasing the likelihood of introducing
+bugs.
+
+\subsection{Architecture}
+
+% Architecture Diagram
+\begin{sidewaysfigure}
+\centering
+\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{../src/architecture.pdf}
+\caption{The Architecture of \textit{Checksims}}
+\label{fig:architecture}
+\end{sidewaysfigure}
+
+\textit{Checksims} has a roughly linear architecture, composed of a number of
+discrete components, most with one input and one output. The overall service
+accepts a number of student submissions as input, and returns usable output.
+The overall architecture is shown in Figure~\ref{fig:architecture} and
+described below.
+
+Student submissions are accepted by the tokenizer. The tokenizer will identify
+all files within the submission, apply a tokenizing algorithm to them, and
+yield the resultant tokenized submissions. These tokenized submissions are
+then passed into a common code remover, which removes code designated as common
+from all tokenized submissions to ensure it is not matched. One or more
+preprocessors are then applied to the tokenized submissions, transforming the
+tokens to increase comparison accuracy. Submissions are then grouped by an
+algorithm which generates all possible unique, unordered pairs of submissions.
+A user-defined similarity detection algorithm is then run on all groups, and
+the results are parsed into a similarity matrix. This similarity matrix is then
+passed to a user-defined output strategy, which produces a human-readable form
+of the output for parsing.
+
+% TODO WRITE THIS
+
+\subsection{Submissions and Tokenization}
+\textit{Checksims} accepts as input a directory containing a number of student
+submissions, and a pattern to match files to be included within a submission.
+It is assumed that each submission is contained within a single subdirectory
+of the input directory --- that is, all student code is located in
+subdirectories of a single directory, and each subdirectory contains the code
+of exactly one student. All files within a single subdirectory are considered
+to belong to a single student, and are checked against the match pattern to
+determine whether they are included. This allows \textit{Checksims} to only
+include source files; a match pattern of \texttt{*.\{c,h\}} would only match
+C source files, and ignore README files, for example.
+
+Submissions are then split into tokens for comparison by a similarity detection
+algorithm. Several algorithms are included to perform this task, all resulting
+in a linked list of tokens representing the original input. Current tokenizing
+algorithms do not affect the order of the input submission, though some may
+alter the original submission by removing whitespace. Current tokenizing
+algorithms operate on the plaintext of the submission only. No attempt is made
+to parse the input into a syntax tree (or, indeed, use the grammar of the input
+language at all), pursuant to our stated goal of performing plaintext only
+comparisons. Parsing using a language-specific grammar should be able to be
+added to \textit{Checksims}, but as no provision was made for it initially, it
+is expected it will be much more difficult than adding a new similarity
+detection algorithm. The same tokenization algorithm is used for all
+submissions to ensure internal consistency.
+
+% This section may not be desirable to include
+% Commenting out for now
+\iffalse
+Tokenization type has no effect on the function of similarity detection
+algorithms. Tokens are presented as a simple interface, which enables equality
+checking without care for what type of token is being accepted. Because of
+this, all similarity detection algorithms are tokenization agnostic and can be
+run with any token type. To ensure internal consistency, however, only one
+tokenization strategy is used for all submissions, and thus all tokens that
+are handled in a single run of the program are of the same type.
+
+Internally, tokens are represented as integers, with a distinct integer ID for
+each distinct input token (and repeated input tokens reusing the previously
+assigned ID). For example, the input sequence ``ABCDA'' would be tokenized into
+the sequence ``0 1 2 3 0'' (note the repeated identifier for the repeated
+character). This choice is less efficient when tokens represent individual
+characters of the input submission (32-bit integers representing UTF-8
+characters which will, in typical cases, be 8 bits), but it offers a
+substantial space and performance advantage for tokenization algorithms which
+represent substrings of the input as tokens (for example, line tokenization,
+which splits the input submission at newline characters to form tokens). Given
+that we expect most uses of this program to use string-backed tokens (for
+reasons given subsequently), using integers as tokens was included as an
+optimization measure.
+\fi
+
+
+\subsection{Preprocessing and Common Code Removal}
+Once submissions have been accepted and tokenized, \textit{Checksims} offers
+the option of running them through a set of preprocessors before performing
+similarity detection. Preprocessors manipulate the tokens of submissions to
+normalize them prior to running detection algorithms. The only normalization
+currently included transforms all tokens by lowercasing any characters within,
+ensuring that case is not a factor in comparisons. Preprocessors are
+implemented modularly, so more can be easily added in the future.
+
+Common code removal can also be performed at this stage. Common code removal
+accepts a submission which contains given code which is expected to be present
+in all submissions. This code is tokenized using the same method used for all
+other submissions, and similarity detection is performed between it and each
+submission. Any code matching the common code is removed prior to the main
+similarity detection algorithm being run. Common code removal is performed
+prior to any preprocessors, as common code should match exactly without them.
+This can also improve the performance of slower similarity detection
+algorithms by making submissions smaller.
+
+
+\subsection{Similarity Detection}
+After submissions have been tokenized and normalized, \textit{Checksims} will
+apply a pairwise similarity detection algorithm to all unique unordered pairs
+of submissions. This will obtain the similarity of every submission in the
+input with every other input submission, representing a complete picture of how
+similar all submissions within the group are. At present, two pairwise
+detection algorithms are included: \textit{Line Comparison} and 
+\textit{Smith-Waterman}.
+
+Pairwise detection was chosen to simplify the construction of
+\textit{Checksims}, and allow easy multithreading. The alternative would be to
+create a database of features (token sequences, for example) for all
+submissions encountered, and compare new submissions against this database to
+check for matches (while adding their own unique features to it, so future
+checks will include them). Pairwise detection removes the requirement for
+a database (potentially an external dependency, which would add significantly
+to the complexity of detection algorithms) and makes all comparisons stateless,
+allowing them to be easily run in parallel by removing mutable state. It is
+still possible to parallelize feature extraction, but it is complicated by the
+presence of mutable state shared between threads, requiring potentially
+performance-impacting synchronization code. Finally, most dynamic programming
+algorithms for similarity detection are intended to be run on pairs of
+submissions, and these algorithms tend to be the easiest to implement. It would
+be desirable to add support for feature extraction and comparison against a
+database in the future to enable a new class of algorithms to be added, but no
+provision has been made for this at present.
+
+
+\subsubsection{Line Comparison}
+\label{sec:linecompare}
+The \textit{Line Comparison} algorithm is a special case of n-gram
+fingerprinting, as mentioned in the literature review in
+Section~\ref{sec:ngram}. \textit{Line comparison} hashes each input token and
+creates a map of each hash to each occurrence (the position and submission
+where the token was found). Hash collisions are identified as hashes which map
+to more than one occurrence, and collisions involving both submissions are
+tokens shared between the two. The number of tokens involved in such
+collisions is tallied and reported as the final result.
+
+It is worth noting that line comparison is actually a feature extraction
+algorithm, and could be run with a central database of submissions if desired.
+However, for the reasons mentioned previously, \textit{Checksims} only
+implements pairwise comparisons, so the ``database'' used is a hash table
+rebuilt every time a submission is compared. This is not particularly
+efficient, but the speed of modern hashing algorithms ensures that the loss of
+performance does not have a noticeable impact on execution speed.
+
+\textit{Line Comparison} is a trivially simple algorithm which was implemented
+mostly as a proof of concept. It runs extremely fast and scales linearly with
+the size of both submissions, but it misses a great deal of similarities due
+to the nature of hash collisions. Even a trivial change (a single letter added
+or removed, for example) will result in a different hash, causing the changed
+token to not be matched (indeed, all of the obfuscation techniques in
+Section~\ref{sec:obfuscation} can defeat the \textit{Line Comparison}
+algorithm). Furthermore, almost all hashes enforce the property that any
+change in the input will result in major changes to the output Therefore, it
+is impossible to tell how similar two inputs are simply by comparing their
+hashes. This makes it impossible to identify similar submissions just from
+their hashes, preventing \textit{Line Comparison} from being used to identify
+very similar hashes. Line Comparison remains in \textit{Checksims} both as a
+proof of concept and example of a simple algorithm, and to quickly identify
+extremely similar or identical submissions  (an initial check which can be run
+prior to a slower but more accurate algorithm such as \textit{Smith-Waterman}).
+
+As the name of the algorithm reveals, \textit{Line Comparison} was originally
+intended to be used exclusively with string-backed tokens, each representing a
+single line of a submission. This was the first algorithm we implemented, and
+at the time tokens were exclusively based on one line of a submission. When the
+\textit{Smith-Waterman} algorithm was added, tokens were expanded to
+accommodate alternative tokenization algorithms (character based, for 
+example), and Line Comparison was made generic to work with these tokens as
+well; however, its usefulness in these cases is questionable. In the character
+tokenization case, for example, almost every submission will presumably be
+written using the same subset of characters (capital and lowercase letters,
+numbers, and punctuation used as language-specific syntax). These characters
+will be shared between almost every submission; it is unusual to see a
+similarity result of less than 99\% when using \textit{Line Comparison} with
+character tokenization.
+
+
+\subsubsection{Smith-Waterman Algorithm}
+\label{sec:smithwaterman}
+The \textit{Smith-Waterman} algorithm is the primary similarity detection
+algorithm included in Checksims. It is described in the literature review in
+Section~\ref{sec:smithwatermanlit}, and was identified as a candidate for this
+role based Irving's paper describing its use in the detection of academic
+dishonesty in source code \cite{irving04}. It capable of finding most
+similarities characteristic of academic dishonesty in submissions at the
+plaintext level, and is able to defeat some of the methods of obfuscation
+listed in Section~\ref{sec:obfuscation} in the literature review (for example,
+some instances of changing identifier names).
+
+It is noteworthy that \textit{Smith-Waterman} is an poorly scaling algorithm.
+Its runtime complexity and memory usage both scale as $O(m * n)$ where $m$ and
+$n$ are the size of the two submissions being compared (after tokenizing).
+If both submissions scale evenly in size, scaling is exponential;
+indeed, if the submissions are fixed as the same size, scaling is exactly
+$O(n^{2})$. Initially, the algorithm was too slow to be used on 
+moderately-sized classes (defined here as 40-50 students). We made several
+optimization passes to improve performance, including changing the default
+tokenization algorithm for \textit{Smith-Waterman} from generating tokens from
+each character to generating tokens for whitespace-separated strings (reducing
+token count by approximately 400\%). After these optimizations,
+\textit{Smith-Waterman} is fast enough for typical use cases (classes of 40-50
+and submissions of 500-1000 tokens), though larger numbers of student
+submissions (or an increase in average size of the submissions themselves)
+will greatly increase the time the algorithm takes to complete. Larger class
+sizes are more manageable than larger submission sizes. For example, a class of
+100 to 110 students would likely finish in approximately 12 hours; a doubling
+of token count cause individual comparisons to take days to run and require
+dozens (if not hundreds) of gigabytes of memory.
+
+
+\subsection{User-Friendly Output}
+After all possible similarities have been computed, \textit{Checksims} formats
+the results into a ``similarity matrix'' (defined later), then uses an output
+strategy to format and print the resultant matrix. A variety of output
+strategies are available, and the specific one to use is specified by the user.
+All output strategies focus on presenting information in a usable fashion,
+with an emphasis on identifying unusually large similarities easily.
+
+Output strategies are pluggable modules, similar to preprocessors and
+algorithms. This allows new output strategies to be written and inserted with
+ease, with the restriction that they can only display information contained in
+the similarity matrix. Some information which might be desirable to display
+(for example, the specific tokens of the submissions which were matched) is not
+present in the similarity matrix, placing a limitation on what types of output
+formatting are presently possible. It may be desirable to make additional
+information available to output strategies in the future, but there are no
+existing plans to change them.
+
+
+\subsubsection{Similarity Matrix}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{../src/matrix.pdf}
+\caption{A sample similarity matrix}
+\label{fig:matrix}
+\end{figure}
+
+Output strategies are presented a ``similarity matrix'' to build their output
+from. These matrices are built from the complete results of the similarity
+detection algorithm, and contains the similarity of every submission to every
+other. As the name would imply, a similarity matrix is a $NxN$ matrix (with $N$
+being the number of submissions), with each cell representing the similarity
+of one submission with another.
+
+In a similarity matrix, the submissions used in similarity detection are
+counted, and a square matrix of that size is created. Submissions are
+assigned a row and column each. Every cell is initialized as the similarity of
+the submissions which intersect at it (specifically, column submission's
+similarity to row submission). If the row and column submissions are the same,
+the cell is ignored (declared as empty). An example is shown in
+Figure~\ref{fig:matrix}.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{htmloutput.png}
+\caption{Sample output from the HTML output strategy}
+\label{fig:html}
+\end{figure}
+
+Some output strategies will print the similarity matrix itself, possibly with
+visual aids to ``call out'' unusually large similarities. For example, the
+\texttt{HTML} output strategy produces a web page containing a similarity
+matrix with cells color-coded to identify how similar the submissions are.
+A screenshot of sample output from this output strategy is shown in
+Figure~\ref{fig:html}.

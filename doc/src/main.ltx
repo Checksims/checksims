@@ -1,0 +1,77 @@
+\documentclass[12pt]{article}
+
+\usepackage{graphicx} % To include figures
+\usepackage{rotating} % For rotated figures
+\usepackage[bibstyle=../src/numeric-annote]{biblatex} % For bibliography
+\usepackage{scrextend}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry} % 1in margins
+\usepackage[section]{placeins} % Ensure that figures appear in given section
+\usepackage{hyperref} % Hyperlinks in ToC, references, cites
+\usepackage[labelfont=bf]{caption} % Bold figure captions
+
+% Use hyperlinks when outputting to PDF
+\hypersetup{
+	colorlinks=false,
+	bookmarks=true,
+}
+
+\setcounter{tocdepth}{5}
+\setcounter{secnumdepth}{5}
+
+\addbibresource{../src/bibliography.bib}
+\nocite{*}
+
+\author{Dolan Murvihill \and Matthew Heon}
+\title{Software Similarity Detection}
+
+\begin{document}
+
+% Center the title page
+\null
+\nointerlineskip
+\vfill
+\let\snewpage \newpage
+\let\newpage \relax
+\maketitle
+\let \newpage \snewpage
+\vfill 
+\newpage
+
+% Center the abstract
+\topskip0pt
+\vspace*{\fill}
+\begin{abstract}
+TO DO TO DO TO DO TO DO TO DO TO DO TO DO
+\end{abstract}
+\vspace*{\fill}
+\newpage
+
+% Insert table of concepts
+\tableofcontents
+\newpage
+
+% Include introduction
+\input{intro.ltx}
+
+% Include lit review
+\input{litreview.ltx}
+
+% Our Approach
+\input{approach.ltx}
+
+% Experimental Verification
+\input{methodology.ltx}
+
+% Include results
+\input{results.ltx}
+
+% Include conclusion
+\input{conclusion.ltx}
+
+% Bibliography
+\clearpage
+\addcontentsline{toc}{section}{Annotated References}
+\printbibliography
+
+\end{document}

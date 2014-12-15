@@ -3,27 +3,37 @@ LATEX_ROOT=doc
 LATEX_SRC=$(LATEX_ROOT)/src
 LATEX_DIST=$(LATEX_ROOT)/dist
 LATEX_BUILD=$(LATEX_ROOT)/build
-LATEX_BUILD_ARGS=-outdir=$(LATEX_DIST) -pdf
+LATEX_BUILD_ARGS=-bibtex -pdf -outdir=../dist -cd
 BIBLIOGRAPHY=$(LATEX_SRC)/bibliography.bib
 
-all: doc litreview methodology
+all: docs jar
 
-doc: $(LATEX_DIST)/requirements.pdf mvaux
+jar:
+	mvn compile package
 
-litreview: $(LATEX_DIST)/litreview.pdf mvaux
+test:
+	mvn compile test
 
-methodology: $(LATEX_DIST)/methodology.pdf mvaux
+docs: main userguide devguide
 
-mvaux:
-	mv $(LATEX_DIST)/*.aux $(LATEX_BUILD) || true
-	mv $(LATEX_DIST)/*.log $(LATEX_BUILD) || true
-	mv $(LATEX_DIST)/*.fls $(LATEX_BUILD) || true
+builddir:
+	mkdir -p $(LATEX_DIST)
 
-$(LATEX_DIST)/requirements.pdf: $(LATEX_SRC)/requirements.ltx
-	$(LATEX) $(LATEX_BUILD_ARGS) $(LATEX_SRC)/requirements.ltx
+main: builddir $(LATEX_DIST)/main.pdf
 
-$(LATEX_DIST)/litreview.pdf: $(LATEX_SRC)/litreview.ltx $(BIBLIOGRAPHY)
-	$(LATEX) $(LATEX_BUILD_ARGS) $(LATEX_SRC)/litreview.ltx
+userguide: builddir $(LATEX_DIST)/user_guide.pdf
 
-$(LATEX_DIST)/methodology.pdf: $(LATEX_SRC)/methodology.ltx $(BIBLIOGRAPHY)
-	$(LATEX) $(LATEX_BUILD_ARGS) $(LATEX_SRC)/methodology.ltx
+devguide: builddir $(LATEX_DIST)/developer_guide.pdf
+
+$(LATEX_DIST)/main.pdf: $(LATEX_SRC)/main.ltx $(LATEX_SRC)/approach.ltx $(LATEX_SRC)/methodology.ltx
+	$(LATEX) $(LATEX_BUILD_ARGS) $(LATEX_SRC)/main.ltx
+
+$(LATEX_DIST)/user_guide.pdf: $(LATEX_SRC)/user_guide.ltx
+	$(LATEX) $(LATEX_BUILD_ARGS) $(LATEX_SRC)/user_guide.ltx
+
+$(LATEX_DIST)/developer_guide.pdf: $(LATEX_SRC)/developer_guide.ltx
+	$(LATEX) $(LATEX_BUILD_ARGS) $(LATEX_SRC)/developer_guide.ltx
+
+clean:
+	rm -rf $(LATEX_DIST) $(LATEX_BUILD)
+	mvn clean

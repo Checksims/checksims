@@ -1,0 +1,51 @@
+\section{Future Work}
+As we mentioned during our description of \textit{Checksims} in
+Section~\ref{sec:approach}, we deliberately built in extensibility to ease the
+addition of new features. While this is generally considered to be a good
+design philosophy, it was especially important because we did not have time to
+add so many features which we felt might be valuable. There is much work that
+can be done in the future to add these missing features.
+
+We feel that one of the most important features which can be added to
+\textit{Checksims} at present is the capability to use fingerprinting
+algorithms without the requirement of stateless, pairwise comparisons. Adding
+the ability to use fingerprinting algorithms with a persistent database of
+student submissions would allow fast checking not only within a single
+assignment (as \textit{Checksims} does today), but also against every previous
+assignment previously run through the detector --- detecting students who, for
+example, used another student's assignment from a previous year. Furthermore,
+advanced fingerprinting algorithms can offer most of the accuracy of
+Vector-Distance approaches (like \textit{Smith-Waterman}) while being
+substantially faster (for details, see the description of MOSS in
+Section~\ref{sec:moss}). The addition of a fast comparison algorithm based on
+MOSS would alleviate the speed disadvantages of \textit{Smith-Waterman} on
+large classes and assignments.
+
+Additional output strategies would be greatly beneficial to the use of
+\textit{Checksims}. While we feel that our HTML and Threshold output strategies
+are adequate for everyday use, they fall short of being ideal for usability.
+For example, an output strategy that would offer the option to view the
+similarities detected between two assignments would potentially be very
+valuable to course staff, as it could speed their investigation of suspected
+cases of similarity substantially.
+
+Usability improvements for \textit{Checksims} could also come from tools to
+make it easier to apply to assignments. Professor Lauer has suggested
+integration with online homework submission systems (such as \textit{Turnin})
+which would run a \textit{Checksims} scan automatically after submissions for
+an assignment are closed. Another option would be a GUI wrapper for
+\textit{Checksims} to automate common tasks (for example, placing student
+submissions into separate folders, or decompressing submissions given as .zip
+or .tar files).
+
+Given that one of the goals of \textit{Checksims} is to serve as a platform for
+future research into similarity detection, it is only proper that we should
+suggest some research which could be performed using it. It was suggested to
+the authors that the comparison of programs at runtime could provide useful
+metrics for similarity detection --- for example, Valgrind profiling of memory
+use and execution time. We did not find significant investigation into such
+techniques in our literature review, and they could certainly be investigated
+using \textit{Checksims}.
+
+\section{Conclusion}
+TO DO TO DO TO DO

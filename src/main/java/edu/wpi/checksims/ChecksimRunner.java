@@ -1,8 +1,29 @@
+/*
+ * CDDL HEADER START
+ *
+ * The contents of this file are subject to the terms of the
+ * Common Development and Distribution License (the "License").
+ * You may not use this file except in compliance with the License.
+ *
+ * See LICENSE.txt included in this distribution for the specific
+ * language governing permissions and limitations under the License.
+ *
+ * When distributing Covered Code, include this CDDL HEADER in each
+ * file and include the License file at LICENSE.txt.
+ * If applicable, add the following below this CDDL HEADER, with the
+ * fields enclosed by brackets "[]" replaced with your own identifying
+ * information: Portions Copyright [yyyy] [name of copyright owner]
+ *
+ * CDDL HEADER END
+ *
+ * Copyright (c) 2014 Matthew Heon and Dolan Murvihill
+ */
+
 package edu.wpi.checksims;
 
 import edu.wpi.checksims.algorithm.AlgorithmRegistry;
 import edu.wpi.checksims.algorithm.CommonCodeRemover;
-import edu.wpi.checksims.algorithm.PlagiarismDetector;
+import edu.wpi.checksims.algorithm.SimilarityDetector;
 import edu.wpi.checksims.algorithm.output.OutputRegistry;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrix;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrixPrinter;
@@ -136,7 +157,7 @@ public class ChecksimRunner {
         }
 
         // Parse plagiarism detection algorithm
-        PlagiarismDetector algorithm;
+        SimilarityDetector algorithm;
         if(cli.hasOption("a")) {
             try {
                 algorithm = AlgorithmRegistry.getInstance().getAlgorithmInstance(cli.getOptionValue("a"));
@@ -165,8 +186,14 @@ public class ChecksimRunner {
         boolean removeCommonCode = cli.hasOption("c");
         File commonCodeDirectory = null;
         // TODO may be desirable for this to be configurable
-        // For now default to the same algorithm used for actual detection
-        PlagiarismDetector commonCodeRemovalAlgorithm = algorithm;
+        // For now default to linecompare
+        SimilarityDetector commonCodeRemovalAlgorithm;
+        try {
+            commonCodeRemovalAlgorithm = AlgorithmRegistry.getInstance().getAlgorithmInstance("linecompare");
+        } catch(ChecksimException e) {
+            logs.error("Cannot obtain instance of linecompare algorithm!");
+            throw new RuntimeException(e);
+        }
         if(removeCommonCode) {
             commonCodeDirectory = new File(cli.getOptionValue("c"));
             logs.info("Removing common code (given in directory " + commonCodeDirectory.getName() + ")");
@@ -238,6 +265,8 @@ public class ChecksimRunner {
             logs.error("Error creating submissions from directory!");
             throw new RuntimeException(e);
         }
+
+        logs.trace("Loaded " + submissions.size() + " submissions for testing.");
 
         // If we are performing common code detection...
         if(config.removeCommonCode) {

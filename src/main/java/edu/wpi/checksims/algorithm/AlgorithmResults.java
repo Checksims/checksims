@@ -1,6 +1,26 @@
+/*
+ * CDDL HEADER START
+ *
+ * The contents of this file are subject to the terms of the
+ * Common Development and Distribution License (the "License").
+ * You may not use this file except in compliance with the License.
+ *
+ * See LICENSE.txt included in this distribution for the specific
+ * language governing permissions and limitations under the License.
+ *
+ * When distributing Covered Code, include this CDDL HEADER in each
+ * file and include the License file at LICENSE.txt.
+ * If applicable, add the following below this CDDL HEADER, with the
+ * fields enclosed by brackets "[]" replaced with your own identifying
+ * information: Portions Copyright [yyyy] [name of copyright owner]
+ *
+ * CDDL HEADER END
+ *
+ * Copyright (c) 2014 Matthew Heon and Dolan Murvihill
+ */
+
 package edu.wpi.checksims.algorithm;
 
-import com.google.common.collect.ImmutableList;
 import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.token.TokenList;
 
@@ -27,10 +47,18 @@ public final class AlgorithmResults {
     // TODO may be desirable to ensure that identicalTokensA and identicalTokensB are never over the number of tokens in the submission?
 
     public float percentMatchedA() {
+        if(a.getNumTokens() == 0) {
+            return 0.0f;
+        }
+
         return ((float)identicalTokensA) / a.getNumTokens();
     }
 
     public float percentMatchedB() {
+        if(a.getNumTokens() == 0) {
+            return 0.0f;
+        }
+
         return ((float)identicalTokensB) / b.getNumTokens();
     }
 
