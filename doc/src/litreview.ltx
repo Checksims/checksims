@@ -121,13 +121,14 @@ TODO
 % cite baker95
 
 \subsubsection{Bioinformatics}
-The comparison of similar sequences is done often in Bioinformatics. Strands of
-DNA, RNA, or proteins are often sequenced and compared for a variety of
-reasons. A well-known example of this is the use of DNA testing in the criminal
-justice system, where DNA comparisons are used to identify the perpetrators of
-crimes from trace evidence. A number of commonly-used similarity detection
-algorithms were originally developed for bioinformatics use --- for example,
-the Smith-Waterman algorithm \cite{smith1981identification}.
+The comparison of similar sequences is common practice in Bioinformatics.
+Strands of DNA, RNA, or proteins are often sequenced and compared for a
+variety of reasons. A well-known example of this is the use of DNA testing in
+the criminal justice system, where DNA comparisons are used to identify the
+perpetrators of crimes from trace evidence. A number of commonly-used
+similarity detection algorithms were originally developed for bioinformatics
+use --- for example, the Smith-Waterman algorithm
+\cite{smith1981identification}.
 % Could use a general citation for similarity checking in bioinformatics
 
 
@@ -135,11 +136,18 @@ the Smith-Waterman algorithm \cite{smith1981identification}.
 TODO
 % Need cites
 
+
+\subsubsection{Copyright Infringement Detection}
+TODO
+% Cite Brin95
+% Cite the YouTube ContentID white paper
+
+
 \subsubsection{Detection of Academic Dishonesty}
-The detection of academic dishonesty is a prominent application of similarity
-detection algorithms, and the one we are most interested in. There has been a
-great deal of research focused on the detection of academic dishonesty (both in
-plaintext and source code); Thomas Lancaster presents a thorough overview of
+The application we are most interested in, detection of academic dishonesty,
+is already a well-known use for similarity detection algorithms. There has been
+a great deal of research focused on the detection of academic dishonesty (both
+in plaintext and source code); Thomas Lancaster presents a thorough overview of
 existing work in a 2005 paper, including a comparison of all existing academic
 dishonesty detection solutions available at time of publication
 \cite{lancaster05}. The detection of unauthorized copying draws heavily on
@@ -181,7 +189,7 @@ copying. It is presented in order of sophistication, least to greatest.
 \item Changing data types (substituting floats for integers, or exploding
 	structures into separate variables)
 \item Replacing expressions with semantically identical equivalents (for
-	example, \texttt{!x} with \texttt{x == false})
+	example, \code{!x} with \code{x == false})
 \item Adding redundant statements or variables
 \item Changing the order of independent statements
 \item Changing the structure of iteration statements
@@ -196,8 +204,8 @@ copying. It is presented in order of sophistication, least to greatest.
 \subsection{Algorithms}
 Previous research into similarity detection has produced a number of algorithms
 suitable for use in identifying similarities in source code.  Overall, these
-algorithms can be grouped into two broad classifications: feature and
-structural comparisons. Feature comparison algorithms build a profile of
+algorithms can be grouped into two broad classifications: feature comparisons
+and structural comparisons. Feature comparison algorithms build a profile of
 various attributes of the input documents (for example, number of distinct
 tokens, overall word count, average number of characters per line) and
 compares the profiles of submissions to determine if they are unusually
@@ -231,31 +239,37 @@ possible to remove the effectiveness of some approaches to obfuscating
 similarities (namely, renaming functions and variables)
 \cite{arwin2006plagiarism}.
 
-The use of parsing and related normalizations is a powerful tool to detect
+The use of parsing and related normalizations can be a powerful tool to detect
 obfuscated similarities. All 13 of the obfuscation techniques discussed in
 Section~\ref{sec:obfuscation} can be identified and defeated by using
 normalized abstract syntax trees produced by a parser
 \cite{arwin2006plagiarism}. The obvious disadvantage of this approach is that
 the parsing phase is language-sensitive. This introduces a limit on the amount
 of languages a similarity detection system can process, and requires a
-potentially large amount of changes to add support for new languages. Despite
-this, almost every similarity detection system targeted at source code will
-use a syntax-aware parsing phase to catch similarities which might otherwise
-be undetectable \cite{whale1990identification} \cite{arwin2006plagiarism}
-\cite{lancaster05}.
+potentially large amount of changes to add support for new languages.
+
+In addition, language-specific parsing entails information loss; some features
+that may be used indicate similarity, such as comments or identifier
+misspellings, are often lost during parsing and by similar normalizations.
+
+Despite its drawbacks, almost every similarity detection system targeted at
+source code will use a syntax-aware parsing phase to catch similarities which
+might otherwise be undetectable \cite{whale1990identification}
+\cite{arwin2006plagiarism} \cite{lancaster05}.
 
 
 \subsubsection{Vector-Distance Algorithms}
 Vector-distance algorithms seek to compare a number of inputs (typically 2)
 and identify the number of edits that must be made to transform one of the
-inputs into the other(s). The complement of this is the number of things that
-did not need to be changed --- the similarities between the two documents.
-Vector-Distance algorithms are typically the slowest of all similarity
-detection algorithms, but have the potential to identify the best possible
-match between inputs, whereas fingerprinting and feature comparison may not
-identify the best possible match (but typically will execute faster).
-% Might want separate section for LCS based matching?
+inputs into the other(s). The complement of vector distance is the number of
+things that did not need to be changed --- the similarities between the two
+documents. Vector-Distance algorithms are typically the slowest of all
+similarity detection algorithms, but have the potential to identify the best
+possible match between inputs, whereas fingerprinting and feature comparison
+may not identify the best possible match (but typically will execute faster).
 
+\paragraph{Longest-Common-Substring matching}
+% TODO
 
 \paragraph{Smith-Waterman Algorithm}
 \label{sec:smithwatermanlit}
@@ -268,8 +282,9 @@ attempt to find common sequences of ordered characters in input strings.
 However, the longest common substring problem seeks to find identical sequences
 of characters, whereas the Smith-Waterman algorithm is tolerant of skipped or
 unmatched characters. Figure~\ref{fig:stringalignment} shows a sample alignment
-of two strings. The longest common substring of the two would be ``ABCD'', but
-a local alignment also captures the matched ``G'' character.
+of two strings ``ABCDEFG'' and ``ABCDXG''. The longest common substring of the
+two would be ``ABCD'', but a local alignment also captures the matched ``G''
+character.
 
 \begin{figure}
 \centering
@@ -322,45 +337,46 @@ to see whether any submissions other than the current one have the same
 \textit{Fingerprints} are typically the hashes of one or more tokens of the
 input. Typically, before being inserted into the database, a small subset of
 all tokens is selected, and the rest are discarded; this is done to reduce the
-number of entries required in the database. A typical solution might be to
-discard all hashes except those which equal 0 modulo a certain number
-\cite{schleimer03}.
+number of entries required in the database. A commonly implemented solution
+is to discard all hashes except those which are congruent to 0 modulo a certain
+number $p$, but better fingerprint selectors exist. \cite{schleimer03}.
 
-The prototypical fingerprinting algorithm is Karp-Rabin string matching.
+The archetypal fingerprinting algorithm is Karp-Rabin string matching.
 Karp-Rabin generates ``rolling hashes'' of the two input submissions (the
 hash of characters $N$ to $M$ of the input, then the hash of characters $N + 1$
 to $M + 1$, and so on). The sets of hashes for the inputs are checked against
-each other, and the matches are used to percent of the documents which match
-\cite{karp87}.
-% Might want a separate section for this?
+each other, and the matches are used to identify common substrings.
+\cite{karp87}. Karp-Rabin string matching is a fundamental technique used by
+many later string-matching papers.
+% TODO cite the papers that cite K-R
 
 
 \paragraph{n-Gram Fingerprinting}
 \label{sec:ngram}
-By far the most common document fingerprinting approach is called n-gram
+By far the most common document fingerprinting approach is called $n$-gram
 fingerprinting. The document is tokenized, and considered in sequences of $n$
-tokens, or \textit{n-grams}. The n-grams overlap, so that there an $m$
-character document will be considered as $m - n + 1$ n-grams. The hashes of 
-these  n-grams are stored in a database and checked against those from other 
+tokens, or \textit{$n$-grams}. The $n$-grams overlap, so that there an $m$
+character document will be considered as $m - n + 1$ $n$-grams. The hashes of 
+these  $n$-grams are stored in a database and checked against those from other 
 documents. The hashes are usually stored with a pointer to their occurrence to
 aid in detection.
 
 TODO ILLUSTRATION
 
-Most plagiarism corpora are far too large to store all n-grams from all
+Most plagiarism corpora are far too large to store all $n$-grams from all
 documents. Usually, a selection algorithm is used to select a subset of the
-n-grams to serve as the document's \textit{fingerprints}, but that entails
+$n$-grams to serve as the document's \textit{fingerprints}, but that entails
 information loss: even word-for-word identical documents will only match if
-they both contain an n-gram that was selected as a fingerprint, so how the
-fingerprints are selected is very important. A very simple approach is to
-select n-grams whose hashes are divisible by some number $p$
+they both contain an $n$-gram that was selected as a fingerprint, so the way
+in which the fingerprints are selected is very important. A very simple
+approach is to select $n$-grams whose hashes are divisible by some number $p$
 \cite{schleimer03}, but this technique can leave gaps of arbitrary length
 between fingerprints, so that a large chunk of similar text might slip by.
 
 Schleimer, Wilkerson, and Aiken presented an alternative fingerprint selection
 algorithm in 2003 called \textit{winnowing}. After dividing the document's
-tokens into n-grams, winnowing further divides the n-grams into 
-\textit{windows} of size $t$. Winnowing always selects the minimum hash from
+tokens into $n$-grams, winnowing further divides the $n$-grams into overlapping
+\textit{windows} of size $t$. Winnowing always exactly one hash from
 each window, guaranteeing that a match of $t$ or more consecutive tokens will
 be identified.
 
@@ -387,17 +403,17 @@ average word per line \cite{arwin2006plagiarism}.
 
 Feature comparison algorithms were common in the early days of similarity
 detection in the 1980s and early 1990s \cite{clough03}. However, it has become
-less popular of late because of the effectiveness of structural comparison
-algorithms. Feature comparison algorithms can be just as accurate as structural
-comparison algorithms, but require a great deal of tuning as the differences
-in the profiles of documents containing unauthorized copying and those that do
-not are typically very small \cite{arwin2006plagiarism}. We find one reference
-to the creation of a similarity detection system using this algorithm after
-2000, but no others \cite{jones01}. The paper describing this system provided
-no evidence that the aforementioned criticisms were not valid, and did not
-provide any results to substantiate its effectiveness. Given the lack of
-popularity of this approach and noted disadvantages, we did not pursue research
-into it further.
+less popular of late because of the growing effectiveness of structural
+comparison algorithms. Feature comparison algorithms can be just as accurate
+as structural comparison algorithms, but require a great deal of tuning as
+the differences in the profiles of documents containing unauthorized copying
+and those that do not are typically very small \cite{arwin2006plagiarism}. We
+find one reference to the creation of a similarity detection system using
+this algorithm after 2000, but no others \cite{jones01}. The paper describing
+this system provided no evidence that the aforementioned criticisms were not
+valid, and did not provide any results to substantiate its effectiveness.
+Given the lack of popularity of this approach and noted disadvantages, we did
+not consider it further.
 % Could cite lancaster05
 
 
