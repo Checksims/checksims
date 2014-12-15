@@ -81,6 +81,7 @@ be more than sufficient to provide an easy-to-use interface for our solution.
 
 
 \section{Our Approach}
+\label{sec:approach}
 Our approach to similarity detection is named \textit{Checksims}, and was
 built to fulfill all requirements outlined above. \textit{Checksims} is a
 client-based Java application implementing a pair of similarity detection
@@ -357,7 +358,16 @@ similarity to row submission). If the row and column submissions are the same,
 the cell is ignored (declared as empty). An example is shown in
 Figure~\ref{fig:matrix}.
 
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{htmloutput.png}
+\caption{Sample output from the HTML output strategy}
+\label{fig:html}
+\end{figure}
+
 Some output strategies will print the similarity matrix itself, possibly with
 visual aids to ``call out'' unusually large similarities. For example, the
 \texttt{HTML} output strategy produces a web page containing a similarity
 matrix with cells color-coded to identify how similar the submissions are.
+A screenshot of sample output from this output strategy is shown in
+Figure~\ref{fig:html}.

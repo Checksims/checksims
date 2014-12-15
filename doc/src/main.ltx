@@ -1,12 +1,14 @@
 \documentclass[12pt]{article}
 
-\usepackage{graphicx}
-\usepackage{rotating}
-\usepackage[bibstyle=../src/numeric-annote]{biblatex}
+\usepackage{graphicx} % To include figures
+\usepackage{rotating} % For rotated figures
+\usepackage[bibstyle=../src/numeric-annote]{biblatex} % For bibliography
 \usepackage{scrextend}
 \usepackage[T1]{fontenc}
-\usepackage[margin=1in]{geometry}
-\usepackage{hyperref}
+\usepackage[margin=1in]{geometry} % 1in margins
+\usepackage[section]{placeins} % Ensure that figures appear in given section
+\usepackage{hyperref} % Hyperlinks in ToC, references, cites
+\usepackage[labelfont=bf]{caption} % Bold figure captions
 
 % Use hyperlinks when outputting to PDF
 \hypersetup{
@@ -19,6 +21,8 @@
 
 \addbibresource{../src/bibliography.bib}
 \nocite{*}
+
+\newcommand{\code}[1]{\texttt{#1}}
 
 \author{Dolan Murvihill \and Matthew Heon}
 \title{Software Similarity Detection}
