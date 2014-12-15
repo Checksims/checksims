@@ -9,6 +9,8 @@
 \usepackage[section]{placeins} % Ensure that figures appear in given section
 \usepackage{hyperref} % Hyperlinks in ToC, references, cites
 \usepackage[labelfont=bf]{caption} % Bold figure captions
+\usepackage[toc,page]{appendix} % Add appendices
+\usepackage{url}
 
 % Use hyperlinks when outputting to PDF
 \hypersetup{
@@ -75,5 +77,16 @@ TO DO TO DO TO DO TO DO TO DO TO DO TO DO
 \clearpage
 \addcontentsline{toc}{section}{Annotated References}
 \printbibliography
+
+% Appendices
+\begin{appendices}
+
+% User Guide
+\input{user_guide.ltx}
+
+% Developer's Guide
+\input{developer_guide.ltx}
+
+\end{appendices}
 
 \end{document}
