@@ -440,16 +440,16 @@ the solutions we did find is contained below.
 \label{sec:moss}
 MOSS, an acronym for \textit{Measure of Software Similarity}, is a solution
 developed by Professor Alex Aiken of Stanford in 1994 \cite{bowyer99}. Today,
-over a decade later, it is generally considered the gold standard in software
-similarity detection \cite{beth14}. MOSS is provided as a free service for
-non-commercial use (though it was previously restricted only for use in
-academia). It is a closed-source, hosted service providing an e-mail interface.
-This is wrapped by a Perl script which provides a user-friendly command-line
-frontend for submitting code for analysis. Results are provided via email, and
-can take several hours to arrive \cite{bowyer99}. MOSS is based off of the
-n-Gram Fingerprinting algorithm with winnowing described in
+two decades later, it is considered the gold standard in software similarity
+detection \cite{beth14}. MOSS is provided as a free service for non
+commercial use (though it was previously restricted only for use in academia).
+It is a proprietary-source, hosted service providing an e-mail interface. The
+email-interface is wrapped by a Perl script which provides a user-friendly
+command-line frontend to submit code for analysis. Results are provided via
+email, and can take several hours to arrive \cite{bowyer99}. MOSS is based
+on the n-Gram Fingerprinting algorithm with winnowing described in
 Section~\ref{sec:ngram}. Most of the details on the implementation are public,
-but the tuning parameters used are kept private.
+but the tuning parameters used are kept private. 
 
 When new similarity detection systems are published, they will often publish
 results in comparison to those of MOSS. Despite having used the same algorithm
