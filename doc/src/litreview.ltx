@@ -1,6 +1,6 @@
 \section{Definitions}
 Several terms are fundamental to the field of similarity detection which are
-not in common use. For clarify, we provide definitions for them here.
+not in common use. For clarity, we provide definitions for them here.
 
 \begin{itemize}
 \item The terms \textit{academic dishonesty} and \textit{unauthorized copying}
@@ -255,21 +255,12 @@ might otherwise be undetectable \cite{whale1990identification}
 \subsubsection{Vector-Distance Algorithms}
 Vector-distance algorithms seek to compare a number of inputs (typically 2)
 and identify the number of edits that must be made to transform one of the
-<<<<<<< HEAD
 inputs into the other(s). The complement of this is the number of things that
 did not need to be changed --- the similarities between the two documents.
 Vector-Distance algorithms are typically the slowest of all similarity
 detection algorithms, but have the potential to identify the best possible
 match between inputs, whereas fingerprinting and feature comparison may not
 identify the best possible match (but typically will execute faster).
-=======
-inputs into the other(s). The complement of vector distance is the number of
-things that did not need to be changed --- the similarities between the two
-documents. Vector-Distance algorithms are typically the slowest of all
-similarity detection algorithms, but have the potential to identify the best
-possible match between inputs, whereas fingerprinting and feature comparison
-may not identify the best possible match (but typically will execute faster).
->>>>>>> dm/revision
 
 
 \paragraph{Longest Common Substring Matching}
@@ -282,25 +273,15 @@ The \textit{Smith-Waterman} algorithm was developed by Temple Smith and
 Michael Waterman in 1981 for the comparison of DNA sequences
 \cite{smith1981identification}. It is a dynamic programming algorithm that
 seeks to find the optimal alignment of two strings. The string alignment
-<<<<<<< HEAD
 problem is similar to the longest common substring problem described in
 Section~\ref{sec:lcs}, in that both attempt to find common sequences of
 ordered characters in input strings. However, the longest common substring
 problem seeks to find identical sequences of characters, whereas the
 \textit{Smith-Waterman} algorithm is tolerant of skipped or unmatched
 characters. Figure~\ref{fig:stringalignment} shows a sample alignment of two
-strings. The longest common substring of the two would be ``ABCD'', but a
-local alignment also captures the matched ``G'' character.
-=======
-problem is similar to the longest common substring problem, in that both
-attempt to find common sequences of ordered characters in input strings.
-However, the longest common substring problem seeks to find identical sequences
-of characters, whereas the Smith-Waterman algorithm is tolerant of skipped or
-unmatched characters. Figure~\ref{fig:stringalignment} shows a sample alignment
-of two strings ``ABCDEFG'' and ``ABCDXG''. The longest common substring of the
-two would be ``ABCD'', but a local alignment also captures the matched ``G''
+strings, ``ABCDEFG'' and ``ABCDXG''. The longest common substring of the two
+would be ``ABCD'', but a local alignment also captures the matched ``G''
 character.
->>>>>>> dm/revision
 
 \begin{figure}
 \centering
@@ -423,7 +404,6 @@ average word per line \cite{arwin2006plagiarism}.
 
 Feature comparison algorithms were common in the early days of similarity
 detection in the 1980s and early 1990s \cite{clough03}. However, it has become
-<<<<<<< HEAD
 less popular of late because of the growing effectiveness of structural
 comparison algorithms. Feature comparison algorithms can be just as accurate
 as structural comparison algorithms, but require a great deal of tuning as the
