@@ -14,7 +14,7 @@ not in common use. For clarity, we provide definitions for them here.
 \item A \textit{corpus} (plural \textit{corpora}) is a body of work. A corpus
 	may contain many documents written by many people. A typical corpus in the
 	world of academic dishonesty detection might be all the student
-	submissions for a specific assignment
+	submissions for a specific assignment.
 \iffalse
 \item Similarities between works contained within a single corpus are referred
 	to as \textit{intra-corpal similarities}. Similarities between a work in a
@@ -29,11 +29,12 @@ not in common use. For clarity, we provide definitions for them here.
 \item A \textit{False Positive} for given matching algorithm is a result which
 	is matched by the algorithm, but should not be included. In the context of
 	a similarity detection system, it would be two results which are flagged as
-	unusually similar, but are not.
+	unusually similar, but are not considered to be academic dishonesty
 \item A \textit{False Negative} for a given matching algorithm is a result
 	which not matched by the algorithm, but should have been included. In the
 	context of a similarity detection system, it would be two results which are
-	not flagged as unusually similar when they are.
+	not flagged as unusually similar in spite of having been created by
+	unauthorized copying.
 \end{itemize}
 
 
@@ -47,16 +48,15 @@ might also solve the specific problems which were the impetus for our solution.
 
 \subsection{Academic Dishonesty}
 \label{sec:dishonesty}
-Though we already had a working definition of academic dishonesty from
-Professor Lauer, we felt that it was important to gain a perspective on what
-other definitions existed. There have been a number of scholarly attempts to
-provide a definition for the term (and the associated term ``plagiarism'',
-which we will avoid). Thomas Lancaster, in a 2005 survey of similarity
-detection systems, defines academic dishonesty as ``The process by which
-students submit work for academic credit which contains other people's
-unacknowledged words or ideas'' \cite{lancaster05}. This provides a solid
-foundation, but there is still a question of what specific acts constitute
-academic dishonesty.
+Though had obtained a working definition of academic dishonesty from Professor
+Lauer, we felt that it was important to gain a perspective on what other
+definitions existed. There have been a number of scholarly attempts to provide
+a definition for the term (and the associated term ``plagiarism'', which we
+will avoid). Thomas Lancaster, in a 2005 survey of similarity detection
+systems, defines academic dishonesty as ``The process by which students submit
+work for academic credit which contains other people's unacknowledged words or
+ideas'' \cite{lancaster05}. This provides a solid foundation, but there is
+still a question of what specific acts constitute academic dishonesty.
 
 The question of academic dishonesty has been further complicated by the
 emergence of code-hosting websites such as \textit{Github} and
