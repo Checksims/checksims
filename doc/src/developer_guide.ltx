@@ -1,4 +1,4 @@
-\section{Checksims Developer Guide}
+\section{Developer Guide}
 This guide is intended to serve as an introduction to \textit{Checksims} to
 introduce new developers to the codebase. It is hoped that this will make
 contributing to the codebase easier and more accessible.
@@ -6,21 +6,21 @@ contributing to the codebase easier and more accessible.
 \subsection{Obtaining the Source}
 The source code for \textit{Checksims} is available on Github, at the following
 URL:
-\\
-\\
-\indent
+
+\begin{figure}[H]
+\centering
 \url{https://github.com/mheon/checksims/}.
-\\
+\end{figure}
 
 The source can be checked out using
 Git via the instructions located on the Github webpage, which are duplicated
 here for convenience:
 % TO DO it's likely migrating to a different location on Github!
-\\
-\\
-\indent
+
+\begin{figure}[H]
+\centering
 \texttt{git clone https://github.com/mheon/checksims.git}
-\\
+\end{figure}
 
 \subsection{Building Checksims}
 Building \textit{Checksims} has two requirements: a Java 8 JDK, and version 3
@@ -28,11 +28,11 @@ of Apache Maven. Configuration of a Maven install is beyond the scope of this
 document, but it can be easily obtained on Linux via your distribution's
 package manager, and OS X and Windows installers are available at the follwoing
 location:
-\\
-\\
-\indent
+
+\begin{figure}[H]
+\centering
 \url{https://maven.apache.org/download.cgi}
-\\
+\end{figure}
 
 Maven itself is written in Java, and the provided Jar files should be
 cross-platform.
@@ -51,28 +51,28 @@ the root of the cloned repository, and all paths given are relative to this
 directory.
 
 To run unit tests:
-\\
-\\
-\indent
+
+\begin{figure}[H]
+\centering
 \texttt{mvn clean test}
-\\
+\end{figure}
 
 To build an executable Jar file:
-\\
-\\
-\indent
+
+\begin{figure}[H]
+\centering
 \texttt{mvn clean compile package}
-\\
+\end{figure}
 
 Build artifacts (executable Jars) will be placed in the \texttt{target/}
 directory. By default, two Jars will be produced: one with, and one without,
 dependencies included. They are easily differentiated - the Jar with
 dependencies included will be named as follows:
-\\
-\\
+
+\begin{figure}[H]
 \indent
 \texttt{checksims-VERSION-with-dependencies.jar}
-\\
+\end{figure}
 
 Where VERSION is the current version number (1.0 at time of this writing).
 
@@ -97,11 +97,11 @@ for example the template for generating HTML output) are located in the
 Source files are contained in package-appropriate subdirectories of these main
 directories. In the case of a source file named \texttt{ChecksimRunner.java} in
 package \texttt{edu.wpi.checksims}, the location of this file would be:
-\\
-\\
-\indent
-\texttt{src/main/java/edu/wpi/checksims/ChecksimRunner.java}.
-\\
+
+\begin{figure}[H]
+\centering
+\texttt{src/main/java/edu/wpi/checksims/ChecksimRunner.java}
+\end{figure}
 
 Most Java IDEs should have the ability to import a Maven project; this should
 pick up all source directories automatically.
@@ -143,10 +143,10 @@ stable part of the interface.
 The \texttt{util} subpackage contains general utility code.
 
 \paragraph{Code Structure}
-The entry point of \textit{Checksims} is contained in the
-\texttt{ChecksimRunner} class in the root package. This class contains both
-argument parsing and the \texttt{runChecksims} method, which controls the
-core functionality of the program.
+The entry point of \textit{Checksims} is \texttt{ChecksimRunner} in the root
+package. This class contains both argument parsing and the
+\texttt{runChecksims} method, which controls the core functionality of the
+program.
 
 \texttt{runChecksims} begins by initializing a list of submissions from the
 given directory, generating one submission per subdirectory of the given
@@ -182,10 +182,14 @@ This section details the process of adding a similarity detection algorithm,
 though the process is very similar for a preprocessor or output strategy.
 
 All similarity detection algorithms must be contained in package
-\texttt{algorithm} or a subpackage thereof. The core
-interface is \texttt{SimilarityDetector}, requiring three methods:
-\texttt{getName()}, \texttt{getDefaultTokenType()}, and
-\texttt{detectSimilarity}.
+\texttt{algorithm} or a subpackage thereof. The core interface is
+\texttt{SimilarityDetector}, requiring three methods:
+
+\begin{itemize}
+\item \texttt{getName()}
+\item \texttt{getDefaultTokenType()}
+\item \texttt{detectSimilarity}
+\end{itemize}
 
 The \texttt{getName()} method returns the name of the algorithm, as the user
 will type it in on the command line. This must be a unique string (no two
