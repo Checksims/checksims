@@ -117,7 +117,7 @@ number of subpackages, described below.
 
 The \texttt{algorithm} subpackage contains core similarity detection
 functionality. All similarity detection algorithms (and the root interface
-\texttt{PlagiarismDetector} which all detection algorithms implement) are
+\texttt{SimilarityDetector} which all detection algorithms implement) are
 contained within algorithm. All algorithms at time of writing (Longest Common
 Substring, Line Similarity, and Smith-Waterman) are contained within
 appropriately-named subpackages(for example, \texttt{algorithm/smithwaterman}
@@ -183,9 +183,9 @@ though the process is very similar for a preprocessor or output strategy.
 
 All similarity detection algorithms must be contained in package
 \texttt{algorithm} or a subpackage thereof. The core
-interface is \texttt{PlagiarismDetector}, requiring three methods:
+interface is \texttt{SimilarityDetector}, requiring three methods:
 \texttt{getName()}, \texttt{getDefaultTokenType()}, and
-\texttt{detectPlagiarism}.
+\texttt{detectSimilarity}.
 
 The \texttt{getName()} method returns the name of the algorithm, as the user
 will type it in on the command line. This must be a unique string (no two
@@ -200,7 +200,7 @@ individual characters) to produce tokens. The returned token type from this
 method will be the default for this algorithm (this can be overridden by the
 user at runtime, however).
 
-The \texttt{detectPlagiarism()} method accepts a pair of student submissions,
+The \texttt{detectSimilarity()} method accepts a pair of student submissions,
 performs similarity detection, and returns an \texttt{AlgorithmResults} object
 representing the results of the detection. Exceptions are permitted to be
 thrown on internal algorithm errors.
@@ -210,12 +210,12 @@ no arguments and returning an instance (preferably a singleton) of the
 algorithm. All detection algorithms are automatically loaded at runtime using
 reflection using this method. As a result of this, no work is required to
 make an algorithm available outside of writing it and placing it in the
-\texttt{algorithm} package; all implementors of \texttt{PlagiarismDetector}
+\texttt{algorithm} package; all implementors of \texttt{SimilarityDetector}
 will be scanned via reflection and loaded automatically.
 
 When writing algorithms, please make them thread-safe within a single instance
 of the class. Similarity detection is by default performed multi-threaded,
 with all threads using the same instance. Consequently, making implementors
 synchronized is inadvisable. Instead, attempt to confine all mutable state to
-the \texttt{detectPlagiarism} method (and any helpers), avoiding class-level
+the \texttt{detectSimilarity} method (and any helpers), avoiding class-level
 mutable data.
