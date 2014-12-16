@@ -1,11 +1,9 @@
-\documentclass{article}
-\usepackage{url}
-\title{Checksims: A Developer's Guide}
-\author{Dolan Murvihill \and Matthew Heon}
-\begin{document}
-\maketitle
+\section{Checksims Developer Guide}
+This guide is intended to serve as an introduction to \textit{Checksims} to
+introduce new developers to the codebase. It is hoped that this will make
+contributing to the codebase easier and more accessible.
 
-\section{Obtaining the Source}
+\subsection{Obtaining the Source}
 The source code for \textit{Checksims} is available on Github, at the following
 URL:
 \\
@@ -24,7 +22,7 @@ here for convenience:
 \texttt{git clone https://github.com/mheon/checksims.git}
 \\
 
-\section{Building Checksims}
+\subsection{Building Checksims}
 Building \textit{Checksims} has two requirements: a Java 8 JDK, and version 3
 of Apache Maven. Configuration of a Maven install is beyond the scope of this
 document, but it can be easily obtained on Linux via your distribution's
@@ -78,14 +76,14 @@ dependencies included will be named as follows:
 
 Where VERSION is the current version number (1.0 at time of this writing).
 
-\section{Contributing: Modifying the Source}
+\subsection{Contributing: Modifying the Source}
 Checksims is fairly well documented and ships with unit tests, to enable ease
 of modifications. Furthermore, measures have been taken to make the addition
 of new algorithms, preprocessors, and output strategies especially easy. This
 section details the project structure to ease understanding of the source code
 and provide the location of critical project components.
 
-\subsection{Directory Structure}
+\subsubsection{Directory Structure}
 Checksims is structured as a typical Maven project; again, full description of
 this format is beyond the scope of the document, but important locations will
 be summarized.
@@ -108,12 +106,12 @@ package \texttt{edu.wpi.checksims}, the location of this file would be:
 Most Java IDEs should have the ability to import a Maven project; this should
 pick up all source directories automatically.
 
-\subsection{Source Structure}
+\subsubsection{Source Structure}
 This section contains a description of the package and source structure of the
 project.
 % TODO expand
 
-\subsubsection{Package Structure}
+\paragraph{Package Structure}
 The root package for \textit{Checksims} is \texttt{edu.wpi.checksims}, with a
 number of subpackages, described below.
 
@@ -144,7 +142,7 @@ stable part of the interface.
 
 The \texttt{util} subpackage contains general utility code.
 
-\subsubsection{Code Structure}
+\paragraph{Code Structure}
 The entry point of \textit{Checksims} is contained in the
 \texttt{ChecksimRunner} class in the root package. This class contains both
 argument parsing and the \texttt{runChecksims} method, which controls the
@@ -179,7 +177,7 @@ output possible (for example, the included HTML output strategy). As in all
 Maven projects, the build process and dependencies are controlled by the 
 \texttt{pom.xml} file in the root of the repository.
 
-\subsection{Adding an Algorithm}
+\subsubsection{Adding an Algorithm}
 This section details the process of adding a similarity detection algorithm,
 though the process is very similar for a preprocessor or output strategy.
 
@@ -220,6 +218,4 @@ of the class. Similarity detection is by default performed multi-threaded,
 with all threads using the same instance. Consequently, making implementors
 synchronized is inadvisable. Instead, attempt to confine all mutable state to
 the \texttt{detectPlagiarism} method (and any helpers), avoiding class-level
-mutable data. 
-
-\end{document}
+mutable data.

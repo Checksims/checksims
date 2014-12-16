@@ -14,25 +14,15 @@ jar:
 test:
 	mvn compile test
 
-docs: main userguide devguide
+docs: main
 
 builddir:
 	mkdir -p $(LATEX_DIST)
 
 main: builddir $(LATEX_DIST)/main.pdf
 
-userguide: builddir $(LATEX_DIST)/user_guide.pdf
-
-devguide: builddir $(LATEX_DIST)/developer_guide.pdf
-
 $(LATEX_DIST)/main.pdf: $(LATEX_SRC)/main.ltx $(LATEX_SRC)/approach.ltx $(LATEX_SRC)/methodology.ltx $(LATEX_SRC)/litreview.ltx
 	$(LATEX) $(LATEX_BUILD_ARGS) $(LATEX_SRC)/main.ltx
-
-$(LATEX_DIST)/user_guide.pdf: $(LATEX_SRC)/user_guide.ltx
-	$(LATEX) $(LATEX_BUILD_ARGS) $(LATEX_SRC)/user_guide.ltx
-
-$(LATEX_DIST)/developer_guide.pdf: $(LATEX_SRC)/developer_guide.ltx
-	$(LATEX) $(LATEX_BUILD_ARGS) $(LATEX_SRC)/developer_guide.ltx
 
 clean:
 	rm -rf $(LATEX_DIST) $(LATEX_BUILD)

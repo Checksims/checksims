@@ -2,13 +2,17 @@
 
 \usepackage{graphicx} % To include figures
 \usepackage{rotating} % For rotated figures
-\usepackage[bibstyle=../src/numeric-annote]{biblatex} % For bibliography
+\usepackage[hyperref]{biblatex} % For bibliography
 \usepackage{scrextend}
 \usepackage[T1]{fontenc}
 \usepackage[margin=1in]{geometry} % 1in margins
 \usepackage[section]{placeins} % Ensure that figures appear in given section
 \usepackage{hyperref} % Hyperlinks in ToC, references, cites
 \usepackage[labelfont=bf]{caption} % Bold figure captions
+\usepackage[toc,page]{appendix} % Add appendices
+\usepackage{url} % Ability to include URLs
+\usepackage[american]{babel}
+\usepackage[babel]{csquotes}
 
 % Use hyperlinks when outputting to PDF
 \hypersetup{
@@ -21,6 +25,26 @@
 
 \addbibresource{../src/bibliography.bib}
 \nocite{*}
+
+% More bibliography options
+\renewbibmacro*{finentry}{%
+	\setunit{\addperiod\\}%
+	\printfield{annotation}%
+	\finentry}
+\DeclareFieldFormat{annotation}{%
+	\begin{hyphenrules}{american}%
+	\bfseries #1\addperiod
+	\end{hyphenrules}}
+\defbibheading{bibliography}{%
+	\section*{Annotated References}}
+\renewenvironment*{thebibliography}
+	{\list{}{%
+		\setlength{\leftmargin}{1.5em}%
+		\setlength{\itemindent}{-\leftmargin}%
+		\setlength{\itemsep}{0.5\baselineskip}%
+		\setlength{\parsep}{0pt}}}
+	{\endlist}
+
 
 \newcommand{\code}[1]{\texttt{#1}}
 
@@ -73,7 +97,21 @@ TO DO TO DO TO DO TO DO TO DO TO DO TO DO
 
 % Bibliography
 \clearpage
-\addcontentsline{toc}{section}{Annotated References}
 \printbibliography
+
+% Appendices
+\clearpage
+\begin{appendices}
+
+% User Guide
+\input{user_guide.ltx}
+
+% Ensure each appendix starts on a new page
+\clearpage
+
+% Developer's Guide
+\input{developer_guide.ltx}
+
+\end{appendices}
 
 \end{document}
