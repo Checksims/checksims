@@ -23,10 +23,11 @@
 \setcounter{tocdepth}{5}
 \setcounter{secnumdepth}{5}
 
-\addbibresource{../src/bibliography.bib}
+\addbibresource{bibliography.bib}
 \nocite{*}
 
 % More bibliography options
+% Annotations. And a heading.
 \renewbibmacro*{finentry}{%
 	\setunit{\addperiod\\}%
 	\printfield{annotation}%
@@ -97,7 +98,7 @@ TO DO TO DO TO DO TO DO TO DO TO DO TO DO
 
 % Bibliography
 \clearpage
-\printbibliography
+\printbibliography[heading=bibintoc]
 
 % Appendices
 \clearpage

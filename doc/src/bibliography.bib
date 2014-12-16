@@ -39,9 +39,9 @@
 	organization={ACM},
 	annote={
     \setlength{\parskip}{1.5ex}
-	  Unsuitable for use in project--focuses on very high-level comparison,
+	  Unsuitable for use in project---focuses on very high-level comparison,
 	  analyzing design (code structure, data structures) of two programs for
-	  similarity (overall program design is analyzed and compared--going to be
+	  similarity (overall program design is analyzed and compared---going to be
 	  identical in low-level CS!). Mention at most.}
 }
 @article{beth14,
@@ -255,7 +255,7 @@
     amount of information shared between 2 sequences (be they DNA, text, or source
     code) which can then be used to make a determination on plagiarism. However, to
     make use of this algorithm, the program must be parsed into tokens to remove
-    whitespace issues (amongst other reasons). Solution is named SID -- Software
+    whitespace issues (amongst other reasons). Solution is named SID --- Software
     Integrity Diagnosis. I can find no information on current development (paper
     dated 2004), and the official website no longer exists. No evidence source code
     was ever released.}
@@ -321,7 +321,7 @@
   annote={
     \setlength{\parskip}{1.5ex}
     Not a proper discussion of plagiarism detection, but still very applicable.
-    This presents a scalable approach to identifying ``semantic codes''--
+    This presents a scalable approach to identifying ``semantic codes''---
     semantically equivalent source code blocks (here presented in the context of
     the detection of dead/redundant code, but plagiarism applications are obvious).
     Based on construction of a syntax tree in a form very similar to a function
@@ -356,9 +356,9 @@
   annote={
     \setlength{\parskip}{1.5ex}
     a textual approach to source code plagiarism detection based on a
-    ``fingerprinting'' method -- in keeping with our ``line-by-line checksum'' examples,
+    ``fingerprinting'' method --- in keeping with our ``line-by-line checksum'' examples,
     but more adaptable (can cross multiple lines, etc). apparently, fingerprinting
-    is not as good as some other methods, though -- their conclusion mentions the
+    is not as good as some other methods, though --- their conclusion mentions the
     existing ``identity algorithm'' is more accurate in their testing.}
 }
 @article{hordijk08,
@@ -376,7 +376,7 @@
   annote={
     \setlength{\parskip}{1.5ex}
     a similarity detection algorithm for plaintexts intended for plagiarism
-    detection. according to conclusion, very accurate, but slow -- perhaps too slow
+    detection. according to conclusion, very accurate, but slow --- perhaps too slow
     for anything but very small batches of files. this does describe our situation,
     though. worth looking into.}
 }
@@ -438,7 +438,7 @@
   organization={consortium for computing sciences in colleges},
   annote={
     \setlength{\parskip}{1.5ex}
-    a developed example of ``feature comparison'' -- creates
+    a developed example of ``feature comparison'' --- creates
     and examines ``profiles'' of program features (line count, number of unique
     tokens, average line length, number of spaces, that sort of thing). no evidence
     is presented that it is actually effective, and indeed they do not test on
@@ -569,7 +569,7 @@
     \setlength{\parskip}{1.5ex}
     another paper that doesn't really solve the plagiarism prolem, and instead
     attempts to find duplicate/dead code. this one is interesting because of its
-    categorization metrics, though -- it attempts to classify code as either a
+    categorization metrics, though --- it attempts to classify code as either a
     straight duplicate, close copy, or unclassifiable (some duplicated code, but
     not enough to conclusively classify). this might be worth carrying over into
     our work.}
@@ -584,7 +584,7 @@
   publisher={The Higher Education Academy Innovation Way, York Science Park, Heslington, York YO10 5BR},
   annote={
     \setlength{\parskip}{1.5ex}
-    To Do. Entirely devoted to producing a taxonomy of plagiarism detection solutions --
+    To Do. Entirely devoted to producing a taxonomy of plagiarism detection solutions ---
     existing software, types of detection engine, etc. Going to be VERY useful
     writing literature survey.}
 }
@@ -685,10 +685,10 @@
     number of disadvantages. The biggest one is that the filter used is typically a
     mod-p filter; a mod-p filter accepts a k-gram x if H(x) is congruent to zero
     mod p. Mod-p filters are weak because the fingerprints selected from the
-    document are uneven -- there could be huge runs of n-grams that do not hash to
+    document are uneven --- there could be huge runs of n-grams that do not hash to
     zero mod p. In principle, the maximum ``gap width'' in a document is unbounded,
     and in practice it is often longer than most web pages. Mod-p especially chokes
-    on low-entropy data -- a long string of zeroes, for instance, will either go
+    on low-entropy data --- a long string of zeroes, for instance, will either go
     completely unfingerprinted, or fingerprinted every single time.
     \par
     The paper's contribution is winnowing, a k-gram filter that guarantees an upper
