@@ -25,7 +25,7 @@ userguide: builddir $(LATEX_DIST)/user_guide.pdf
 
 devguide: builddir $(LATEX_DIST)/developer_guide.pdf
 
-$(LATEX_DIST)/main.pdf: $(LATEX_SRC)/main.ltx $(LATEX_SRC)/approach.ltx $(LATEX_SRC)/methodology.ltx
+$(LATEX_DIST)/main.pdf: $(LATEX_SRC)/main.ltx $(LATEX_SRC)/approach.ltx $(LATEX_SRC)/methodology.ltx $(LATEX_SRC)/litreview.ltx
 	$(LATEX) $(LATEX_BUILD_ARGS) $(LATEX_SRC)/main.ltx
 
 $(LATEX_DIST)/user_guide.pdf: $(LATEX_SRC)/user_guide.ltx
