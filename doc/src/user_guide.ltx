@@ -1,11 +1,4 @@
-\documentclass{article}
-\usepackage{url}
-\title{Checksims: A User's Guide}
-\author{Dolan Murvihill \and Matthew Heon}
-\begin{document}
-\maketitle
-
-\section{Introduction}
+\section{User Guide}
 \textit{Checksims} is a tool for detecting source code similarities in an
 arbitrary number of user-provided programming projects. Its primary purpose is
 to detect academic dishonesty in programming assignments.
@@ -16,7 +9,7 @@ then applies a pairwise similarity detection algorithm to all possible pairs
 of submissions. The results of the algorithm are then printed via an output
 strategy.
 
-\section{Installing Checksims}
+\subsection{Installing Checksims}
 \textit{Checksims} is distributed as an executable Java package (.jar file).
 As a Java application, Checksims is cross-platform and should run on any system
 capable of running a Java virtual machine (JVM). The provided Jar file is
@@ -38,7 +31,7 @@ URL:
 \url{https://www.java.com/en/download/index.jsp}
 \\
 
-\section{Running Checksims}
+\subsection{Running Checksims}
 
 \textit{Checksims} is a command-line application, and is typically invoked
 from your operating system's shell. The .jar file given can be run using Java
@@ -109,7 +102,7 @@ is used.
 Checksims contains built-in usage information and descriptions of its arguments
 which can be printed by supplying the \texttt{-h} or \texttt{--help} flag.
 
-\section{Appendix A: Description of Tokenizations}
+\subsection{Description of Tokenizations}
 \textit{Checksims} breaks submissions into a series of tokens as they are read
 in. Several options are provided, each providing a tradeoff of speed for
 performance. All similarity detection algorithms provide a default tokenization
@@ -125,7 +118,7 @@ basis for token comparison.
 Three tokenization options are provided by default: Character, Whitespace, and
 Line. Their advantages and disadvantages are listed below.
 
-\subsection{Character Tokenization}
+\subsubsection{Character Tokenization}
 The simplest tokenization method, character tokenization breaks a submission
 into the characters which compose it and builds a token for each character.
 Whitespace characters (spaces and newlines) are included as tokens.
@@ -137,7 +130,7 @@ accuracy, as it can identify largely similar words and lines which would
 otherwise be ignored. Character tokenization also runs a slight memory overhead
 compared to the other tokenization schemes.
 
-\subsection{Whitespace Tokenization}
+\subsubsection{Whitespace Tokenization}
 Whitespace tokenization breaks a submission apart at whitespace characters
 (spaces, tabs, newlines) to create tokens. Whitespace characters are removed as
 part of the splitting process, and are not included as tokens.
@@ -149,7 +142,7 @@ performance (assuming whitespace tokens are on average 4 characters, a fourfold
 reduction in token count can be expected, even ignoring the deletion of
 whitespace).
 
-\subsection{Line Tokenization}
+\subsubsection{Line Tokenization}
 Line tokenization splits the submission on newlines, creating a token from each
 line in the original. Non-newline whitespace characters (spaces and tabs) are
 retained.
@@ -158,19 +151,19 @@ Line tokenization represents the fastest but least precise tokenization option.
 It is capable of identifying exact duplication, but even trivial attempts to
 obfuscate similarities will prevent their being identified.
 
-\section{Appendix B: Description of Preprocessors}
+\subsection{Description of Preprocessors}
 After a submission is converted into tokens, these tokens can then be
 manipulated to improve detection accuracy. This is accomplished by the use of
 predefined preprocessors. At present, only one of these is available. The
 lowercase preprocessor lowercases all letters in all tokens, effectively
 ensuring that algorithms are case-insensitive.
 
-\section{Appendix C: Description of Algorithms}
+\subsection{Description of Algorithms}
 \textit{Checksims} provides two primary detection algorithms at present. The
 first, Smith-Waterman, offers accurate detection but slow performance. The
 second, Line Comparison, is very fast, but not very accurate.
 
-\subsection{Smith-Waterman}
+\subsubsection{Smith-Waterman}
 The Smith-Waterman algorithm for string overlaying was originally developed to
 find optimal local alignments between DNA sequences for bioinformatics
 problems. Adapted to handle arbitrary alphabets, it proves a valuable tool for
@@ -192,7 +185,7 @@ Because of the performance penalty of Smith-Waterman, it is recommended to use
 it with the whitespace tokenization scheme, which it defaults to. This
 minimizes the amount of tokens present, greatly improving performance.
 
-\subsection{Line Comparison}
+\subsubsection{Line Comparison}
 The Line Comparison algorithm identifies identical tokens in both submissions.
 It is a trivial algorithm unique to Checksims, and notable for its speed. Line
 comparison hashes each input token, and identifies hash collisions (identical
@@ -216,7 +209,7 @@ example, a single missing character) can result in otherwise extremely similar
 lines not being recorded as similar. Line comparison is thus very limited in
 terms of accuracy.
 
-\section{Appendix D: Description of Output Strategies}
+\subsection{Description of Output Strategies}
 Once an algorithm has been applied to the submissions, the results must be
 printed in a usable format so they may be used and interpreted. Output
 strategies determine how this is done.
@@ -232,23 +225,21 @@ row and column, given that each submission occurs once per axis), the
 similarity between the submissions is ignored (they would be 100\% identical,
 given that they are the same submission!).
 
-\subsection{CSV}
+\subsubsection{CSV}
 The CSV output strategy records output as a similarity matrix in
 comma-separated value format. This output format is computer-readable, not
 human-readable. It can be imported into Microsoft Excel or a number of other
 software statistics packages to generate statistics about detected similarities
 
-\subsection{HTML}
+\subsubsection{HTML}
 The HTML output strategy produces a web page which can be opened in a typical
 web browser, presenting a colorized version of a similarity matrix. A color
 range (yellow to red) shows how similar each cell is, allowing easy visual
 identification of similar students and clusters of similarities.
 
-\subsection{Threshold}
+\subsubsection{Threshold}
 The threshold output strategy produces an ordered list of submission pairs
 which are sufficiently similar (by default, 60\% or greater). The list
 is ordered from most to least similar, and omits all information about
 similarities lower than the threshold. This output strategy produces
 quickly actionable information about the most-similar submissions.
-
-\end{document}
