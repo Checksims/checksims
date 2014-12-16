@@ -21,7 +21,7 @@ builddir:
 
 main: builddir $(LATEX_DIST)/main.pdf
 
-$(LATEX_DIST)/main.pdf: $(LATEX_SRC)/main.ltx $(LATEX_SRC)/approach.ltx $(LATEX_SRC)/methodology.ltx
+$(LATEX_DIST)/main.pdf: $(LATEX_SRC)/main.ltx $(LATEX_SRC)/approach.ltx $(LATEX_SRC)/methodology.ltx $(LATEX_SRC)/litreview.ltx
 	$(LATEX) $(LATEX_BUILD_ARGS) $(LATEX_SRC)/main.ltx
 
 clean:

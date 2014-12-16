@@ -29,7 +29,7 @@ not in common use. For clarity, we provide definitions for them here.
 \item A \textit{False Positive} for given matching algorithm is a result which
 	is matched by the algorithm, but should not be included. In the context of
 	a similarity detection system, it would be two results which are flagged as
-	unusually similar, but are not considered to be academic dishonesty
+	unusually similar, but are not considered to be academic dishonesty.
 \item A \textit{False Negative} for a given matching algorithm is a result
 	which not matched by the algorithm, but should have been included. In the
 	context of a similarity detection system, it would be two results which are
@@ -134,9 +134,12 @@ TODO
 
 
 \subsubsection{Copyright Infringement Detection}
-TODO
-% Cite Brin95
-% Cite the YouTube ContentID white paper
+Some people have tried to use similarity detection techniques to detect
+copyright infringement. The earliest copyright infringement detection tool we
+found was \textit{COPS} (COpyright Protection System), by Sergey Brin, James
+Davis, and Hector Garcia-Molina, in 1995 \cite{brin95}. Since copyright
+infringement detection is very similar in nature to academic dishonesty
+detection, but much less active, we chose not to focus on these papers.
 
 
 \subsubsection{Detection of Academic Dishonesty}
@@ -144,12 +147,12 @@ The application we are most interested in, detection of academic dishonesty,
 is already a well-known use for similarity detection algorithms. There has been
 a great deal of research focused on the detection of academic dishonesty (both
 in plaintext and source code); Thomas Lancaster presents a thorough overview of
-existing work in his previously-mentioned 2005 paper, including a comparison
-of all existing academic dishonesty detection solutions available at time of
-publication \cite{lancaster05}. The detection of unauthorized copying draws
-heavily on the fields of Natural Language Processing and Information
-Retrieval to process student submissions and efficiently store and retrieve
-information about similarities \cite{beth14}.
+existing work in his 2005 paper, including a comparison of all existing
+academic dishonesty detection solutions available at time of publication
+\cite{lancaster05}. The detection of unauthorized copying draws heavily on the
+fields of Natural Language Processing and Information Retrieval to process
+student submissions and efficiently store and retrieve information about
+similarities \cite{beth14}.
 
 Academic dishonesty detection is generally broken into two broad fields. The
 first is the detection of unauthorized copying in source code, and the second
