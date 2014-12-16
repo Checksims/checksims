@@ -1,7 +1,10 @@
 \section{User Guide}
 \textit{Checksims} is a tool for detecting source code similarities in an
 arbitrary number of user-provided programming projects. Its primary purpose is
-to detect academic dishonesty in programming assignments.
+to flag potential cases of academic dishonesty in programming assignments.
+\textit{Checksims} is not intended to detect academic dishonesty on its own,
+but rather to act as a tool to identify suspicious assignments for review by
+course staff.
 
 Checksims accepts a number of submissions (programming assignments) as input,
 applies a tokenizer to transform each submission into a series of tokens, and
@@ -10,22 +13,22 @@ of submissions. The results of the algorithm are then printed via an output
 strategy.
 
 \subsection{Installing Checksims}
-\textit{Checksims} is distributed as an executable Java package (.jar file).
-As a Java application, Checksims is cross-platform and should run on any system
-capable of running a Java virtual machine (JVM). The provided Jar file is
+\textit{Checksims} is distributed as an executable Java package (\textt{.jar}
+file). As a Java application, \textit{Checksims} is cross-platform and should
+run on any system capable of running a Java virtual machine (JVM). The provided Jar file is
 completely self-contained and requires no installation, and should be named
 as follows:
 \\
 \indent
-\texttt{checksims-1.0-jar-with-dependencies.jar}
+\texttt{checksims-1.0.1-jar-with-dependencies.jar}
 \\
 
-Note that 1.0 represents the current version of \textit{Checksims} at the time
-of this writing, and may be different for the version you receive.
+Note that 1.0.1 represents the current version of \textit{Checksims} at the
+time of this writing, and may be different for the version you receive.
 
-Please note that Checksims requires a Java 8 virtual machine. The latest
-version of the Oracle JVM is recommended, and can be found at the following
-URL:
+Please note that \textit{Checksims} requires a Java 8 virtual machine. The
+latest version of the Oracle JVM is recommended, and can be found at the
+following URL:
 \\
 \indent
 \url{https://www.java.com/en/download/index.jsp}
@@ -44,15 +47,15 @@ as follows:
 It may be desirable to rename the provided .jar file or write a wrapping shell
 script to reduce the amount of typing required for this basic invocation.
 
-Checksims has two mandatory arguments: a glob match pattern, and a directory
-to scan for submissions.
+Checksims has two mandatory arguments: a \textit{glob} match pattern, and a
+directory to scan for submissions.
 
-The glob match pattern is a shell-style match pattern used to identify files to
-include in submissions. Wildcard characters accepted by a shell are permitted;
-for example, providing a \texttt{*} will include every file in a submission,
-while \texttt{*.c} will include all C files. To ensure that these are not
-parsed by your shell, it is recommended to escape this pattern (for example,
-with quotes in a Linux bash shell).
+The \textit{glob} match pattern is a shell-style match pattern used to
+identify files to include in submissions. Wildcard characters accepted by a
+shell are permitted; for example, providing a \texttt{*} will include every
+file in a submission, while \texttt{*.c} will include all C files. To ensure
+that these are not parsed by your shell, it is recommended to escape this
+pattern (typically using double quotes --- \texttt{``*.c''} for example).
 
 After the glob match pattern, one or more directories to search for submissions
 must be provided. \textit{Checksims} assumes each subdirectory of these

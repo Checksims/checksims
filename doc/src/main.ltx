@@ -13,6 +13,7 @@
 \usepackage{url} % Ability to include URLs
 \usepackage[american]{babel}
 \usepackage[babel]{csquotes}
+\usepackage{changepage} % For force-indenting annotations
 
 % Use hyperlinks when outputting to PDF
 \hypersetup{
@@ -29,12 +30,14 @@
 % More bibliography options
 % Annotations. And a heading.
 \renewbibmacro*{finentry}{%
-	\setunit{\addperiod\\}%
+	\setunit{\addperiod}%
 	\printfield{annotation}%
 	\finentry}
 \DeclareFieldFormat{annotation}{%
 	\begin{hyphenrules}{american}%
-	\bfseries #1\addperiod
+	\begin{adjustwidth}{2.5em}{0pt}
+	#1\addperiod
+	\end{adjustwidth}
 	\end{hyphenrules}}
 \defbibheading{bibliography}{%
 	\section*{Annotated References}}
@@ -45,6 +48,7 @@
 		\setlength{\itemsep}{0.5\baselineskip}%
 		\setlength{\parsep}{0pt}}}
 	{\endlist}
+\renewcommand{\finentrypunct}{}
 
 
 \newcommand{\code}[1]{\texttt{#1}}
