@@ -148,7 +148,7 @@ existing work in his previously-mentioned 2005 paper, including a comparison
 of all existing academic dishonesty detection solutions available at time of
 publication \cite{lancaster05}. The detection of unauthorized copying draws
 heavily on the fields of Natural Language Processing and Information
-Retrieval, to process student submissions and efficiently store and retrieve
+Retrieval to process student submissions and efficiently store and retrieve
 information about similarities \cite{beth14}.
 
 Academic dishonesty detection is generally broken into two broad fields. The
@@ -164,19 +164,18 @@ solve, we are naturally more interested in source code similarity detection.
 
 \paragraph{Obfuscation}
 \label{sec:obfuscation}
-In the case of both academic dishonesty and malware, the authors who produced
-the submissions being compared have an interest in preventing the detection
-of any similarity that exists. Consequently, they will often take steps to
-obfuscate code in an attempt to remove similarities or prevent them from
-being detected. Programs and algorithms which attempt to detect malware or
+In the case of both academic dishonesty and malware, authors have an interest
+in preventing the detection of similarities in their programs. Consequently,
+they will often take steps to obfuscate code in an attempt to hide or remove
+similarities. Programs and algorithms which attempt to detect malware or
 academic dishonesty must be resistant to common obfuscation techniques to be
 successful.
 
-A list of 12 methods of defeating similarity detection is given by Geoffrey
-Whale in a 1990 paper on program similarity, and reproduced below
-\cite{whale1990identification}. This list is widely cited, and generally
-considered a definitive enumeration of methods of disguising unauthorized
-copying. It is presented in order of sophistication, least to greatest.
+Geoffrey Whale listed 12 methods of defeating similarity detection in a 1990
+paper \cite{whale1990identification}. This list, widely cited, it reproduced
+below, and is considered a definitive enumeration of methods of disguising
+unauthorized copying. It is presented in order of sophistication, least to
+greatest.
 \begin{enumerate}
 \item Changing comments or formatting (for example, adding whitespace)
 \item Changing identifiers
@@ -199,40 +198,44 @@ copying. It is presented in order of sophistication, least to greatest.
 
 \subsection{Algorithms}
 \label{sec:algo}
-Previous research into similarity detection has produced a number of algorithms
-suitable for use in identifying similarities in source code.  Overall, these
-algorithms can be grouped into two broad classifications: feature comparisons
-and structural comparisons. Feature comparison algorithms build a profile of
-various attributes of the input documents (for example, number of distinct
-tokens, overall word count, average number of characters per line) and
+Previous research into similarity detection has produced a number of
+algorithms which can be grouped into two broad classifications: feature
+comparisons and structural comparisons. Feature comparison algorithms build a
+profile of various attributes of the input documents (for example, number of
+distinct tokens, overall word count, average number of characters per line) and
 compares the profiles of submissions to determine if they are unusually
-similar. Structural comparisons will compare the structure of submissions ---
-for example, comparing the specific tokens that form the inputs 
+similar. Structural comparisons compare the content of submissions --- for
+example, comparing the specific tokens that form the inputs 
 \cite{arwin2006plagiarism}. Within structural comparisons, there are two broad
 subcategories: Vector-Distance algorithms and Fingerprinting algorithms.
 % Lancaster05 good citation for here
 
 
 \subsubsection{Syntax Awareness in Comparison}
-Similarity detection on source code offers a number of options that are not
-present when working with plaintext. Every programming language can be
-tokenized and parsed according to a grammar defined by the language. Through
-this grammar, we can identify the purpose of all input tokens --- variable
-name, language keyword, function name, etc. This permits the use of powerful
-normalization techniques which would not normally be available.
+Similarity detection on source code offers a number of advantages over working
+with plaintext. Every programming language can be tokenized and parsed
+according to a grammar defined by the language. Through this grammar, we can
+identify the purpose of all input tokens --- variable name, language keyword,
+function name, etc. This permits the use of powerful normalization techniques
+that are not available when dealing with natural languages.
 
-By parsing input submissions into an abstract syntax tree (as a compiler or
-interpreter normally would do to compile or execute the code), similarity
-detection can be performed on a representation of the program where
-similarities which might be ambiguous in plaintext become clear. For example,
-the operations $1 + 2$ and $2 + 1$ are identical in purpose, but plaintext
-comparison would typically not be able to identify their similarity beyond the
-shared $+$ character. However, parsing into a syntax tree would create a $+$
-node with the children $1$ and $2$ for both inputs, identifying that they are
-functionally identical (and should be considered similar). Furthermore, it
-becomes possible to apply a consistent normalization scheme to things like
-identifiers. By renaming identifiers in a consistent manner, it becomes
-possible to remove the effectiveness of some approaches to obfuscating
+The abstract syntax tree representation of a program makes similarities which
+might be ambiguous in plaintext easy to spot. By parsing input submissions
+into such syntax trees, similarity detection can be performed in a less
+ambiguous manner. As compilers and interpreters normally perform this task
+when preparing to compile or execute code, performing this parsing is not an
+undue burden when tokenizing submissions. By parsing input submissions into an
+abstract syntax tree (as a compiler or interpreter normally would do to
+compile or execute the code), similarity detection can be performed on a
+representation of the program where similarities which might be ambiguous in
+plaintext become clear. For example, the operations $1 + 2$ and $2 + 1$ are
+identical in purpose, but plaintext comparison would typically not be able to
+identify their similarity beyond the shared $+$ character. However, parsing
+into a syntax tree would create identical $+$ nodes with children $1$ and $2$
+for both, identifying that they are identical (as additional is commutative).
+Furthermore, it becomes possible to apply a consistent normalization scheme to
+things like identifiers. By renaming identifiers in a consistent manner, it
+becomes possible to remove the effectiveness of some approaches to obfuscating
 similarities (namely, renaming functions and variables)
 \cite{arwin2006plagiarism}.
 
@@ -241,25 +244,22 @@ obfuscated similarities. All 13 of the obfuscation techniques discussed in
 Section~\ref{sec:obfuscation} can be identified and defeated by using
 normalized abstract syntax trees produced by a parser
 \cite{arwin2006plagiarism}. The obvious disadvantage of this approach is that
-the parsing phase is language-sensitive. This introduces a limit on the number
-of languages a similarity detection system can process, and requires a
-potentially large number of changes to add support for new languages.
-
-In addition, language-specific parsing entails information loss; some features
-that may be used indicate similarity, such as comments or identifier
-misspellings, are often lost during parsing and by similar normalizations.
-
-Despite its drawbacks, almost every similarity detection system targeted at
-source code will use a syntax-aware parsing phase to catch similarities which
-might otherwise be undetectable \cite{whale1990identification}
-\cite{arwin2006plagiarism} \cite{lancaster05}.
+the parsing phase is language-sensitive. This limits a similarity detection
+system to a few languages and imposes a significant burden to support
+additional languages. In addition, language-specific parsing entails
+information loss; some features that may be used indicate similarity, such as
+comments or identifier misspellings, are often lost during parsing and by
+similar normalizations. Despite its drawbacks, almost every similarity
+detection system targeted at source code will use a syntax-aware parsing phase
+to catch similarities which might otherwise be undetectable 
+\cite{whale1990identification} \cite{arwin2006plagiarism} \cite{lancaster05}.
 
 
 \subsubsection{Vector-Distance Algorithms}
-Vector-distance algorithms seek to compare a number of inputs (typically 2)
-and identify the number of edits that must be made to transform one of the
-inputs into the other(s). The complement of this is the number of things that
-did not need to be changed --- the similarities between the two documents.
+Vector-distance algorithms seek to compare two or more inputs and identify the
+number and sequence of edits that must be made to transform one of the inputs
+into the other(s). The complement of this is the number of things that did not
+need to be changed --- the similarities between the two documents.
 Vector-Distance algorithms are typically the slowest of all similarity
 detection algorithms, but have the potential to identify the best possible
 match between inputs, whereas fingerprinting and feature comparison may not
