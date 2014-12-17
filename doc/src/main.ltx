@@ -110,13 +110,18 @@ TO DO TO DO TO DO TO DO TO DO TO DO TO DO
 \clearpage
 \begin{appendices}
 
+% Restart figure numbering for each appendix
+\renewcommand\thefigure{\thesection.\arabic{figure}}
+
 % User Guide
+\setcounter{figure}{0}
 \input{user_guide.ltx}
 
 % Ensure each appendix starts on a new page
 \clearpage
 
 % Developer's Guide
+\setcounter{figure}{0}
 \input{developer_guide.ltx}
 
 \end{appendices}
