@@ -3,16 +3,16 @@
 \usepackage{graphicx} % To include figures
 \usepackage{rotating} % For rotated figures
 \usepackage[hyperref,backend=biber]{biblatex} % For bibliography
-\usepackage{scrextend}
-\usepackage[T1]{fontenc}
+\usepackage{scrextend} % Alignment for notes, references, etc
+\usepackage[T1]{fontenc} % Use 8-bit character encoding (vs 7-bit)
 \usepackage[margin=1in]{geometry} % 1in margins
 \usepackage[section]{placeins} % Ensure that figures appear in given section
 \usepackage{hyperref} % Hyperlinks in ToC, references, cites
 \usepackage[labelfont=bf]{caption} % Bold figure captions
 \usepackage[toc,page]{appendix} % Add appendices
 \usepackage{url} % Ability to include URLs
-\usepackage[american]{babel}
-\usepackage[babel]{csquotes}
+\usepackage[american]{babel} % Set language to American english
+\usepackage[babel]{csquotes} % Better quotation support
 \usepackage{changepage} % For force-indenting annotations
 \usepackage{float} % For absolute figure location specification
 
@@ -23,6 +23,8 @@
 	pdfauthor={Matthew Heon and Dolan Murvihill}
 }
 
+% Number paragraphs and subparagraphs
+% Include them in the ToC as well
 \setcounter{tocdepth}{5}
 \setcounter{secnumdepth}{5}
 
