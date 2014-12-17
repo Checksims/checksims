@@ -119,6 +119,29 @@ which can be printed by supplying the \texttt{-h} or \texttt{--help} flag. The
 output mirrors the information provided above, though it may be more
 up-to-date.
 
+A number of arguments can also be passed to the Java virtual machine.
+These are usually placed in the command line as follows:
+
+\begin{figure}[H]
+\centering
+\texttt{java <JVM\_ARGS> -jar PATH/TO/CHECKSIMS <ARGS>}
+\end{figure}
+
+These arguments are well-documented and can be used on all Java virtual
+machines. They are detailed below.
+
+\begin{itemize}
+\item \texttt{-d64}, \texttt{-d32}: Specify a 64 or 32 bit JVM, respectively.
+	Some JVMs will only support 32 or 64 bit, but not both. Using a 64-bit JVM
+	where available is preferred to enable the VM to use more than 4GB of
+	memory.
+\item \texttt{-Xmx}: Specify a maximum amount of memory for the JVM to use.
+	The number can be formatted as [Amount][Unit] where [Unit] is M for
+	megabyte or G for gigabyte. Note that the number is specified immediately
+	after the flag, with no \texttt{=} character. For example, to set the JVM
+	to use at most 4GB of ram, specify \texttt{-Xmx4G} at the command line.
+\end{itemize}
+
 
 \subsection{Description of Tokenizations}
 \textit{Checksims} breaks submissions into a series of tokens as they are read
