@@ -2,7 +2,7 @@
 
 \usepackage{graphicx} % To include figures
 \usepackage{rotating} % For rotated figures
-\usepackage[hyperref]{biblatex} % For bibliography
+\usepackage[hyperref,backend=biber]{biblatex} % For bibliography
 \usepackage{scrextend}
 \usepackage[T1]{fontenc}
 \usepackage[margin=1in]{geometry} % 1in margins
@@ -19,7 +19,8 @@
 % Use hyperlinks when outputting to PDF
 \hypersetup{
 	colorlinks=false,
-	bookmarks=true,
+	pdftitle={Software Similarity Detection},
+	pdfauthor={Matthew Heon and Dolan Murvihill}
 }
 
 \setcounter{tocdepth}{5}
@@ -54,7 +55,7 @@
 
 \newcommand{\code}[1]{\texttt{#1}}
 
-\author{Dolan Murvihill \and Matthew Heon}
+\author{Matthew Heon \and Dolan Murvihill}
 \title{Software Similarity Detection}
 
 \begin{document}
