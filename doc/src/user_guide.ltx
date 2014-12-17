@@ -12,6 +12,7 @@ then applies a pairwise similarity detection algorithm to all possible pairs
 of submissions. The results of the algorithm are then printed via an output
 strategy.
 
+
 \subsection{Installing Checksims}
 \textit{Checksims} is distributed as an executable Java package (\texttt{.jar}
 file). As a Java application, \textit{Checksims} is cross-platform and should
@@ -37,6 +38,7 @@ following URL:
 \url{https://www.java.com/en/download/index.jsp}
 \end{figure}
 
+
 \subsection{Running Checksims}
 
 \textit{Checksims} is a command-line application, and is typically invoked
@@ -51,8 +53,8 @@ as follows:
 It may be desirable to rename the provided .jar file or write a wrapping shell
 script to reduce the amount of typing required for this basic invocation.
 
-Checksims has two mandatory arguments: a \textit{glob} match pattern, and a
-directory to scan for submissions.
+Checksims has two mandatory arguments: a single \textit{glob} match pattern,
+and at least one to scan for submissions.
 
 The \textit{glob} match pattern is a shell-style match pattern used to
 identify files to include in submissions. Wildcard characters accepted by a
@@ -73,7 +75,8 @@ directory for submissions, two submissions named ``A'' and ``B'' will be
 created.
 
 After creation, any empty submissions (no files found matching given pattern,
-or only empty files found) will be removed prior to running the detection algorithm.
+or only empty files found) will be removed prior to running the detection
+algorithm.
 
 At present, there is no way of differentiating submissions beyond placing them
 within separate directories.
@@ -116,6 +119,7 @@ which can be printed by supplying the \texttt{-h} or \texttt{--help} flag. The
 output mirrors the information provided above, though it may be more
 up-to-date.
 
+
 \subsection{Description of Tokenizations}
 \textit{Checksims} breaks submissions into a series of tokens as they are read
 in. Several options are provided, each providing a tradeoff of speed for
@@ -132,6 +136,7 @@ basis for token comparison.
 Three tokenization options are provided by default: Character, Whitespace, and
 Line. Their advantages and disadvantages are listed below.
 
+
 \subsubsection{Character Tokenization}
 The simplest tokenization method, character tokenization breaks a submission
 into the characters which compose it and builds a token for each character.
@@ -143,6 +148,7 @@ for most algorithms, character tokenization will be the most conducive to
 accuracy, as it can identify largely similar words and lines which would
 otherwise be ignored. Character tokenization also runs a slight memory overhead
 compared to the other tokenization schemes.
+
 
 \subsubsection{Whitespace Tokenization}
 Whitespace tokenization breaks a submission apart at whitespace characters
@@ -156,6 +162,7 @@ performance (assuming whitespace tokens are on average 4 characters, a fourfold
 reduction in token count can be expected, even ignoring the deletion of
 whitespace).
 
+
 \subsubsection{Line Tokenization}
 Line tokenization splits the submission on newlines, creating a token from each
 line in the original. Non-newline whitespace characters (spaces and tabs) are
@@ -164,6 +171,7 @@ retained.
 Line tokenization represents the fastest but least precise tokenization option.
 It is capable of identifying exact duplication, but even trivial attempts to
 obfuscate similarities will prevent their being identified.
+
 
 \subsection{Description of Preprocessors}
 After a submission is converted into tokens, these tokens can then be
@@ -176,6 +184,7 @@ ensuring that algorithms are case-insensitive.
 \textit{Checksims} provides two detection algorithms at present. The first is
 \textit{Smith-Waterman}. It offers accurate detection but slow performance.
 The second is \textit{Line Comparison}. It is very fast, but not very accurate.
+
 
 \subsubsection{Smith-Waterman}
 The \textit{Smith-Waterman} algorithm for string overlaying was originally
@@ -198,8 +207,9 @@ minutes; for larger submissions, however, hours (or even days) may be required.
 
 Because of the performance penalty of \textit{Smith-Waterman}, it is
 recommended to use it with the whitespace tokenization scheme, which it
-defaults to. This minimizes the amount of tokens present, greatly improving
+defaults to. This minimizes the number of tokens present, greatly improving
 performance.
+
 
 \subsubsection{Line Comparison}
 The \textit{Line Comparison} algorithm identifies identical tokens in both
@@ -225,21 +235,34 @@ example, a single missing character) can result in otherwise extremely similar
 lines not being recorded as similar. \textit{Line Comparison} is thus very
 limited in terms of accuracy.
 
+
 \subsection{Description of Output Strategies}
 Once an algorithm has been applied to the submissions, the results must be
 printed in a usable format so they may be used and interpreted. Output
 strategies determine how this is done.
 
 Results will often be presented as a $n$x$n$ matrix, henceforth referred to as
-a \textit{Similarity Matrix}. A similarity matrix is square, with each
-submission compared appearing once on both the X axis and Y axis. Each cell
-represents the similarity of the submission given on the X axis with the
-submission given on the Y axis (please note that this is one-way similarity
---- comparing Y to X may have different results, as the submissions could be
-of different size). Where the submissions on the X axis and Y axis are
-identical (will happen once per row and column, given that each submission
-occurs once per axis), the similarity between the submissions is ignored (they
-would be 100\% identical, given that they are the same submission!).
+a \textit{Similarity Matrix}. These matrices are built from the complete
+results of the similarity detection algorithm, and contain the similarity of
+every submission to every other. As the name would imply, a similarity matrix
+is a $NxN$ matrix (with $N$ being the number of submissions), with each cell
+representing the similarity of one submission with another.
+
+In a similarity matrix, the submissions used in similarity detection are
+counted, and a square matrix of that dimension is created. Submissions are each
+assigned a row and column. Every cell is initialized as the similarity of the
+submissions which define its intersection (specifically, column submission's
+similarity to row submission). If the row and column submissions are the same,
+the cell is ignored (declared as empty). An example is shown in
+Figure~\ref{fig:userguidematrix}.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{../src/matrix.pdf}
+\caption{A sample similarity matrix}
+\label{fig:userguidematrix}
+\end{figure}
+
 
 \subsubsection{CSV}
 The CSV output strategy records output as a similarity matrix in
@@ -247,11 +270,13 @@ comma-separated value format. This output format is computer-readable, not
 human-readable. It can be imported into Microsoft Excel or a number of other
 software statistics packages to generate statistics about detected similarities
 
+
 \subsubsection{HTML}
 The HTML output strategy produces a web page which can be opened in a typical
 web browser, presenting a colorized version of a similarity matrix. A color
 range (yellow to red) shows how similar each cell is, allowing easy visual
 identification of similar students and clusters of similarities.
+
 
 \subsubsection{Threshold}
 The threshold output strategy produces an ordered list of submission pairs

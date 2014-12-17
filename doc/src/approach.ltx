@@ -345,17 +345,17 @@ there are no existing plans to change them.
 
 Output strategies are presented a ``similarity matrix'' to build their output
 from. These matrices are built from the complete results of the similarity
-detection algorithm, and contains the similarity of every submission to every
+detection algorithm, and contain the similarity of every submission to every
 other. As the name would imply, a similarity matrix is a $NxN$ matrix (with $N$
 being the number of submissions), with each cell representing the similarity
 of one submission with another.
 
 In a similarity matrix, the submissions used in similarity detection are
-counted, and a square matrix of that dimension is created. Submissions are
-assigned a row and column each. Every cell is initialized as the similarity of
-the submissions which define its intersection (specifically, column
-submission's similarity to row submission). If the row and column submissions
-are the same, the cell is ignored (declared as empty). An example is shown in
+counted, and a square matrix of that dimension is created. Submissions are each
+assigned a row and column. Every cell is initialized as the similarity of the
+submissions which define its intersection (specifically, column submission's
+similarity to row submission). If the row and column submissions are the same,
+the cell is ignored (declared as empty). An example is shown in
 Figure~\ref{fig:matrix}.
 
 \begin{figure}
