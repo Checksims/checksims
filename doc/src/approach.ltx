@@ -1,6 +1,5 @@
 \section{Requirements}
 \label{sec:requirements}
-
 The first step in any software engineering project is determining the key
 requirements. Ours are based on our initial goals (listed in
 Section~\ref{sec:goals}) Some goals were solicited from our advisor (the
@@ -49,7 +48,7 @@ open source community. Proper documentation and unit testing of all produced
 source code, and emphasis on extendability when designing the architecture, were
 decided to be priorities.
 
-% Reference to MOSS in lit review
+% Reference to MOSS in lit review (is this necessary?)
 We decided to implement a client-based solution (as opposed to a hosted
 solution such as MOSS), to keep the frontend and user-interface code as
 simple as possible to ensure that as much time as possible was spent working on
@@ -96,14 +95,6 @@ features without needing to make significant changes to the core program,
 increasing productivity and decreasing the likelihood of introducing bugs.
 
 \subsection{Architecture}
-% Architecture Diagram
-\begin{sidewaysfigure}
-\centering
-\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{../src/architecture.pdf}
-\caption{The Architecture of \textit{Checksims}}
-\label{fig:architecture}
-\end{sidewaysfigure}
-
 \textit{Checksims} has a roughly linear architecture, composed of a number of
 discrete components, most with one input and one output. The overall service
 accepts a number of student submissions as input, and returns usable output.
@@ -127,7 +118,14 @@ described below.
         which produces a human-readable form of the output for parsing.
 \end{enumerate}
 
-% TODO WRITE THIS
+% Architecture Diagram
+\begin{sidewaysfigure}
+\centering
+\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{../src/architecture.pdf}
+\caption{The Architecture of \textit{Checksims}}
+\label{fig:architecture}
+\end{sidewaysfigure}
+
 
 \subsection{Submissions and Tokenization}
 \textit{Checksims} accepts as input a directory containing a number of student
@@ -287,16 +285,16 @@ The \textit{Smith-Waterman} algorithm is the primary similarity detection
 algorithm included in Checksims. It is described in the literature review in
 Section~\ref{sec:smithwatermanlit}, and was identified as a candidate for this
 role based on Irving's paper describing its use in the detection of academic
-dishonesty in source code \cite{irving04}. It capable of finding most
+dishonesty in source code \cite{irving04}. It is capable of finding most
 similarities characteristic of academic dishonesty in submissions at the
-plaintext level, and is able to defeat some of the methods of obfuscation
+plaintext level and it is able to defeat some of the methods of obfuscation
 listed in Section~\ref{sec:obfuscation} in the literature review (for example,
 some instances of changing identifier names).
 
-It is noteworthy that \textit{Smith-Waterman} is an poorly scaling algorithm.
-Its runtime complexity and memory usage both scale as $O(m * n)$ where $m$ and
-$n$ are the size of the two submissions being compared (after tokenizing).
-If both submissions scale evenly in size, scaling is quadratic; indeed, if the
+It is noteworthy that \textit{Smith-Waterman} scales poorly. Its runtime
+complexity and memory usage both scale as $O(m * n)$ where $m$ and $n$ are the
+size of the two submissions being compared (after tokenizing). If both
+submissions scale evenly in size, scaling is quadratic; indeed, if the
 submissions are fixed as the same size, scaling is exactly $O(n^{2})$.
 Initially, the algorithm was too slow to be used on  moderately-sized classes
 (defined here as 40-50 students). We made several optimization passes to
@@ -304,21 +302,21 @@ improve performance, including changing the default tokenization algorithm
 for \textit{Smith-Waterman} from generating tokens from each character to
 generating tokens for whitespace-separated strings (reducing token count by
 approximately 75\%). After these optimizations, \textit{Smith-Waterman} is
-fast enough for typical use cases (classes of 40-50 and submissions of 500
-1000 tokens), though larger numbers of student submissions (or an increase in
-average size of the submissions themselves) will greatly increase the time
-the algorithm takes to complete. Larger class sizes are more manageable than
-larger submission sizes. For example, a class of 100 to 110 students would
-likely finish in approximately 12 hours; a doubling of token count cause
-individual comparisons to take days to run and require dozens (if not hundred)
-of gigaBytes of memory. 
+fast enough for typical use cases (classes of 40-50 and submissions of 500 to
+1000 tokens), though substantially larger class sizes or an increase in average
+size of the submissions themselves will greatly increase the time required for
+the algorithm to complete. Larger class sizes are more manageable than larger
+submission sizes. For example, a class of 100 to 110 students would likely
+finish in approximately 12 hours; a doubling of token count causes individual
+comparisons to take days to run and require dozens (if not hundreds) of
+gigabytes of memory. 
 
 \subsection{User-Friendly Output}
 After all possible similarities have been computed, \textit{Checksims} formats
 the results into a ``similarity matrix'' as described in
-Section~\ref{sec:simmatrix}, then uses an output strategy to format and print
-the resulting matrix. A variety of output strategies are available, and the
-specific one to use is specified by the user. All output strategies focus on
+Section~\ref{sec:simmatrix}, and then uses an output strategy to format and
+print the resulting matrix. A variety of output strategies are available. The
+specific strategy used is user-specified. All output strategies focus on
 presenting information in a usable fashion, with an emphasis on identifying
 unusually large similarities easily.
 
@@ -326,15 +324,19 @@ Like preprocessors and algorithms, output strategies are pluggable modules,
 allowing new output strategies to be written and inserted with ease, with the
 restriction that they can only display information contained in the
 similarity matrix. Some information which might be desirable to display (for
-example, the specific tokens of the submissions which were matched) is not
-present in the similarity matrix, placing a limitation on what types of
-output formatting are presently possible. It may be desirable to make
-additional information available to output strategies in the future, but
-there are no existing plans to change them.
+example, the specific matching tokens) is not present in the similarity matrix,
+placing limits on what output formats are possible. It may be desirable to make
+additional information available to output strategies in the future.
 
 
 \subsubsection{Similarity Matrix}
 \label{sec:simmatrix}
+Output strategies work from a ``similarity matrix''. These matrices are built
+from the complete results of the similarity detection algorithm, and contain
+the similarity of every submission to every other. As the name would imply, a
+similarity matrix is a $N$x$N$ matrix (with $N$ being the number of
+submissions), with each cell representing the similarity of one submission with
+another.
 
 \begin{figure}
 \centering
@@ -343,20 +345,17 @@ there are no existing plans to change them.
 \label{fig:matrix}
 \end{figure}
 
-Output strategies are presented a ``similarity matrix'' to build their output
-from. These matrices are built from the complete results of the similarity
-detection algorithm, and contain the similarity of every submission to every
-other. As the name would imply, a similarity matrix is a $NxN$ matrix (with $N$
-being the number of submissions), with each cell representing the similarity
-of one submission with another.
-
 In a similarity matrix, the submissions used in similarity detection are
 counted, and a square matrix of that dimension is created. Submissions are each
 assigned a row and column. Every cell is initialized as the similarity of the
 submissions which define its intersection (specifically, column submission's
 similarity to row submission). If the row and column submissions are the same,
 the cell is ignored (declared as empty). An example is shown in
-Figure~\ref{fig:matrix}.
+Figure~\ref{fig:matrix}. Each cell shows the similarity of the submission on
+the X axis with the submission on the Y axis. In Figure~\ref{fig:matrix}, the
+bottom-right corner cell shows the percentage similarity of submission A to
+submission C --- that is, the percent of submission A's tokens which are shared
+with submission C.
 
 \begin{figure}
 \centering
