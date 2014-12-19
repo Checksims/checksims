@@ -38,6 +38,11 @@ following URL:
 \url{https://www.java.com/en/download/index.jsp}
 \end{figure}
 
+Please install the 64-bit version of the JVM if your system supports it.
+\textit{Checksims} can consume a substantial amount of memory, potentially more
+than the 4GB maximum that a 32-bit JVM can use. A 64-bit JVM can prevent a
+number of memory-related program crashes.
+
 
 \subsection{Running Checksims}
 
@@ -53,8 +58,10 @@ as follows:
 It may be desirable to rename the provided .jar file or write a wrapping shell
 script to reduce the amount of typing required for this basic invocation.
 
-Checksims has two mandatory arguments: a single \textit{glob} match pattern,
-and at least one to scan for submissions.
+
+\subsubsection{Arguments}
+\textit{Checksims} has two mandatory arguments: a single \textit{glob} match
+pattern, and at least one to scan for submissions.
 
 The \textit{glob} match pattern is a shell-style match pattern used to
 identify files to include in submissions. Wildcard characters accepted by a
@@ -81,6 +88,8 @@ algorithm.
 At present, there is no way of differentiating submissions beyond placing them
 within separate directories.
 
+
+\paragraph{Optional Arguments}
 Before the glob matcher, you may place a number of arguments to control
 Checksims's functionality. These are detailed below:
 
@@ -114,10 +123,54 @@ Checksims's functionality. These are detailed below:
 \item \texttt{-v}, \texttt{--verbose}: Verbose debugging output.
 \end{itemize}
 
-Checksims contains built-in usage information and descriptions of its arguments
-which can be printed by supplying the \texttt{-h} or \texttt{--help} flag. The
-output mirrors the information provided above, though it may be more
+\textit{Checksims} contains built-in usage information and descriptions of its
+arguments which can be printed by supplying the \texttt{-h} or \texttt{--help}
+flag. The output mirrors the information provided above, though it may be more
 up-to-date.
+
+
+\subsubsection{Common Errors and Solutions}
+This section contains a number of common errors which can occur while using
+\textit{Checksims}, and suggests potential fixes.
+
+
+\paragraph{Out of Memory Errors}
+A Java Out of Memory exception occurs when \textit{Checksims} uses all the
+memory available to the Java virtual machine. This is usually caused by running
+a complex comparison algorithm (for example, \textit{Smith-Waterman}) on
+large submissions.
+
+The first potential fix is to increase the amount of memory available to the
+JVM. This can be done by installing 64-bit Java and passing the \texttt{-d64}
+flag to use a 64-bit JVM (enabling the use of more than 4GB of memory). If a
+64-bit JVM is already installed, a larger amount of memory can be provided
+using the \texttt{-Xmx} flag.
+
+If more memory cannot be allocated to the JVM, it is also possible to reduce
+the amount of memory used by \textit{Checksims}. This can be done in a number
+of ways. Firstly, reducing the amount of threads used with the \texttt{-j} flag
+will cause a substantial decrease in the amount of memory used. Each thread
+uses roughly the same amount of memory, so a reduction from 4 to 2 threads
+should cause \textit{Checksims} to use half as much memory. Furthermore,
+changing the tokenization used can impact the number of tokens stored, which
+has substantial implications for algorithm memory use. Changing from Character
+to Whitespace tokenization for \textit{Smith-Waterman}, for example, will
+usually result in a 4-fold reduction in memory use.
+
+
+\paragraph{No Submissions Detected}
+In the case that \textit{Checksims} cannot build any student submissions to
+compare, the first step is usually to check the glob match pattern used. Ensure
+that any characters which might be interpreted by your shell (for example, 
+\texttt{*}) are properly escaped (single or double quoted on Linux or OS X,
+double quoted on Windows). Furthermore, check that the glob match pattern is
+syntactically valid for your platform.
+
+Verify that you are passing \textit{Checksims} a directory containing a number
+of student submissions, each of which is contained in a single subdirectory of
+the directory passed to \textit{Checksims}. Even if each student submission is
+a single file, it must be contained in a subdirectory. Student submission
+directories may contain subdirectories themselves without issue.
 
 
 \subsection{Description of Tokenizations}
@@ -129,9 +182,9 @@ default can be overridden at runtime if desired. This may be desirable, as
 tokenization has strong implications for algorithm accuracy and performance.
 
 Only one tokenization is supported at any given time; it is impossible to
-request that Checksims tokenize one submission using character tokenization,
-and another using whitespace tokenizations. This is done to ensure a uniform
-basis for token comparison.
+request that \textit{Checksims} tokenize one submission using character
+tokenization, and another using whitespace tokenizations. This is done to
+ensure a uniform basis for token comparison.
 
 Three tokenization options are provided by default: Character, Whitespace, and
 Line. Their advantages and disadvantages are listed below.
