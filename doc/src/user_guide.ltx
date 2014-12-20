@@ -47,8 +47,8 @@ number of memory-related program crashes.
 \subsection{Running Checksims}
 
 \textit{Checksims} is a command-line application, and is typically invoked
-from your operating system's shell. The .jar file given can be run using Java
-as follows:
+from your operating system's shell. The \texttt{.jar} file given can be run
+using Java as follows:
 
 \begin{figure}[H]
 \centering
@@ -72,15 +72,18 @@ that these are not parsed by your shell, it is recommended to escape this
 pattern (typically using double quotes --- \texttt{``*.c''} for example).
 
 After the glob match pattern, one or more directories to search for submissions
-must be provided. \textit{Checksims} assumes each subdirectory of these
-search directories is a submission. It will recursively identify any files
-matching the given glob pattern in a submission directory, append all matching
-files together, and tokenize the collection. File naming information is lost
-during this process, but the contents of all matching files will be present.
-Each submission is named for the directory containing it; if a directory
-containing two subdirectories named ``A'' and ``B'' is provided as a search
-directory for submissions, two submissions named ``A'' and ``B'' will be
-created.
+must be provided. \textit{Checksims} assumes each subdirectory of these search
+directories is a submission. It will identify any files matching the given
+glob pattern in a submission directory, append all matching files together,
+and tokenize the collection. By default, it is not recursive and will only
+identify files in the student submission directory and not subdirectories. An
+argument is provided to enable recursion through subdirectories to generate
+submissions (see section \ref{sec:optionalargs} for details). File naming
+information is lost during this process, but the contents of all matching
+files will be present. Each submission is named for the directory containing
+it; if a directory containing two subdirectories named ``A'' and ``B'' is
+provided as a search directory for submissions, two submissions named ``A''
+and ``B'' will be created.
 
 After creation, any empty submissions (no files found matching given pattern,
 or only empty files found) will be removed prior to running the detection
@@ -91,8 +94,9 @@ within separate directories.
 
 
 \paragraph{Optional Arguments}
-Before the glob matcher, you may place a number of arguments to control
-Checksims's functionality. These are detailed below:
+\label{sec:optionalargs}
+Before the glob matcher, you may place a number of arguments to control the
+functionality of \textit{Checksims}. These are detailed below:
 
 \begin{itemize}
 \item \texttt{-a}, \texttt{--algorithm}: Specify algorithm to use for
@@ -108,20 +112,25 @@ Checksims's functionality. These are detailed below:
 	algorithms, preprocessors, and output strategies.
 \item \texttt{-j}, \texttt{--jobs}: Specify number of threads to use. Defaults
 	to number of CPUs available on your system.
-\item \texttt{-o}, \texttt{--output}: Specify output format. Available options
-	are \texttt{html}, \texttt{csv}, and \texttt{threshold} at present, and can
-	be listed with \texttt{-h}. If no output format is given, the default is
-	used.
+\item \texttt{-o}, \texttt{--output}: Specify output format(s) to use. More
+	than one can be provided; if so, separate them with commas. Available
+	options are \texttt{html}, \texttt{csv}, and \texttt{threshold} at
+	present, and can be listed with \texttt{-h}. If no output format is given,
+	the default is used.
 \item \texttt{-p}, \texttt{--preprocess}: Specify preprocessors to apply. More
 	than one can be provided; if so, separate them with commons. At present,
 	the only available option is \texttt{lowercase}. Available options can be
 	listed with \texttt{-h}. If this argument is not provided, no preprocessors
 	are applied.
+\item \texttt{-r}, \texttt{--recursive}: Recursively traverse subdirectories
+	when generating submissions.
 \item \texttt{-t}, \texttt{--token}: Specify tokenization to use. Available
 	options are \texttt{line}, \texttt{whitespace}, and \texttt{character} at
 	present, and can be listed with \texttt{-h}. If this option is not given,
 	the default tokenization for the algorithm is used.
 \item \texttt{-v}, \texttt{--verbose}: Verbose debugging output.
+\item \texttt{-vv}, \texttt{--veryverbose}: Very verbose debugging output.
+	Overrides \texttt{-v} if both are specified.
 \end{itemize}
 
 \textit{Checksims} contains built-in usage information and descriptions of its
