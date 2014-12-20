@@ -250,25 +250,30 @@ public class ChecksimRunner {
                     preprocessors.add(p);
                 }
             } catch(ChecksimException e) {
-                logs.error("Error applying preprocessor!");
+                logs.error("Error obtaining preprocessors!");
                 throw new RuntimeException(e);
             }
         }
 
-        SimilarityMatrixPrinter outputPrinter;
+        List<SimilarityMatrixPrinter> outputStrategies = new LinkedList<>();
         if(cli.hasOption("o")) {
+            String[] desiredStrategies = cli.getOptionValue("o").split(",");
+
             try {
-                outputPrinter = OutputRegistry.getInstance().getOutputStrategy(cli.getOptionValue("o"));
+                for(String s : desiredStrategies) {
+                    SimilarityMatrixPrinter p = OutputRegistry.getInstance().getOutputStrategy(s);
+                    outputStrategies.add(p);
+                }
             } catch(ChecksimException e) {
-                logs.error("Error obtaining output strategy!");
+                logs.error("Error obtaining output strategies!");
                 throw new RuntimeException(e);
             }
         } else {
-            outputPrinter = OutputRegistry.getInstance().getDefaultStrategy();
+            outputStrategies.add(OutputRegistry.getInstance().getDefaultStrategy());
         }
 
         ChecksimConfig config = new ChecksimConfig(algorithm, tokenization, preprocessors, submissionDirs, recursive, removeCommonCode, commonCodeRemovalAlgorithm, commonCodeDirectory, glob,
-                outputPrinter, outputToFile, outputFileAsFile);
+                outputStrategies, outputToFile, outputFileAsFile);
 
         runChecksims(config);
 
@@ -318,18 +323,22 @@ public class ChecksimRunner {
         // Apply algorithm to submission
         SimilarityMatrix results = SimilarityMatrix.generate(submissions, config.algorithm);
 
-        String output = config.outputPrinter.printMatrix(results);
+        for(SimilarityMatrixPrinter p : config.outputPrinters) {
+            String output = p.printMatrix(results);
 
-        if(config.outputToFile) {
-            try {
-                FileStringWriter.writeStringToFile(config.outputFile, output);
-            } catch (IOException e) {
-                logs.error("Error printing output to file!");
-                throw new RuntimeException(e);
+            logs.info("Generating " + p.getName() + " output");
+
+            if (config.outputToFile) {
+                try {
+                    FileStringWriter.writeStringToFile(new File(config.outputFile.getAbsolutePath() + "." + p.getName()), output);
+                } catch (IOException e) {
+                    logs.error("Error printing output to file!");
+                    throw new RuntimeException(e);
+                }
+            } else {
+                System.out.println("\n\n");
+                System.out.println(output);
             }
-        } else {
-            System.out.println("\n\n");
-            System.out.println(output);
         }
     }
 }

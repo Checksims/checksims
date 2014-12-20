@@ -43,13 +43,13 @@ public final class ChecksimConfig {
     public final SimilarityDetector commonCodeRemovalAlgorithm;
     public final File commonCodeDirectory;
     public final String globMatcher;
-    public final SimilarityMatrixPrinter outputPrinter;
+    public final ImmutableList<SimilarityMatrixPrinter> outputPrinters;
     public final boolean outputToFile;
     public final File outputFile;
 
     public ChecksimConfig(SimilarityDetector algorithm, TokenType tokenization, List<SubmissionPreprocessor> preprocessors,
                           List<File> submissionDirectories, boolean recursive, boolean removeCommonCode, SimilarityDetector commonCodeRemovalAlgorithm,
-                          File commonCodeDirectory, String globMatcher, SimilarityMatrixPrinter outputPrinter,
+                          File commonCodeDirectory, String globMatcher, List<SimilarityMatrixPrinter> outputPrinters,
                           boolean outputToFile, File outputFile) {
         this.algorithm = algorithm;
         this.tokenization = tokenization;
@@ -63,7 +63,7 @@ public final class ChecksimConfig {
         this.globMatcher = globMatcher;
         this.submissionDirectories = ImmutableList.copyOf(submissionDirectories);
 
-        this.outputPrinter = outputPrinter;
+        this.outputPrinters = ImmutableList.copyOf(outputPrinters);
         this.outputToFile = outputToFile;
         this.outputFile = outputFile;
     }
