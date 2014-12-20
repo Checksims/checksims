@@ -35,6 +35,7 @@ import edu.wpi.checksims.token.TokenType;
 import edu.wpi.checksims.token.tokenizer.FileTokenizer;
 import edu.wpi.checksims.util.file.FileStringWriter;
 import org.apache.commons.cli.*;
+import org.apache.commons.collections.list.SetUniqueList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.impl.SimpleLogger;
@@ -241,7 +242,9 @@ public class ChecksimRunner {
             System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "" + threads);
         }
 
-        List<SubmissionPreprocessor> preprocessors = new LinkedList<>();
+        // Parse preprocessors
+        // Ensure no duplicates
+        List<SubmissionPreprocessor> preprocessors = SetUniqueList.decorate(new LinkedList<>());
         if(cli.hasOption("p")) {
             String[] splitPreprocessors = cli.getOptionValue("p").split(",");
             try {
@@ -255,7 +258,9 @@ public class ChecksimRunner {
             }
         }
 
-        List<SimilarityMatrixPrinter> outputStrategies = new LinkedList<>();
+        // Parse output strategies
+        // Ensure no duplicates
+        List<SimilarityMatrixPrinter> outputStrategies = SetUniqueList.decorate(new LinkedList<>());
         if(cli.hasOption("o")) {
             String[] desiredStrategies = cli.getOptionValue("o").split(",");
 
