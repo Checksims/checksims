@@ -54,7 +54,7 @@ public class AlgorithmRunner {
                 int curProcessed = submissionsProcessed.incrementAndGet();
                 logs.info("Processing submission pair " + curProcessed + "/" + allPairs.size());
 
-                logs.trace("Running " + algorithm.getName() + " on submissions " + pair.first.getName() +
+                logs.debug("Running " + algorithm.getName() + " on submissions " + pair.first.getName() +
                         "(" + pair.first.getNumTokens() + " tokens) and " + pair.second.getName() + " (" +
                         pair.second.getNumTokens() + " tokens)");
 

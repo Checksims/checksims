@@ -44,7 +44,7 @@ public class FileLineReader {
             throw new IOException("File " + f.getName() + " does not exist or is not a file!");
         }
 
-        logs.debug("Reading file " + f.getPath());
+        logs.trace("Reading file " + f.getPath());
 
         List<String> lines = new LinkedList<>();
 

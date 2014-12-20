@@ -26,6 +26,8 @@ import edu.wpi.checksims.token.TokenType;
 import edu.wpi.checksims.token.tokenizer.FileTokenizer;
 import edu.wpi.checksims.util.file.FileLineReader;
 import org.apache.commons.collections4.list.SetUniqueList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -75,8 +77,9 @@ public interface Submission {
      * @return Set of submissions including all unique nonempty submissions in the given directory
      * @throws java.io.IOException Thrown on error interacting with file or filesystem
      */
-    public static List<Submission> submissionListFromDir(File directory, String glob, FileTokenizer splitter) throws IOException {
+    public static List<Submission> submissionListFromDir(File directory, String glob, FileTokenizer splitter, boolean recursive) throws IOException {
         List<Submission> submissions = SetUniqueList.setUniqueList(new LinkedList<>());
+        Logger local = LoggerFactory.getLogger(Submission.class);
 
         if(!directory.exists() || !directory.isDirectory()) {
             throw new IOException("Directory " + directory.getName() + " does not exist or is not a directory!");
@@ -86,10 +89,13 @@ public interface Submission {
         File[] contents = directory.listFiles(File::isDirectory);
 
         for(File f : contents) {
-            Submission s = submissionFromDir(f, glob, splitter);
+            Submission s = submissionFromDir(f, glob, splitter, recursive);
 
             if(s != null) {
                 submissions.add(s);
+                local.debug("Created submission with name " + s.getName());
+            } else {
+                local.warn("Could not create submission from directory " + f.getName() + " - no files matching pattern found!");
             }
         }
 
@@ -105,7 +111,7 @@ public interface Submission {
      * @return Single submission from all files matching the glob in given directory
      * @throws IOException Thrown on error interacting with file
      */
-    public static Submission submissionFromDir(File directory, String glob, FileTokenizer splitter) throws IOException {
+    public static Submission submissionFromDir(File directory, String glob, FileTokenizer splitter, boolean recursive) throws IOException {
         String dirName = directory.getName();
 
         if(!directory.exists() || !directory.isDirectory()) {
@@ -114,7 +120,7 @@ public interface Submission {
 
         // TODO consider verbose logging of which files we're adding to the submission?
 
-        List<File> files = getAllMatchingFiles(directory, glob);
+        List<File> files = getAllMatchingFiles(directory, glob, recursive);
 
         return submissionFromFiles(dirName, files, splitter);
     }
@@ -126,8 +132,13 @@ public interface Submission {
      * @param glob Match pattern used to identify files to include
      * @return List of all matching files in this directory and subdirectories
      */
-    static List<File> getAllMatchingFiles(File directory, String glob) {
+    static List<File> getAllMatchingFiles(File directory, String glob, boolean recursive) {
         List<File> allFiles = new LinkedList<>();
+        Logger logs = LoggerFactory.getLogger(Submission.class);
+
+        if(recursive) {
+            logs.trace("Recursively traversing directory " + directory.getName());
+        }
 
         // Add this directory
         Collections.addAll(allFiles, getMatchingFilesFromDir(directory, glob));
@@ -135,8 +146,10 @@ public interface Submission {
         // Get subdirectories
         File[] subdirs = directory.listFiles(File::isDirectory);
 
-        // Recursively call on all subdirectories
-        Arrays.stream(subdirs).forEach((f) -> allFiles.addAll(getAllMatchingFiles(f, glob)));
+        // Recursively call on all subdirectories if specified
+        if(recursive) {
+            Arrays.stream(subdirs).forEach((f) -> allFiles.addAll(getAllMatchingFiles(f, glob, true)));
+        }
 
         return allFiles;
     }
@@ -164,6 +177,8 @@ public interface Submission {
      * @throws IOException Thrown on error reading from file
      */
     public static Submission submissionFromFiles(String name, List<File> files, FileTokenizer splitter) throws IOException {
+        Logger logs = LoggerFactory.getLogger(Submission.class);
+
         if(files.size() == 0) {
             return null;
         }
@@ -173,6 +188,10 @@ public interface Submission {
         // Could do this with a .stream().forEach(...) but we'd have to handle the IOException inside
         for(File f : files) {
             tokenList.addAll(splitter.splitFile(FileLineReader.readFile(f)));
+        }
+
+        if(tokenList.size() > 7500) {
+            logs.warn("Warning: Submission " + name + " has very large token count (" + tokenList.size() + ")");
         }
 
         return new ConcreteSubmission(name, tokenList);
