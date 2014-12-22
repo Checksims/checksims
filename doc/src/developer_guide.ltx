@@ -25,10 +25,9 @@ Github webpage, which are duplicated here for convenience:
 
 \subsection{Building Checksims}
 Building \textit{Checksims} has two requirements: a Java 8 JDK, and version 3
-of the \textit{Apache Maven} build system. Configuration of a Maven install is
-beyond the scope of this document, but it can be easily obtained on Linux via
-your distribution's package manager, and OS X and Windows installers are
-available at the following location:
+of the \textit{Apache Maven} build system. The following assumes familiarity
+with Maven and its capabilities. The commands below must be run in the root of
+the cloned repository. All paths are relative to this directory.
 
 \begin{figure}[H]
 \centering
@@ -38,11 +37,15 @@ available at the following location:
 Maven itself is written in Java, and the provided Jar files should be
 cross-platform.
 
-Please note that JDK 8 or later is a buildtime and runtime requirement. Earlier
-versions of the JDK will not be able to build and run Checksims. Most testing
-was performed using the Oracle JDK across Linux and OS X, but other
-configurations (Linux/OS X + OpenJDK 8, Windows) should be supported without
-issue.
+% Yellow highlight to emphasize importance
+\begin{mdframed}[hidealllines=true,backgroundcolor=yellow]
+Note that JDK 8 or later is a buildtime and runtime requirement. Earlier
+versions of the JDK will not be able to build and run Checksims.
+\end{mdframed}
+
+Most testing was performed using the Oracle JDK across Linux and OS X, but
+other configurations (Linux/OS X + OpenJDK 8, Windows) should be supported
+without issue.
 
 \textit{Checksims} uses the typical Maven lifecycle commands for building.
 Again, a full review of Maven's capabilities is outside the scope of this
@@ -67,7 +70,7 @@ To build an executable \texttt{.jar} file:
 
 Build artifacts (executable \texttt{.jar} files) will be placed in the
 \texttt{target/} directory. By default, two \texttt{.jar} files will be
-produced: one with, and one without, dependencies included. They are easily
+produced: one with, and one without, library dependencies. They are easily
 differentiated --- the \texttt{.jar} with dependencies included will be named
 as follows:
 
@@ -126,10 +129,11 @@ number of subpackages, described below.
 The \texttt{algorithm} subpackage contains core similarity detection
 functionality. All similarity detection algorithms (and the root interface
 \texttt{SimilarityDetector} which all detection algorithms implement) are
-contained within algorithm. All algorithms at time of writing (\textit{Line
+contained within algorithm. Algorithms at time of writing (\textit{Line
 Similarity} and \textit{Smith-Waterman}) are contained within
-appropriately-named subpackages(for example, \texttt{algorithm/smithwaterman}
-for the \textit{Smith-Waterman} algorithm). The overall \texttt{algorithm}
+appropriately-named subpackages (for example, \texttt{algorithm/smithwaterman}
+for the \textit{Smith-Waterman} algorithm). It is intended that the same
+scheme will be used for future algorithms. The overall \texttt{algorithm}
 package also contains the \texttt{output} subpackage, containing all valid
 output strategies and the \texttt{SimilarityMatrixPrinter} interface which all
 output strategies implement. Finally, the \texttt{algorithm} package also
@@ -138,15 +142,15 @@ preprocessor algorithms for token lists.
 
 The \texttt{submission} subpackage contains code relating to the creation of
 submissions from directories and files on disk. All concrete classes within are
-final; this part of the interface is considered stable, and should not require
-much modification or extension.
+\texttt{final}; this part of the interface is considered stable, and should
+not require much modification or extension.
 
 The \texttt{token} subpackage contains code relating to tokenization of files
 and tokens generated. Several data structures for tokens, including
 \texttt{TokenList} (implementing \texttt{List<Token>}) and trees of arbitrary
 arity (contained in the \texttt{tree} subpackage), are included here. Concrete
-implementations of tokens themselves are final; again, this is considered a
-stable part of the interface.
+implementations of tokens themselves are \texttt{final}; again, this is
+considered a stable part of the interface.
 
 The \texttt{util} subpackage contains general utility code.
 
@@ -161,14 +165,13 @@ program.
 given directory, generating one submission per subdirectory of the given
 assignment directory(s). After the list of all submissions has been built,
 common code detection and removal is performed (if requested by the user).
-Preprocessors requested are then applied, sequentially, on each submission.
-Finally, \texttt{SimilarityMatrix.generate()} is called, creating a results
-matrix.
+Preprocessors are then applied, sequentially, on each submission. Finally,
+\texttt{SimilarityMatrix.generate()} is called, creating a results matrix.
 
 \texttt{SimilarityMatrix.generate()} generates a list of all unique unordered
 pairs of student submissions, then applies a given pairwise similarity
 detection algorithm to each submission. The results are then collated to
-produce the \textit{similarity matrix}: a 2-dimensional array of floats,
+produce the \textit{similarity matrix}: a square array of floats,
 representing the similarity of each assignment when compared with each other
 assignment.
 
@@ -210,11 +213,11 @@ contain spaces.
 
 The \texttt{getDefaultTokenType()} method returns the default tokenization used
 by the algorithm. There are three supported tokenizations in \textit{Checksims}
-at the time of this writing: Line, Whitespace, and Character. Each breaks
-submitted files up different (by newline, by whitespace character, and into
-individual characters) to produce tokens. The returned token type from this
-method will be the default for this algorithm (this can be overridden by the
-user at runtime, however).
+at the time of this writing: \texttt{Line}, \texttt{Whitespace}, and
+\texttt{Character}. Each breaks submitted files up differently (by newline, by
+whitespace character, and into individual characters) to produce tokens. The
+returned token type from this method is the default for this algorithm (this
+can be overridden by the user at runtime, however).
 
 The \texttt{detectSimilarity()} method accepts a pair of student submissions,
 performs similarity detection, and returns an \texttt{AlgorithmResults} object
@@ -229,9 +232,9 @@ make an algorithm available outside of writing it and placing it in the
 \texttt{algorithm} package; all implementors of \texttt{SimilarityDetector}
 will be scanned via reflection and loaded automatically.
 
-When writing algorithms, please make them thread-safe within a single instance
-of the class. Similarity detection is by default performed multi-threaded,
-with all threads using the same instance. Consequently, making implementors
-synchronized is inadvisable. Instead, attempt to confine all mutable state to
-the \texttt{detectSimilarity} method (and any helpers), avoiding class-level
-mutable data.
+Similarity detection is multithreaded by default, and is performed using a
+single instance of the similarity detector. Consequently, it is not advised
+to have class-level mutable state or \texttt{synchronized} methods within a
+similarity detector. Instead, mutable state should be confined to the
+\texttt{detectSimilarity()} method and any helpers. The overall implementation
+of a similarity detector must be thread-safe.
