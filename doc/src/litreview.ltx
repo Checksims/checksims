@@ -7,7 +7,7 @@ not in common use. For clarity, we provide definitions for them here.
 	are used throughout this paper to refer to the use of another's work
 	without permission or attribution. In this context, it refers to students
 	who use another person's work without attribution and/or without the
-	permission of their instructor to do so. This is often referred to as
+	permission of the instructor to do so. This is often referred to as
 	``cheating'' or ``plagiarism'' in general use, but we deliberately avoid
 	these terms where possible, as they can be perceived to be controversial
 	or judgmental.
@@ -27,27 +27,24 @@ not in common use. For clarity, we provide definitions for them here.
 	breaks an input string up in a consistent manner (for example, at each
 	newline). \textit{Tokens} are formed from the broken-up chunks of the
 	input.
-\item A \textit{False Positive} for given matching algorithm is a result which
-	is matched by the algorithm, but should not be included. In the context of
-	a similarity detection system, it would be two results which are flagged as
+\item A \textit{False Positive} for given tool is a result which is matched by
+	the tool, but should not be included. In the context of a similarity
+	detection system, it would be two or more submissions which are flagged as
 	unusually similar, but are not considered to be academic dishonesty.
-\item A \textit{False Negative} for a given matching algorithm is a result
-	which not matched by the algorithm, but should have been included. In the
-	context of a similarity detection system, it would be two results which are
-	not flagged as unusually similar in spite of having been created by
-	unauthorized copying.
+\item A \textit{False Negative} for a given tool is a result which not matched
+	by the tool, but should have been included. In the context of a similarity
+	detection system, it would be two results which are not flagged as
+	unusually similar in spite of having been created by unauthorized copying.
 \end{itemize}
 
 
 \section{Literature Review}
-We conducted a review of existing literature on similarity detection and
-academic dishonesty to inform our requirements and design. The
-results of this survey are contained in this section, and focus on three
-areas of inquiry: what is academic dishonesty (Section~\ref{sec:dishonesty}),
-what algorithms exist for detecting academic dishonesty
-(Section~\ref{sec:algo}), and what preexisting solutions are there that might
-also solve the specific problems which were the impetus for our solution
-(Section~\ref{sec:existing}).
+This section summarizes our review of existing literature in the area of
+similarity detection. It is focused on three areas: what is academic
+dishonesty (Section~\ref{sec:dishonesty}), what algorithms exist for detecting
+academic dishonesty (Section~\ref{sec:algo}), and what preexisting solutions
+are there that might also solve the specific problems which were the impetus
+for our solution (Section~\ref{sec:existing}).
 
 \subsection{Academic Dishonesty}
 \label{sec:dishonesty}
