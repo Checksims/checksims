@@ -168,14 +168,14 @@ machines. Several commonly-used flags are detailed below.
 \end{itemize}
 
 
-\paragraph{Sample Command Lines}
+\paragraph{Sample Command Line}
 A typical command line invocation of \textit{Checksims} is shown below.
 
 \begin{figure}[H]
 \centering
 \texttt{java -d64 -jar PATH/TO/CHECKSIMS\_JAR.jar -a smithwaterman -o html,csv
--v -r -f ./out \textquotedbl*.c\textquotedbl SUBMISSION\_DIR\_ONE
-SUBMISSION\_DIR\_TWO}
+-v -r -f ./out \textquotedbl*.c\textquotedbl\ \ SUBMISSION\_DIR\_ONE
+\ \ SUBMISSION\_DIR\_TWO}
 \end{figure}
 
 This instructs \textit{Checksims} to do the following:
@@ -187,7 +187,7 @@ This instructs \textit{Checksims} to do the following:
 	and save this output in two files names \texttt{out.html} and
 	\texttt{out.csv} (\texttt{-o} and \texttt{-f}).
 \item Perform similarity detection on all files with extension \texttt{.c} in
-	directories \texttt{SUBMISSION\_DIR\_ONE} and
+	directories~\texttt{SUBMISSION\_DIR\_ONE} and
 	\texttt{SUBMISSION\_DIR\_TWO}.
 \end{itemize}
 
@@ -239,10 +239,11 @@ directories may contain subdirectories themselves without issue.
 \subsection{Description of Tokenizations}
 \textit{Checksims} breaks submissions into a series of tokens as they are read
 in. Several options are provided, each providing a tradeoff of speed for
-performance. All similarity detection algorithms provide a default tokenization
-which has been chosen to optimize its performance for typical usage, but this
-default can be overridden at runtime if desired. This may be desirable, as
-tokenization has strong implications for algorithm accuracy and performance.
+performance. Each similarity detection algorithm provides a default
+tokenization which has been chosen to optimize its performance for typical
+usage, but this default can be overridden at runtime if desired. This may be
+desirable, as tokenization has strong implications for algorithm accuracy and
+performance.
 
 Only one tokenization is supported at any given time; it is impossible to
 request that \textit{Checksims} tokenize one submission using character
@@ -302,7 +303,8 @@ namely the lowercase preprocessor that converts all letters to lowercase.
 \subsection{Description of Algorithms}
 \textit{Checksims} provides two detection algorithms at present. The first is
 \textit{Smith-Waterman}. It offers accurate detection but slow performance.
-The second is \textit{Line Comparison}. It is very fast, but not very accurate.
+The second is \textit{Line Comparison}. It is very fast, but not very accurate
+and easily fooled by obfuscation.
 
 
 \subsubsection{Smith-Waterman}
@@ -320,13 +322,14 @@ be found.
 However, \textit{Smith-Waterman}'s accuracy comes at a substantial performance
 cost. The algorithm itself is $O(n*m)$ where $n$ and $m$ are the lengths of
 the two sequences being compared; assuming equal and even growth of both
-sequences, the algorithm scales exponentially (both for runtime and memory).
-For smaller submissions, Smith-Waterman can complete an entire class in a few
-minutes; for larger submissions, however, hours (or even days) may be required.
+sequences, the algorithm scales as roughly $O(n^{2})$ (both for runtime and
+memory). For smaller submissions, Smith-Waterman can complete an entire class
+in a few minutes; for larger submissions, however, hours (or even days) may be
+required.
 
 Because of the performance penalty of \textit{Smith-Waterman}, it is
 recommended to use it with the \texttt{Whitespace} tokenization scheme, which
-it defaults to. This minimizes the number of tokens present, greatly improving
+it defaults to. This reduces the number of tokens present, greatly improving
 performance.
 
 
@@ -375,7 +378,7 @@ similarity to row submission). If the row and column submissions are the same,
 the cell is ignored (declared as empty). An example is shown in
 Figure~\ref{fig:userguidematrix}. Each cell shows the similarity of the
 submission on the X axis with the submission on the Y axis. In
-Figure~\ref{fig:userguidematrix}, the bottom-right corner cell shows the
+Figure~\ref{fig:userguidematrix}, the bottom-left corner cell shows the
 percentage similarity of submission A to submission C --- that is, the percent
 of submission A's tokens which are shared with submission C.
 
