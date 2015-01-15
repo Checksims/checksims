@@ -176,7 +176,7 @@ optimization measure.
 
 \subsection{Preprocessing and Common Code Removal}
 Once submissions have been accepted and tokenized, \textit{Checksims} performs
-common code removal. Common code removal accepts a submission which contains
+common code removal. Common code removal accepts a submission that contains
 code that is expected to be present in all submissions --- for instance,
 templates, copyright notices or helper functions provided by the instructor.
 This code is tokenized using the same method used for all other submissions,
@@ -228,7 +228,7 @@ fingerprinting, as described in Section~\ref{sec:ngram}. \textit{Line
 Comparison} is meant to work with line-sized tokens. It hashes each input token
 and creates a map of each hash to each occurrence (the position and
 submission where the token was found). Hash collisions are identified as
-hashes which map to more than one occurrence, and collisions involving both
+hashes that map to more than one occurrence, and collisions involving both
 submissions are tokens shared between the two. The percentage of tokens
 involved in such collisions is tallied and reported as the final
 result.
@@ -236,13 +236,13 @@ result.
 It is worth noting that line comparison is actually a \textit{feature
 extraction} algorithm, and could be run with a central database of
 submissions if desired. However, since \textit {Checksims} only implements
-pairwise comparisons, the ``database'' used is a hash table which must be
+pairwise comparisons, the ``database'' used is a hash table that must be
 rebuilt every time a submission is compared. The current architecture is not
 particularly efficient, but the speed of modern hashing algorithms ensures
 that the loss of performance does not have a noticeable impact on execution
 speed for runs on fewer than 400 submissions. 
 
-\textit{Line Comparison} is a simple algorithm which was implemented as a
+\textit{Line Comparison} is a simple algorithm that was implemented as a
 proof of concept. It runs extremely fast in linear time with the size of both
 submissions, but it misses a number of similarities due to the nature of hash
 collisions. Even a trivial change (a single letter added or removed, for
@@ -257,7 +257,7 @@ impossible to identify similar lines just from their hashes, preventing
 textit{Line Comparison} from being used to identify very similar hashes. Line
 Comparison remains in \textit{Checksims} both as a proof of concept and
 example of a simple algorithm, and to quickly identify extremely similar or
-identical submissions (an initial check which can be run prior to a slower
+identical submissions (an initial check that can be run prior to a slower
 but more accurate algorithm such as \textit{Smith-Waterman}).
 
 \textit{Line Comparison} is designed to work with tokens
@@ -313,7 +313,7 @@ unusually large similarities easily.
 Like preprocessors and algorithms, output strategies are pluggable modules, 
 allowing new output strategies to be written and inserted with ease, with the
 restriction that they can only display information contained in the
-similarity matrix. Some information which might be desirable to display (for
+similarity matrix. Some information that might be desirable to display (for
 example, the specific matching tokens) is not present in the similarity matrix,
 placing limits on what output formats are possible. It may be desirable to make
 additional information available to output strategies in the future.
@@ -338,13 +338,13 @@ another.
 In a similarity matrix, the submissions used in similarity detection are
 counted, and a square matrix of that dimension is created. Submissions are each
 assigned a row and column. Every cell is initialized as the similarity of the
-submissions which define its intersection (specifically, column submission's
+submissions that define its intersection (specifically, column submission's
 similarity to row submission). If the row and column submissions are the same,
 the cell is ignored (declared as empty). An example is shown in
 Figure~\ref{fig:matrix}. Each cell shows the similarity of the submission on
 the X axis with the submission on the Y axis. In Figure~\ref{fig:matrix}, the
 bottom-right corner cell shows the percentage similarity of submission A to
-submission C --- that is, the percent of submission A's tokens which are shared
+submission C --- that is, the percent of submission A's tokens that are shared
 with submission C.
 
 \begin{figure}
