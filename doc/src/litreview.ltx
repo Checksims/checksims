@@ -54,7 +54,7 @@ term ``academic dishonesty'' (and the associated term ``plagiarism'', which we
 avoid). Thomas Lancaster, in a 2005 survey of similarity detection systems,
 defines academic dishonesty as ``The process by which students submit work for
 academic credit which contains other people's unacknowledged words or ideas''
-\cite{lancaster05}. This provides a solid foundation, but there is still a
+\cite{lancaster05}. Lancaster provides a solid foundation, but there is still a
 question of what specific acts constitute academic dishonesty.
 
 The question of academic dishonesty has been further complicated by the
@@ -62,21 +62,21 @@ emergence of code-hosting websites such as \textit{Github} and
 \textit{Bitbucket}, and Q\&A sites such as \textit{StackOverflow}. Students
 may host code they wrote for a class on \textit{Github}, where it may be
 copied without permission or attribution by their classmates (or students in
-another class who were given the same assignment). Almost anyone familiar with
-academia would agree that the student who copied the given code was guilty of
-unauthorized copying, but some argue that the student who originally hosted the
-code is guilty of academic dishonesty for enabling copying to take place
-\cite{cosma06}. In the case of \textit{StackOverflow}, students may ask
-questions on  the appropriate course of action to take to complete an 
+another class who were given the same assignment). In the case of
+\textit{StackOverflow}, students may ask questions on how to complete an 
 assignment. The answers they receive might include example source code, and 
 most would agree that copying this example code (again, without attribution 
 and likely without permission) constitutes academic dishonesty. However, 
 some professors feel that the use of any information (even hints as to 
 algorithms, or pseudocode versions of a solution) obtained from such a 
-source constitutes academic  dishonesty. Different instructors are likely to 
-have different definitions of which offenses constitute unauthorized copying, 
-complicating the creation of tools to assist in detecting the 
-practice.
+source constitutes academic dishonesty. In the case of copying from a site like
+\textit{GitHub} without the knowledge of the creator, Almost anyone familiar
+with academia would agree that the student who copied the given code was guilty
+of unauthorized copying, but some argue that the student who originally hosted
+the code is guilty of academic dishonesty for enabling copying to take place
+\cite{cosma06}. In all cases, different instructors have different definitions
+of which offenses constitute unauthorized copying, complicating the creation
+of tools to assist in detecting the practice.
 
 A 2006 survey of professors in the UK on academic dishonesty produced a broad
 spectrum of results for what professors perceive is (and is not) academic
@@ -90,18 +90,74 @@ academic dishonesty. However, many respondents noted that the degree of
 adaptation was an important factor, noting that while 100\% similarity was
 almost certainly indicative of unauthorized copying, there was a point at
 which the changes to the code would cause it to no longer be a case of
-unauthorized copying; respondents disagreed at where, exactly, this point was.
-A majority of respondents indicated that almost every offense involving the
-unauthorized duplication of source code could, indeed, be considered academic 
-dishonesty given the right circumstances, save cases where the code copied 
-was written by the submitting student. In such cases (for example, the 
-submission of an assignment written previously for a different class, with 
-slight modifications), most respondents answered that it was a violation of 
-course policy, but not a matter of academic dishonesty.
+unauthorized copying; respondents disagreed as to where, exactly, this point 
+was. A majority of respondents indicated that almost every offense involving 
+the unauthorized duplication of source code could, indeed, be considered 
+academic dishonesty given the right circumstances, save cases where the code 
+copied was written by the submitting student. In such cases (for example, 
+the submission of an assignment written previously for a different class, 
+with slight modifications), most respondents answered that it was a 
+violation of course policy, but not a matter of academic 
+dishonesty.
 % TODO should cite joy1999
 
+\subsubsection{Detection of Academic Dishonesty}
+There has been a great deal of research focused on the detection of academic 
+dishonesty (both in plaintext and source code); Thomas Lancaster presents a 
+thorough overview of existing work in his 2005 paper, including a comparison 
+of all existing academic dishonesty detection solutions available at time of 
+publication \cite{lancaster05}. The detection of unauthorized copying draws 
+heavily on the fields of Natural Language Processing and Information 
+Retrieval to process student submissions and efficiently store and retrieve 
+information about similarities \cite{beth14}.
 
-\subsection{Applications}
+Academic dishonesty detection is generally broken into two broad fields. The
+first is the detection of unauthorized copying in source code, and the second
+the detection of unauthorized copying in natural language. The source code
+detection problem is generally considered the easier of the two problems, given
+that programming languages follow a fixed grammar. The need for advanced 
+natural language processing is mostly eliminated, given the constraints on 
+what is valid source code \cite{clough03}. Given the problem we are 
+attempting to solve, we are naturally more interested in source code 
+similarity detection.
+% Could cite lancaster05
+
+
+\paragraph{Obfuscation}
+\label{sec:obfuscation}
+In the case of both academic dishonesty and malware, violators have an interest
+in preventing the detection of similarities in their programs. Consequently,
+they often take steps to obfuscate code in an attempt to hide or remove
+similarities. Programs and algorithms that attempt to detect malware or
+academic dishonesty must be resistant to common obfuscation techniques to be
+successful.
+
+Geoffrey Whale listed 12 methods of defeating similarity detection in a 1990
+paper \cite{whale1990identification}. Whale's list, widely cited, is reproduced
+below, and is considered a definitive enumeration of methods of disguising
+unauthorized copying. It is presented in order of sophistication, least to
+greatest.
+\begin{enumerate}
+\item Changing comments or formatting (for example, adding whitespace)
+\item Changing identifiers
+\item Changing the order of operands in expressions (for example, $1 + 2$
+	into $2 + 1$)
+\item Changing data types (substituting floats for integers, or exploding
+	structures into separate variables)
+\item Replacing expressions with semantically identical equivalents (for
+	example, \code{!x} with \code{x == false})
+\item Adding redundant statements or variables
+\item Changing the order of independent statements
+\item Changing the structure of iteration statements
+\item Changing the structure of conditional statements
+\item Replacing procedure calls with procedure bodies
+\item Introducing non-structured statements such as \texttt{GOTO}s
+\item Combining original and copied program fragments
+\end{enumerate}
+% TODO could use another para here to smooth the transition?
+
+
+\subsection{Other Applications of Similarity Detection}
 There are a number of fields with an interest in detecting similarities between
 input documents, most for purposes completely different than ours. These
 inputs are not necessarily source code, but the fields in question may have
@@ -151,64 +207,6 @@ detection is a very similar problem to academic dishonesty detection, but there
 is much more research explicitly focused on academic dishonesty than on
 copyright infringement.
 
-
-\subsubsection{Detection of Academic Dishonesty}
-The application we are most interested in, detection of academic dishonesty,
-is already a well-known use for similarity detection algorithms. There has been
-a great deal of research focused on the detection of academic dishonesty (both
-in plaintext and source code); Thomas Lancaster presents a thorough overview of
-existing work in his 2005 paper, including a comparison of all existing
-academic dishonesty detection solutions available at time of publication
-\cite{lancaster05}. The detection of unauthorized copying draws heavily on the
-fields of Natural Language Processing and Information Retrieval to process
-student submissions and efficiently store and retrieve information about
-similarities \cite{beth14}.
-
-Academic dishonesty detection is generally broken into two broad fields. The
-first is the detection of unauthorized copying in source code, and the second
-the detection of unauthorized copying in plaintext. The source code detection
-problem is generally considered the easier of the two problems, given that
-programming languages follow a fixed grammar. The need for advanced natural
-language processing is mostly eliminated, given the constraints on what is
-valid source code \cite{clough03}. Given the problem we are attempting to
-solve, we are naturally more interested in source code similarity detection.
-% Could cite lancaster05
-
-
-\paragraph{Obfuscation}
-\label{sec:obfuscation}
-In the case of both academic dishonesty and malware, violators have an interest
-in preventing the detection of similarities in their programs. Consequently,
-they often take steps to obfuscate code in an attempt to hide or remove
-similarities. Programs and algorithms that attempt to detect malware or
-academic dishonesty must be resistant to common obfuscation techniques to be
-successful.
-
-Geoffrey Whale listed 12 methods of defeating similarity detection in a 1990
-paper \cite{whale1990identification}. Whale's list, widely cited, is reproduced
-below, and is considered a definitive enumeration of methods of disguising
-unauthorized copying. It is presented in order of sophistication, least to
-greatest.
-\begin{enumerate}
-\item Changing comments or formatting (for example, adding whitespace)
-\item Changing identifiers
-\item Changing the order of operands in expressions (for example, $1 + 2$
-	into $2 + 1$)
-\item Changing data types (substituting floats for integers, or exploding
-	structures into separate variables)
-\item Replacing expressions with semantically identical equivalents (for
-	example, \code{!x} with \code{x == false})
-\item Adding redundant statements or variables
-\item Changing the order of independent statements
-\item Changing the structure of iteration statements
-\item Changing the structure of conditional statements
-\item Replacing procedure calls with procedure bodies
-\item Introducing non-structured statements such as GOTOs
-\item Combining original and copied program fragments
-\end{enumerate}
-% TODO could use another para here to smooth the transition?
-
-
 \subsection{Algorithms}
 \label{sec:algo}
 Previous research into similarity detection largely falls into two categories:
@@ -217,7 +215,7 @@ build a profile of various attributes of the input documents (for example,
 number of distinct tokens, overall word count, average number of characters 
 per line) and compares the profiles of submissions to determine if they are 
 unusually similar. Structural comparisons compare the content of submissions 
---- for example, comparing the specific tokens that form the   
+--- for example, comparing the specific tokens that form the 
 inputs \cite{arwin2006plagiarism}. Within structural comparisons, there are 
 two broad subcategories: Vector-Distance algorithms and Fingerprinting
 algorithms.
@@ -373,7 +371,7 @@ Fingerprinting algorithms (also known as \textit{feature extraction
 		sequences of $n$ tokens, or \textit{n-grams}. The \textit{n-grams} overlap, so
 		that there an $m$ character document is considered as $m - n + 1$ 
 		\textit{n-grams}. The hashes of these \textit{n-grams} are stored in a
-		database and checked against those from other  documents. The hashes are
+		database and checked against those from other documents. The hashes are
 		usually stored with pointers to their occurrences to aid in detection.
 
 		TODO ILLUSTRATION
@@ -392,7 +390,7 @@ between fingerprints, so that a large chunk of similar text might slip by.
 Schleimer, Wilkerson, and Aiken presented an alternative fingerprint selection
 algorithm in 2003 called \textit{winnowing}. After dividing the document's
 tokens into \textit{n-grams}, winnowing further divides the \textit{n-grams}
-into  \textit{windows} of size $t$. Winnowing always selects exactly one hash
+into \textit{windows} of size $t$. Winnowing always selects exactly one hash
 from each window, guaranteeing that a match of $t$ or more consecutive tokens
 is identified.
 
@@ -414,14 +412,14 @@ Feature comparison algorithms were common in the early days of similarity
 detection in the 1980s and early 1990s \cite{clough03}. However, it has become
 less popular of late because of the growing effectiveness of structural
 comparison algorithms such as \textit{Smith-Waterman} and fingerprinting.
-Feature comparison algorithms can be just as accurate as structural   
+Feature comparison algorithms can be just as accurate as structural 
 comparison algorithms, but require a great deal of tuning as the differences 
 in the profiles of documents containing unauthorized copying and those that 
 do not are typically very small \cite{arwin2006plagiarism}. We found one 
 reference to the creation of a similarity detection system using this 
 algorithm after 2000, but no others \cite{jones01}. The paper describing this 
-system provided no evidence that the aforementioned criticisms were not valid
-, and did not provide any results to substantiate its effectiveness. Given 
+system provided no evidence that the aforementioned criticisms were not valid,
+and did not provide any results to substantiate its effectiveness. Given 
 the lack of popularity of this approach and noted disadvantages, we did not 
 pursue this line of inquiry.
 % Could cite lancaster05
@@ -455,8 +453,8 @@ previously restricted only for use in academia). It is a service, not a software
 tool that can be deployed. Its primary interface is a Perl script that provides
 a user-friendly command-line frontend to submit code for analysis. Results 
 are provided via email, and can take several hours to arrive \cite{bowyer99}.
-MOSS is based on the $n$-gram  Fingerprinting algorithm with winnowing
-described in Section~\ref{sec:ngram}.  Most of the details about the
+MOSS is based on the $n$-gram Fingerprinting algorithm with winnowing
+described in Section~\ref{sec:ngram}. Most of the details about the
 implementation are public, but the tuning parameters are kept private. 
 
 When new similarity detection systems are published, they often compare their 
