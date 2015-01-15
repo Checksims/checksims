@@ -78,28 +78,41 @@ the code is guilty of academic dishonesty for enabling copying to take place
 of which offenses constitute unauthorized copying, complicating the creation
 of tools to assist in detecting the practice.
 
+There is no consensus among academics as to what degree of copying constitutes
+academic dishonesty, but most professors insist that they ``know it when they
+see it''. Mike Joy and Michael Luck provide some example behaviors that they
+would consider dishonest \cite{joy99}:
+\begin{itemize}
+\item ``A weak student produces work in close collaboration with a
+ colleage\textit{[sic.]} in the belief that it is acceptable.''\\
+\item ``A weak student copies, then edits, a colleage's program, with or
+ without the colleage's permission, hoping that this will go unnoticed.''\\
+\item ``A poorly motivated (but not necessarily weak) student copies, and then
+ edits, a colleague's program, with the intention of minimizing the work
+ needed.''\\
+\end{itemize}
+
 A 2006 survey of professors in the UK on academic dishonesty produced a broad
 spectrum of results for what professors perceive is (and is not) academic
 dishonesty \cite{cosma06}. The sharing of source code, comments, overall
 design, documentation, and user interface were all near-universally perceived
-to be unauthorized copying amongst respondents to the survey. Specifically for
-source code, use of code from other sources without acknowledgment (even if
-the source code was adapted to the student's specific application, or
+to be unauthorized copying amongst respondents to the survey. Specifically
+for source code, use of code from other sources without acknowledgment (even
+if the source code was adapted to the student's specific application, or
 rewritten from another language) was again near-universally considered to be
 academic dishonesty. However, many respondents noted that the degree of
 adaptation was an important factor, noting that while 100\% similarity was
 almost certainly indicative of unauthorized copying, there was a point at
 which the changes to the code would cause it to no longer be a case of
-unauthorized copying; respondents disagreed as to where, exactly, this point 
-was. A majority of respondents indicated that almost every offense involving 
-the unauthorized duplication of source code could, indeed, be considered 
-academic dishonesty given the right circumstances, save cases where the code 
-copied was written by the submitting student. In such cases (for example, 
-the submission of an assignment written previously for a different class, 
-with slight modifications), most respondents answered that it was a 
-violation of course policy, but not a matter of academic 
+unauthorized copying; respondents disagreed as to where, exactly, this point
+was. A majority of respondents indicated that almost every offense involving
+the unauthorized duplication of source code could, indeed, be considered
+academic dishonesty given the right circumstances, save cases where the code
+copied was written by the submitting student. In such cases (for example, the
+submission of an assignment written previously for a different class, with
+slight modifications), most respondents answered that it was a violation of
+course policy, but not a matter of academic
 dishonesty.
-% TODO should cite joy1999
 
 \subsubsection{Detection of Academic Dishonesty}
 There has been a great deal of research focused on the detection of academic 
@@ -120,7 +133,7 @@ natural language processing is mostly eliminated, given the constraints on
 what is valid source code \cite{clough03}. Given the problem we are 
 attempting to solve, we are naturally more interested in source code 
 similarity detection.
-% Could cite lancaster05
+% TODO do we cite lancaster05?
 
 
 \paragraph{Obfuscation}
@@ -154,8 +167,10 @@ greatest.
 \item Introducing non-structured statements such as \texttt{GOTO}s
 \item Combining original and copied program fragments
 \end{enumerate}
-% TODO could use another para here to smooth the transition?
 
+Similarities are not only useful as indicators of academic dishonesty; the next
+section describes similarity detection techniques that are designed for other
+applications.
 
 \subsection{Other Applications of Similarity Detection}
 There are a number of fields with an interest in detecting similarities between
@@ -190,13 +205,7 @@ perpetrators of crimes from trace evidence. A number of commonly-used
 similarity detection algorithms were originally developed for bioinformatics
 use --- for example, the Smith-Waterman algorithm described in Section~
 \ref{sec:smithwatermanlit} \cite{smith1981identification}.
-% Could use a general citation for similarity checking in bioinformatics
-
-
-\subsubsection{Malware Analysis}
-TODO
-% Need cites
-
+% TODO Could use a general citation for similarity checking in bioinformatics
 
 \subsubsection{Copyright Infringement Detection}
 Some people have tried to use similarity detection techniques to detect
@@ -360,9 +369,9 @@ Fingerprinting algorithms (also known as \textit{feature extraction
 		 $N + 1$ to $M + 1$, and so on). The sets of hashes for the inputs are checked
 		against each other, and the matches are used to identify common substrings.
 		\cite{karp87}. \textit{Karp-Rabin} string matching is a fundamental technique
-		used by many later string-matching papers.
-		% TODO cite papers citing K-R
-
+		used and built on by many later string-matching papers \cite{schleimer03}
+		\cite{buss94} \cite{arwin06} \cite{burrows07} \cite{wise96} \cite{clough03}
+                \cite{djuric01} \cite{johnson93} \cite{johnson94} \cite{poon12} \cite{wise96}.
 
 		\paragraph{\textit{n-gram} Fingerprinting}
 		\label{sec:ngram}
@@ -463,9 +472,13 @@ decade, MOSS remains highly competitive. In a battery of tests run in 2014
 using several similarity detection algorithms, MOSS posts detection results
 comparable every other algorithm tested \cite{beth14}.
 
-% TODO mention inadequacies of MOSS
-% TODO mention that finds things we don't consider to be dishonesty
-% Cite aiken05 - NEED TO FIND PAPER
+All academic dishonesty detectors suffer from the diversity of definitions of
+unauthorized copying, and MOSS is no exception. MOSS often flags behavior which
+our advisor, our primary customer, does not consider to be unauthorized
+copying. The secrecy of MOSS's tuning parameters and database also prevent
+researchers from independently evaluating its performance or reproducing any of
+its results.
+% TODO Cite aiken05 - NEED TO FIND PAPER
 
 \subsubsection{JPlag}
 TODO
