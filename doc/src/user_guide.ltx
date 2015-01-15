@@ -12,221 +12,393 @@ then applies a pairwise similarity detection algorithm to all possible pairs
 of submissions. The results of the algorithm are then printed via an output
 strategy.
 
-\subsection{Installing Checksims}
-\textit{Checksims} is distributed as an executable Java package (\textt{.jar}
-file). As a Java application, \textit{Checksims} is cross-platform and should
-run on any system capable of running a Java virtual machine (JVM). The provided Jar file is
-completely self-contained and requires no installation, and should be named
-as follows:
-\\
-\indent
-\texttt{checksims-1.0.1-jar-with-dependencies.jar}
-\\
 
-Note that 1.0.1 represents the current version of \textit{Checksims} at the
-time of this writing, and may be different for the version you receive.
+\subsection{Installing Checksims}
+\textit{Checksims} is distributed as an executable Java package (\texttt{.jar}
+file). As a Java application, \textit{Checksims} is cross-platform and should
+run on any system capable of running a Java virtual machine (JVM). The
+provided Jar file is completely self-contained and requires no installation,
+and should be named as follows:
+
+\begin{figure}[H]
+\centering
+\texttt{checksims-\checksimsver-jar-with-dependencies.jar}
+\end{figure}
+
+
+Note that \checksimsver~represents the current version of \textit{Checksims}
+at the time of this writing, and may be different for the version you receive.
 
 Please note that \textit{Checksims} requires a Java 8 virtual machine. The
 latest version of the Oracle JVM is recommended, and can be found at the
 following URL:
-\\
-\indent
+
+\begin{figure}[H]
+\centering
 \url{https://www.java.com/en/download/index.jsp}
-\\
+\end{figure}
+
+Please install the 64-bit version of the JVM if your system supports it.
+\textit{Checksims} can consume a substantial amount of memory, potentially more
+than the 4GB maximum that a 32-bit JVM can use. A 64-bit JVM can prevent a
+number of memory-related program crashes.
+
 
 \subsection{Running Checksims}
 
 \textit{Checksims} is a command-line application, and is typically invoked
-from your operating system's shell. The .jar file given can be run using Java
-as follows:
-\\
-\indent
+from your operating system's shell or command prompt. The \texttt{.jar} file
+given can be run using Java as follows:
+
+\begin{figure}[H]
+\centering
 \texttt{java -jar PATH/TO/CHECKSIMS\_JAR.jar <ARGUMENTS>}
-\\
+\end{figure}
 
-It may be desirable to rename the provided .jar file or write a wrapping shell
-script to reduce the amount of typing required for this basic invocation.
+It may be desirable to rename the provided \texttt{.jar} file or write a
+wrapping shell script to reduce the amount of typing required for this basic
+invocation.
 
-Checksims has two mandatory arguments: a \textit{glob} match pattern, and a
-directory to scan for submissions.
+
+\subsubsection{Arguments}
+\textit{Checksims} has two mandatory arguments: a single \textit{glob} match
+pattern, and at least one directory to scan for submissions.
 
 The \textit{glob} match pattern is a shell-style match pattern used to
 identify files to include in submissions. Wildcard characters accepted by a
-shell are permitted; for example, providing a \texttt{*} will include every
-file in a submission, while \texttt{*.c} will include all C files. To ensure
-that these are not parsed by your shell, it is recommended to escape this
-pattern (typically using double quotes --- \texttt{``*.c''} for example).
+shell are permitted; for example, providing a \texttt{*} will match every file
+in a submission, while \texttt{*.c} will include all C files. To ensure that
+these are not parsed by your shell, it is recommended to escape this pattern
+(typically using double quotes --- \texttt{\textquotedbl*.c\textquotedbl}
+for example).
 
 After the glob match pattern, one or more directories to search for submissions
-must be provided. \textit{Checksims} assumes each subdirectory of these
-search directories is a submission. It will recursively identify any files
-matching the given glob pattern in a submission directory, append all matching
-files together, and tokenize the collection. File naming information is lost
-during this process, but the contents of all matching files will be present.
-Each submission is named for the directory containing it; if a directory
-containing two subdirectories named ``A'' and ``B'' is provided as a search
-directory for submissions, two submissions named ``A'' and ``B'' will be
-created.
+must be provided. \textit{Checksims} assumes each subdirectory of these search
+directories is a submission. It will identify any files matching the given
+glob pattern within a submission directory, append all matching files together,
+and tokenize the collection. By default, it is not recursive and will only
+identify files in the submission directory, but not in any subdirectories. An
+argument is provided to enable recursion through subdirectories to generate
+submissions (see section \ref{sec:optionalargs} for details). File names are
+discarded during this process, but the contents of all matching files will be
+present. Each submission is named for its root directory (that is, the
+subdirectory of the submissions directory passed to \textit{Checksims}); if a
+directory containing two subdirectories named ``A'' and ``B'' is provided as a
+search directory for submissions, two submissions named ``A'' and ``B'' will
+be created.
+
+% TODO ADD EXPLANATORY DIAGRAM
 
 After creation, any empty submissions (no files found matching given pattern,
-or only empty files found) will be removed prior to running the detection algorithm.
+or only empty files found) are removed prior to running the detection
+algorithm.
 
 At present, there is no way of differentiating submissions beyond placing them
 within separate directories.
 
-Before the glob matcher, you may place a number of arguments to control
-Checksims's functionality. These are detailed below:
+
+\paragraph{Optional Arguments}
+\label{sec:optionalargs}
+Before the glob matcher, you may place a number of arguments to control the
+operation of \textit{Checksims}. These are detailed below:
 
 \begin{itemize}
 \item \texttt{-a}, \texttt{--algorithm}: Specify algorithm to use for
-similarity detection. Available options are listed with \texttt{-h}. If no
-algorithm is given, the default is used.
+	similarity detection. Available options are \texttt{linecompare} and
+	\texttt{smithwaterman} at present, and can be listed with the \texttt{-h}
+	option. If no algorithm is given, the default is used.
 \item \texttt{-c}, \texttt{--common}: Perform common code removal. Specify a
-directory containing common code (files within this directory will be
-identified using the same glob matcher as normal submissions).
+	directory containing common code (files within this directory will be
+	identified using the same glob matcher as normal submissions).
 \item \texttt{-f}, \texttt{--file}: Output to a file. Must provide filename of
-output file as argument.
+	output file as argument. The name of the output strategy used will be
+	appended to the given filename as an extension. If more than one output
+	strategy is given, more than one output file will be produced, each with
+	the given filename but with differing extensions.
 \item \texttt{-h}, \texttt{--help}: Print usage information and available
-algorithms, preprocessors, and output strategies.
+	algorithms, preprocessors, and output strategies.
 \item \texttt{-j}, \texttt{--jobs}: Specify number of threads to use. Defaults
-to number of CPUs available on your system.
-\item \texttt{-o}, \texttt{--output}: Specify output format. Available options
-are listed with \texttt{-h}. If no output format is given, the default is used.
+	to number of CPUs available on your system.
+\item \texttt{-o}, \texttt{--output}: Specify output format(s) to use. More
+	than one can be provided; if so, separate them with commas. Available
+	options are \texttt{html}, \texttt{csv}, and \texttt{threshold} at
+	present, and can be listed with the \texttt{-h} option. If no output
+	format is given, the default is used.
 \item \texttt{-p}, \texttt{--preprocess}: Specify preprocessors to apply. More
-than one can be provided; if so, separate them with commons. Available options
-are listed with \texttt{-h}. If this argument is not provided, no preprocessors
-are applied.
+	than one can be provided; if so, separate them with commas. At present,
+	the only available option is \texttt{lowercase}. Available options can be
+	listed with the \texttt{-h} option. If this argument is not provided, no
+	preprocessors are applied.
+\item \texttt{-r}, \texttt{--recursive}: Recursively traverse subdirectories
+	when generating submissions.
 \item \texttt{-t}, \texttt{--token}: Specify tokenization to use. Available
-options are listed with \texttt{-h}. If no tokenization is given, the default
-is used.
-\item \texttt{-v}, \texttt{--verbose}: Use verbose debugging output.
+	options are \texttt{line}, \texttt{whitespace}, and \texttt{character} at
+	present, and can be listed with the \texttt{-h} option. If the \texttt{-t}
+	option is not given, the default tokenization for the algorithm is used.
+\item \texttt{-v}, \texttt{--verbose}: Verbose debugging output.
+\item \texttt{-vv}, \texttt{--veryverbose}: Very verbose debugging output.
+	Overrides \texttt{-v} if both are specified.
 \end{itemize}
 
-Checksims contains built-in usage information and descriptions of its arguments
-which can be printed by supplying the \texttt{-h} or \texttt{--help} flag.
+\textit{Checksims} contains built-in usage information and descriptions of its
+arguments which can be printed by supplying the \texttt{-h} or \texttt{--help}
+flag. The output mirrors the information provided above, though it may be more
+up-to-date.
+
+\paragraph{JVM Arguments}
+A number of arguments can also be passed to the Java virtual machine.
+These are usually placed in the command line as follows:
+
+\begin{figure}[H]
+\centering
+\texttt{java <JVM\_ARGS> -jar PATH/TO/CHECKSIMS\_JAR.jar <ARGS>}
+\end{figure}
+
+These arguments are well-documented and can be used on all Java virtual
+machines. Several commonly-used flags are detailed below.
+
+\begin{itemize}
+\item \texttt{-d64}, \texttt{-d32}: Specify a 64 or 32 bit JVM, respectively.
+	Some JVMs will only support 32 or 64 bit, but not both. Using a 64-bit JVM
+	where available is preferred to enable the VM to use more than 4GB of
+	memory.
+\item \texttt{-Xmx}: Specify a maximum amount of memory for the JVM to use.
+	The number can be formatted as [Amount][Unit] where [Unit] is M for
+	megabyte or G for gigabyte. Note that the number is specified immediately
+	after the flag, with no \texttt{=} character. For example, to set the JVM
+	to use at most 4GB of ram, specify \texttt{-Xmx4G} at the command line.
+\end{itemize}
+
+
+\paragraph{Sample Command Line}
+A typical command line invocation of \textit{Checksims} is shown below.
+
+\begin{figure}[H]
+\centering
+\texttt{java -d64 -jar PATH/TO/CHECKSIMS\_JAR.jar -a smithwaterman -o html,csv
+-v -r -f ./out \textquotedbl*.c\textquotedbl\ \ SUBMISSION\_DIR\_ONE
+\ \ SUBMISSION\_DIR\_TWO}
+\end{figure}
+
+This instructs \textit{Checksims} to do the following:
+\begin{itemize}
+\item Use a 64-bit JVM to prevent memory issues (\texttt{-d64}).
+\item Use an algorithm named \texttt{smithwaterman} to perform similarity
+	detection (\texttt{-a}).
+\item Generate output using two strategies, \texttt{html} and \texttt{csv}
+	(\texttt{-o}), and save this output in two files names \texttt{out.html}
+	and \texttt{out.csv} (\texttt{-f}).
+\item Perform similarity detection on all files with
+	extension~\texttt{\textquotedbl.c\textquotedbl}~in
+	directories~\texttt{SUBMISSION\_DIR\_ONE} and
+	\texttt{SUBMISSION\_DIR\_TWO}.
+\end{itemize}
+
+
+\subsubsection{Common Errors and Solutions}
+This section contains a number of common errors which can occur while using
+\textit{Checksims}, and suggests potential fixes.
+
+
+\paragraph{Out of Memory Errors}
+A Java Out of Memory exception occurs when \textit{Checksims} uses all the
+memory available to the Java virtual machine. This is usually caused by running
+a complex comparison algorithm (for example, \textit{Smith-Waterman}) on
+large submissions.
+
+The first potential fix is to increase the amount of memory available to the
+JVM. This can be done by installing 64-bit Java and passing the \texttt{-d64}
+flag to use a 64-bit JVM (enabling the use of more than 4GB of memory). If a
+64-bit JVM is already installed, a larger amount of memory can be provided
+using the \texttt{-Xmx} flag.
+
+If more memory cannot be allocated to the JVM, it is also possible to reduce
+the amount of memory used by \textit{Checksims}. This can be done in a number
+of ways. Firstly, reducing the number of threads used with the \texttt{-j} flag
+will cause a substantial decrease in the amount of memory used. Each thread
+uses roughly the same amount of memory, so a reduction from 4 to 2 threads
+should cause \textit{Checksims} to use half as much memory. Furthermore,
+changing the tokenization used can impact the number of tokens stored, which
+has substantial implications for algorithm memory use. Changing from Character
+to Whitespace tokenization for \textit{Smith-Waterman}, for example, will
+usually result in a 4-fold reduction in memory use.
+
+
+\paragraph{No Submissions Detected}
+In the case that \textit{Checksims} cannot build any student submissions to
+compare, the first step is usually to check the glob match pattern used. Ensure
+that any characters which might be interpreted by your shell (for example, 
+\texttt{*}) are properly escaped (single or double quoted on Linux or OS X,
+double quoted on Windows). Furthermore, check that the glob match pattern is
+syntactically valid for your platform.
+
+Verify that you are passing \textit{Checksims} a directory containing a number
+of student submissions, each of which is contained in a single subdirectory of
+the directory passed to \textit{Checksims}. Even if each student submission is
+a single file, it must be contained in a subdirectory. Student submission
+directories may contain subdirectories themselves without issue.
+
 
 \subsection{Description of Tokenizations}
 \textit{Checksims} breaks submissions into a series of tokens as they are read
 in. Several options are provided, each providing a tradeoff of speed for
-performance. All similarity detection algorithms provide a default tokenization
-which has been chosen to optimize their performance for typical usage, but this
-default can be overridden at runtime if desired. This may be desirable, as
-tokenization has strong implications for algorithm accuracy and performance.
+performance. Each similarity detection algorithm provides a default
+tokenization which has been chosen to optimize its performance for typical
+usage, but this default can be overridden at runtime if desired. This may be
+desirable, as tokenization has strong implications for algorithm accuracy and
+performance.
 
 Only one tokenization is supported at any given time; it is impossible to
-request that Checksims tokenize one submission using character tokenization,
-and another using whitespace tokenizations. This is done to ensure a uniform
-basis for token comparison.
+request that \textit{Checksims} tokenize one submission using character
+tokenization, and another using whitespace tokenizations. This is done to
+ensure a uniform basis for token comparison.
 
-Three tokenization options are provided by default: Character, Whitespace, and
-Line. Their advantages and disadvantages are listed below.
+Three tokenization options are provided by default: \texttt{Character},
+\texttt{Whitespace}, and \texttt{Line}. Their advantages and disadvantages are
+listed below.
+
 
 \subsubsection{Character Tokenization}
-The simplest tokenization method, character tokenization breaks a submission
-into the characters which compose it and builds a token for each character.
-Whitespace characters (spaces and newlines) are included as tokens.
+The simplest tokenization method, \texttt{Character} tokenization, breaks a
+submission into the characters which compose it and builds a token for each
+character. Whitespace characters (spaces and newlines) are treated as tokens.
+No deduplication of whitespace is done --- if a submission contains 3
+consecutive spaces, all will be treated as independent tokens.
 
-Character tokenization has the slowest performance of all the tokenization
-schemes as it generates far more tokens for the algorithm to process. However,
-for most algorithms, character tokenization will be the most conducive to
-accuracy, as it can identify largely similar words and lines which would
-otherwise be ignored. Character tokenization also runs a slight memory overhead
-compared to the other tokenization schemes.
+\texttt{Character} tokenization has the slowest performance of all the
+tokenization schemes as it generates far more tokens for the algorithm to
+process. However, for most algorithms, \texttt{Character} tokenization will be
+the most conducive to accuracy, as it can identify largely similar words and
+lines which would otherwise be ignored. \texttt{Character} tokenization also
+uses slightly more memory to store compared to the other tokenization schemes.
+\texttt{Character} tokenization may have adverse effects on the amount of
+memory used by certain algorithms as well.
+
 
 \subsubsection{Whitespace Tokenization}
-Whitespace tokenization breaks a submission apart at whitespace characters
-(spaces, tabs, newlines) to create tokens. Whitespace characters are removed as
-part of the splitting process, and are not included as tokens.
+\texttt{Whitespace} tokenization breaks a submission apart at whitespace
+characters (spaces, tabs, newlines) to create tokens. Whitespace characters
+are removed as part of the splitting process, and are not included as tokens.
 
-Whitespace tokenization represents a balance between performance and accuracy.
-With preprocessing (lowercasing to remove case ambiguity, etc), it can retain
-much of the accuracy of character tokenization while substantially improving
-performance (assuming whitespace tokens are on average 4 characters, a fourfold
-reduction in token count can be expected, even ignoring the deletion of
-whitespace).
+\texttt{Whitespace} tokenization represents a balance between performance and
+accuracy. With preprocessing (lowercasing to remove case ambiguity, etc), it
+can retain much of the accuracy of \texttt{Character} tokenization while
+substantially improving performance (assuming \texttt{Whitespace} tokens are
+on average 4 characters, a fourfold reduction in token count can be expected,
+even ignoring the deletion of whitespace).
+
 
 \subsubsection{Line Tokenization}
-Line tokenization splits the submission on newlines, creating a token from each
-line in the original. Non-newline whitespace characters (spaces and tabs) are
-retained.
+\texttt{Line} tokenization splits the submission at line boundaries, creating
+a token from each line in the original. Non-newline whitespace characters
+(spaces and tabs) are retained.
 
-Line tokenization represents the fastest but least precise tokenization option.
-It is capable of identifying exact duplication, but even trivial attempts to
-obfuscate similarities will prevent their being identified.
+\texttt{Line} tokenization represents the fastest but least precise
+tokenization option. It is capable of identifying exact duplication, but even
+trivial attempts to obfuscate similarities will prevent detection.
+
 
 \subsection{Description of Preprocessors}
 After a submission is converted into tokens, these tokens can then be
 manipulated to improve detection accuracy. This is accomplished by the use of
-predefined preprocessors. At present, only one of these is available. The
-lowercase preprocessor lowercases all letters in all tokens, effectively
-ensuring that algorithms are case-insensitive.
+predefined preprocessors. At present, only one preprocessor is available,
+namely the lowercase preprocessor that converts all letters to lowercase.
+
 
 \subsection{Description of Algorithms}
-\textit{Checksims} provides two primary detection algorithms at present. The
-first, Smith-Waterman, offers accurate detection but slow performance. The
-second, Line Comparison, is very fast, but not very accurate.
+\textit{Checksims} provides two detection algorithms at present. The first is
+\textit{Smith-Waterman}. It offers accurate detection but slow performance.
+The second is \textit{Line Comparison}. It is very fast, but not very accurate
+and easily fooled by obfuscation.
+
 
 \subsubsection{Smith-Waterman}
-The Smith-Waterman algorithm for string overlaying was originally developed to
-find optimal local alignments between DNA sequences for bioinformatics
-problems. Adapted to handle arbitrary alphabets, it proves a valuable tool for
-identifying similar token sequences. As a local alignment algorithm, it is
-capable of detecting sequences even when they are not completely identical. A
-small number of missing or unmatched tokens are tolerated, identifying more
-similarities than simply finding the longest common sequence. Furthermore,
-Smith-Waterman is guaranteed to identify the optimal local alignment - if
-common sequences exist, they will be found.
+The \textit{Smith-Waterman} algorithm for string overlaying was originally
+developed to find optimal local alignments between DNA sequences for
+bioinformatics problems. Adapted to handle arbitrary alphabets, it proves a
+valuable tool for identifying similar token sequences. As a local alignment
+algorithm, it is capable of detecting sequences even when they are not
+completely identical. A small number of missing or unmatched tokens are
+tolerated, identifying more similarities than simply finding the longest
+common sequence. Furthermore, \textit{Smith-Waterman} is guaranteed to
+identify the optimal local alignment --- if common sequences exist, they will
+be found.
 
-However, Smith-Waterman's accuracy comes at a substantial performance cost. The
-algorithm itself is $O(nm)$ where $n$ and $m$ are the lengths of the two
-sequences being compared; assuming equal and even growth of both sequences, the
-algorithm scales exponentially (both for runtime and memory). For smaller
-submissions, Smith-Waterman can complete an entire class in a few minutes; for
-larger submissions, however, hours (or even days) may be required.
+However, \textit{Smith-Waterman}'s accuracy comes at a substantial performance
+cost. The algorithm itself is $O(n*m)$ where $n$ and $m$ are the lengths of
+the two sequences being compared; assuming equal and even growth of both
+sequences, the algorithm scales as roughly $O(n^{2})$ (both for runtime and
+memory). For smaller submissions, Smith-Waterman can complete an entire class
+in a few minutes; for larger submissions, however, hours (or even days) may be
+required.
 
-Because of the performance penalty of Smith-Waterman, it is recommended to use
-it with the whitespace tokenization scheme, which it defaults to. This
-minimizes the amount of tokens present, greatly improving performance.
+Because of the performance penalty of \textit{Smith-Waterman}, it is
+recommended to use it with the \texttt{Whitespace} tokenization scheme, which
+it defaults to. This reduces the number of tokens present, greatly improving
+performance.
+
 
 \subsubsection{Line Comparison}
-The Line Comparison algorithm identifies identical tokens in both submissions.
-It is a trivial algorithm unique to Checksims, and notable for its speed. Line
-comparison hashes each input token, and identifies hash collisions (identical
-tokens). Similarity is reported on the number of collisions detected between
-the two submissions.
+The \textit{Line Comparison} algorithm identifies identical tokens in both
+submissions. It is a trivial algorithm unique to Checksims, and notable for
+its speed. \textit{Line comparison} hashes each input token, and identifies
+hash collisions (identical tokens). Similarity is reported on the number of
+collisions detected between the two submissions.
 
-Line comparison makes one pass through each submission, and thus is $O(m + n)$.
-It is thus far faster than Smith-Waterman.
+\textit{Line comparison} makes one pass through each submission, and thus is
+$O(m + n)$. It is thus far faster than \textit{Smith-Waterman}.
 
 As the name of the algorithm indicates, it is only intended to be used with
-(and defaults to) the line tokenization scheme. Whitespace tokenization results
-in a percent of shared words contained in submissions, which is almost always
-very high and does not mean much about the actual similarity of two
-submissions. Character tokenization tends to result in greater than 99\%
-similarity for all submissions, given that most all will be using the same
-basic alphabet (capital and lowercase letters, numbers, and 
+(and defaults to) the \texttt{Line} tokenization scheme. \texttt{Whitespace}
+tokenization results in a percent of shared words contained in submissions,
+which is almost always very high and does not mean much about the actual
+similarity of two submissions. \texttt{Character} tokenization tends to result
+in greater than 99\% similarity for all submissions, given that most all will
+be using the same basic alphabet (capital and lowercase letters, numbers, and
 language-appropriate syntax such as \{ or [).
 
-Given the restriction to the use of line tokenization, even small changes (for
-example, a single missing character) can result in otherwise extremely similar
-lines not being recorded as similar. Line comparison is thus very limited in
+Given the restriction to the use of \texttt{Line} tokenization, even small
+changes (for example, a single missing character) can result in otherwise
+extremely similar lines not being recorded as similar. It is possible that
+preprocessors could remove some trivial differences (for example, changes to
+whitespace or addition of comments). However, other alterations, like
+reordering statements or changes to identifier names, are very difficult to
+catch with preprocessors. \textit{Line Comparison} is thus very limited in
 terms of accuracy.
+
 
 \subsection{Description of Output Strategies}
 Once an algorithm has been applied to the submissions, the results must be
 printed in a usable format so they may be used and interpreted. Output
 strategies determine how this is done.
 
-Results will often be presented as a 2x2 matrix, henceforth referred to as a
-\textit{Similarity Matrix}. A similarity matrix is square, with each submission
-compared appearing once on both the X axis and Y axis. Each cell represents the
-similarity of the submission given on the X axis with the submission given on
-the Y axis (please note that this is one-way similarity - comparing Y to X may
-have different results, as the submissions could be of different size). Where
-the submissions on the X axis and Y axis are identical (will happen once per
-row and column, given that each submission occurs once per axis), the
-similarity between the submissions is ignored (they would be 100\% identical,
-given that they are the same submission!).
+Results will often be presented as a square matrix, henceforth referred to as
+a \textit{Similarity Matrix}. These matrices are built from the complete
+results of the similarity detection algorithm, and contain the similarity of
+every submission to every other. As the name would imply, a similarity matrix
+is a $N \times N$ matrix (with $N$ being the number of submissions), with
+each cell containing a number representing the degree of similarity of one
+submission to another.
+
+In a similarity matrix, the submissions used in similarity detection are
+counted, and a square matrix of that dimension is created. Submissions are each
+assigned a row and column. Every cell is initialized as the degree of
+similarity of the submissions which define its intersection (specifically,
+column submission's similarity to row submission). If the row and column
+submissions are the same, the cell is ignored (declared as empty). An example
+is shown in Figure~\ref{fig:userguidematrix}. Each cell shows the similarity
+of the submission on the X axis with the submission on the Y axis. In
+Figure~\ref{fig:userguidematrix}, the bottom-left corner cell shows the
+percentage similarity of submission A to submission C --- that is, the percent
+of submission A's tokens which are shared with submission C.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{matrix.pdf}
+\caption{A sample similarity matrix}
+\label{fig:userguidematrix}
+\end{figure}
+
 
 \subsubsection{CSV}
 The CSV output strategy records output as a similarity matrix in
@@ -234,11 +406,13 @@ comma-separated value format. This output format is computer-readable, not
 human-readable. It can be imported into Microsoft Excel or a number of other
 software statistics packages to generate statistics about detected similarities
 
+
 \subsubsection{HTML}
 The HTML output strategy produces a web page which can be opened in a typical
 web browser, presenting a colorized version of a similarity matrix. A color
 range (yellow to red) shows how similar each cell is, allowing easy visual
 identification of similar students and clusters of similarities.
+
 
 \subsubsection{Threshold}
 The threshold output strategy produces an ordered list of submission pairs

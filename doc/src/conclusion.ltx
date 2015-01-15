@@ -21,6 +21,17 @@ Section~\ref{sec:moss}). The addition of a fast comparison algorithm based on
 MOSS would alleviate the speed disadvantages of \textit{Smith-Waterman} on
 large classes and assignments.
 
+To add some of the benefits of fingerprinting algorithms to the
+\textit{Smith-Waterman} algorithm, we believe it would be useful to add the
+ability to specify an ``archive'' directory, which would contain a number of
+student submissions from previous years. The archived submissions would be
+compared against all student submissions from the current year, but not against
+each other, greatly reducing the number of comparisons that must be made and
+removing extraneous results about previous years. Adding such a feature would
+be a relatively small set of changes which would make the
+\textit{Smith-Waterman} algorithm much more usable when comparing with past
+assignments.
+
 Additional output strategies would be greatly beneficial to the use of
 \textit{Checksims}. While we feel that our HTML and Threshold output strategies
 are adequate for everyday use, they fall short of being ideal for usability.

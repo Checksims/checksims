@@ -1,0 +1,30 @@
+\documentclass[12pt]{article}
+
+\input{includes.ltx} % Grab our standard includes
+
+% Use hyperlinks when outputting to PDF
+\hypersetup{
+	colorlinks=false,
+	pdftitle={Checksims Developer Guide},
+	pdfauthor={Matthew Heon and Dolan Murvihill}
+}
+
+% Number paragraphs and subparagraphs
+% Include them in the ToC as well
+\setcounter{tocdepth}{5}
+\setcounter{secnumdepth}{5}
+
+% Include Checksims version
+\input{version.ltx}
+
+\author{Matthew Heon \and Dolan Murvihill}
+\title{Checksims Developer Guide}
+
+\begin{document}
+\maketitle
+
+\tableofcontents
+
+\input{developer_guide.ltx}
+
+\end{document}

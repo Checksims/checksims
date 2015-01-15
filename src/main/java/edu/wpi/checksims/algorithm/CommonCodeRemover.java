@@ -72,7 +72,7 @@ public class CommonCodeRemover {
     }
 
     public static Submission removeCommonCodeFromSubmission(Submission in, Submission common, SimilarityDetector algorithm) throws ChecksimException {
-        logs.trace("Performing common code removal on submission " + in.getName());
+        logs.debug("Performing common code removal on submission " + in.getName());
 
         AlgorithmResults results = algorithm.detectSimilarity(in, common);
 

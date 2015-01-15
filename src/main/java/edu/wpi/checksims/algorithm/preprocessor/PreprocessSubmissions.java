@@ -22,9 +22,12 @@
 package edu.wpi.checksims.algorithm.preprocessor;
 
 import edu.wpi.checksims.submission.Submission;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -33,6 +36,8 @@ import java.util.stream.Collectors;
  * Apply a preprocessor (maps Submission to Submission) to a given list of submissions
  */
 public class PreprocessSubmissions {
+    private static Logger logs;
+
     private PreprocessSubmissions() {}
 
     /**
@@ -46,7 +51,18 @@ public class PreprocessSubmissions {
      */
     public static List<Submission> process(Function<Submission, Submission> mapping, List<Submission> submissions) {
         Supplier<List<Submission>> linkedListFactory = LinkedList::new;
+        AtomicInteger submissionIndex = new AtomicInteger();
 
-        return submissions.stream().map(mapping::apply).collect(Collectors.toCollection(linkedListFactory));
+        if(logs == null) {
+            logs = LoggerFactory.getLogger(PreprocessSubmissions.class);
+        }
+
+        return submissions.stream().map((submission) -> {
+            int current = submissionIndex.incrementAndGet();
+
+            logs.info("Applying preprocessor to submission " + current + "/" + submissions.size());
+
+            return mapping.apply(submission);
+        }).collect(Collectors.toCollection(linkedListFactory));
     }
 }

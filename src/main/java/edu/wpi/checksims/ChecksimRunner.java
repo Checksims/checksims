@@ -35,6 +35,7 @@ import edu.wpi.checksims.token.TokenType;
 import edu.wpi.checksims.token.tokenizer.FileTokenizer;
 import edu.wpi.checksims.util.file.FileStringWriter;
 import org.apache.commons.cli.*;
+import org.apache.commons.collections.list.SetUniqueList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.impl.SimpleLogger;
@@ -61,8 +62,10 @@ public class ChecksimRunner {
         Option preprocess = new Option("p", "preprocess", true, "preprocessors to apply");
         Option jobs = new Option("j", "jobs", true, "number of threads to use");
         Option verbose = new Option("v", "verbose", false, "specify verbose output");
+        Option doubleVerbose = new Option("vv", "veryverbose", false, "specify very verbose output. supercedes -v if both specified.");
         Option help = new Option("h", "help", false, "show usage information");
         Option common = new Option("c", "common", true, "remove common code contained in given directory");
+        Option recursive = new Option("r", "recursive", false, "recursively traverse subdirectories to generate submissions");
 
         opts.addOption(alg);
         opts.addOption(token);
@@ -71,8 +74,10 @@ public class ChecksimRunner {
         opts.addOption(preprocess);
         opts.addOption(jobs);
         opts.addOption(verbose);
+        opts.addOption(doubleVerbose);
         opts.addOption(help);
         opts.addOption(common);
+        opts.addOption(recursive);
 
         return opts;
     }
@@ -85,12 +90,17 @@ public class ChecksimRunner {
         return parser.parse(getOpts(), args);
     }
 
-    static Logger startLogger(boolean verbose) {
-        if(verbose) {
+    static Logger startLogger(int level) {
+        if(level == 1) {
             // Set verbose logging level
+            System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "DEBUG");
+        } else if(level == 2) {
+            // Set very verbose logging level
             System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
-        } else {
+        } else if(level == 0) {
             System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
+        } else {
+            throw new RuntimeException("Unrecognized verbosity level passed to startLogger!");
         }
 
         System.setProperty(SimpleLogger.SHOW_LOG_NAME_KEY, "false");
@@ -137,7 +147,13 @@ public class ChecksimRunner {
         }
 
         // Parse verbose setting
-        logs = startLogger(cli.hasOption("v"));
+        if(cli.hasOption("vv")) {
+            logs = startLogger(2);
+        } else if(cli.hasOption("v")) {
+            logs = startLogger(1);
+        } else {
+            logs = startLogger(0);
+        }
 
         // Get unconsumed arguments
         String[] unusedArgs = cli.getArgs();
@@ -169,6 +185,14 @@ public class ChecksimRunner {
             algorithm = AlgorithmRegistry.getInstance().getDefaultAlgorithm();
         }
 
+        // Parse recursive flag
+        boolean recursive = false;
+        if(cli.hasOption("r")) {
+            recursive = true;
+            logs.trace("Recursively traversing subdirectories of student directories");
+        }
+
+        // Parse tokenization
         TokenType tokenization;
         if(cli.hasOption("t")) {
             try {
@@ -218,7 +242,9 @@ public class ChecksimRunner {
             System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "" + threads);
         }
 
-        List<SubmissionPreprocessor> preprocessors = new LinkedList<>();
+        // Parse preprocessors
+        // Ensure no duplicates
+        List<SubmissionPreprocessor> preprocessors = SetUniqueList.decorate(new LinkedList<>());
         if(cli.hasOption("p")) {
             String[] splitPreprocessors = cli.getOptionValue("p").split(",");
             try {
@@ -227,25 +253,32 @@ public class ChecksimRunner {
                     preprocessors.add(p);
                 }
             } catch(ChecksimException e) {
-                logs.error("Error applying preprocessor!");
+                logs.error("Error obtaining preprocessors!");
                 throw new RuntimeException(e);
             }
         }
 
-        SimilarityMatrixPrinter outputPrinter;
+        // Parse output strategies
+        // Ensure no duplicates
+        List<SimilarityMatrixPrinter> outputStrategies = SetUniqueList.decorate(new LinkedList<>());
         if(cli.hasOption("o")) {
+            String[] desiredStrategies = cli.getOptionValue("o").split(",");
+
             try {
-                outputPrinter = OutputRegistry.getInstance().getOutputStrategy(cli.getOptionValue("o"));
+                for(String s : desiredStrategies) {
+                    SimilarityMatrixPrinter p = OutputRegistry.getInstance().getOutputStrategy(s);
+                    outputStrategies.add(p);
+                }
             } catch(ChecksimException e) {
-                logs.error("Error obtaining output strategy!");
+                logs.error("Error obtaining output strategies!");
                 throw new RuntimeException(e);
             }
         } else {
-            outputPrinter = OutputRegistry.getInstance().getDefaultStrategy();
+            outputStrategies.add(OutputRegistry.getInstance().getDefaultStrategy());
         }
 
-        ChecksimConfig config = new ChecksimConfig(algorithm, tokenization, preprocessors, submissionDirs, removeCommonCode, commonCodeRemovalAlgorithm, commonCodeDirectory, glob,
-                outputPrinter, outputToFile, outputFileAsFile);
+        ChecksimConfig config = new ChecksimConfig(algorithm, tokenization, preprocessors, submissionDirs, recursive, removeCommonCode, commonCodeRemovalAlgorithm, commonCodeDirectory, glob,
+                outputStrategies, outputToFile, outputFileAsFile);
 
         runChecksims(config);
 
@@ -259,21 +292,26 @@ public class ChecksimRunner {
 
         try {
             for (File f : config.submissionDirectories) {
-                submissions.addAll(Submission.submissionListFromDir(f, config.globMatcher, tokenizer));
+                submissions.addAll(Submission.submissionListFromDir(f, config.globMatcher, tokenizer, config.recursive));
             }
         } catch(IOException e) {
             logs.error("Error creating submissions from directory!");
             throw new RuntimeException(e);
         }
 
-        logs.trace("Loaded " + submissions.size() + " submissions for testing.");
+        logs.info("Got " + submissions.size() + " submissions to test.");
+
+        if(submissions.size() == 0) {
+            logs.error("No student submissions were found! Nothing to do!");
+            System.exit(0);
+        }
 
         // If we are performing common code detection...
         if(config.removeCommonCode) {
             // Create a submission for the common code
             Submission common;
             try {
-                common = Submission.submissionFromDir(config.commonCodeDirectory, config.globMatcher, tokenizer);
+                common = Submission.submissionFromDir(config.commonCodeDirectory, config.globMatcher, tokenizer, config.recursive);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -290,18 +328,22 @@ public class ChecksimRunner {
         // Apply algorithm to submission
         SimilarityMatrix results = SimilarityMatrix.generate(submissions, config.algorithm);
 
-        String output = config.outputPrinter.printMatrix(results);
+        for(SimilarityMatrixPrinter p : config.outputPrinters) {
+            String output = p.printMatrix(results);
 
-        if(config.outputToFile) {
-            try {
-                FileStringWriter.writeStringToFile(config.outputFile, output);
-            } catch (IOException e) {
-                logs.error("Error printing output to file!");
-                throw new RuntimeException(e);
+            logs.info("Generating " + p.getName() + " output");
+
+            if (config.outputToFile) {
+                try {
+                    FileStringWriter.writeStringToFile(new File(config.outputFile.getAbsolutePath() + "." + p.getName()), output);
+                } catch (IOException e) {
+                    logs.error("Error printing output to file!");
+                    throw new RuntimeException(e);
+                }
+            } else {
+                System.out.println("\n\n");
+                System.out.println(output);
             }
-        } else {
-            System.out.println("\n\n");
-            System.out.println(output);
         }
     }
 }

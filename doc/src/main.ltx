@@ -1,26 +1,17 @@
 \documentclass[12pt]{article}
 
-\usepackage{graphicx} % To include figures
-\usepackage{rotating} % For rotated figures
-\usepackage[hyperref]{biblatex} % For bibliography
-\usepackage{scrextend}
-\usepackage[T1]{fontenc}
-\usepackage[margin=1in]{geometry} % 1in margins
-\usepackage[section]{placeins} % Ensure that figures appear in given section
-\usepackage{hyperref} % Hyperlinks in ToC, references, cites
-\usepackage[labelfont=bf]{caption} % Bold figure captions
-\usepackage[toc,page]{appendix} % Add appendices
-\usepackage{url} % Ability to include URLs
-\usepackage[american]{babel}
-\usepackage[babel]{csquotes}
-\usepackage{changepage} % For force-indenting annotations
+\input{includes.ltx} % Grab our standard includes
+\usepackage[hyperref,backend=biber]{biblatex} % For bibliography
 
 % Use hyperlinks when outputting to PDF
 \hypersetup{
 	colorlinks=false,
-	bookmarks=true,
+	pdftitle={Software Similarity Detection},
+	pdfauthor={Matthew Heon and Dolan Murvihill}
 }
 
+% Number paragraphs and subparagraphs
+% Include them in the ToC as well
 \setcounter{tocdepth}{5}
 \setcounter{secnumdepth}{5}
 
@@ -53,7 +44,10 @@
 
 \newcommand{\code}[1]{\texttt{#1}}
 
-\author{Dolan Murvihill \and Matthew Heon}
+% Load current version of Checksims
+\input{version.ltx}
+
+\author{Matthew Heon \and Dolan Murvihill}
 \title{Software Similarity Detection}
 
 \begin{document}
@@ -108,13 +102,18 @@ TO DO TO DO TO DO TO DO TO DO TO DO TO DO
 \clearpage
 \begin{appendices}
 
+% Restart figure numbering for each appendix
+\renewcommand\thefigure{\thesection.\arabic{figure}}
+
 % User Guide
+\setcounter{figure}{0}
 \input{user_guide.ltx}
 
 % Ensure each appendix starts on a new page
 \clearpage
 
 % Developer's Guide
+\setcounter{figure}{0}
 \input{developer_guide.ltx}
 
 \end{appendices}
