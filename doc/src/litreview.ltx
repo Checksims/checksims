@@ -286,20 +286,13 @@ may not identify the best possible match --- a fatal weakness in
 bioinformatics, but not in copy detection!
 
 
-\paragraph{Longest Common Substring Matching}
-\label{sec:lcs}
-TODO
-
 \paragraph{Smith-Waterman Algorithm}
 \label{sec:smithwatermanlit}
 The \textit{Smith-Waterman} algorithm was developed by Temple Smith and
 Michael Waterman in 1981 for the comparison of DNA sequences
 \cite{smith1981identification}. It is a dynamic programming algorithm that
-seeks to find the optimal alignment of two strings. The string alignment
-problem is similar to the longest common substring problem described in
-Section~\ref{sec:lcs}, in that both attempt to find common sequences of
-ordered characters in input strings. However, the longest common substring
-problem seeks to find identical sequences of characters, whereas the
+seeks to find the optimal alignment of two strings. Unlike algorithms that
+solve the traditional longest common substring problem, the
 \textit{Smith-Waterman} algorithm is tolerant of skipped or unmatched
 characters. Figure~\ref{fig:stringalignment} shows a sample alignment of two
 strings, ``ABCDEFG'' and ``ABCDXG''. The longest common substring of the two
