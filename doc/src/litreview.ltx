@@ -70,13 +70,13 @@ and likely without permission) constitutes academic dishonesty. However,
 some professors feel that the use of any information (even hints as to 
 algorithms, or pseudocode versions of a solution) obtained from such a 
 source constitutes academic dishonesty. In the case of copying from a site like
-\textit{GitHub} without the knowledge of the creator, Almost anyone familiar
+\textit{GitHub} without the knowledge of the creator, almost anyone familiar
 with academia would agree that the student who copied the given code was guilty
-of unauthorized copying, but some argue that the student who originally hosted
-the code is guilty of academic dishonesty for enabling copying to take place
-\cite{cosma06}. In all cases, different instructors have different definitions
-of which offenses constitute unauthorized copying, complicating the creation
-of tools to assist in detecting the practice.
+of unauthorized copying. However, many go further, arguing that the student who
+originally hosted the code is guilty of academic dishonesty for enabling
+copying to take place \cite{cosma06}. In all cases, different instructors
+have different definitions of which offenses constitute unauthorized copying,
+complicating the creation of tools to assist in detecting the practice.
 
 There is no consensus among academics as to what degree of copying constitutes
 academic dishonesty, but most professors insist that they ``know it when they
@@ -111,8 +111,7 @@ academic dishonesty given the right circumstances, save cases where the code
 copied was written by the submitting student. In such cases (for example, the
 submission of an assignment written previously for a different class, with
 slight modifications), most respondents answered that it was a violation of
-course policy, but not a matter of academic
-dishonesty.
+course policy, but not a matter of academic dishonesty.
 
 \subsubsection{Detection of Academic Dishonesty}
 There has been a great deal of research focused on the detection of academic 
@@ -182,30 +181,27 @@ construction of our application.
 
 \subsubsection{Code Clone Detection}
 Most professional software engineers agree that source code should not be
-duplicated in a large programming project. The \textit{duplication hypothesis}
-holds that duplicated source code makes a programming project harder to
-maintain, by requiring the same change in multiple (perhaps non-obvious)
-places. A number of tools have been developed to search for duplicated source
-code (code clones), and same studies have tried to evaluate the duplication
-hypothesis itself \cite{hordijk08}.
+duplicated in a large programming project, yet it often is. Naturally, a
+number of tools have been developed to search for \textit{code clones}, or
+instances of duplicated source code. An early code clone detector,
+\textit{dup}, was developed at AT\&T. \textit{Dup} searches C source files
+line-by-line and can be used to detect parameterized matches - files that
+match when eliminating certain differences such as variable names. In 1993, 
+textit{dup} found parameterized matches for 15\% of the X Window System, and
+23\% of a large proprietary AT\&T system \cite{baker95}.
 
-An early code clone detector, \textit{dup}, was developed at AT\&T.
-\textit{Dup} searches C source files line-by-line and can be used to detect
-parameterized matches - files that match when eliminating certain differences
-such as variable names. In 1993, \textit{dup} found parameterized matches for
-15\% of the X Window System, and 23\% of a large proprietary AT\&T system
-\cite{baker95}.
 
 \subsubsection{Bioinformatics}
 The comparison of similar sequences is common practice in Bioinformatics.
 Strands of DNA, RNA, or proteins are often sequenced and compared for a
-variety of reasons. A well-known example of this is the use of DNA testing in
+variety of reasons. A well-known example is the use of DNA testing in
 the criminal justice system, where DNA comparisons are used to identify the
 perpetrators of crimes from trace evidence. A number of commonly-used
 similarity detection algorithms were originally developed for bioinformatics
 use --- for example, the Smith-Waterman algorithm described in Section~
 \ref{sec:smithwatermanlit} \cite{smith1981identification}.
 % TODO Could use a general citation for similarity checking in bioinformatics
+
 
 \subsubsection{Copyright Infringement Detection}
 Some people have tried to use similarity detection techniques to detect
@@ -216,6 +212,7 @@ detection is a very similar problem to academic dishonesty detection, but there
 is much more research explicitly focused on academic dishonesty than on
 copyright infringement.
 
+
 \subsection{Algorithms}
 \label{sec:algo}
 Previous research into similarity detection largely falls into two categories:
@@ -224,11 +221,10 @@ build a profile of various attributes of the input documents (for example,
 number of distinct tokens, overall word count, average number of characters 
 per line) and compares the profiles of submissions to determine if they are 
 unusually similar. Structural comparisons compare the content of submissions 
---- for example, comparing the specific tokens that form the 
-inputs \cite{arwin2006plagiarism}. Within structural comparisons, there are 
-two broad subcategories: Vector-Distance algorithms and Fingerprinting
-algorithms.
-% Lancaster05 good citation for here
+--- for example, comparing the specific tokens that form the inputs
+\cite{arwin2006plagiarism}. Within structural comparisons, there are two
+broad subcategories: Vector-Distance algorithms and Fingerprinting algorithms.
+% TODO Lancaster05 good citation for here
 
 
 \subsubsection{Syntax Awareness in Comparison}
@@ -279,11 +275,10 @@ to catch similarities that might otherwise be undetectable
 Vector-distance algorithms compare two or more inputs and identify the
 number and sequence of edits that must be made to transform one of the inputs
 into the other(s). The complement of this sequence of edits is the set of
-things that did not need to be changed --- the similarities between the two 
-documents. Vector-Distance algorithms are typically the slowest of all 
-similarity detection algorithms, but fingerprinting and feature comparison
-may not identify the best possible match --- a fatal weakness in
-bioinformatics, but not in copy detection!
+things that did not change --- the similarities between the two documents.
+Vector-Distance algorithms are typically the slowest of all  similarity
+detection algorithms, but fingerprinting and feature comparison may not
+identify the best possible match.
 
 
 \paragraph{Smith-Waterman Algorithm}
@@ -339,47 +334,47 @@ removing the need for recomputation of the unchanged parts of the array.
 
 \subsubsection{Fingerprinting Algorithms}
 Fingerprinting algorithms (also known as \textit{feature extraction
-		algorithms}) extract a number of \textit{fingerprints} (or 
-			\textit{features}) which can be used to identify a document. These
-		\textit{fingerprints} are then added to a database (with a list of references
-				back to the inputs that contained them). To identify similarities, an input's
-		\textit{fingerprints} are computed, added to the database, and then looked up
-		to see whether any submissions other than the current one have the same
-		\textit{fingerprints} \cite{hoad03}.
+algorithms}) extract a number of \textit{fingerprints} (or 
+	\textit{features}) which can be used to identify a document. These
+\textit{fingerprints} are then added to a database (with a list of references
+		back to the inputs that contained them). To identify similarities, an input's
+\textit{fingerprints} are computed, added to the database, and then looked up
+to see whether any submissions other than the current one have the same
+\textit{fingerprints} \cite{hoad03}.
 
-		\textit{Fingerprints} are typically the hashes of one or more tokens of the
-		input. Typically, before being inserted into the database, a small subset of
-		the tokens is selected, and the rest are discarded; this is done to reduce the
-		number of entries required in the database. A typical solution might be to
-		discard all hashes except those which are congruent to $0$ modulo a certain
-		number $p$, but better fingerprint selectors exist \cite{schleimer03}.
+\textit{Fingerprints} are typically the hashes of one or more tokens of the
+input. Typically, before being inserted into the database, a small subset of
+the tokens is selected, and the rest are discarded; this is done to reduce the
+number of entries required in the database. A typical solution might be to
+discard all hashes except those which are congruent to $0$ modulo a certain
+number $p$, but better fingerprint selectors exist \cite{schleimer03}.
 
 
-		\paragraph{Karp-Rabin String Matching}
-		The archetypal fingerprinting algorithm is \textit{Karp-Rabin} string matching.
-		\textit{Karp-Rabin} generates ``rolling hashes'' of the two input submissions
-		(the hash of characters $N$ to $M$ of the input, then the hash of characters 
-		 $N + 1$ to $M + 1$, and so on). The sets of hashes for the inputs are checked
-		against each other, and the matches are used to identify common substrings.
-		\cite{karp87}. \textit{Karp-Rabin} string matching is a fundamental technique
-		used and built on by many later string-matching papers \cite{schleimer03}
-		\cite{buss94} \cite{arwin2006plagiarism} \cite{burrows07} \cite{clough03}
-                \cite{johnson94}.
+\paragraph{Karp-Rabin String Matching}
+The archetypal fingerprinting algorithm is \textit{Karp-Rabin} string matching.
+\textit{Karp-Rabin} generates ``rolling hashes'' of the two input submissions
+(the hash of characters $N$ to $M$ of the input, then the hash of characters 
+ $N + 1$ to $M + 1$, and so on). The sets of hashes for the inputs are checked
+against each other, and the matches are used to identify common substrings.
+\cite{karp87}. \textit{Karp-Rabin} string matching is a fundamental technique
+used and built on by many later string-matching papers \cite{schleimer03}
+\cite{buss94} \cite{arwin2006plagiarism} \cite{burrows07} \cite{clough03}
+\cite{johnson94}.
 
-		\paragraph{\textit{n-gram} Fingerprinting}
-		\label{sec:ngram}
-		By far the most common document fingerprinting approach is called 
-		\textit{n-gram fingerprinting}. The document is tokenized and considered as
-		sequences of $n$ tokens, or \textit{n-grams}. The \textit{n-grams} overlap, so
-		that there an $m$ character document is considered as $m - n + 1$ 
-		\textit{n-grams}. The hashes of these \textit{n-grams} are stored in a
-		database and checked against those from other documents. The hashes are
-		usually stored with pointers to their occurrences to aid in detection.
+\paragraph{$n$-gram Fingerprinting}
+\label{sec:ngram}
+By far the most common document fingerprinting approach is called 
+\textit{n-gram fingerprinting}. The document is tokenized and considered as
+sequences of $n$ tokens, or \textit{n-grams}. The \textit{n-grams} overlap, so
+that there an $m$ character document is considered as $m - n + 1$ 
+\textit{n-grams}. The hashes of these \textit{n-grams} are stored in a
+database and checked against those from other documents. The hashes are
+usually stored with pointers to their occurrences to aid in detection.
 
-		TODO ILLUSTRATION
+TODO ILLUSTRATION
 
-		Most corpora are far too large to store the the hashes of every \textit{n-gram}
-		from every document in the database. Usually, a small subset of all hashes are
+Most corpora are far too large to store the the hashes of every \textit{n-gram}
+from every document in the database. Usually, a small subset of all hashes are
 selected through an algorithm; these serve as the document's
 \textit{fingerprints}. This does entail some information loss; even
 word-for-word identical documents only match if they both contain an
@@ -399,8 +394,9 @@ is identified.
 TODO ILLUSTRATION
 
 Winnowing has proven to be extremely powerful; it is used by the current
-industry standard source code similarity detector, MOSS, described in Section~
-\ref{sec:moss}.
+industry standard source code similarity detector, \textit{Measure of Software
+Similarity}, or MOSS, described in Section~\ref{sec:moss}.
+
 
 \subsubsection{Feature Comparison}
 Feature Comparison, also known as \textit{Attribute Counting}, attempts to
@@ -422,7 +418,7 @@ reference to the creation of a similarity detection system using this
 algorithm after 2000, but no others \cite{jones01}. The paper describing this 
 system provided no evidence that the aforementioned criticisms were not valid,
 and did not provide any results to substantiate its effectiveness. Given 
-the lack of popularity of this approach and noted disadvantages, we did not 
+the lack of popularity of this approach and its noted disadvantages, we did not 
 pursue this line of inquiry.
 % Could cite lancaster05
 
@@ -445,25 +441,28 @@ very few are publicly available. many solutions mentioned in literature were
 never released, or have not been maintained for many years. The two noteworthy
 products, MOSS and \textit{JPlag}, are described below.
 
+
 \subsubsection{MOSS}
 \label{sec:moss}
 MOSS, an acronym for \textit{Measure of Software Similarity}, is a solution
 developed by Professor Alex Aiken of Stanford in 1994 \cite{bowyer99}. Today,
 two decades later, it is considered the gold standard in software similarity
 detection \cite{beth14}. MOSS is free for non-commercial use (though it was 
-previously restricted only for use in academia). It is a service, not a software
-tool that can be deployed. Its primary interface is a Perl script that provides
-a user-friendly command-line frontend to submit code for analysis. Results 
+previously restricted only for use in academia). It is an online service, not
+a software tool that can be deployed. Its primary interface is a Perl script
+that provides a command-line frontend to submit code for analysis. Results
 are provided via email, and can take several hours to arrive \cite{bowyer99}.
 MOSS is based on the $n$-gram Fingerprinting algorithm with winnowing
 described in Section~\ref{sec:ngram}. Most of the details about the
-implementation are public, but the tuning parameters are kept private. 
+implementation are public, but the tuning parameters of the algorithm are kept
+private. 
 
-When new similarity detection systems are published, they often compare their 
-results with those of MOSS. Despite having used the same algorithm for over a 
+Despite having used the same algorithm for over a 
 decade, MOSS remains highly competitive. In a battery of tests run in 2014
 using several similarity detection algorithms, MOSS posts detection results
-comparable every other algorithm tested \cite{beth14}.
+comparable every other algorithm tested \cite{beth14}. In fact, when new
+similarity detection systems are published, they often compare their results
+with those of MOSS. 
 
 All academic dishonesty detectors suffer from the diversity of definitions of
 unauthorized copying, and MOSS is no exception. MOSS often flags behavior which
@@ -473,8 +472,10 @@ researchers from independently evaluating its performance or reproducing any of
 its results.
 % TODO Cite aiken05 - NEED TO FIND PAPER
 
+
 \subsubsection{JPlag}
 TODO
+
 
 \subsubsection{Other Programs}
 TODO
