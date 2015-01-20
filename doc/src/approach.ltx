@@ -5,13 +5,13 @@ detection tool with the following requirements:
 \begin{itemize}
 \item The program should be usable by course staff with very little
  or no training, and should produce output in a form that can be easily
- interpreted. \\
+ interpreted.
 \item The output itself should not be a definitive accusation of academic
  wrongdoing; instead, it simply should flag suspicious submissions for further
- review by course staff.\\
+ review by course staff.
 \item The detector should to be complete and usable within seven weeks; this
  requirement placed a severe time limit on implementation and encouraged the
- implementation of a relatively small set of features.\\
+ implementation of a relatively small set of features.
 \item The detector should not attempt to perform language-specific analysis of
  the source code, but instead only interpret submissions as plaintext. The
  language-agnosticism requirement came from the time constraint and the
@@ -59,10 +59,8 @@ independently verify results.
 
 Instructors and teaching assistants at WPI use Windows, Mac OS X, and Linux.
 The tool should be platform-independent and as easy to use as possible on all
-three major operating systems.
-
-A graphical interface would improve usability, but due to implementation time
-constraints it was not added as a requirement.
+three major operating systems. A graphical interface would improve usability,
+but due to implementation time constraints it was not added as a requirement.
 
 
 \section{Approach}
@@ -99,9 +97,9 @@ described below.
  \item One or more \textit{preprocessors} are applied to the tokenized
     submissions, transforming the tokens to improve accuracy.
  \item Submissions are then grouped into pairs. A user-selectable
-    \textit{similarity detector}, or \textit{similarity detection algorithm},
-    is then run on all possible pairs of submissions, and the results are
-    recorded in a \textit{similarity matrix}.
+    \textit{similarity detector}, which implements a \textit{similarity
+    detection algorithm}, is then run on all possible pairs of submissions, and
+    the results are recorded in a \textit{similarity matrix}.
  \item The similarity matrix is then passed to a user-selected \textit{output
     strategy}, which produces a human-readable form of the output for parsing.
 \end{enumerate}
@@ -117,12 +115,12 @@ described below.
 
 \subsection{Submissions and Tokenization}
 \textit{Checksims} accepts an input directory containing a number of student
-submissions and a pattern to match files to be selected from each submission.
+submissions and a pattern to match files to be composed into a submission.
 It is assumed that each submission is contained within a single subdirectory
 of the input directory --- that is, all student code is located in
 subdirectories of the input directory, and each subdirectory contains the code
 of exactly one student. All files within a single subdirectory are considered
-to belong to a single student, and are checked against the match pattern to
+to belong to a single student, and are compared with the match pattern to
 determine whether they are checked. This allows \textit{Checksims} to only
 include source files; for example, a match pattern of \texttt{*.\{c,h\}} would
 only match C source files, and would ignore README files.
@@ -135,7 +133,7 @@ consistency. None of the provided tokenizing algorithms affect the order of
 the input submission, though some may alter the original submission by
 removing whitespace. The provided tokenizing algorithms operate on the
 plaintext of the submission only. No attempt is made to parse the input into
-a syntax tree (or, indeed, use the grammar of the input language at all),
+a syntax tree (or even use the grammar of the input language at all),
 pursuant to our stated goal of performing plaintext only comparisons. Parsing
 using a language-specific grammar could be added to \textit{Checksims}, but
 as no provision was made for it initially, would probably be more difficult
@@ -185,8 +183,8 @@ preprocessors after performing common code removal but before performing
 similarity detection. Preprocessors manipulate the token representations of
 submissions to normalize them prior to running detection algorithms. The only
 preprocessor in the current release converts all letters to lower case.
-Preprocessors are implemented modularly, so more can be easily added in the
-future.
+Preprocessors are implemented modularly, and more are planned in the future. 
+
 
 \subsection{Similarity Detection}
 After submissions have been tokenized and normalized, \textit{Checksims}
@@ -197,12 +195,13 @@ the group. At present, two pairwise detection algorithms are included with
 \textit{Checksims}: \textit{Line Comparison}, and \textit{Smith-Waterman}.
 
 Comparisons are carried out pairwise in order to simplify the construction of
-\textit{Checksims} and enable easy multithreading. The alternative would be to
+\textit{Checksims} and enable easy multithreading. An alternative would be to
 create a database of features (token sequences, for example) for all
 submissions encountered, and compare new submissions against this database to
 check for matches (while adding their own unique features to it, so future
-checks will include them). Pairwise detection is easy to run in parallel, easy
-to represent in a similarity matrix, and easy to implement.
+checks will include them). Pairwise detection is easy to run in parallel
+because of its lack of shared state, and easy to represent in a similarity
+matrix.
 
 Many similarity detectors, including MOSS, check submissions against a database
 instead of running a pairwise comparison. Using a central database reduces the
@@ -216,10 +215,11 @@ architecture in the future.
 The following subsections describe the two similarity detectors provided with
 the current release of \textit{Checksims}.
 
+
 \subsubsection{Line Comparison}
 \label{sec:linecompare}
-The \textit{Line Comparison} algorithm is a special case of $n$-gram
-fingerprinting, as described in Section~\ref{sec:ngram}. \textit{Line
+The \textit{Line Comparison} algorithm is a special case of \textit{n-gram
+fingerprinting}, as described in Section~\ref{sec:ngram}. \textit{Line
 Comparison} is meant to work with line-sized tokens. It hashes each input token
 and creates a map of each hash to each occurrence (the position and
 submission where the token was found). Hash collisions are identified as
@@ -233,9 +233,9 @@ extraction} algorithm, and could be run with a central database of
 submissions if desired. However, since \textit {Checksims} only implements
 pairwise comparisons, the ``database'' used is a hash table that must be
 rebuilt every time a submission is compared. The current architecture is not
-particularly efficient, but the speed of modern hashing algorithms ensures
-that the loss of performance does not have a noticeable impact on execution
-speed for runs on fewer than 400 submissions. 
+particularly efficient, but because of the high speed of modern hashing
+algorithms, the loss of performance does not have a noticeable impact on
+execution speed.
 
 \textit{Line Comparison} is a simple algorithm that was implemented as a
 proof of concept. It runs extremely fast in linear time with the size of both
@@ -256,13 +256,13 @@ identical submissions (an initial check that can be run prior to a slower
 but more accurate algorithm such as \textit{Smith-Waterman}).
 
 \textit{Line Comparison} is designed to work with tokens
-that represent lines; its usefulness with other tokenizers is questionable.
-In the character tokenization case, for example, almost every submission
-is presumably written using the same subset of characters (capital and
-lowercase letters, numbers, and punctuation used as language-specific syntax).
-These characters are shared between almost every submission; it is unusual to
-see a similarity result of less than 99\% when using \textit{Line Comparison}
-with character tokenization.
+that represent lines; its usefulness with significantly coarser or finer
+tokenizers is questionable. In the character tokenization case, for example,
+almost every submission is presumably written using the same subset of
+characters (capital and lowercase letters, numbers, and punctuation used as
+language-specific syntax). These characters are shared between almost every
+submission; it is unusual to see a similarity result of less than 99\% when
+using \textit{Line Comparison} with character tokenization.
 
 
 \subsubsection{Smith-Waterman Algorithm}
@@ -275,26 +275,26 @@ Smith-Waterman defeated multiple methods of obfuscation described in
 Section~\ref{sec:obfuscation}, including changed identifier names. We believe
 \textit{Smith-Waterman} caught most of the instances of academic dishonesty in
 our test corpus. For more information about Smith-Waterman's performance, see
-Section~\ref{sec:results}.
+Section~\ref{sec:results}. TODO add refs to specific sections discussing SW
 
 \textit{Smith-Waterman} scales poorly. Its running time and memory usage both
 scale as $O(m * n)$ where $m$ and $n$ are the size of the two submissions
 being compared (after tokenizing). If both submissions are the same size,
-scaling is $O(n^{2})$. Initially, the algorithm was too slow to be used, even
-on classes of (defined here as 40-50 students). We made several optimization
-passes to improve performance, including changing the default tokenization
-algorithm for \textit{Smith-Waterman} from character tokens to
-whitespace-separated tokens, reducing the number of tokens by an estimated
-factor of four. After these optimizations, \textit{Smith-Waterman} is fast
-enough for typical use cases at WPI (classes of 60-70 students and submissions
-of 500 to 1000 tokens), though substantially larger class sizes or an
-increase in average size of the submissions themselves greatly increases the
-time required for the algorithm to complete. Larger class sizes are more
-manageable than larger submission sizes. Based on the results described in
-Section~\ref{sec:runtime}, we estimate that a class of 100 to 110 students
-might finish in around two hours while a large increase in token count could
-cause individual comparisons to take days to run and require dozens if not
-hundreds) of gigabytes of memory. 
+scaling is $O(n^{2})$. Initially, the algorithm ran too slowly to be useful,
+even on classes of 40-50 students. We made several optimization passes to
+improve performance, including changing the default tokenization algorithm
+for \textit{Smith-Waterman} from character tokens to whitespace-separated
+tokens, reducing the number of tokens by an estimated factor of four. After
+these optimizations, \textit{Smith-Waterman} is fast enough for typical use
+cases at WPI (classes of 60-70 students and submissions of 500 to 1000 tokens),
+though substantially larger class sizes or an increase in average size of the
+submissions themselves greatly increases the time required for the algorithm
+to complete. Larger class sizes are more manageable than larger submission
+sizes. Based on the results described in Section~\ref{sec:runtime}, we
+estimate that a class of 100 to 110 students might finish in around two hours
+while a large increase in token count could cause individual comparisons to
+take days to run and require dozens, if not hundreds, of gigabytes of memory. 
+
 
 \subsection{User-Friendly Output}
 After all possible similarities have been computed, \textit{Checksims} formats
