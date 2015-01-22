@@ -11,4 +11,5 @@ dist/
 *.iml
 target/
 .idea/
-
+*.sublime-project
+*.sublime-workspace
