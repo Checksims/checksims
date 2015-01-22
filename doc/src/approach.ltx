@@ -1,121 +1,107 @@
 \section{Requirements}
 \label{sec:requirements}
-The first step in any software engineering project is determining the key
-requirements. Ours are based on our initial goals (listed in
-Section~\ref{sec:goals}) Some goals were solicited from our advisor (the
-intended audience of the program), while others came from our literature
-review. Our requirements, summarized below, drove the decisions that created
-our solution.
+Our advisor, Professor Lauer, commissioned the \textit{checksims} similarity
+detection tool with the following requirements:
+\begin{itemize}
+\item The program should be usable by course staff with very little
+ or no training, and should produce output in a form that can be easily
+ interpreted.
+\item The output itself should not be a definitive accusation of academic
+ wrongdoing; instead, it simply should flag suspicious submissions for further
+ review by course staff.
+\item The detector should to be complete and usable within seven weeks; this
+ requirement placed a severe time limit on implementation and encouraged the
+ implementation of a relatively small set of features.
+\item The detector should not attempt to perform language-specific analysis of
+ the source code, but instead only interpret submissions as plaintext. The
+ language-agnosticism requirement came from the time constraint and the
+ potential that the detector would be used for a number of classes using
+ various languages.
+\item The algorithm should be run locally and preferably be easy to invoke once
+ student submissions are closed.
+\item Finally, the detector should be made to match Professor Lauer's specific
+ definition of similarity and academic dishonesty, which is very permissive of
+ relatively similar code so long as it was typed separately.
+\end{itemize}
 
-From Professor Lauer, we obtained the requirement that whatever we produce must
-be easy to use. The program should be usable by course staff with very little
-or no training, and should produce output that can easily be interpreted. The
-output itself should not be a definitive accusation of academic wrongdoing;
-instead, it simply should flag suspicious submissions for further review by
-course staff. The detector should to be complete and usable within seven weeks,
-placing a severe time limit on implementation and encouraging the
-implementation of a relatively small set of features. Given the time constraint
-and the potential that the detector would be used for a number of classes
-taught using various languages, it was also desirable that the detector not
-attempt to perform language-specific analysis of the source code, but instead
-only interpret submissions as plaintext. Finally, the detector should be made
-to match Professor Lauer's specific definition of similarity and academic
-dishonesty, which is very permissive of relatively similar code so long as it
-was typed in separately. The relaxed detection environment meant that some
-types of similarity detection (for example, detecting  semantically-identical
-code segments) are far less useful, as they match activities that are
-considered perfectly acceptable by Professor Lauer.
-  
-From our literature review, we determined that source code similarity detection
-tools almost universally parse input submissions into syntax trees, as it
-is very easy to disguise (intentionally or unintentionally) similar code
-through a number of small tweaks (swapping argument or operand order, for
-example). It was apparent to us that performing any kind of syntax tree
-analysis was incompatible with the previous requirement that the system
-produced should operate on plaintext only. The plaintext requirement was the
-overriding concern --- syntax-based parsing limits the number of languages
-that can be used with a detector, and would also be difficult to implement
-given our time constraints. Instead, we sought to identify methods used for
-similarity detection in plaintext submissions that could be sufficiently
-accurate and run in a reasonable amount of time.
+Source code similarity detection tools almost always parse input submissions
+into syntax trees, as it is very easy to disguise (intentionally or 
+unintentionally) similar code through a number of small tweaks (swapping 
+argument or operand order, for example). It was apparent to us that 
+performing any kind of syntax tree analysis was incompatible with the 
+requirement that the system produced should operate on plaintext only. The
+plaintext requirement was the overriding concern --- syntax-based parsing 
+limits the languages that can be used with a detector, and it would also be
+difficult to implement given our time constraints.
 
-The requirements seem to lead to a product that is small in scope,
-implementing only a subset of the functionality that might eventually be
-desirable, We required that our solution be modular and easily extensible.
-While we might not be able to implement all features we desired, we could pass
-on the ability to quickly implement new features to future MQP teams, or to the
-open source community. Proper documentation and unit testing of all produced
-source code, and emphasis on extendability when designing the architecture, were
-decided to be priorities.
+The requirements seem to lead to a tool that is small in scope, implementing
+only a subset of the functionality that might eventually be desirable. The
+solution should be modular and easily extensible, so that new features can be
+added to the very basic initial feature set; the intention is to pass the tool
+on to future project teams, or to the open source community. The requirements
+emphasize an extensible architecture, proper documentation and
+unit testing, and a useful, extensible test suite.
 
 % Reference to MOSS in lit review (is this necessary?)
-We decided to implement a client-based solution (as opposed to a hosted
-solution such as MOSS), to keep the frontend and user-interface code as
-simple as possible to ensure that as much time as possible was spent working on
-the backend code to accomplish similarity detection. A client-based solution
-does have the notable disadvantage of not having access to the data of all
-users, limiting the data set available to compare against (only a single
-professor's assignments, for example, instead of those of an entire school).
-While a larger data set is certainly desirable, we decided that simplicity
-was more important, to ensure we would actually have time to fully implement
-the solution. Furthermore, an open-source, client-based solution offers the
+The requirements lead naturally to a client-based solution (as opposed to a
+hosted solution such as MOSS). The short implementation time led to very simple
+frontend and user-interface code, ensured that as much implementation time as
+possible was spent working on the actual similarity detection code. A client
+based solution does have the notable disadvantage of complicating access to
+larger corpora of assignments, which have to be downloaded and run locally.
+While a larger data set is certainly desirable, implementation simplicity was
+more important. Furthermore, an open-source, client-based solution offers the
 ability for technically capable users to easily modify our solution to meet
-their own  needs. Finally, a client-based solution is transparent in its
-require operation --- there is no magic occurring ``behind the curtain'' on
-the server-side, and any results can be independently verified.
- 
-Our last major requirement was that our similarity detection tool be capable of
-running on all common operating systems. Though we do not believe that data
-on operating system preferences among WPI course staff exists, we know of
-course staff who use each of Windows, Mac OS X, and Linux regularly.
-Given this, we did not want to mandate that our software run on a specific operating system.
+their own needs. Finally, a client-based solution is transparent in its
+required operation --- there is no magic occurring ``behind the curtain'' on
+the server. The transparency of the design also makes it very easy to
+independently verify results.
 
-We decided not to require a graphical interface, despite its positive
-implications for usability. Given our time constraints, implementation of a
-full GUI was hard to justify. Furthermore, given the limited complexity of the
-features we intended to implement, we felt that a command-line interface would
-be more than sufficient to provide an easy-to-use interface for our solution.
+Instructors and teaching assistants at WPI use Windows, Mac OS X, and Linux.
+The tool should be platform-independent and as easy to use as possible on all
+three major operating systems. A graphical interface would improve usability,
+but due to implementation time constraints it was not added as a requirement.
 
 
-\section{Our Approach}
+\section{Approach}
 \label{sec:approach}
-Our approach to similarity detection is named \textit{Checksims}, and was
-built to fulfill all requirements outlined above. \textit{Checksims} is a
-client-based Java application implementing a pair of similarity detection
-algorithms and several output formats. It performs similarity detection on an
-arbitrary number of student submissions within a single assignment, and
-produces output that can be used to easily determine which submissions are
-unusually similar.
+Our similarity detection tool, \textit{Checksims}, was built to fulfill all
+requirements outlined above. \textit{Checksims} is a client-based Java
+application implementing a pair of similarity detection algorithms and
+several output formats. It performs similarity detection on an arbitrary
+number of student submissions within a single assignment, and it produces
+output that can be used to easily determine which submissions need to be
+checked by hand for unauthorized copying.
 
 \textit{Checksims} uses a simple, modular architecture designed for easy
-extensibility. It is designed to be trivially to add a new similarity
-detection algorithm or output strategy without significant changes to the
+extensibility. It is designed to be trivial to add new similarity
+detection algorithms or output strategies without significant changes to the
 program thus enabling future projects to expand on our work and offer further
-features without needing to make significant changes to the core program,
+features without requiring significant changes to the core program,
 increasing productivity and decreasing the likelihood of introducing bugs.
 
 \subsection{Architecture}
 \textit{Checksims} has a roughly linear architecture, composed of a number of
 discrete components, most with one input and one output. The overall service
-accepts a number of student submissions as input, and returns usable output.
-The overall architecture is shown in Figure~\ref{fig:architecture} and
+accepts a set of student submissions as input, and returns usable output.
+The overall architecture is shown in Figure~\ref{fig:architecture} and is
 described below.
 
 \begin{enumerate}
-  \item Student submissions are accepted by the tokenizer. The tokenizer will
-        identify all files within the submission, apply a tokenizing algorithm
-        to them, and yield the resultant tokenized submissions.
-  \item The tokenized submissions are then passed into a common code remover,
-        which removes code designated as ``common'' from all tokenized
-        submissions to ensure it is not matched.
-  \item One or more preprocessors are applied to the tokenized
-        submissions, transforming the tokens to increase comparison accuracy.
-  \item Submissions are then grouped by an algorithm that generates all
-        possible unique, unordered pairs of submissions. A user-defined
-        similarity detection algorithm is then run on all groups, and the
-        results are parsed into a similarity matrix.
-  \item The similarity matrix is then passed to a user-defined output strategy,
-        which produces a human-readable form of the output for parsing.
+ \item Student submissions are first processed by the \textit{tokenizer}. The
+    tokenizer identifies all files within the submission, applies a tokenizing
+    algorithm on them, and yields the resulting tokenized submissions.
+ \item The tokenized submissions are then passed into a
+    \textit{common code remover}, which removes code designated as ``common''
+    from all tokenized submissions to ensure it is not matched.
+ \item One or more \textit{preprocessors} are applied to the tokenized
+    submissions, transforming the tokens to improve accuracy.
+ \item Submissions are then grouped into pairs. A user-selectable
+    \textit{similarity detector}, which implements a \textit{similarity
+    detection algorithm}, is then run on all possible pairs of submissions, and
+    the results are recorded in a \textit{similarity matrix}.
+ \item The similarity matrix is then passed to a user-selected \textit{output
+    strategy}, which produces a human-readable form of the output for parsing.
 \end{enumerate}
 
 % Architecture Diagram
@@ -128,30 +114,31 @@ described below.
 
 
 \subsection{Submissions and Tokenization}
-\textit{Checksims} accepts as input a directory containing a number of student
-submissions, and a pattern to match files to be included within a submission.
+\textit{Checksims} accepts an input directory containing a number of student
+submissions and a pattern to match files to be composed into a submission.
 It is assumed that each submission is contained within a single subdirectory
 of the input directory --- that is, all student code is located in
-subdirectories of a single directory, and each subdirectory contains the code
+subdirectories of the input directory, and each subdirectory contains the code
 of exactly one student. All files within a single subdirectory are considered
-to belong to a single student, and are checked against the match pattern to
-determine whether they are included. This allows \textit{Checksims} to only
-include source files; a match pattern of \texttt{*.\{c,h\}} would only match
-C source files, and ignore README files, for example.
+to belong to a single student, and are compared with the match pattern to
+determine whether they are checked. This allows \textit{Checksims} to only
+include source files; for example, a match pattern of \texttt{*.\{c,h\}} would
+only match C source files, and would ignore README files.
 
 Submissions are then split into tokens for comparison by a similarity detection
-algorithm. Several algorithms are included to perform this task, all resulting
-in a linked list of tokens representing the original input. Current tokenizing
-algorithms do not affect the order of the input submission, though some may
-alter the original submission by removing whitespace. Current tokenizing
-algorithms operate on the plaintext of the submission only. No attempt is made
-to parse the input into a syntax tree (or, indeed, use the grammar of the input
-language at all), pursuant to our stated goal of performing plaintext only
-comparisons. Parsing using a language-specific grammar can be added to
-\textit{Checksims}, but as no provision was made for it initially, it
-is expected it will be much more difficult than adding a new similarity
-detection algorithm. The same tokenization algorithm is used for all
-submissions to ensure internal consistency.
+algorithm. Several tokenizers are included to perform this task, all resulting
+in a linked list of tokens representing the original input. The same
+tokenization algorithm is used for all submissions to ensure internal
+consistency. None of the provided tokenizing algorithms affect the order of
+the input submission, though some may alter the original submission by
+removing whitespace. The provided tokenizing algorithms operate on the
+plaintext of the submission only. No attempt is made to parse the input into
+a syntax tree (or even use the grammar of the input language at all),
+pursuant to our stated goal of performing plaintext only comparisons. Parsing
+using a language-specific grammar could be added to \textit{Checksims}, but
+as no provision was made for it initially, would probably be more difficult
+than simply plugging in a new similarity detection
+algorithm.
 
 % This section may not be desirable to include
 % Commenting out for now
@@ -170,8 +157,8 @@ assigned ID). For example, the input sequence ``ABCDA'' would be tokenized into
 the sequence ``0 1 2 3 0'' (note the repeated identifier for the repeated
 character). This choice is less efficient when tokens represent individual
 characters of the input submission (32-bit integers representing UTF-8
-characters which will, in typical cases, be 8 bits), but it offers a
-substantial space and performance advantage for tokenization algorithms that
+characters which are usually 8 bits), but it offers a
+substantial space and performance advantage for tokenization algorithms which
 represent substrings of the input as tokens (for example, line tokenization,
 which splits the input submission at newline characters to form tokens). Given
 that we expect most uses of this program to use string-backed tokens (for
@@ -181,135 +168,133 @@ optimization measure.
 
 
 \subsection{Preprocessing and Common Code Removal}
-Once submissions have been accepted and tokenized, \textit{Checksims} offers
-the option of running them through a set of preprocessors before performing
-similarity detection. Preprocessors manipulate the tokens of submissions to
-normalize them prior to running detection algorithms. The only normalization
-currently included transforms all tokens by lowercasing any characters within,
-ensuring that case is not a factor in comparisons. Preprocessors are
-implemented modularly, so more can be easily added in the future.
+Once submissions have been accepted and tokenized, \textit{Checksims} performs
+common code removal. Common code removal accepts a submission that contains
+code that is expected to be present in all submissions --- for instance,
+templates, copyright notices or helper functions provided by the instructor.
+This code is tokenized using the same method used for all other submissions,
+and similarity detection is performed between it and each submission. Any
+code matching the common code is removed before the main similarity detection
+algorithm is run. Common code removal can also improve the performance of more
+expensive similarity detection algorithms by making submissions smaller. 
 
-Common code removal can also be performed at this stage. Common code removal
-accepts a submission containing code that is expected to be present in all
-submissions --- for instance, copyright notices or helper functions provided by
-the instructor. This code is tokenized using the same method used for all other
-submissions, and similarity detection is performed between it and each
-submission. Any code matching the common code is removed prior to the main
-similarity detection algorithm being run. Common code removal is performed
-prior to any preprocessors, as common code should match exactly without them.
-Common code removal can also improve the performance of more expensive
-similarity detection algorithms by making submissions smaller. 
+\textit{Checksims} offers the option of modifying submissions with one or more
+preprocessors after performing common code removal but before performing
+similarity detection. Preprocessors manipulate the token representations of
+submissions to normalize them prior to running detection algorithms. The only
+preprocessor in the current release converts all letters to lower case.
+Preprocessors are implemented modularly, and more are planned in the future. 
+
 
 \subsection{Similarity Detection}
-After submissions have been tokenized and normalized, \textit{Checksims} will
-apply a pairwise similarity detection algorithm to all unique unordered pairs
+After submissions have been tokenized and normalized, \textit{Checksims}
+applies a pairwise similarity detection algorithm to all unique unordered pairs
 of submissions, obtaining the similarity of every submission in the input with
-every other input submission --- a complete picture of how similar all
-submissions within the group are. At present, two pairwise detection
-algorithms are included with \textit{Checksims}: \textit{Line Comparison}, and 
-\textit{Smith-Waterman}.
+every other input submission --- a complete picture of the similarities within
+the group. At present, two pairwise detection algorithms are included with 
+\textit{Checksims}: \textit{Line Comparison}, and \textit{Smith-Waterman}.
 
-We chose pairwise detection to simplify the construction of \textit{Checksims}
-and allow easy multithreading. The alternative would be to create a database
-of features (token sequences, for example) for all submissions encountered,
-and compare new submissions against this database to check for matches (while
-adding their own unique features to it, so future checks will include them).
-Pairwise detection removes the requirement for a database (potentially an
-external dependency, which would add significantly to the complexity of
-detection algorithms) and makes all comparisons stateless, allowing them to
-be easily run in parallel by removing mutable state. It is still possible to
-parallelize feature extraction, but it is complicated by the presence of
-mutable state shared between threads, requiring synchronization code that
-could impact performance. Finally, most dynamic programming algorithms for
-similarity detection are intended to be run on pairs of submissions, and
-these algorithms tend to be the easiest to implement. It would be desirable
-to add support for feature extraction and comparison against a database in
-the future to enable a new class of algorithms to be added, but no provision
-has been made for this at present.
- 
+Comparisons are carried out pairwise in order to simplify the construction of
+\textit{Checksims} and enable easy multithreading. An alternative would be to
+create a database of features (token sequences, for example) for all
+submissions encountered, and compare new submissions against this database to
+check for matches (while adding their own unique features to it, so future
+checks will include them). Pairwise detection is easy to run in parallel
+because of its lack of shared state, and easy to represent in a similarity
+matrix.
+
+Many similarity detectors, including MOSS, check submissions against a database
+instead of running a pairwise comparison. Using a central database reduces the
+space complexity of the framework from $O(n^2)$ to $O(n)$ when running
+detection algorithms that can take advantage of it. \textit{Checksims} does not
+at present support this architecture, because it would complicate
+implementation of multithreading by introducing a shared resource (the
+database). It would probably be a good idea to add support for this
+architecture in the future.
+
+The following subsections describe the two similarity detectors provided with
+the current release of \textit{Checksims}.
+
+
 \subsubsection{Line Comparison}
 \label{sec:linecompare}
-The \textit{Line Comparison} algorithm is a special case of $n$-gram
-fingerprinting, as mentioned in the literature review in
-Section~\ref{sec:ngram}. \textit{Line Comparison} hashes each input token and
-creates a map of each hash to each occurrence (the position and submission
-where the token was found). Hash collisions are defined as hashes that map
-to more than one occurrence, and collisions involving both submissions are
-tokens shared between the two. The percentage of tokens involved in such
-collisions is tallied and reported as the final result.
+The \textit{Line Comparison} algorithm is a special case of \textit{n-gram
+fingerprinting}, as described in Section~\ref{sec:ngram}. \textit{Line
+Comparison} is meant to work with line-sized tokens. It hashes each input token
+and creates a map of each hash to each occurrence (the position and
+submission where the token was found). Hash collisions are identified as
+hashes that map to more than one occurrence, and collisions involving both
+submissions are tokens shared between the two. The percentage of tokens
+involved in such collisions is tallied and reported as the final
+result.
 
-It is worth noting that line comparison is actually a feature extraction
-algorithm, and could be run with a central database of submissions if desired.
-However, for the reasons mentioned previously, \textit{Checksims} only
-implements pairwise comparisons, so the ``database'' used is a hash table
+It is worth noting that line comparison is actually a \textit{feature
+extraction} algorithm, and could be run with a central database of
+submissions if desired. However, since \textit {Checksims} only implements
+pairwise comparisons, the ``database'' used is a hash table that must be
 rebuilt every time a submission is compared. The current architecture is not
-particularly efficient, but the speed of modern hashing algorithms ensures
-that the loss of performance does not have a noticeable impact on execution
-speed. 
+particularly efficient, but because of the high speed of modern hashing
+algorithms, the loss of performance does not have a noticeable impact on
+execution speed.
 
-\textit{Line Comparison} is a simple algorithm which was implemented as a
+\textit{Line Comparison} is a simple algorithm that was implemented as a
 proof of concept. It runs extremely fast in linear time with the size of both
 submissions, but it misses a number of similarities due to the nature of hash
 collisions. Even a trivial change (a single letter added or removed, for
-example) will result in a different hash, causing the changed token to not be
-matched (indeed, all of the obfuscation techniques in
+example) results in a different hash, causing the changed token to not be
+matched. Indeed, all of the obfuscation techniques in
 Section~\ref{sec:obfuscation} can defeat the \textit{Line Comparison}
-algorithm). Furthermore, almost all hashes enforce the property that any
-change in the input will result in major changes to the output Therefore, it
-is impossible to tell how similar two inputs are simply by comparing their
-hashes. This makes it impossible to identify similar submissions just from
-their hashes, preventing \textit{Line Comparison} from being used to identify
-very similar hashes. Line Comparison remains in \textit{Checksims} both as a
-proof of concept and example of a simple algorithm, and to quickly identify
-extremely similar or identical submissions  (an initial check which can be
-run prior to a slower but more accurate algorithm such as
-\textit{Smith-Waterman}).  As the name of the algorithm reveals,
-\textit{Line Comparison} was originally intended to be used exclusively with
-string-backed tokens, each representing a single line of a submission. This
-was the first algorithm we implemented, and at the time tokens were
-exclusively based on one line of a submission. When the \textit{Smith-Waterman}
-algorithm was added, tokens were expanded to accommodate alternative
-tokenization algorithms (character based, for  example), and Line Comparison
-was made generic to work with these tokens as well; however, its usefulness
-with other tokenizers is questionable. In the character tokenization case, for
-example, almost every submission will presumably be written using the same
-subset of characters (capital and lowercase letters, numbers, and punctuation
-used as language-specific syntax). These characters will be shared between
-almost every submission; it is unusual to see a similarity result of less than
-99\% when using \textit{Line Comparison} with character tokenization.
+algorithm, unless preprocessors are applied to combat them. Furthermore, almost
+all hashes enforce the property that any change in the input results in major
+changes to the output. Therefore, it is impossible to tell the degree of
+similarity between two tokens simply by comparing their hashes. This makes it
+impossible to identify similar lines just from their hashes, preventing 
+textit{Line Comparison} from being used to identify very similar hashes. Line
+Comparison remains in \textit{Checksims} both as a proof of concept and
+example of a simple algorithm, and to quickly identify extremely similar or
+identical submissions (an initial check that can be run prior to a slower
+but more accurate algorithm such as \textit{Smith-Waterman}).
+
+\textit{Line Comparison} is designed to work with tokens
+that represent lines; its usefulness with significantly coarser or finer
+tokenizers is questionable. In the character tokenization case, for example,
+almost every submission is presumably written using the same subset of
+characters (capital and lowercase letters, numbers, and punctuation used as
+language-specific syntax). These characters are shared between almost every
+submission; it is unusual to see a similarity result of less than 99\% when
+using \textit{Line Comparison} with character tokenization.
 
 
 \subsubsection{Smith-Waterman Algorithm}
 \label{sec:smithwaterman}
 The \textit{Smith-Waterman} algorithm is the primary similarity detection
-algorithm included in Checksims. It is described in the literature review in
-Section~\ref{sec:smithwatermanlit}, and was identified as a candidate for this
-role based on Irving's paper describing its use in the detection of academic
-dishonesty in source code \cite{irving04}. It is capable of finding most
-similarities characteristic of academic dishonesty in submissions at the
-plaintext level and it is able to defeat some of the methods of obfuscation
-listed in Section~\ref{sec:obfuscation} in the literature review (for example,
-some instances of changing identifier names).
+algorithm included in \textit{Checksims}. It is described in
+Section~\ref{sec:smithwatermanlit}, and was first used in academic dishonesty
+detection by Robert Irving \cite{irving04}. When run against our test corpus,
+Smith-Waterman defeated multiple methods of obfuscation described in
+Section~\ref{sec:obfuscation}, including changed identifier names. We believe
+\textit{Smith-Waterman} caught most of the instances of academic dishonesty in
+our test corpus. For more information about Smith-Waterman's performance, see
+Section~\ref{sec:results}. TODO add refs to specific sections discussing SW
 
-It is noteworthy that \textit{Smith-Waterman} scales poorly. Its runtime
-complexity and memory usage both scale as $O(m * n)$ where $m$ and $n$ are the
-size of the two submissions being compared (after tokenizing). If both
-submissions scale evenly in size, scaling is quadratic; indeed, if the
-submissions are fixed as the same size, scaling is exactly $O(n^{2})$.
-Initially, the algorithm was too slow to be used on  moderately-sized classes
-(defined here as 40-50 students). We made several optimization passes to
+\textit{Smith-Waterman} scales poorly. Its running time and memory usage both
+scale as $O(m * n)$ where $m$ and $n$ are the size of the two submissions
+being compared (after tokenizing). If both submissions are the same size,
+scaling is $O(n^{2})$. Initially, the algorithm ran too slowly to be useful,
+even on classes of 40-50 students. We made several optimization passes to
 improve performance, including changing the default tokenization algorithm
-for \textit{Smith-Waterman} from generating tokens from each character to
-generating tokens for whitespace-separated strings (reducing token count by
-approximately 75\%). After these optimizations, \textit{Smith-Waterman} is
-fast enough for typical use cases (classes of 40-50 and submissions of 500 to
-1000 tokens), though substantially larger class sizes or an increase in average
-size of the submissions themselves will greatly increase the time required for
-the algorithm to complete. Larger class sizes are more manageable than larger
-submission sizes. For example, a class of 100 to 110 students would likely
-finish in approximately 12 hours; a doubling of token count causes individual
-comparisons to take days to run and require dozens (if not hundreds) of
-gigabytes of memory. 
+for \textit{Smith-Waterman} from character tokens to whitespace-separated
+tokens, reducing the number of tokens by an estimated factor of four. After
+these optimizations, \textit{Smith-Waterman} is fast enough for typical use
+cases at WPI (classes of 60-70 students and submissions of 500 to 1000 tokens),
+though substantially larger class sizes or an increase in average size of the
+submissions themselves greatly increases the time required for the algorithm
+to complete. Larger class sizes are more manageable than larger submission
+sizes. Based on the results described in Section~\ref{sec:runtime}, we
+estimate that a class of 100 to 110 students might finish in around two hours
+while a large increase in token count could cause individual comparisons to
+take days to run and require dozens, if not hundreds, of gigabytes of memory. 
+
 
 \subsection{User-Friendly Output}
 After all possible similarities have been computed, \textit{Checksims} formats
@@ -364,7 +349,7 @@ with submission C.
 \label{fig:html}
 \end{figure}
 
-Some output strategies will print the similarity matrix itself, possibly with
+Some output strategies print the similarity matrix itself, possibly with
 visual aids to ``call out'' unusually large similarities. For example, the
 \texttt{HTML} output strategy produces a web page containing a similarity
 matrix with cells color-coded to allow the eye to pick out the most similar

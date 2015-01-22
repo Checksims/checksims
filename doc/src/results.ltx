@@ -1,4 +1,5 @@
 \section{Results}
+\label{sec:results}
 The experiments described in Section~\ref{sec:methods} were performed on the
 anonymized student data we obtained as test data. This section summarizes their
 results, and attempts to draw conclusions about the state of \textit{Checksims}
@@ -28,13 +29,13 @@ false positives. Given the obvious limitations of the \textit{Line Comparison}
 algorithm (detailed in Section~\ref{sec:linecompare}), we do not believe this
 to be the case. A large number of the additional results found by
 \textit{Smith-Waterman} are almost certainly real instances of unauthorized
-copying (or, at the least, cases that should have been brought to the
+copying (or, at the least, cases which should have been brought to the
 attention of course staff for manual review). This matches our hypothesis that
 \textit{Smith-Waterman} is the more accurate of the two algorithms (though,
 again, we cannot prove this with only these results).
 
 It is noteworthy that we removed common code from all assignments in our test
-data that we knew to contain it. In several cases, we were unable to obtain
+data which we knew to contain it. In several cases, we were unable to obtain
 the common code from the instructors who gave the assignment. For these cases,
 we identified one student who had 100\% similarity to all others. On further
 examination, these students typically had submitted no code save the common
@@ -67,7 +68,7 @@ also nearly-certain cases of academic dishonesty. We reviewed 6 of these pairs
 of assignments, and found that all of them match our definition of academic
 dishonesty.
 
-The 70\% to 89\% range, however, contains a number of similarities that may
+The 70\% to 89\% range, however, contains a number of similarities which may
 not be caused by academic dishonesty. In some cases, students implemented the
 same algorithm in very similar ways. Given that there are not many ways to
 write a simple algorithm (for example, Bubblesort), especially if typical loop
@@ -83,7 +84,7 @@ in the 70\% to 89\% range may have produced their code independently, but using
 very similar algorithms and pseudocode --- perfectly acceptable, according to
 Professor Lauer.
 
-The potential difference between the two assignments that form our test data
+The potential difference between the two assignments which form our test data
 is emphasized by the graph in Figure~\ref{fig:classcompare}. Almost all
 similarities identified are from CS2301, despite it only containing
 approximately 70\% of our test code. Given this, the smaller similarities seen
@@ -106,6 +107,7 @@ as word of its use spreads.
 
 
 \subsubsection{Runtime Comparison}
+\label{sec:runtime}
 Figure~\ref{fig:smithwatermanruntime} shows the runtime of the
 \textit{Smith-Waterman} algorithm for every assignment in our dataset. No
 assignment took over 2400 seconds (40 minutes) to complete, and the vast
@@ -157,7 +159,7 @@ submitting very little to no code (typically in the dozens of lines, with many
 being trivially simple - for example, \} or \texttt{return;}). Many of these
 lines are also contained in larger assignments, so the trivial assignment
 appears to be very similar to larger assignments to \textit{Line Comparison}
-(the larger assignments typically display inverse similarities that are very
+(the larger assignments typically display inverse similarities which are very
 small --- 5 to 20\% being common). \textit{Smith-Waterman} has awareness of the
 ordering of tokens within a document, and consequently will ignore trivial
 sequences like \texttt{\{ return; \}} if they are not present in the submission
