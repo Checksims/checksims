@@ -4,13 +4,13 @@ The first step in any software engineering project is determining the key
 requirements. Ours are based on our initial goals (listed in
 Section~\ref{sec:goals}) Some goals were solicited from our advisor (the
 intended audience of the program), while others came from our literature
-review. Our requirements, summarized below, drove the decisions which created
+review. Our requirements, summarized below, drove the decisions that created
 our solution.
 
 From Professor Lauer, we obtained the requirement that whatever we produce must
 be easy to use. The program should be usable by course staff with very little
-or no training, and should produce output which can easily be interpreted.
-The output itself should not be a definitive accusation of academic wrongdoing;
+or no training, and should produce output that can easily be interpreted. The
+output itself should not be a definitive accusation of academic wrongdoing;
 instead, it simply should flag suspicious submissions for further review by
 course staff. The detector should to be complete and usable within seven weeks,
 placing a severe time limit on implementation and encouraging the
@@ -23,7 +23,7 @@ to match Professor Lauer's specific definition of similarity and academic
 dishonesty, which is very permissive of relatively similar code so long as it
 was typed in separately. The relaxed detection environment meant that some
 types of similarity detection (for example, detecting  semantically-identical
-code segments) are far less useful, as they match activities which are
+code segments) are far less useful, as they match activities that are
 considered perfectly acceptable by Professor Lauer.
   
 From our literature review, we determined that source code similarity detection
@@ -36,11 +36,11 @@ produced should operate on plaintext only. The plaintext requirement was the
 overriding concern --- syntax-based parsing limits the number of languages
 that can be used with a detector, and would also be difficult to implement
 given our time constraints. Instead, we sought to identify methods used for
-similarity detection in plaintext submissions which could be sufficiently
+similarity detection in plaintext submissions that could be sufficiently
 accurate and run in a reasonable amount of time.
 
-The requirements seem to lead to a product which is small in scope,
-implementing only a subset of the functionality which might eventually be
+The requirements seem to lead to a product that is small in scope,
+implementing only a subset of the functionality that might eventually be
 desirable, We required that our solution be modular and easily extensible.
 While we might not be able to implement all features we desired, we could pass
 on the ability to quickly implement new features to future MQP teams, or to the
@@ -84,7 +84,7 @@ built to fulfill all requirements outlined above. \textit{Checksims} is a
 client-based Java application implementing a pair of similarity detection
 algorithms and several output formats. It performs similarity detection on an
 arbitrary number of student submissions within a single assignment, and
-produces output which can be used to easily determine which submissions are
+produces output that can be used to easily determine which submissions are
 unusually similar.
 
 \textit{Checksims} uses a simple, modular architecture designed for easy
@@ -110,7 +110,7 @@ described below.
         submissions to ensure it is not matched.
   \item One or more preprocessors are applied to the tokenized
         submissions, transforming the tokens to increase comparison accuracy.
-  \item Submissions are then grouped by an algorithm which generates all
+  \item Submissions are then grouped by an algorithm that generates all
         possible unique, unordered pairs of submissions. A user-defined
         similarity detection algorithm is then run on all groups, and the
         results are parsed into a similarity matrix.
@@ -171,7 +171,7 @@ the sequence ``0 1 2 3 0'' (note the repeated identifier for the repeated
 character). This choice is less efficient when tokens represent individual
 characters of the input submission (32-bit integers representing UTF-8
 characters which will, in typical cases, be 8 bits), but it offers a
-substantial space and performance advantage for tokenization algorithms which
+substantial space and performance advantage for tokenization algorithms that
 represent substrings of the input as tokens (for example, line tokenization,
 which splits the input submission at newline characters to form tokens). Given
 that we expect most uses of this program to use string-backed tokens (for
@@ -190,7 +190,7 @@ ensuring that case is not a factor in comparisons. Preprocessors are
 implemented modularly, so more can be easily added in the future.
 
 Common code removal can also be performed at this stage. Common code removal
-accepts a submission which contains code that is expected to be present in all
+accepts a submission containing code that is expected to be present in all
 submissions --- for instance, copyright notices or helper functions provided by
 the instructor. This code is tokenized using the same method used for all other
 submissions, and similarity detection is performed between it and each
@@ -219,7 +219,7 @@ external dependency, which would add significantly to the complexity of
 detection algorithms) and makes all comparisons stateless, allowing them to
 be easily run in parallel by removing mutable state. It is still possible to
 parallelize feature extraction, but it is complicated by the presence of
-mutable state shared between threads, requiring synchronization code which
+mutable state shared between threads, requiring synchronization code that
 could impact performance. Finally, most dynamic programming algorithms for
 similarity detection are intended to be run on pairs of submissions, and
 these algorithms tend to be the easiest to implement. It would be desirable
@@ -233,7 +233,7 @@ The \textit{Line Comparison} algorithm is a special case of $n$-gram
 fingerprinting, as mentioned in the literature review in
 Section~\ref{sec:ngram}. \textit{Line Comparison} hashes each input token and
 creates a map of each hash to each occurrence (the position and submission
-where the token was found). Hash collisions are identified as hashes which map
+where the token was found). Hash collisions are defined as hashes that map
 to more than one occurrence, and collisions involving both submissions are
 tokens shared between the two. The percentage of tokens involved in such
 collisions is tallied and reported as the final result.
@@ -323,7 +323,7 @@ unusually large similarities easily.
 Like preprocessors and algorithms, output strategies are pluggable modules, 
 allowing new output strategies to be written and inserted with ease, with the
 restriction that they can only display information contained in the
-similarity matrix. Some information which might be desirable to display (for
+similarity matrix. Some information that might be desirable to display (for
 example, the specific matching tokens) is not present in the similarity matrix,
 placing limits on what output formats are possible. It may be desirable to make
 additional information available to output strategies in the future.
@@ -348,13 +348,13 @@ another.
 In a similarity matrix, the submissions used in similarity detection are
 counted, and a square matrix of that dimension is created. Submissions are each
 assigned a row and column. Every cell is initialized as the similarity of the
-submissions which define its intersection (specifically, column submission's
+submissions that define its intersection (specifically, column submission's
 similarity to row submission). If the row and column submissions are the same,
 the cell is ignored (declared as empty). An example is shown in
 Figure~\ref{fig:matrix}. Each cell shows the similarity of the submission on
 the X axis with the submission on the Y axis. In Figure~\ref{fig:matrix}, the
 bottom-right corner cell shows the percentage similarity of submission A to
-submission C --- that is, the percent of submission A's tokens which are shared
+submission C --- that is, the percent of submission A's tokens that are shared
 with submission C.
 
 \begin{figure}

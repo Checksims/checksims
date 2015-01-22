@@ -62,7 +62,7 @@ invocation.
 
 \subsubsection{Arguments}
 \textit{Checksims} has two mandatory arguments: a single \textit{glob} match
-pattern, and at least one to scan for submissions.
+pattern, and at least one directory to scan for submissions.
 
 The \textit{glob} match pattern is a shell-style match pattern used to
 identify files to include in submissions. Wildcard characters accepted by a
@@ -87,6 +87,8 @@ directory containing two subdirectories named ``A'' and ``B'' is provided as a
 search directory for submissions, two submissions named ``A'' and ``B'' will
 be created.
 
+% TODO ADD EXPLANATORY DIAGRAM
+
 After creation, any empty submissions (no files found matching given pattern,
 or only empty files found) are removed prior to running the detection
 algorithm.
@@ -103,8 +105,8 @@ operation of \textit{Checksims}. These are detailed below:
 \begin{itemize}
 \item \texttt{-a}, \texttt{--algorithm}: Specify algorithm to use for
 	similarity detection. Available options are \texttt{linecompare} and
-	\texttt{smithwaterman} at present, and can be listed with \texttt{-h}. If
-	no algorithm is given, the default is used.
+	\texttt{smithwaterman} at present, and can be listed with the \texttt{-h}
+	option. If no algorithm is given, the default is used.
 \item \texttt{-c}, \texttt{--common}: Perform common code removal. Specify a
 	directory containing common code (files within this directory will be
 	identified using the same glob matcher as normal submissions).
@@ -120,26 +122,26 @@ operation of \textit{Checksims}. These are detailed below:
 \item \texttt{-o}, \texttt{--output}: Specify output format(s) to use. More
 	than one can be provided; if so, separate them with commas. Available
 	options are \texttt{html}, \texttt{csv}, and \texttt{threshold} at
-	present, and can be listed with \texttt{-h}. If no output format is given,
-	the default is used.
+	present, and can be listed with the \texttt{-h} option. If no output
+	format is given, the default is used.
 \item \texttt{-p}, \texttt{--preprocess}: Specify preprocessors to apply. More
 	than one can be provided; if so, separate them with commas. At present,
 	the only available option is \texttt{lowercase}. Available options can be
-	listed with \texttt{-h}. If this argument is not provided, no preprocessors
-	are applied.
+	listed with the \texttt{-h} option. If this argument is not provided, no
+	preprocessors are applied.
 \item \texttt{-r}, \texttt{--recursive}: Recursively traverse subdirectories
 	when generating submissions.
 \item \texttt{-t}, \texttt{--token}: Specify tokenization to use. Available
 	options are \texttt{line}, \texttt{whitespace}, and \texttt{character} at
-	present, and can be listed with \texttt{-h}. If this option is not given,
-	the default tokenization for the algorithm is used.
+	present, and can be listed with the \texttt{-h} option. If the \texttt{-t}
+	option is not given, the default tokenization for the algorithm is used.
 \item \texttt{-v}, \texttt{--verbose}: Verbose debugging output.
 \item \texttt{-vv}, \texttt{--veryverbose}: Very verbose debugging output.
 	Overrides \texttt{-v} if both are specified.
 \end{itemize}
 
 \textit{Checksims} contains built-in usage information and descriptions of its
-arguments which can be printed by supplying the \texttt{-h} or \texttt{--help}
+arguments, which can be printed by supplying the \texttt{-h} or \texttt{--help}
 flag. The output mirrors the information provided above, though it may be more
 up-to-date.
 
@@ -183,17 +185,18 @@ This instructs \textit{Checksims} to do the following:
 \item Use a 64-bit JVM to prevent memory issues (\texttt{-d64}).
 \item Use an algorithm named \texttt{smithwaterman} to perform similarity
 	detection (\texttt{-a}).
-\item Generate output using two strategies, \texttt{html} and \texttt{csv},
-	and save this output in two files names \texttt{out.html} and
-	\texttt{out.csv} (\texttt{-o} and \texttt{-f}).
-\item Perform similarity detection on all files with extension \texttt{.c} in
+\item Generate output using two strategies, \texttt{html} and \texttt{csv}
+	(\texttt{-o}), and save this output in two files names \texttt{out.html}
+	and \texttt{out.csv} (\texttt{-f}).
+\item Perform similarity detection on all files with
+	extension~\texttt{\textquotedbl.c\textquotedbl}~in
 	directories~\texttt{SUBMISSION\_DIR\_ONE} and
 	\texttt{SUBMISSION\_DIR\_TWO}.
 \end{itemize}
 
 
 \subsubsection{Common Errors and Solutions}
-This section contains a number of common errors which can occur while using
+This section contains a number of common errors that can occur while using
 \textit{Checksims}, and suggests potential fixes.
 
 
@@ -224,7 +227,7 @@ usually result in a 4-fold reduction in memory use.
 \paragraph{No Submissions Detected}
 In the case that \textit{Checksims} cannot build any student submissions to
 compare, the first step is usually to check the glob match pattern used. Ensure
-that any characters which might be interpreted by your shell (for example, 
+that any characters that might be interpreted by your shell (for example, 
 \texttt{*}) are properly escaped (single or double quoted on Linux or OS X,
 double quoted on Windows). Furthermore, check that the glob match pattern is
 syntactically valid for your platform.
@@ -256,8 +259,8 @@ listed below.
 
 
 \subsubsection{Character Tokenization}
-The simplest tokenization method, \texttt{Character} tokenization breaks a
-submission into the characters which compose it and builds a token for each
+The simplest tokenization method, \texttt{Character} tokenization, breaks a
+submission into the characters that compose it and builds a token for each
 character. Whitespace characters (spaces and newlines) are treated as tokens.
 No deduplication of whitespace is done --- if a submission contains 3
 consecutive spaces, all will be treated as independent tokens.
@@ -266,8 +269,10 @@ consecutive spaces, all will be treated as independent tokens.
 tokenization schemes as it generates far more tokens for the algorithm to
 process. However, for most algorithms, \texttt{Character} tokenization will be
 the most conducive to accuracy, as it can identify largely similar words and
-lines which would otherwise be ignored. \texttt{Character} tokenization also
-uses slightly more memory compared to the other tokenization schemes.
+lines that would otherwise be ignored. \texttt{Character} tokenization also
+uses slightly more memory to store compared to the other tokenization schemes.
+\texttt{Character} tokenization may have adverse effects on the amount of
+memory used by certain algorithms as well.
 
 
 \subsubsection{Whitespace Tokenization}
@@ -354,8 +359,12 @@ language-appropriate syntax such as \{ or [).
 
 Given the restriction to the use of \texttt{Line} tokenization, even small
 changes (for example, a single missing character) can result in otherwise
-extremely similar lines not being recorded as similar. \textit{Line Comparison}
-is thus very limited in terms of accuracy.
+extremely similar lines not being recorded as similar. It is possible that
+preprocessors could remove some trivial differences (for example, changes to
+whitespace or addition of comments). However, other alterations, like
+reordering statements or changes to identifier names, are very difficult to
+catch with preprocessors. \textit{Line Comparison} is thus very limited in
+terms of accuracy.
 
 
 \subsection{Description of Output Strategies}
@@ -367,20 +376,21 @@ Results will often be presented as a square matrix, henceforth referred to as
 a \textit{Similarity Matrix}. These matrices are built from the complete
 results of the similarity detection algorithm, and contain the similarity of
 every submission to every other. As the name would imply, a similarity matrix
-is a $N$\texttt{x}$N$ matrix (with $N$ being the number of submissions), with
-each cell representing the similarity of one submission with another.
+is a $N \times N$ matrix (with $N$ being the number of submissions), with
+each cell containing a number representing the degree of similarity of one
+submission to another.
 
 In a similarity matrix, the submissions used in similarity detection are
 counted, and a square matrix of that dimension is created. Submissions are each
-assigned a row and column. Every cell is initialized as the similarity of the
-submissions which define its intersection (specifically, column submission's
-similarity to row submission). If the row and column submissions are the same,
-the cell is ignored (declared as empty). An example is shown in
-Figure~\ref{fig:userguidematrix}. Each cell shows the similarity of the
-submission on the X axis with the submission on the Y axis. In
+assigned a row and column. Every cell is initialized as the degree of
+similarity of the submissions that define its intersection (specifically,
+column submission's similarity to row submission). If the row and column
+submissions are the same, the cell is ignored (declared as empty). An example
+is shown in Figure~\ref{fig:userguidematrix}. Each cell shows the similarity
+of the submission on the X axis with the submission on the Y axis. In
 Figure~\ref{fig:userguidematrix}, the bottom-left corner cell shows the
 percentage similarity of submission A to submission C --- that is, the percent
-of submission A's tokens which are shared with submission C.
+of submission A's tokens that are shared with submission C.
 
 \begin{figure}
 \centering
@@ -398,7 +408,7 @@ software statistics packages to generate statistics about detected similarities
 
 
 \subsubsection{HTML}
-The HTML output strategy produces a web page which can be opened in a typical
+The HTML output strategy produces a web page that can be opened in a typical
 web browser, presenting a colorized version of a similarity matrix. A color
 range (yellow to red) shows how similar each cell is, allowing easy visual
 identification of similar students and clusters of similarities.
@@ -406,7 +416,7 @@ identification of similar students and clusters of similarities.
 
 \subsubsection{Threshold}
 The threshold output strategy produces an ordered list of submission pairs
-which are sufficiently similar (by default, 60\% or greater). The list
+that are sufficiently similar (by default, 60\% or greater). The list
 is ordered from most to least similar, and omits all information about
 similarities lower than the threshold. This output strategy produces
 quickly actionable information about the most-similar submissions.

@@ -6,7 +6,7 @@ these have concerned the unauthorized and unacknowledged copying of source code
 within the Electrical and Computer Engineering and Computer Science departments.
 The first reports came from Nicholas DeMarinis, a Teaching Assistant in the
 Electrical and Computer Engineering department, who noticed several instances
-of source code which he considered to be suspiciously similar in an embedded
+of source code that he considered to be suspiciously similar in an embedded
 systems programming course. He identified several cases of academic dishonesty,
 including one where the students had extensively obfuscated the copied code.
 
@@ -16,14 +16,14 @@ course staff of a low-level programming class he was teaching found a pair of
 students who submitted near-identical assignments, which he brought to
 Professor Lauer's attention. Several assignments later, another member of the
 course staff identified another set of students with very similar assignments
---- this time, by noticing that both students had submitted assignments which
-had identical, incorrect output.
+--- this time, by noticing that both students had submitted assignments that
+produced identical, incorrect output.
 
 In both of these cases, the unauthorized copying was caught mostly by luck.
-Both courses had more than one teaching assistant; if the two assignments which
+Both courses had more than one teaching assistant; if the two assignments that 
 contained unauthorized copying were graded by different teaching assistants,
 the copying would almost certainly not have been identified. This draws
-questions to how many cases of academic dishonesty occurred which were not
+questions to how many cases of academic dishonesty occurred that were not
 identified.
 
 The issue does not appear to be that course staff cannot identify unauthorized
@@ -34,49 +34,45 @@ to deal with. A solution for flagging potential cases of unauthorized copying
 for review by course staff has the potential to greatly increase detection of
 academic dishonesty.
  
-Professor Lauer commissioned the authors to construct a system for
+Professor Lauer commissioned us, the authors, to construct a system for
 automatically detecting suspicious assignments, with the intent of integrating
 it into his low-level courses as a tool to identify which assignments require
 manual review.
 
 
-\subsection{What is Academic Dishonesty}
+\subsection{Defining Academic Dishonesty}
 \label{sec:lauerdishonesty}
-The authors felt that, as they were developing software to detect academic
-dishonesty, it was important to know what academic dishonesty is. Professor
-Lauer provided us with his definition of what is and is not permissable, and
-we used this definition when determining what we should and should not detect.
-A wider discussion of varying definitions is contained in \ref{sec:dishonesty}
-in the literature review, but this is the working definition we used when
-building our solution.
+Different professors have different definitions of what constitutes illegal
+copying. In one class, two different students submitting similar algorithms
+might be considered to have engaged in unauthorized copying, while in another
+class their submissions might be considered perfectly acceptable. We used the
+definition below when building our tool. A wider discussion of varying
+definitions of academic dishonesty is contained in
+Section~\ref{sec:dishonesty}.
 
-Professor Lauer considers the collaboration of students on a whiteboard to be
-perfectly acceptable during assignments (indeed, it may be actively encouraged,
-depending on the course). Students can collaboratively develop pseudocode-level
-descriptions of the appropriate solution to an assignment, and then translate
-this pseudocode into a working program independently. The direct copying of
-source code is, however, prohibited --- each student must write their program
-independently, though again they may reference shared pseudocode. In Professor
-Lauer's view, this ensures that the code must  ``pass through the brain'' ---
-the students will gain more understanding by typing independently than by
-copying code directly. Thus, the direct copying of code from other sources is
-considered by Professor Lauer to be academic dishonesty, while solutions being
-identical at the pseudocode level are generally not considered problems.
+In Professor Lauer's lower level courses, students are encouraged to collaborate
+on a whiteboard and design pseudocode solutions, but they must type in and
+debug their own programs from these solutions. The direct copying of source
+code is, however, prohibited. This way, the code must pass ``through the
+brain'' --- the students will gain more understanding by typing
+independently than by copying code directly. Direct copying from other sources
+does constitute academic dishonesty. Such rules are described in the course
+syllabus, and are usually explained directly during the first lecture as well.
 
 Using source code from the web follows much the same rules as collaborating
 with other students. The use of preexisting pseudocode (or using existing code
-as pseudocode) is considered acceptable, so long as the student types their own
-solution, and do not copy wholesale a solution from the internet.
+as pseudocode or inspiration) is considered acceptable, so long as the student
+types his or her own solution, and does not copy his or her entire solution
+from the Internet.
 
 
 \subsection{Project Goals}
 \label{sec:goals}
-The overall goal of this project was to produce a piece of software to provide
-easy flagging of unusually similar source code submissions. The determination of
-whether such cases are or are not academic dishonesty is beyond the scope of
-this work; it is sufficient that our solution flag them for review by course
-staff. A key goal is ease of use --- it must be easy both to use the detector,
-and to identify suspicious results it has flagged. To enable features to be
-added in the future, we decided that our solution must be open-source and
-modular.
-% TODO anything else that needs to be said here?
+The overall goal of this project was to produce a software tool to provide easy
+flagging of unusually similar source code submissions for followup by course
+staff. The tool must be an easy-to-use desktop application. Future work would
+focus on integrating the tool into the grading workflow by adding integration
+with existing software tools (for example, for project submission). To
+facilitate future modifications and expansion, the tool must be open-source
+and modular.
+
