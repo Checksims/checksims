@@ -110,9 +110,20 @@ construction of our application.
 
 
 \subsubsection{Code Clone Detection}
-TODO
-% Cite hordijk08
-% cite baker95
+Most professional software engineers agree that source code should not be
+duplicated in a large programming project. The \textit{duplication hypothesis}
+holds that duplicated source code makes a programming project harder to
+maintain, by requiring the same change in multiple (perhaps non-obvious)
+places. A number of tools have been developed to search for duplicated source
+code (code clones), and same studies have tried to evaluate the duplication
+hypothesis itself \cite{hordijk08}.
+
+An early code clone detector, \textit{dup}, was developed at AT\&T.
+\textit{Dup} searches C source files line-by-line and can be used to detect
+parameterized matches - files which match when eliminating certain differences
+such as variable names. In 1993, \textit{dup} found parameterized matches for
+15\% of the X Window System, and 23\% of a large proprietary AT\&T system
+\cite{baker95}.
 
 \subsubsection{Bioinformatics}
 The comparison of similar sequences is common practice in Bioinformatics.
