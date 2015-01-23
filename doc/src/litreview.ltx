@@ -123,16 +123,15 @@ heavily on the fields of Natural Language Processing and Information
 Retrieval to process student submissions and efficiently store and retrieve 
 information about similarities \cite{beth14}.
 
-Academic dishonesty detection is generally broken into two broad fields. The
+Academic dishonesty detection is often broken into two broad fields. The
 first is the detection of unauthorized copying in source code, and the second
-the detection of unauthorized copying in natural language. The source code
-detection problem is generally considered the easier of the two problems, given
-that programming languages follow a fixed grammar. The need for advanced 
-natural language processing is mostly eliminated, given the constraints on 
-what is valid source code \cite{clough03}. Given the problem we are 
-attempting to solve, we are naturally more interested in source code 
-similarity detection.
-% TODO do we cite lancaster05?
+the detection of unauthorized copying in natural language \cite{lancaster05}.
+The source code detection problem is generally considered the easier of the
+two problems, given that programming languages follow a fixed grammar. The
+need for advanced natural language processing is mostly eliminated, given
+the constraints on what is valid source code \cite{clough03}. Given the
+problem we are attempting to solve, we are naturally more interested in
+source code similarity detection.
 
 
 \paragraph{Obfuscation}
@@ -275,7 +274,7 @@ Vector-distance algorithms compare two or more inputs and identify the
 number and sequence of edits that must be made to transform one of the inputs
 into the other(s). The complement of this sequence of edits is the set of
 things that did not change --- the similarities between the two documents.
-Vector-Distance algorithms are typically the slowest of all  similarity
+Vector-Distance algorithms are typically the slowest of all similarity
 detection algorithms, but fingerprinting and feature comparison may not
 identify the best possible match.
 
