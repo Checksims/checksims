@@ -267,6 +267,10 @@ to catch similarities that might otherwise be undetectable
 \cite{whale1990identification} \cite{arwin2006plagiarism} \cite{lancaster05}.
 
 
+\subsubsection{Greedy String Tiling}
+\label{sec:gst}
+TODO explanation of greedy string tiling
+
 \subsubsection{Vector-Distance Algorithms}
 Vector-distance algorithms compare two or more inputs and identify the
 number and sequence of edits that must be made to transform one of the inputs
@@ -484,5 +488,32 @@ its results.
 
 
 \subsubsection{JPlag}
-TODO
+\textit{JPlag} is a web service developed by Guido Malpohl in 1996. When it was
+being actively developed, \textit{JPlag} compared closely with the performance
+of MOSS, and some academic dishonesty detection tool developers chose to forgo
+testing their own tools against MOSS in favor of \textit{JPlag}
+\cite{prechelt00} \cite{ciesielski08}.
+
+\textit{JPlag} allows users to submit an archive of programming files to its
+web service; the files will then be compared pairwise against each other.
+\textit{Jplag} first runs the programs through a parser or scanner for the
+appropriate programming language, then uses the outputs from the parser or
+scanner as the input strings to its backend algorithm; only the front-end
+parsing step is language-dependent \cite{prechel00}. \textit{JPlag} is
+advertised to support C, C++, Java, and Scheme.
+
+\textit{JPlag} uses Wise's greedy string tiling as described in
+Section~\cite{sec:gst}, with some modifications. First, it searches for
+matching strings using Karp-Rabin string matching, as described in
+Section~\cite{sec:karp-rabin}. Second, when searching for the longest common
+substring between documents, it skips a number of comparisons equal to the
+longest common substring found so far. If the next character after that jump
+is a match, then, and only then, does the algorithm step back to try to
+verify the string. Finally, JPlag enforces that the shorter document is
+always treated as the query document. The matching algorithm runs in $O(n^3)$
+worst case, but usually $O(n)$ in practice.
+
+The source code for \textit{JPlag} is not available to the public, and we have
+not been able to locate the service on the web. In spite of the service's
+success, we believe development has stopped and the project has been abandoned.
 
