@@ -363,14 +363,20 @@ used and built on by many later string-matching papers \cite{schleimer03}
 \paragraph{$n$-gram Fingerprinting}
 \label{sec:ngram}
 By far the most common document fingerprinting approach is called 
-\textit{n-gram fingerprinting}. The document is tokenized and considered as
+\textit{n-gram fingerprinting}. Figure~\ref{fig:n-gram} presents an overview of
+\textit{n-gram} fingerprinting. The document is tokenized and considered as
 sequences of $n$ tokens, or \textit{n-grams}. The \textit{n-grams} overlap, so
-that there an $m$ character document is considered as $m - n + 1$ 
-\textit{n-grams}. The hashes of these \textit{n-grams} are stored in a
-database and checked against those from other documents. The hashes are
-usually stored with pointers to their occurrences to aid in detection.
+that a document with $L$ tokens is considered as $L - n + 1$  \textit{n-grams}.
+The hashes of these \textit{n-grams} are stored in a database and checked
+against those from other documents. The hashes are usually stored with
+pointers to their occurrences to aid in detection.
 
-TODO ILLUSTRATION
+\begin{figure}
+\centering
+\includegraphics{ngram-diagram.png}
+\caption{An overview of \textit{n-gram} fingerprinting}
+\label{fig:n-gram}
+\end{figure}
 
 Most corpora are far too large to store the the hashes of every \textit{n-gram}
 from every document in the database. Usually, a small subset of all hashes are
@@ -389,8 +395,6 @@ tokens into \textit{n-grams}, winnowing further divides the \textit{n-grams}
 into \textit{windows} of size $t$. Winnowing always selects exactly one hash
 from each window, guaranteeing that a match of $t$ or more consecutive tokens
 is identified.
-
-TODO ILLUSTRATION
 
 Winnowing has proven to be extremely powerful; it is used by the current
 industry standard source code similarity detector, \textit{Measure of Software
