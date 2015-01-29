@@ -269,7 +269,14 @@ to catch similarities that might otherwise be undetectable
 
 \subsubsection{Greedy String Tiling}
 \label{sec:gst}
-TODO explanation of greedy string tiling
+Greedy String Tiling is a popular algorithm that is most notably used by
+\textit{JPlag} \cite{prechelt00} First, the algorithm locates the longest
+string that is shared between the two documents and designates that string as
+a ``tile''. Then, it tiles the next longest substring that is not already
+part of a tile. It continues tiling the next largest shared string until the
+largest match falls below some floor. The algorithm is guaranteed to
+terminate because the length of the maximum match decreases with each step;
+greedy string tiling runs in $O(n^3)$ worst-case time.
 
 \subsubsection{Vector-Distance Algorithms}
 Vector-distance algorithms compare two or more inputs and identify the
