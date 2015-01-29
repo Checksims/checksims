@@ -425,14 +425,28 @@ pursue this line of inquiry.
 % Could cite lancaster05
 
 
-\iffalse
 \subsubsection{Other Approaches}
-TODO
-% Debate: are these worth mentioning at all?
-% Reference ciesielski08
-% Reference belkhouche04
-% Reference lancaster05
-\fi
+
+Burrows, Tahaghoghi, and Zobel have developed a highly scalable approach to
+similarity detection using advanced information retrieval techniques, which can
+handle checking for similarity among tens of thousands of source code documents
+\cite{burrows07}. The Burrows approach requires users to select a function of
+two documents that outputs a ``similarity score'' for them. Because the
+effectiveness of the Burrows approach requires using an intelligent similarity
+scoring function, a number of such functions have been developed, including the
+Okapi BM25 function and a family of functions developed by Ciesielski, Nelson,
+and Tahaghogi using genetic programming \cite{ciesielski08}.
+
+Belkhouche, Nix, and Hassell have contributed an elaborate academic dishonesty
+detection approach that compares C programs by converting them to structures
+representing control flow, data tables, and other high-level concepts. Their
+implementation is highly language-specific \cite{belkhouche04}.
+
+So many other unauthorized copying detectors have been developed that
+describing all of them here would be impractical. Lancaster and Culwin have
+constructed a detailed and very helpful taxonomy of commonly known copy
+detection tools, and have described those tools in terms of that taxonomy
+\cite{lancaster05}.
 
 
 \subsection{Existing Solutions}
