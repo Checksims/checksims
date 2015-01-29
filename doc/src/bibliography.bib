@@ -18,6 +18,15 @@
   year={2005},
   annote={TODO}
 }
+@inproceedings{arwin2006plagiarism,
+  title={Plagiarism detection across programming languages},
+  author={Arwin, Christian and Tahaghoghi, Seyed MM},
+  booktitle={Proceedings of the 29th Australasian Computer Science Conference-Volume 48},
+  pages={277--286},
+  year={2006},
+  organization={Australian Computer Society, Inc.},
+  annote={TODO}
+}
 @inproceedings{baker95,
   title={On finding duplication and near-duplication in large software systems},
   author={Baker, Brenda S},
@@ -38,11 +47,11 @@
 	year={2004},
 	organization={ACM},
 	annote={
-    \setlength{\parskip}{1.5ex}
-	  Unsuitable for use in project---focuses on very high-level comparison,
-	  analyzing design (code structure, data structures) of two programs for
-	  similarity (overall program design is analyzed and compared---going to be
-	  identical in low-level CS!). Mention at most.}
+          \setlength{\parskip}{1.5ex}
+	  Focuses on very high-level comparison, analyzing design (code
+          structure, data structures) of two programs for similarity. Performs
+          progressively higher-level analysis on C programs at five levels of
+          abstraction. Very language-specific approach.}
 }
 @article{beth14,
   title={A Comparison of Similarity Techniques for Detecting Source Code Plagiarism},
@@ -97,8 +106,8 @@
     programming class setting. Describes MOSS, a web-based plagiarism detection
     service still made available by Stanford (upwards of a decade after initial
     inception). MOSS does not provide details of algorithms used internally,
-    does not provide source code, but does provide what would seem to be a useful
-    benchmark for usability given its popularity.}
+    does not provide source code, but does provide a useful benchmark for
+    usability given its popularity.}
 }
 @inproceedings{brin95,
   title={Copy detection mechanisms for digital documents},
@@ -126,17 +135,6 @@
     document fingerprinting approaches we have studied. The authors choose the
     last strategy.}
 }
-@inproceedings{brixtel10,
-  title={Language-independent clone detection applied to plagiarism detection},
-  author={Brixtel, Romain and Fontaine, Mathieu and Lesner, Boris and Bazin, Cyril and Robbes, Romain},
-  booktitle={Source Code Analysis and Manipulation \(SCAM\), 2010 10th IEEE Working Conference on},
-  pages={77--86},
-  year={2010},
-  organization={IEEE},
-  annote={
-    \setlength{\parskip}{1.5ex}
-    TO DO; Very promising abstract}
-}
 @article{burrows07,
   title={Efficient plagiarism detection for large code repositories},
   author={Burrows, Steven and Tahaghoghi, Seyed MM and Zobel, Justin},
@@ -148,12 +146,10 @@
   publisher={Wiley Online Library},
   annote={
     \setlength{\parskip}{1.5ex}
-    Focused on efficiency over large data sets. Details indexing algorithms adapted
+    Focuses on efficiency over large data sets. Details indexing algorithms adapted
     from genomic information retrieval for maintaining a database of source code
     which new submissions can be compared against, in a very efficient manner (so
-    as to scale to many thousands or tens of thousands of submissions). Very
-    advanced database retrieval techniques I did not understand in the slightest
-    discussed for majority of paper.}
+    as to scale to many thousands or tens of thousands of submissions).}
 }
 @article{buss94,
   title={Investigating reverse engineering technologies for the CAS program understanding project},
@@ -256,9 +252,7 @@
     code) which can then be used to make a determination on plagiarism. However, to
     make use of this algorithm, the program must be parsed into tokens to remove
     whitespace issues (amongst other reasons). Solution is named SID --- Software
-    Integrity Diagnosis. I can find no information on current development (paper
-    dated 2004), and the official website no longer exists. No evidence source code
-    was ever released.}
+    Integrity Diagnosis.}
 }
 @inproceedings{ciesielski08,
   title={Evolving similarity functions for code plagiarism detection},
@@ -270,19 +264,9 @@
   annote={
     \setlength{\parskip}{1.5ex}
     Discusses the use of genetic algorithms to tune an existing algorithm for
-    plagiarism detection (Okapi) for optimum accuracy, and furthermore uses
+    similarity evaluation (Okapi) for optimum accuracy, and furthermore uses
     particle swarm genetic optimization to devise novel formulas for plagiarism
     detection.}
-}
-@inproceedings{clough03,
-  title={Old and new challenges in automatic plagiarism detection},
-  author={Clough, Paul and others},
-  booktitle={National Plagiarism Advisory Service, 2003; http://ir. shef. ac. uk/cloughie/index. html},
-  year={2003},
-  organization={Citeseer},
-  annote={
-    \setlength{\parskip}{1.5ex}
-    According to abstract, focuses on natural language.}
 }
 @article{cosma06,
   title={Source-code plagiarism: A UK academic perspective},
@@ -292,9 +276,7 @@
   annote={
     \setlength{\parskip}{1.5ex}
     A survey of UK academics focused not on how to detect plagiarism, but what it
-    is in the context of source code and programming classes. Useful for abstract/
-    introduction, not really useful otherwise as Prof. Lauer has provided his own
-    definition, and that is what we are working with for this project.}
+    is in the context of source code and programming classes.}
 }
 @article{crochemore01,
   title={A fast and practical bit-vector algorithm for the longest common subsequence problem},
@@ -320,53 +302,12 @@
   organization={IEEE},
   annote={
     \setlength{\parskip}{1.5ex}
-    Not a proper discussion of plagiarism detection, but still very applicable.
     This presents a scalable approach to identifying ``semantic codes''---
     semantically equivalent source code blocks (here presented in the context of
     the detection of dead/redundant code, but plagiarism applications are obvious).
-    Based on construction of a syntax tree in a form very similar to a function
-    call graph.}
-}
-@inproceedings{gitchell99,
-  title={sim: a utility for detecting similarity in computer programs},
-  author={Gitchell, David and Tran, Nicholas},
-  booktitle={acm sigcse bulletin},
-  volume={31},
-  number={1},
-  pages={266--270},
-  year={1999},
-  organization={acm},
-  annote={
-    \setlength{\parskip}{1.5ex}
-    a functional description of the previously-described sim utility. no
-    significant details of the algorithm are mentioned which are not expanded on in
-    the first paper, but it does mention a worthwhile statistic: sim is $o(s^2)$
-    complexity, where s is the size of the parse tree of the program being
-    processed. this, perhaps, places the scalability papers in a better context?}
-}
-@article{hoad03,
-  title={methods for identifying versioned and plagiarized documents},
-  author={Hoad, Timothy C and Zobel, Justin},
-  journal={journal of the american society for information science and technology},
-  volume={54},
-  number={3},
-  pages={203--215},
-  year={2003},
-  publisher={wiley online library},
-  annote={
-    \setlength{\parskip}{1.5ex}
-    a textual approach to source code plagiarism detection based on a
-    ``fingerprinting'' method --- in keeping with our ``line-by-line checksum'' examples,
-    but more adaptable (can cross multiple lines, etc). apparently, fingerprinting
-    is not as good as some other methods, though --- their conclusion mentions the
-    existing ``identity algorithm'' is more accurate in their testing.}
-}
-@article{hordijk08,
-  title={structured review of code clone literature},
-  author={Hordijk, Wiebe and Ponisio, Mar{'\i}a Laura and Wieringa, Roel},
-  year={2008},
-  publisher={centre for telematics and information technology, university of twente},
-  annote={TODO}
+    Reports that fingerprinting is not as good as some other methods --- the
+    conclusion mentions the existing ``identity algorithm'' is more accurate in
+    their testing.}
 }
 @article{irving04,
   title={plagiarism and collusion detection using the smith-waterman algorithm},
@@ -376,9 +317,8 @@
   annote={
     \setlength{\parskip}{1.5ex}
     a similarity detection algorithm for plaintexts intended for plagiarism
-    detection. according to conclusion, very accurate, but slow --- perhaps too slow
-    for anything but very small batches of files. this does describe our situation,
-    though. worth looking into.}
+    detection. According to conclusion, very accurate, but slow --- perhaps too slow
+    for anything but very small batches of files.}
 }
 @inproceedings{johnson94,
   title={substring matching for clone detection and change tracking},
@@ -409,14 +349,14 @@
     \ref{itm:substrings}-\ref{itm:iterate} have the advantage of being
     language-agnostic. note that this approach is reminiscent of the document
     fingerprinting approaches to plagiarism detection. step \ref{itm:rawmatch}
-    is done by karp-rabin string matching \cite{karp87}. in step
+    is done by karp-rabin string matching \cite{karp87}. In step
     \ref{itm:iterate}, they perform tasks such as merging consecutive matches
     and other ``lossless'' compression strategies. step \ref{itm:correct} is
     where one might  perform ``lossy'' compression, such as eliminating certain
     text (like, for instance, a copyright notice) that is expected to be
     cloned.
     \par
-    the authors tested their prototype on gcc, versions 2.5.8 and 2.3.3; both
+    The authors tested their prototype on gcc, versions 2.5.8 and 2.3.3; both
     releases together total 1440 files with a combined size of 40 megabytes.
     they found a total of 988 ``clusters'', or matched substrings. 315 of these
     clusters were of type ``abx'' (contained in one file from each release) or
@@ -424,8 +364,8 @@
     these represent code that was not changed between releases, or that was
     moved to a different location. there were a very large number of abx
     clusters as a result of a large naming convention change done by the gcc
-    team between the two releases. they identified some software cloning, and
-    areas of massive changes. the authors reported very few nonsense matches.}
+    team between the two releases. They identified some software cloning, and
+    areas of massive changes. The authors reported very few nonsense matches.}
 }
 @inproceedings{jones01,
   title={metrics based plagarism monitoring},
@@ -456,15 +396,15 @@
   annote={
     \setlength{\parskip}{1.5ex}
     \par
-    joy provides a definition of plagiarism, ``unacknowledged copying of documents
+    Joy and Luck provides a definition of plagiarism, ``unacknowledged copying of documents
     or programs'', and names several potential causes of plagiarism.
     \par
-    joy describes
+    Joy and Luck describe
     two obfuscation techniques: lexical changes (comment changes, formatting,
     changing identifier names, etc.) and structural changes (loop replacement, ifs
     to cases, statement ordering, refactoring, etc.)
     \par
-    joy describes two pair comparison techniques: comparing attribute counts, and
+    Joy and Luck describe two pair comparison techniques: comparing attribute counts, and
     comparing structure.
     \par
     presents an algorithm called sherlock, with the following requirements:
@@ -571,8 +511,7 @@
     attempts to find duplicate/dead code. this one is interesting because of its
     categorization metrics, though --- it attempts to classify code as either a
     straight duplicate, close copy, or unclassifiable (some duplicated code, but
-    not enough to conclusively classify). this might be worth carrying over into
-    our work.}
+    not enough to conclusively classify).}
 }
 @article{lancaster05,
   title={Classifications of plagiarism detection engines},
@@ -584,18 +523,9 @@
   publisher={The Higher Education Academy Innovation Way, York Science Park, Heslington, York YO10 5BR},
   annote={
     \setlength{\parskip}{1.5ex}
-    TODO. Entirely devoted to producing a taxonomy of plagiarism detection solutions ---
-    existing software, types of detection engine, etc. Going to be VERY useful
-    writing literature survey.}
-}
-@inproceedings{lukashenko07,
-  title={Computer-based plagiarism detection methods and tools: an overview},
-  author={Lukashenko, Romans and Graudina, Vita and Grundspenkis, Janis},
-  booktitle={Proceedings of the 2007 international conference on Computer systems and technologies},
-  pages={40},
-  year={2007},
-  organization={ACM},
-  annote={TODO}
+    Lancaster provides a detailed taxonomy of plagiarism detection tools, and
+    describes all (then) commonly-known plagiarism detection tools in terms of
+    that taxonomy.}
 }
 @article{murugesan10,
   title={Efficient privacy-preserving similar document detection},
@@ -610,15 +540,20 @@
     \setlength{\parskip}{1.5ex}
     Attempts to detect similar documents when the text of the document is not
     available, for instance, when checking for plagiarism between conferences with
-    confidential systems. Not relevant enough, since we should have access to our
-    full corpus.}
+    confidential systems.} 
 }
 @article{parker89,
   title={Computer algorithms for plagiarism detection},
   author={Parker, Alan and others},
   year={1989},
   publisher={Citeseer},
-  annote={TODO}
+  annote={
+    \setlength{\parskip}{1.5ex}
+    Defines a five-level plagiarism ``spectrum'' to categorize the different
+    types of obfuscations that are commonly used in duplicated student
+    assignments, then provides an overview of some then-advanced similarity
+    detection algorithms. All seven algorithms examined are feature-extraction
+    algorithms that analyze similarities in software metrics.}
 }
 @inproceedings{potthast10,
  author={Potthast, Martin and Stein, Benno and Barr'{o}n-Cede\~{n}o, Alberto and Rosso, Paolo},
@@ -644,16 +579,14 @@
    algorithm to mutate the document.
     \par
    They present PAN-PC-10, a plagiarism corpus created with Mechanical Turk and an
-   algorithmic approach. They compare the corpus with existing corpori Clough09
+   algorithmic approach. They compare the corpus with existing corpora Clough09
    and METER, but stop short of claiming that any one database is the best.}
 }
-@inproceedings{roy08mutation,
-  title={Towards a mutation-based automatic framework for evaluating code clone detection tools},
-  author={Roy, Chanchal K and Cordy, James R},
-  booktitle={Proceedings of the 2008 C 3 S 2 E conference},
-  pages={137--140},
-  year={2008},
-  organization={ACM},
+@techreport{prechelt00,
+  title={JPlag: Finding plagiarism among a set of programs},
+  author={Prechelt, Lutz and Malpohl, Guido and Philippsen, Michael},
+  year={2000},
+  institution={Technical Report 2000-1, Fakultat fur Informatik, Universitat Karlsruhe, D-76128 Karlsruhe, Germany},
   annote={TODO}
 }
 @inproceedings{schleimer03,
@@ -729,10 +662,7 @@
     Winnowing ended up fingerprinting extremely densely in low-entropy data, so the
     authors presented a very minor adjustment called ``robust winnowing'' to correct
     it. Robust winnowing is not a local algorithm, but performed better than
-    winnowing.
-    \par
-    The authors concluded with some linguistic analysis of the web which we don't
-    care about, and several extremely useful implementation suggestions.}
+    winnowing.}
 }
 @article{shivakumar95,
   title={SCAM: A copy detection mechanism for digital documents},
@@ -746,18 +676,7 @@
     work, SCAM chunks by words. Most previous work in this area simply compared
     the size of the overlap against the size of the document, but that doesn't
     work if you are chunking by words; so the authors propose a new similarity
-    approach based on vector distances between word counts.
-    \par
-    The authors reject the Vector Space Model and find a significant weakness with
-    the Cosine Similarity Measure; namely, that it performs poorly when word
-    frequency magnitudes differ significantly. They make an adjustment based on
-    word frequency and call their measure the Relative Frequency Model (RFM). A
-    full description can be found in the paper, but qualitatively, the RFM only
-    considers words whose frequencies are ``similar'' according to a tunable
-    parameter $\epsilon$.
-    \par
-    The experimental results compared SCAM against a previous work, COPS, and were
-    very confusing and probably not that interesting anyway.}
+    approach based on vector distances between word counts.}
 }
 @article{smith1981identification,
   title={Identification of common molecular subsequences},
@@ -772,18 +691,6 @@
     \setlength{\parskip}{1.5ex}
     Describes the Smith-Waterman algorithm for comparing genetic sequences.
     TODO EXPAND.
-  }
-}
-@inproceedings{arwin2006plagiarism,
-  title={Plagiarism detection across programming languages},
-  author={Arwin, Christian and Tahaghoghi, Seyed MM},
-  booktitle={Proceedings of the 29th Australasian Computer Science Conference-Volume 48},
-  pages={277--286},
-  year={2006},
-  organization={Australian Computer Society, Inc.},
-  annote={
-    \setlength{\parskip}{1.5ex}
-    TODO
   }
 }
 @article{whale1990identification,
