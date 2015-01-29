@@ -49,7 +49,7 @@ information, it would not be able to be published.
 In addition to privacy concerns, student code presents another obstacle.
 Prior to this project, there was no similarity detection system in common use
 in the WPI Computer Science department. Consequently, aside from occasional
-submissions that were overly similar identified by course staff, there is no
+submissions which were overly similar identified by course staff, there is no
 concrete record of which submissions within a group are similar. Any results on
 such code will have no baseline to compare against.
 
@@ -110,7 +110,7 @@ Given that anonymized student code tests were performed on submissions stripped
 of comments, the question is raised as to whether this is a reasonable set of
 data to compare against. Actual source code will, in all likelihood, have a
 sizable number of comments. The absence of comments has the potential to
-substantially alter results --- for example, two submissions that differed
+substantially alter results --- for example, two submissions which differed
 only by comments would appear as 100\% similar when, with comments, they might
 only be 70\% to 80\%. Indeed, there is the potential that removing comments
 might increase the accuracy of a similarity detection program (though it could
@@ -126,7 +126,7 @@ A baseline to compare against was necessary to truly use student code as test
 data for \textit{Checksims}. While the output of the program can be
 investigated to verify that any reported similarities do exist and weed out
 false positives, it is impossible to identify false negatives (submissions
-that contain unusual similarities but are not flagged by our software)
+which contain unusual similarities but are not flagged by our software)
 without baseline output identifying all similar submissions. Given that we
 characterize false negatives as a very undesirable characteristic, it is thus
 necessary that we possess the means to verify they are not present.
@@ -171,15 +171,14 @@ detection for source code \cite{beth14}.
 It is noteworthy that using MOSS for baseline results will not completely
 remove false negatives as a factor. If both MOSS and Checksims do not
 identify any unusual similarities that might be indicative of academic
-dishonesty, this will constitute a false negative --- an instance of
-unauthorized copying that has been completely missed. We judge this not
-particularly likely, given the quality and maturity of the algorithms used by
-MOSS (described in the literature review at \ref{sec:moss}). It is unlikely
-that MOSS will miss similarities that indicate academic dishonesty, and if it
-should, this is not a significant loss, as we are not aiming to produce a
-perfect solution, only one that is ``good enough'' --- we do not expect
-\textit{Checksims} to catch cases that have eluded the industry-benchmark
-solution.
+dishonesty, this will constitute a false negative which has been completely
+missed. We judge this not particularly likely, given the quality and maturity
+of the algorithms used by MOSS (described in the literature review at
+\ref{sec:moss}). It is unlikely that MOSS will miss similarities indicate of
+academic dishonesty, and if it should, this is not a significant loss, as we
+are not aiming to produce a perfect solution, only one that is ``good enough''
+--- we do not expect \textit{Checksims} to catch cases which have eluded the
+industry-benchmark solution.
 
 
 \subsubsection{Simulated Similarity}
@@ -241,7 +240,7 @@ assignment in our test data, once using each algorithm. The default
 tokenization strategy was used for both algorithms. Output was saved to a
 unique file for each assignment, and program runtime saved to another file.
 From these, results were computed. Results with similarities under 70\% were
-immediately discarded, to limit the number of checks that would have to be
+immediately discarded, to limit the amount of checks which would have to be
 done. Results over 70\% were reported for both algorithms over all assignments.
 Subsequently, we identified four assignments with a large number of
 similarities, and compared the results for the \textit{Smith-Waterman} and
@@ -260,14 +259,14 @@ Furthermore, we aimed to verify that \textit{Checksims} contained few (or no)
 false negatives.
 
 To perform this experiment, we first identified a number of assignments from
-our test data that had a very large number, or almost no, similarities
+our test data which had a very large number, or almost no, similarities
 (according to data from the previous experiment). Two of each were chosen and
 given to MOSS to perform detection on (given that MOSS is a free service, and
 not particularly fast, we did not wish to place undue demands on it by running
 our entire set of test data through).
 
 The MOSS results for the chosen assignments were then investigated to identify
-false positives --- similarities identified by MOSS that did not match our
+false positives --- similarities identified by MOSS which did not match our
 definition of similarity. The number of false positives (and the original
 number of results) were reported, and the false positives thrown out. The
 \textit{Checksims} results from the previous experiment for both algorithms
