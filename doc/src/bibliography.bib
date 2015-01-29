@@ -10,14 +10,6 @@
     GNU GPL licensed Java 1.5 source code plagiarism detection software dating to
     2006. No evidence of active development after this point.}
 }
-@article{aiken05,
-  title={Moss: A system for detecting software plagiarism},
-  author={Aiken, Alex and others},
-  journal={University of California--Berkeley. See www. cs. berkeley. edu/aiken/moss. html},
-  volume={9},
-  year={2005},
-  annote={TODO}
-}
 @inproceedings{arwin2006plagiarism,
   title={Plagiarism detection across programming languages},
   author={Arwin, Christian and Tahaghoghi, Seyed MM},
@@ -25,7 +17,10 @@
   pages={277--286},
   year={2006},
   organization={Australian Computer Society, Inc.},
-  annote={TODO}
+  annote={Introduces XPlag, a tool designed to detect instances of code copied
+    from one programming language into another. XPlag functions by comparing
+    the intermediate representation of two programs written in different
+    languages but built by the same compiler suite.}
 }
 @inproceedings{baker95,
   title={On finding duplication and near-duplication in large software systems},
@@ -587,7 +582,12 @@
   author={Prechelt, Lutz and Malpohl, Guido and Philippsen, Michael},
   year={2000},
   institution={Technical Report 2000-1, Fakultat fur Informatik, Universitat Karlsruhe, D-76128 Karlsruhe, Germany},
-  annote={TODO}
+  annote={
+    \setlength{\parskip}{1.5ex}
+    Presents JPlag, a similarity detection tool based on greedy string tiling,
+    but with optimizations to decrease the average runtime from $O(n^2)$ to
+    $O(n)$. Jplag achieves results comparable to MOSS, but provides a web
+    interface rather than an email-based one.}
 }
 @inproceedings{schleimer03,
   title={Winnowing: local algorithms for document fingerprinting},
@@ -704,9 +704,13 @@
   publisher={Br Computer Soc},
   annote={
     \setlength{\parskip}{1.5ex}
-    Gives a list of 13 obfuscation measures which can be used to disguise
-    unauthorized copying. TODO EXPAND.    
-  }
+    Whale provides an overview of the state of similarity detection in the year
+    1990. The document contains a discussion of the prevalence and motivation
+    for students to copy others' assignments, common techniques for obscuring
+    unauthorized copying, the various metrics to evaluate similarity detectors
+    and the poor state of evaluation methodologies, and a broad overview of the
+    most common approaches at the time. The paper closes with a comparison of
+    the effectiveness of the most popular approaches.}
 }
 
 
