@@ -12,7 +12,7 @@
 }
 @inproceedings{arwin2006plagiarism,
   title={Plagiarism detection across programming languages},
-  author={Arwin, Christian and Tahaghoghi, Seyed MM},
+  author={Arwin, Christian and Tahaghoghi, Seyed M.M.},
   booktitle={Proceedings of the 29th Australasian Computer Science Conference-Volume 48},
   pages={277--286},
   year={2006},
@@ -24,7 +24,7 @@
 }
 @inproceedings{baker95,
   title={On finding duplication and near-duplication in large software systems},
-  author={Baker, Brenda S},
+  author={Baker, Brenda S.},
   booktitle={Reverse Engineering, 1995., Proceedings of 2nd Working Conference on},
   pages={86--95},
   year={1995},
@@ -81,15 +81,11 @@
     ``$w$-shingling measures the proportion of $n$-gram sequences two documents have in
     common to the total number of $n$-gram sequences that occur in either document''.
     Beth speculates that MOSS uses a similar $n$-gram fingerprinting retrieval
-    system called winnowing.
-    \par
-    In the introduction, the author differentiated ``code clone detection'' from
-    ``source code plagiarism detection'', but did not elaborate. Perhaps we should
-    look more closely into the difference.}
+    system called winnowing.}
 }
 @inproceedings{bowyer99,
-  title={Experience using`` moss'' to detect cheating on programming assignments},
-  author={Bowyer, Kevin W and Hall, Lawrence O},
+  title={Experience using ``MOSS'' to detect cheating on programming assignments},
+  author={Bowyer, Kevin W. and Hall, Lawrence O.},
   booktitle={Frontiers in Education Conference, 1999. FIE'99. 29th Annual},
   volume={3},
   pages={13B3--18},
@@ -121,18 +117,25 @@
     some structural meaning (units are remarkably similar to ``tokens'' as we
     describe them in other parts of the literature).
     \par
-    Brin et al. present four chunking strategies: one unit equals one chunk was
-    rejected for its high space requirement. Non-overlapping chunks were rejected
-    because of their phase dependence. All-overlapping chunks were rejected for
-    having the same space requirement as one-unit chunks, and because an attacker
-    could defeat it by changing one unit in each chunk. Expanding chunks until the
-    chunk hash is divisible by some number $p$; note the similarity to the
-    document fingerprinting approaches we have studied. The authors choose the
-    last strategy.}
+    Brin et al. present four chunking strategies:
+    \begin{enumerate}
+    \item One unit equals one chunk
+    \item Non-overlapping chunks of multiple units
+    \item Multiple-unit chunks with maximum overrlap
+    \item Using the smallest chunk whose hash is divisible by some number $p$.
+    \end{enumerate}
+
+    one unit equals one chunk was rejected for its high space requirement.
+    Non-overlapping chunks were rejected because of their phase dependence.
+    All-overlapping chunks were rejected for having the same space requirement
+    as one-unit chunks, and because an attacker could defeat it by changing one
+    unit in each chunk. Expanding chunks until the chunk hash is divisible by
+    some number $p$; note the similarity to document fingerprinting approaches.
+    The authors choose the last strategy.}
 }
 @article{burrows07,
   title={Efficient plagiarism detection for large code repositories},
-  author={Burrows, Steven and Tahaghoghi, Seyed MM and Zobel, Justin},
+  author={Burrows, Steven and Tahaghoghi, Seyed M.M. and Zobel, Justin},
   journal={Software: Practice and Experience},
   volume={37},
   number={2},
@@ -148,7 +151,7 @@
 }
 @article{buss94,
   title={Investigating reverse engineering technologies for the CAS program understanding project},
-  author={Buss, E and De Mori, Renato and Gentleman, W. Morven and Henshaw, John and Johnson, Howard and Kontogiannis, Kostas and Merlo, Ettore and Muller, HA and Mylopoulos, John and Paul, Santanu and others},
+  author={Buss, E. and De Mori, Renato and Gentleman, W. Morven and Henshaw, John and Johnson, Howard and Kontogiannis, Kostas and Merlo, Ettore and Muller, HA and Mylopoulos, John and Paul, Santanu and others},
   journal={IBM Systems Journal},
   volume={33},
   number={3},
@@ -171,9 +174,6 @@
     \item Recognize inefficient or high-complexity code
     \item Predict the impact of change.
     \end{enumerate}
-    \par
-    We are only interested in goal number 4, and those headings are the only ones
-    we read.
     \par
     The heading ``Pattern Matching'' in the background was fairly useful. They
     mention a few methods:
@@ -275,7 +275,7 @@
 }
 @article{cosma06,
   title={Source-code plagiarism: A UK academic perspective},
-  author={Cosma, Georgina and Joy, MS},
+  author={Cosma, Georgina and Joy, M.S.},
   year={2006},
   publisher={University of Warwick},
   annote={
@@ -316,7 +316,7 @@
 }
 @article{irving04,
   title={plagiarism and collusion detection using the smith-waterman algorithm},
-  author={Irving, Robert w},
+  author={Irving, Robert W.},
   journal={university of glasgow},
   year={2004},
   annote={
@@ -327,7 +327,7 @@
 }
 @inproceedings{johnson94,
   title={substring matching for clone detection and change tracking},
-  author={Johnson, J Howard},
+  author={Johnson, J. Howard},
   booktitle={software maintenance, 1994. proceedings., international conference on},
   pages={120--126},
   year={1994},
@@ -373,9 +373,9 @@
     areas of massive changes. The authors reported very few nonsense matches.}
 }
 @inproceedings{jones01,
-  title={metrics based plagarism monitoring},
-  author={Jones, Edward L},
-  booktitle={journal of computing sciences in colleges},
+  title={Metrics Based plagarism monitoring},
+  author={Jones, Edward L.},
+  booktitle={Journal of Computing Sciences in colleges},
   volume={16},
   number={4},
   pages={253--261},
@@ -390,9 +390,9 @@
     real-world data (only note that they intend to use it in their own courses)}
 }
 @article{joy1999,
-  title={plagiarism in programming assignments},
+  title={Plagiarism in programming assignments},
   author={Joy, Mike and Luck, Michael},
-  journal={education, ieee transactions on},
+  journal={Education, IEEE transactions on},
   volume={42},
   number={2},
   pages={129--133},
@@ -430,7 +430,7 @@
      matches.}
 }
 @article{karp87,
-  title={efficient randomized pattern-matching algorithms},
+  title={Efficient Randomized pattern-matching algorithms},
   author={Karp, Richard M. and Rabin, Michael O.},
   journal={IBM journal of research and development},
   volume={31},
@@ -486,9 +486,9 @@
     project.}
 }
 @incollection{khanna07,
-  title={a formal investigation of diff3},
-  author={Khanna, Sanjeev and Kunal, Keshav and Pierce, Benjamin C},
-  booktitle={fsttcs 2007: foundations of software technology and theoretical computer science},
+  title={A formal investigation of diff3},
+  author={Khanna, Sanjeev and Kunal, Keshav and Pierce, Benjamin C.},
+  booktitle={FSTTCS 2007: Foundations of Software Technology and Theoretical Computer Science},
   pages={485--496},
   year={2007},
   publisher={springer},
@@ -499,9 +499,9 @@
     that are not shared by a third, given reference code shared by all students).}
 }
 @inproceedings{krinke10,
-  title={distinguishing copies from originals in software clones},
+  title={Distinguishing copies from originals in software clones},
   author={Krinke, Jens and Gold, Nicolas and Jia, Yue and Binkley, David},
-  booktitle={proceedings of the 4th international workshop on software clones},
+  booktitle={Proceedings of the 4th international workshop on software clones},
   pages={41--48},
   year={2010},
   organization={acm},
@@ -595,7 +595,7 @@
 }
 @inproceedings{schleimer03,
   title={Winnowing: local algorithms for document fingerprinting},
-  author={Schleimer, Saul and Wilkerson, Daniel S and Aiken, Alex},
+  author={Schleimer, Saul and Wilkerson, Daniel S. and Aiken, Alex},
   booktitle={Proceedings of the 2003 ACM SIGMOD international conference on Management of data},
   pages={76--85},
   year={2003},
@@ -611,12 +611,10 @@
     filtering algorithm, and future documents can be checked against this corpus of
     document ``fingerprints''.
     \par
-    Note that our current LineCompare code is an implementation of $k$-gram
-    filtering; in LineCompare, each line is a token, a document is represented as a
-    sequence of 1-grams, and the 1-grams are filtered using the identity function.
-    Since $k$-gram filtering (referred to by most other literature as ``$n$-gram''
-    filtering) seems to be very prevalent in the literature, we should consider
-    refactoring our implementation to be a more general framework.
+    Our current LineCompare code, described in \ref{sec:linecompare} is an
+    implementation of $k$-gram filtering; in LineCompare, each line is a token,
+    a document is represented as a sequence of 1-grams, and the 1-grams are
+    filtered using the identity function.
     \par
     According to the paper, current (at publication) $k$-gram filters suffer from a
     number of disadvantages. The biggest one is that the filter used is typically a
@@ -632,7 +630,7 @@
     bound on the distance between fingerprints in a document. That means that a
     copy which is longer than the maximum gap width is guaranteed to be detected.
     Winnowing has achieved widespread adoption, including by MOSS, and its merit
-    has caused this paper to rack up \num{711} citations on Google Scholar.
+    has caused this paper to accumulate \num{711} citations on Google Scholar.
     \par
     Schleimer, et al. introduce the concept of a ``local algorithm'', which selects a
     document fingerprint from a ``window'' of consecutive $k$-grams with length $w$. An
@@ -684,7 +682,7 @@
 }
 @article{smith1981identification,
   title={Identification of common molecular subsequences},
-  author={Smith, Temple F and Waterman, Michael S},
+  author={Smith, Temple F. and Waterman, Michael S.},
   journal={Journal of molecular biology},
   volume={147},
   number={1},
