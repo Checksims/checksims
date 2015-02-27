@@ -76,10 +76,10 @@
     of those approaches did poorly. It seems that changes to order and nomenclature
     are best detected when checking compiler-generated structures rather than the
     source itself. $w$-shingling against the LLVM Intermediate Result performed ``the
-    best''.
+    best.''
     \par
     ``$w$-shingling measures the proportion of $n$-gram sequences two documents have in
-    common to the total number of $n$-gram sequences that occur in either document''.
+    common to the total number of $n$-gram sequences that occur in either document.''
     Beth speculates that MOSS uses a similar $n$-gram fingerprinting retrieval
     system called winnowing.}
 }
@@ -125,7 +125,7 @@
     \item Using the smallest chunk whose hash is divisible by some number $p$.
     \end{enumerate}
 
-    one unit equals one chunk was rejected for its high space requirement.
+    One unit equals one chunk was rejected for its high space requirement.
     Non-overlapping chunks were rejected because of their phase dependence.
     All-overlapping chunks were rejected for having the same space requirement
     as one-unit chunks, and because an attacker could defeat it by changing one
@@ -363,7 +363,7 @@
     \par
     The authors tested their prototype on gcc, versions 2.5.8 and 2.3.3; both
     releases together total \num{1440} files with a combined size of \num{40} megabytes.
-    they found a total of \num{988} ``clusters'', or matched substrings. \num{315} of these
+    they found a total of \num{988} ``clusters,'' or matched substrings. \num{315} of these
     clusters were of type ``abx'' (contained in one file from each release) or
     type ``ab='' (contained in one file from each release with the same name).
     these represent code that was not changed between releases, or that was
@@ -402,7 +402,7 @@
     \setlength{\parskip}{1.5ex}
     \par
     Joy and Luck provides a definition of plagiarism, ``unacknowledged copying of documents
-    or programs'', and names several potential causes of plagiarism.
+    or programs,'' and names several potential causes of plagiarism.
     \par
     Joy and Luck describe
     two obfuscation techniques: lexical changes (comment changes, formatting,
@@ -422,7 +422,7 @@
     \par
      incremental comparison: compare five times: in original form, with whitespace
      removed, with comments removed, with both removed, and tokenized. looks for
-     ``runs'' with a maximum allowed size and density of ``anomalies''. looks for and
+     ``runs'' with a maximum allowed size and density of ``anomalies.'' looks for and
      reports maximum length runs.
     \par
      presents a very interesting visualization with a point for each submission
@@ -604,12 +604,12 @@
     \setlength{\parskip}{1.5ex}
     Schleimer et al. present a document fingerprinting algorithm called winnowing,
     and describe its use in Stanford's MOSS service. They describe the concept of
-    ``$k$-gram filtering'', where a document of n tokens is described as a sequence of
+    ``$k$-gram filtering,'' where a document of n tokens is described as a sequence of
     $(n-k+1)$ overlapping $k$-grams, with a $k$-gram being a sequence of $k$ tokens. In
     $k$-gram filtering, each $k$-gram is hashed, and stored, with its document ID and
     location, in a lookup table. The $k$-grams are reduced to a smaller list using a
     filtering algorithm, and future documents can be checked against this corpus of
-    document ``fingerprints''.
+    document ``fingerprints.''
     \par
     Our current LineCompare code, described in \ref{sec:linecompare} is an
     implementation of $k$-gram filtering; in LineCompare, each line is a token,
@@ -632,7 +632,7 @@
     Winnowing has achieved widespread adoption, including by MOSS, and its merit
     has caused this paper to accumulate \num{711} citations on Google Scholar.
     \par
-    Schleimer, et al. introduce the concept of a ``local algorithm'', which selects a
+    Schleimer, et al. introduce the concept of a ``local algorithm,'' which selects a
     document fingerprint from a ``window'' of consecutive $k$-grams with length $w$. An
     algorithm is local if it meets two conditions:
     \begin{enumerate}
@@ -646,12 +646,12 @@
     one $k$-gram from each shared substring of length $w+k-1$. The minimum density
     (asymptotic proportion of fingerprinted $k$-grams to total $k$-grams) of a local
     fingerprint selection algorithm is $1.5 (w+1)$. Winnowing has an asymptotic
-    density of $2/(w+1)$, leading the authors to claim it is ``within 33\% of optimal''.
+    density of $2/(w+1)$, leading the authors to claim it is ``within 33\% of optimal.''
     \par
     The related work describes the Karp-Rabin algorithm, which finds occurrences of
     a substring in a larger string; it seems pretty fundamental. SCAM uses vector
     distance between documents to find copies. Baker presents a concept called
-    ``parameterized matches'', which can rename parameters to be equal and more
+    ``parameterized matches,'' which can rename parameters to be equal and more
     easily detect copies that way.
     \par
     They ran winnowing ($w=100$) and mod-50 on random data and found that both came

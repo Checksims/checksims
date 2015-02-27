@@ -353,13 +353,13 @@ removing the need for recomputation of the unchanged parts of the array.
 Fingerprinting algorithms (also known as \textit{feature extraction
 algorithms}) extract a number of \textit{fingerprints} (or 
 	\textit{features}) which can be used to identify a document. These
-\textit{fingerprints} are then added to a database (with a list of references
+fingerprints are then added to a database (with a list of references
 back to the inputs which contained them). To identify similarities, an input's
-\textit{fingerprints} are computed, added to the database, and then looked up
+fingerprints are computed, added to the database, and then looked up
 to see whether any submissions other than the current one have the same
 fingerprints \cite{schleimer03}.
 
-\textit{Fingerprints} are typically the hashes of one or more tokens of the
+Fingerprints are typically the hashes of one or more tokens of the
 input. Typically, before being inserted into the database, a small subset of
 the tokens is selected, and the rest are discarded; this is done to reduce the
 number of entries required in the database. A typical solution might be to
