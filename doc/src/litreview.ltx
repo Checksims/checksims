@@ -123,11 +123,11 @@ detection solutions available at time of publication \cite{lancaster05}.
 
 Academic dishonesty detection is often broken into two broad fields: detection
 of unauthorized copying in source code, and detection of unauthorized copying
-in natural language \cite{lancaster05}. The source code detection problem is
-generally considered the easier of the two problems, because programming
-languages follow fixed grammars; the explicit, unabmiguous syntax of
-programming languages eliminates the need for advanced natural language
-processing. We focus on source code similarity detection.
+in natural language \cite{lancaster05, clough03}. The source code detection
+problem is generally considered the easier of the two, because
+programming languages follow fixed grammars; the explicit, unabmiguous syntax
+of programming languages eliminates the need for advanced natural
+language processing. We focus on source code similarity detection.
 
 
 \paragraph{Obfuscation}
@@ -272,8 +272,20 @@ documents and designates that string as a ``tile''. It replaces the tile with
 the empty string, then tiles the next longest substring that is not already
 part of a tile. It continues tiling the next largest shared string until the
 largest match falls below some floor. The algorithm is guaranteed to terminate
-because the length of the maximum match decreases with each step; greedy string
-tiling runs in $O(n^3)$ worst case time, but in $O(n)$ best case.
+because the length of the maximum match decreases with each step. Greedy string
+tiling runs in $O(n^3)$ worst case time, but in $O(n)$ best case. (TODO
+informal argument about performance characteristics).
+
+\textit{JPlag} introduced several improvements on Greedy String Tiling. First,
+it searches for matching strings using Karp-Rabin string matching, as
+described in Section~\ref{sec:karp-rabin}. Second, when searching for the
+longest common substring between documents, it skips a number of comparisons
+equal to the longest common substring found so far. If the next character
+after that jump is a match, then, and only then, does the algorithm step back
+to try to verify the string. Finally, \textit{JPlag} enforces that the
+shorter document is always treated as the query document. \textit{Jplag}'s
+optimizations reduce the average-case running time of GST to $O(n)$
+\cite{prechelt00}.
 
 
 \subsubsection{Vector-Distance Algorithms}
@@ -341,13 +353,13 @@ removing the need for recomputation of the unchanged parts of the array.
 Fingerprinting algorithms (also known as \textit{feature extraction
 algorithms}) extract a number of \textit{fingerprints} (or 
 	\textit{features}) which can be used to identify a document. These
-\textit{fingerprints} are then added to a database (with a list of references
+fingerprints are then added to a database (with a list of references
 back to the inputs which contained them). To identify similarities, an input's
-\textit{fingerprints} are computed, added to the database, and then looked up
+fingerprints are computed, added to the database, and then looked up
 to see whether any submissions other than the current one have the same
 fingerprints \cite{schleimer03}.
 
-\textit{Fingerprints} are typically the hashes of one or more tokens of the
+Fingerprints are typically the hashes of one or more tokens of the
 input. Typically, before being inserted into the database, a small subset of
 the tokens is selected, and the rest are discarded; this is done to reduce the
 number of entries required in the database. A typical solution might be to
@@ -363,8 +375,8 @@ The archetypal fingerprinting algorithm is \textit{Karp-Rabin} string matching.
  $N + 1$ to $M + 1$, and so on). The sets of hashes for the inputs are checked
 against each other, and the matches are used to identify common substrings.
 \cite{karp87}. \textit{Karp-Rabin} string matching is a fundamental technique
-used and built on by many later string-matching papers \cite{schleimer03}
-\cite{buss94} \cite{arwin2006plagiarism} \cite{burrows07} \cite{johnson94}.
+used and built on by many later string-matching papers \cite{schleimer03,
+buss94, clough03, arwin2006plagiarism, burrows07, johnson94}.
 
 \paragraph{$n$-gram Fingerprinting}
 \label{sec:ngram}
@@ -416,19 +428,19 @@ defining features --- for example, line count, word count, character count,
 average word per line \cite{arwin2006plagiarism}.
 
 Feature comparison algorithms were common in the early days of similarity
-detection in the 1980s \cite{parker89}. However, it has become less popular
-of late because of the growing effectiveness of structural comparison
-algorithms such as \textit{Smith-Waterman} and fingerprinting. Feature
-comparison algorithms can be just as accurate as structural comparison
-algorithms, but require a great deal of tuning as the differences in the
-profiles of documents containing unauthorized copying and those that do not
-are typically very small \cite{arwin2006plagiarism}. We found one reference
-to the creation of a similarity detection system using this algorithm after
-2000, but no others \cite{jones01}. The paper describing this system
-provided no evidence that the aforementioned criticisms were not valid, and
-did not provide any results to substantiate its effectiveness. Given the
-lack of popularity of this approach and its noted disadvantages, we did not 
-pursue this line of inquiry.
+detection in the 1980s and early 1990s \cite{parker89, clough03}. However, it
+has become less popular of late because of the growing effectiveness of
+structural comparison algorithms such as \textit{Smith-Waterman} and
+fingerprinting. Feature comparison algorithms can be just as accurate as
+structural comparison algorithms, but require a great deal of tuning as the
+differences in the profiles of documents containing unauthorized copying and
+those that do not are typically very small \cite{arwin2006plagiarism}. We
+found one reference to the creation of a similarity detection system using
+this algorithm after 2000, but no others \cite{jones01}. The paper describing
+this system provided no evidence that the aforementioned criticisms were not
+valid, and did not provide any results to substantiate its effectiveness.
+Given the lack of popularity of this approach and its noted disadvantages, we
+did not pursue this line of inquiry.
 
 
 \subsubsection{Other Approaches}
@@ -495,11 +507,10 @@ its results.
 
 \subsubsection{JPlag}
 \label{sec:jplag}
-\textit{JPlag} is a web service developed by Guido Malpohl in 1996. When it was
-being actively developed, \textit{JPlag} compared closely with the performance
-of MOSS, and some academic dishonesty detection tool developers chose to forgo
-testing their own tools against MOSS in favor of \textit{JPlag}
-\cite{prechelt00} \cite{ciesielski08}.
+\textit{JPlag} is a web service developed by Guido Malpohl in 1996.
+\textit{JPlag} compares closely with the performance of MOSS, and some academic
+dishonesty detection tool developers choose to forgo testing their own tools
+against MOSS in favor of \textit{JPlag} \cite{prechelt00, ciesielski08}.
 
 \textit{JPlag} allows users to submit an archive of programming files to its
 web service; the files will then be compared pairwise against each other.
@@ -507,20 +518,8 @@ web service; the files will then be compared pairwise against each other.
 appropriate programming language, then uses the outputs from the parser or
 scanner as the input strings to its backend algorithm; only the front-end
 parsing step is language-dependent \cite{prechelt00}. \textit{JPlag} is
-advertised to support C, C++, Java, and Scheme.
+advertised to support C, C++, Java, Scheme, C\#, and even natural language.
 
-\textit{JPlag} uses Wise's greedy string tiling as described in
-Section~\ref{sec:gst}, with some modifications. First, it searches for
-matching strings using Karp-Rabin string matching, as described in
-Section~\ref{sec:karp-rabin}. Second, when searching for the longest common
-substring between documents, it skips a number of comparisons equal to the
-longest common substring found so far. If the next character after that jump
-is a match, then, and only then, does the algorithm step back to try to
-verify the string. Finally, JPlag enforces that the shorter document is
-always treated as the query document. The matching algorithm runs in $O(n^3)$
-worst case, but usually $O(n)$ in practice.
-
-The source code for \textit{JPlag} is not available to the public, and we have
-not been able to locate the service on the web. In spite of the service's
-success, we believe development has stopped and the project has been abandoned.
+\textit{JPlag}'s core algorithm is Greedy String Tiling, with a number of
+optimizations, as described in Section~\ref{sec:gst}.
 
