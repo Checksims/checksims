@@ -60,7 +60,7 @@
     renaming, code reordering, and refactoring algebraic expressions. The project
     measures the effectiveness of Levenshtein edit distance (in source and in the
     LLVM intermediate representation bitcode), tree edit distance in the abstract
-    syntax tree, graph edit distance in the control flow graphs, and w-shingling,
+    syntax tree, graph edit distance in the control flow graphs, and $w$-shingling,
     both in the source and in the IR bitcode. The algorithms are also checked
     against an unrelated piece of source code (to check for false positives), and
     their performance was also compared with the performance of MOSS, the state of
@@ -75,12 +75,12 @@
     author had comments and whitespace removed before running the checks, so both
     of those approaches did poorly. It seems that changes to order and nomenclature
     are best detected when checking compiler-generated structures rather than the
-    source itself. w-shingling against the LLVM Intermediate Result performed ``the
+    source itself. $w$-shingling against the LLVM Intermediate Result performed ``the
     best''.
     \par
-    ``w-shingling measures the proportion of n-gram sequences two documents have in
-    common to the total number of n-gram sequences that occur in either document''.
-    Beth speculates that MOSS uses a similar n-gram fingerprinting retrieval
+    ``$w$-shingling measures the proportion of $n$-gram sequences two documents have in
+    common to the total number of $n$-gram sequences that occur in either document''.
+    Beth speculates that MOSS uses a similar $n$-gram fingerprinting retrieval
     system called winnowing.
     \par
     In the introduction, the author differentiated ``code clone detection'' from
@@ -193,11 +193,11 @@
        a pattern-based query system with a powerful pattern language that allows
        the programmer to search, for instance, for three nested loops in order to
        find a matrix multiplication.
-    \item Semantic analysis: This research occurred at McGill, and clone detection was
-       just one of their goals. The McGill research focuses on representing code as
-       a vector of complexity metrics; close vectors are more likely to be similar
-       (this is a classic vector distance algorithm). The McGill research uses five
-       metrics:
+    \item Semantic analysis: This research occurred at McGill University, and
+       clone detection was just one of their goals. The McGill research focuses
+       on representing code as a vector of complexity metrics; close vectors
+       are more likely to be similar (this is a classic vector distance
+       algorithm). The McGill research uses five metrics:
        \begin{enumerate}
        \item Number of functions called
        \item Ratio of input-output variables to fanout
@@ -211,7 +211,7 @@
     \end{itemize}
     \par
     
-    Text analysis found 727 copied lines out of a 51,655 line sample of source code
+    Text analysis found \num{727} copied lines out of a \num{51655} line sample of source code
     from SQL/DS. The processing took two hours. They say that subgroup's research
     is now focused on finding approximate matches, implying to me that their
     findings include only exact matches. Syntactic analysis was not used to detect
@@ -243,8 +243,8 @@
   annote={
     \setlength{\parskip}{1.5ex}
     Attempts to ``take a step back'' and develop a universal measure for the
-    amount of information shared between 2 sequences (be they DNA, text, or source
-    code) which can then be used to make a determination on plagiarism. However, to
+    amount of information shared between two sequences, be they DNA, text, or source
+    code, which can then be used to make a determination on plagiarism. However, to
     make use of this algorithm, the program must be parsed into tokens to remove
     whitespace issues (amongst other reasons). Solution is named SID --- Software
     Integrity Diagnosis.}
@@ -362,8 +362,8 @@
     cloned.
     \par
     The authors tested their prototype on gcc, versions 2.5.8 and 2.3.3; both
-    releases together total 1440 files with a combined size of 40 megabytes.
-    they found a total of 988 ``clusters'', or matched substrings. 315 of these
+    releases together total \num{1440} files with a combined size of \num{40} megabytes.
+    they found a total of \num{988} ``clusters'', or matched substrings. \num{315} of these
     clusters were of type ``abx'' (contained in one file from each release) or
     type ``ab='' (contained in one file from each release with the same name).
     these represent code that was not changed between releases, or that was
@@ -451,7 +451,7 @@
     substring in memory of the same length as the one you are searching for.
     authors claim that it seems to be competitive on classical strings only
     for larger substring sizes, but it has a huge advantage in being able to
-    search 2d arrays, higher dimensional arrays, and even irregular shapes
+    search two-dimensional arrays, higher dimensional arrays, and even irregular shapes
     with the same mathematical background.
     \par
     "The idea of using fingerprinting techniques for string-matching problems
@@ -463,12 +463,7 @@
     of the algorithm."
     \par
     first presents a generalization of all string matching problems, and explains
-    how the simple pattern-matching problem we are interested in fits that
-    framework.
-    todo explain the framework here
-    it also provides an example of how a 2d array fits the framework, but we are
-    not interested in that. i have not yet finished reading the paper, but a
-    description of the relevant stuff will go here.
+    how the simple pattern-matching problem fits that framework.
     \par
     Karp and Rabin present three algorithms for deciding whether there is a
     match given an input string $X$ of length $n$, an output string $Y$, a
@@ -499,9 +494,9 @@
   publisher={springer},
   annote={
     \setlength{\parskip}{1.5ex}
-    a discussion of diff3, a 3-way version of the conventional diff algorithm. this
-    could be used for plagiarism detection (detect similarities between 2 files
-    that are not shared by a third [given reference code shared by all students]).}
+    a discussion of diff3, a three-way version of the conventional diff algorithm. this
+    could be used for plagiarism detection (detect similarities between two files
+    that are not shared by a third, given reference code shared by all students).}
 }
 @inproceedings{krinke10,
   title={distinguishing copies from originals in software clones},
@@ -609,38 +604,38 @@
     \setlength{\parskip}{1.5ex}
     Schleimer et al. present a document fingerprinting algorithm called winnowing,
     and describe its use in Stanford's MOSS service. They describe the concept of
-    ``k-gram filtering'', where a document of n tokens is described as a sequence of
-    (n-k+1) overlapping k-grams, with a k-gram being a sequence of k tokens. In
-    k-gram filtering, each k-gram is hashed, and stored, with its document ID and
-    location, in a lookup table. The k-grams are reduced to a smaller list using a
+    ``$k$-gram filtering'', where a document of n tokens is described as a sequence of
+    $(n-k+1)$ overlapping $k$-grams, with a $k$-gram being a sequence of $k$ tokens. In
+    $k$-gram filtering, each $k$-gram is hashed, and stored, with its document ID and
+    location, in a lookup table. The $k$-grams are reduced to a smaller list using a
     filtering algorithm, and future documents can be checked against this corpus of
     document ``fingerprints''.
     \par
-    Note that our current LineCompare code is an implementation of k-gram
+    Note that our current LineCompare code is an implementation of $k$-gram
     filtering; in LineCompare, each line is a token, a document is represented as a
     sequence of 1-grams, and the 1-grams are filtered using the identity function.
-    Since k-gram filtering (referred to by most other literature as ``n-gram''
+    Since $k$-gram filtering (referred to by most other literature as ``$n$-gram''
     filtering) seems to be very prevalent in the literature, we should consider
     refactoring our implementation to be a more general framework.
     \par
-    According to the paper, current (at publication) k-gram filters suffer from a
+    According to the paper, current (at publication) $k$-gram filters suffer from a
     number of disadvantages. The biggest one is that the filter used is typically a
-    mod-p filter; a mod-p filter accepts a k-gram x if H(x) is congruent to zero
-    mod p. Mod-p filters are weak because the fingerprints selected from the
-    document are uneven --- there could be huge runs of n-grams that do not hash to
-    zero mod p. In principle, the maximum ``gap width'' in a document is unbounded,
-    and in practice it is often longer than most web pages. Mod-p especially chokes
+    mod-$p$ filter; a mod-$p$ filter accepts a $k$-gram $x$ if $H(x)$ is congruent to zero
+    mod $p$. Mod-$p$ filters are weak because the fingerprints selected from the
+    document are uneven --- there could be huge runs of $n$-grams that do not hash to
+    zero mod $p$. In principle, the maximum ``gap width'' in a document is unbounded,
+    and in practice it is often longer than most web pages. Mod-$p$ especially chokes
     on low-entropy data --- a long string of zeroes, for instance, will either go
     completely unfingerprinted, or fingerprinted every single time.
     \par
-    The paper's contribution is winnowing, a k-gram filter that guarantees an upper
+    The paper's contribution is winnowing, a $k$-gram filter that guarantees an upper
     bound on the distance between fingerprints in a document. That means that a
     copy which is longer than the maximum gap width is guaranteed to be detected.
     Winnowing has achieved widespread adoption, including by MOSS, and its merit
-    has caused this paper to rack up 711 citations on Google Scholar.
+    has caused this paper to rack up \num{711} citations on Google Scholar.
     \par
     Schleimer, et al. introduce the concept of a ``local algorithm'', which selects a
-    document fingerprint from a ``window'' of consecutive k-grams with length w. An
+    document fingerprint from a ``window'' of consecutive $k$-grams with length $w$. An
     algorithm is local if it meets two conditions:
     \begin{enumerate}
     \item For each possible window, the algorithm selects at least one fingerprint
@@ -648,12 +643,12 @@
     \item The choice depends only on the contents of that window, not on any other.
     \end{enumerate}
     \par
-    The authors demonstrate that if two documents are compared with a k-gram filter
+    The authors demonstrate that if two documents are compared with a $k$-gram filter
     using a local algorithm with window size w, the comparison will detect at least
-    one k-gram from each shared substring of length w+k-1. The minimum density
-    (asymptotic proportion of fingerprinted k-grams to total k-grams) of a local
-    fingerprint selection algorithm is 1.5/(w+1). Winnowing has an asymptotic
-    density of 2/(w+1), leading the authors to claim it is ``within 33\% of optimal''.
+    one $k$-gram from each shared substring of length $w+k-1$. The minimum density
+    (asymptotic proportion of fingerprinted $k$-grams to total $k$-grams) of a local
+    fingerprint selection algorithm is $1.5 (w+1)$. Winnowing has an asymptotic
+    density of $2/(w+1)$, leading the authors to claim it is ``within 33\% of optimal''.
     \par
     The related work describes the Karp-Rabin algorithm, which finds occurrences of
     a substring in a larger string; it seems pretty fundamental. SCAM uses vector
@@ -661,12 +656,12 @@
     ``parameterized matches'', which can rename parameters to be equal and more
     easily detect copies that way.
     \par
-    They ran winnowing (w=100) and mod-50 on random data and found that both came
+    They ran winnowing ($w=100$) and mod-50 on random data and found that both came
     very close to their expected density. Against a corpus of a half million web
     pages, they found that both came close to their expected density, but that
-    mod-50 was highly non-uniform. There was a run of 29,900 non-whitespace,
+    mod-50 was highly non-uniform. There was a run of \num{29900} non-whitespace,
     non-tag characters without a fingerprint from mod-50. The probability of that
-    happening in a random terabyte of data is 10e-220.
+    happening in a random terabyte of data is \num{e-220}.
     \par
     Winnowing ended up fingerprinting extremely densely in low-entropy data, so the
     authors presented a very minor adjustment called ``robust winnowing'' to correct
