@@ -114,23 +114,20 @@ course policy, but not a matter of academic dishonesty.
 
 \subsubsection{Detection of Academic Dishonesty}
 There has been a great deal of research focused on the detection of academic 
-dishonesty (both in plaintext and source code); Thomas Lancaster presents a 
-thorough overview of existing work in his 2005 paper, including a comparison 
-of all existing academic dishonesty detection solutions available at time of 
-publication \cite{lancaster05}. The detection of unauthorized copying draws 
-heavily on the fields of Natural Language Processing and Information 
-Retrieval to process student submissions and efficiently store and retrieve 
-information about similarities \cite{beth14}.
+dishonesty. The detection of unauthorized copying draws heavily on the fields
+of Natural Language Processing and Information Retrieval to process student
+submissions and efficiently store and retrieve information about similarities
+\cite{beth14}. Thomas Lancaster presents a thorough overview of existing work
+in his 2005 paper, including a comparison of all existing academic dishonesty
+detection solutions available at time of publication \cite{lancaster05}.
 
-Academic dishonesty detection is often broken into two broad fields. The
-first is the detection of unauthorized copying in source code, and the second
-the detection of unauthorized copying in natural language \cite{lancaster05}.
-The source code detection problem is generally considered the easier of the
-two problems, given that programming languages follow a fixed grammar. The
-need for advanced natural language processing is mostly eliminated because of
-the explicit, unabmiguous syntax of programming languages. Given the problem we
-are attempting to solve, we are naturally more interested in source code
-similarity detection.
+Academic dishonesty detection is often broken into two broad fields: detection
+of unauthorized copying in source code, and detection of unauthorized copying
+in natural language \cite{lancaster05, clough03}. The source code detection
+problem is generally considered the easier of the two problems, because
+programming languages follow fixed grammars; the explicit, unabmiguous syntax
+of programming languages eliminates the need for advanced natural
+language processing. We focus on source code similarity detection.
 
 
 \paragraph{Obfuscation}
