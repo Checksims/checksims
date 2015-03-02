@@ -6,7 +6,7 @@ clarity, we provide their definitions here.
 \item The terms \textit{academic dishonesty} and \textit{unauthorized copying}
 	are used throughout this paper to refer to the use of another's work
 	without attribution and without the permission of the instructor. Such
-        behavior is often referred to as ``cheating'' or ``plagiarism'', but we
+        behavior is often referred to as ``cheating'' or ``plagiarism,'' but we
         deliberately avoid those terms where possible, as they can be perceived
         to be controversial or judgmental.
 \item A \textit{corpus} (plural \textit{corpora}) is a body of work. A corpus
@@ -25,7 +25,7 @@ clarity, we provide their definitions here.
 	breaks an input string up in a consistent manner (for example, at each
 	newline). \textit{Tokens} are formed from the broken-up chunks of the
 	input.
-\item A \textit{False Positive} is a result which is reported the tool, but
+\item A \textit{False Positive} is a result which is reported, but
         should not have been. In the context of a similarity detection system,
         it would be two or more submissions which are flagged as unusually
         similar, but are not considered to be illegaly copied.
@@ -47,7 +47,7 @@ might also solve the specific problems which inspired our solution
 \subsection{Academic Dishonesty}
 \label{sec:dishonesty}
 There have been a number of scholarly attempts to provide a definition for the
-term ``academic dishonesty''. Thomas Lancaster, in a 2005 survey of similarity
+term ``academic dishonesty.'' Thomas Lancaster, in a 2005 survey of similarity
 detection systems, defines academic dishonesty as ``The process by which
 students submit work for academic credit which contains other people's
 unacknowledged words or ideas'' \cite{lancaster05}. Lancaster provides a
@@ -77,7 +77,7 @@ In all cases, different instructors have different definitions
 of which offenses constitute unauthorized copying, complicating the creation
 of tools to assist in detecting the practice. There is no consensus among
 academics as to what degree of copying constitutes academic dishonesty, but
-most professors insist that they ``know it when they see it''. Mike Joy and
+most professors insist that they ``know it when they see it.'' Mike Joy and
 Michael Luck provide some example behaviors that they would consider dishonest
 \cite{joy1999}:
 \begin{itemize}
@@ -102,7 +102,7 @@ However, many respondents noted that the degree of adaptation was an important
 factor, indicating that while 100\% similarity was almost certainly indicative
 of unauthorized copying, sufficient changes to the code would render it
 ``original''; respondents disagreed as to what, exactly, constitutes
-``sufficient changes''.
+``sufficient changes.''
 
 A majority of respondents indicated that almost every offense involving the
 unauthorized duplication of source code could indeed be considered academic
@@ -268,7 +268,7 @@ to catch similarities that might otherwise be undetectable
 Greedy String Tiling is a popular algorithm that is most notably used by
 \textit{JPlag}, descrbed in Section~\ref{sec:jplag} \cite{prechelt00}. First,
 the algorithm locates the longest string that is shared between the two
-documents and designates that string as a ``tile''. It replaces the tile with
+documents and designates that string as a ``tile.'' It replaces the tile with
 the empty string, then tiles the next longest substring that is not already
 part of a tile. It continues tiling the next largest shared string until the
 largest match falls below some floor. The algorithm is guaranteed to terminate
@@ -307,8 +307,8 @@ seeks to find the optimal alignment of two strings. Unlike algorithms that
 solve the traditional longest common substring problem, the
 \textit{Smith-Waterman} algorithm is tolerant of skipped or unmatched
 characters. Figure~\ref{fig:stringalignment} shows a sample alignment of two
-strings, ``ABCDEFG'' and ``ABCDXG''. The longest common substring of the two
-would be ``ABCD'', but a local alignment also captures the matched ``G''
+strings, ``ABCDEFG'' and ``ABCDXG.'' The longest common substring of the two
+would be ``ABCD,'' but a local alignment also captures the matched ``G''
 character.
 
 \begin{figure}
