@@ -35,7 +35,7 @@ import edu.wpi.checksims.token.TokenType;
 import edu.wpi.checksims.token.tokenizer.FileTokenizer;
 import edu.wpi.checksims.util.file.FileStringWriter;
 import org.apache.commons.cli.*;
-import org.apache.commons.collections.list.SetUniqueList;
+import org.apache.commons.collections4.list.SetUniqueList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.impl.SimpleLogger;
@@ -234,7 +234,7 @@ public class ChecksimRunner {
         if(cli.hasOption("j")) {
             int threads = Integer.parseInt(cli.getOptionValue("j"));
 
-            if(threads < 1) {
+            if (threads < 1) {
                 logs.error("Invalid job count specified!");
                 throw new RuntimeException("Must specify positive number of threads - got " + threads);
             }
@@ -244,7 +244,7 @@ public class ChecksimRunner {
 
         // Parse preprocessors
         // Ensure no duplicates
-        List<SubmissionPreprocessor> preprocessors = SetUniqueList.decorate(new LinkedList<>());
+        List<SubmissionPreprocessor> preprocessors = SetUniqueList.setUniqueList(new LinkedList<>());
         if(cli.hasOption("p")) {
             String[] splitPreprocessors = cli.getOptionValue("p").split(",");
             try {
@@ -260,7 +260,7 @@ public class ChecksimRunner {
 
         // Parse output strategies
         // Ensure no duplicates
-        List<SimilarityMatrixPrinter> outputStrategies = SetUniqueList.decorate(new LinkedList<>());
+        List<SimilarityMatrixPrinter> outputStrategies = SetUniqueList.setUniqueList(new LinkedList<>());
         if(cli.hasOption("o")) {
             String[] desiredStrategies = cli.getOptionValue("o").split(",");
 
