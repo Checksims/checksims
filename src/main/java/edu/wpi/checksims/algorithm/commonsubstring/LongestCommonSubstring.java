@@ -75,8 +75,8 @@ public class LongestCommonSubstring implements SimilarityDetector {
         }
 
         // No point building the tree is one of the submissions was empty
-        if(a.getTokenList().isEmpty() || b.getTokenList().isEmpty()) {
-            return new AlgorithmResults(a, b, 0, 0, a.getTokenList(), b.getTokenList());
+        if(a.getContentAsTokens().isEmpty() || b.getContentAsTokens().isEmpty()) {
+            return new AlgorithmResults(a, b, 0, 0, a.getContentAsTokens(), b.getContentAsTokens());
         }
 
         Triple<Submission, Submission, Integer> onePassResult = onePassLCS(a, b);
@@ -84,7 +84,7 @@ public class LongestCommonSubstring implements SimilarityDetector {
         // if we got no matches, no point continuing
         // Return an empty AlgorithmResults
         if (onePassResult.getRight() == 0) {
-            return new AlgorithmResults(a, b, 0, 0, a.getTokenList(), b.getTokenList());
+            return new AlgorithmResults(a, b, 0, 0, a.getContentAsTokens(), b.getContentAsTokens());
         }
 
         Triple<Submission, Submission, Integer> current = onePassResult;
@@ -95,7 +95,7 @@ public class LongestCommonSubstring implements SimilarityDetector {
             totalMatched += current.getRight();
         }
 
-        return new AlgorithmResults(a, b, totalMatched, totalMatched, current.getLeft().getTokenList(), current.getMiddle().getTokenList());
+        return new AlgorithmResults(a, b, totalMatched, totalMatched, current.getLeft().getContentAsTokens(), current.getMiddle().getContentAsTokens());
     }
 
     static Triple<Submission, Submission, Integer> onePassLCS(Submission a, Submission b) throws ChecksimException {
@@ -116,8 +116,8 @@ public class LongestCommonSubstring implements SimilarityDetector {
             return Triple.of(a, b, 0);
         }
 
-        TokenList toModifyA = TokenList.cloneTokenList(a.getTokenList());
-        TokenList toModifyB = TokenList.cloneTokenList(b.getTokenList());
+        TokenList toModifyA = TokenList.cloneTokenList(a.getContentAsTokens());
+        TokenList toModifyB = TokenList.cloneTokenList(b.getContentAsTokens());
 
         // Arbitrarily choose valid start indices
         int submissionIndexA = lcsMatch.get(0).getOccurrencesA().get(0);
@@ -145,7 +145,7 @@ public class LongestCommonSubstring implements SimilarityDetector {
             submissionIndexB++;
         }
 
-        return Triple.of(new ConcreteSubmission(a.getName(), toModifyA), new ConcreteSubmission(b.getName(), toModifyB), lcsMatch.size());
+        return Triple.of(new ConcreteSubmission(a.getName(), a.getContentAsString(), toModifyA), new ConcreteSubmission(b.getName(), b.getContentAsString(), toModifyB), lcsMatch.size());
     }
 
     static List<SuffixTreeNode> getLCS(SuffixTreeRoot root) throws ChecksimException {

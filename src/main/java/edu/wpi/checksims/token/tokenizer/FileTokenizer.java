@@ -30,7 +30,7 @@ import java.util.List;
  * Interface to read in a file and return it as a list of tokens of a certain type
  */
 public interface FileTokenizer {
-    public TokenList splitFile(List<String> strings);
+    public TokenList splitFile(String string);
 
     public TokenType getType();
 

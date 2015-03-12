@@ -37,7 +37,7 @@ import java.util.List;
 public class FileLineReader {
     private FileLineReader() {}
 
-    public static List<String> readFile(File f) throws IOException {
+    public static String readFile(File f) throws IOException {
         Logger logs = LoggerFactory.getLogger(FileLineReader.class);
 
         if(!f.exists() || !f.isFile()) {
@@ -46,7 +46,7 @@ public class FileLineReader {
 
         logs.trace("Reading file " + f.getPath());
 
-        List<String> lines = new LinkedList<>();
+        StringBuilder content = new StringBuilder();
 
         BufferedReader b = new BufferedReader(new FileReader(f));
 
@@ -54,7 +54,7 @@ public class FileLineReader {
 
         while(lineRead != null) {
             if(!lineRead.isEmpty()) {
-                lines.add(lineRead);
+                content.append(lineRead);
             }
 
             lineRead = b.readLine();
@@ -62,6 +62,6 @@ public class FileLineReader {
 
         b.close();
 
-        return lines;
+        return content.toString();
     }
 }

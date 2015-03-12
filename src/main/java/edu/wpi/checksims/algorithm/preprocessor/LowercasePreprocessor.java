@@ -52,8 +52,8 @@ public class LowercasePreprocessor implements SubmissionPreprocessor {
 
     @Override
     public Submission process(Submission submission) {
-        Supplier<TokenList> tokenListSupplier = () -> new TokenList(submission.getTokenList().type);
+        Supplier<TokenList> tokenListSupplier = () -> new TokenList(submission.getContentAsTokens().type);
 
-        return new ConcreteSubmission(submission.getName(), submission.getTokenList().stream().map(Token::lowerCase).collect(Collectors.toCollection(tokenListSupplier)));
+        return new ConcreteSubmission(submission.getName(), submission.getContentAsString(), submission.getContentAsTokens().stream().map(Token::lowerCase).collect(Collectors.toCollection(tokenListSupplier)));
     }
 }

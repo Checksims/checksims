@@ -67,14 +67,14 @@ public class SuffixTreeRoot extends SuffixTreeShared {
 
         SuffixTreeRoot root = new SuffixTreeRoot(a, b);
 
-        if(a.getTokenList().isEmpty() && b.getTokenList().isEmpty()) {
+        if(a.getContentAsTokens().isEmpty() && b.getContentAsTokens().isEmpty()) {
             // Return empty suffix tree
             return root;
         }
 
         // Add nodes from A
-        if(!a.getTokenList().isEmpty()) {
-            SuffixTreeNode unaryTree = SuffixTreeNode.listToUnarySuffixTree(a.getTokenList(), SubmissionID.A);
+        if(!a.getContentAsTokens().isEmpty()) {
+            SuffixTreeNode unaryTree = SuffixTreeNode.listToUnarySuffixTree(a.getContentAsTokens(), SubmissionID.A);
 
             root.addChildTree(unaryTree);
 
@@ -85,8 +85,8 @@ public class SuffixTreeRoot extends SuffixTreeShared {
         }
 
         // Add nodes from B
-        if(!b.getTokenList().isEmpty()) {
-            SuffixTreeNode unaryTree = SuffixTreeNode.listToUnarySuffixTree(b.getTokenList(), SubmissionID.B);
+        if(!b.getContentAsTokens().isEmpty()) {
+            SuffixTreeNode unaryTree = SuffixTreeNode.listToUnarySuffixTree(b.getContentAsTokens(), SubmissionID.B);
 
             root.addChildTree(unaryTree);
 

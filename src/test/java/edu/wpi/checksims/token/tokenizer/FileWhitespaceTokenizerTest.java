@@ -36,34 +36,15 @@ import static org.junit.Assert.*;
  * Test that we can split files by whitespace
  */
 public class FileWhitespaceTokenizerTest {
-    private static List<String> empty;
-    private static List<String> oneWord;
-    private static List<String> twoWords;
-    private static List<String> wordsSpaceSeparated;
-    private static List<String> wordsTabSeparated;
-    private static List<String> multipleLines;
+    private static final String empty = "";
+    private static final String oneWord = "hello";
+    private static final String twoWords = "hello world";
+    private static final String wordsSpaceSeparated = "    hello     world       this is   a test     ";
+    private static final String wordsTabSeparated = "hello\tworld\t\tthis \t \t is a test\t";
     private static FileWhitespaceTokenizer s;
 
     @BeforeClass
     public static void setUp() {
-        empty = new LinkedList<>();
-
-        oneWord = new LinkedList<>();
-        oneWord.add("hello");
-
-        twoWords = new LinkedList<>();
-        twoWords.add("hello world");
-
-        wordsSpaceSeparated = new LinkedList<>();
-        wordsSpaceSeparated.add("    hello     world       this is   a test     ");
-
-        wordsTabSeparated = new LinkedList<>();
-        wordsTabSeparated.add("hello\tworld\t\tthis \t \t is a test\t");
-
-        multipleLines = new LinkedList<>();
-        multipleLines.add("hello world");
-        multipleLines.add("this is a test");
-
         s = FileWhitespaceTokenizer.getInstance();
     }
 
@@ -123,24 +104,6 @@ public class FileWhitespaceTokenizerTest {
     @Test
     public void testWordsTabSeparatedParsedCorrectly() {
         TokenList tokens = s.splitFile(wordsTabSeparated);
-
-        TokenList expected = new TokenList(TokenType.WHITESPACE);
-        expected.add(new ConcreteToken("hello", TokenType.WHITESPACE));
-        expected.add(new ConcreteToken("world", TokenType.WHITESPACE));
-        expected.add(new ConcreteToken("this", TokenType.WHITESPACE));
-        expected.add(new ConcreteToken("is", TokenType.WHITESPACE));
-        expected.add(new ConcreteToken("a", TokenType.WHITESPACE));
-        expected.add(new ConcreteToken("test", TokenType.WHITESPACE));
-
-        assertNotNull(tokens);
-        assertFalse(tokens.isEmpty());
-        assertEquals(tokens.size(), 6);
-        assertEquals(tokens, expected);
-    }
-
-    @Test
-    public void testMultipleLinesParsedCorrectly() {
-        TokenList tokens = s.splitFile(multipleLines);
 
         TokenList expected = new TokenList(TokenType.WHITESPACE);
         expected.add(new ConcreteToken("hello", TokenType.WHITESPACE));

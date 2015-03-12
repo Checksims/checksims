@@ -48,7 +48,12 @@ public interface Submission {
     /**
      * @return List of tokens forming the body of this submission
      */
-    TokenList getTokenList();
+    TokenList getContentAsTokens();
+
+    /**
+     * @return String consisting of the body of the submission
+     */
+    String getContentAsString();
 
     /**
      * @return Name of this submission
@@ -185,15 +190,22 @@ public interface Submission {
 
         TokenList tokenList = new TokenList(splitter.getType());
 
+        StringBuilder fileContent = new StringBuilder();
+
         // Could do this with a .stream().forEach(...) but we'd have to handle the IOException inside
         for(File f : files) {
-            tokenList.addAll(splitter.splitFile(FileLineReader.readFile(f)));
+            fileContent.append(FileLineReader.readFile(f));
         }
+
+        String contentString = fileContent.toString();
+
+        // Split the content
+        tokenList.addAll(splitter.splitFile(contentString));
 
         if(tokenList.size() > 7500) {
             logs.warn("Warning: Submission " + name + " has very large token count (" + tokenList.size() + ")");
         }
 
-        return new ConcreteSubmission(name, tokenList);
+        return new ConcreteSubmission(name, contentString, tokenList);
     }
 }

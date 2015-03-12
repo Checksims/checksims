@@ -25,7 +25,7 @@ import edu.wpi.checksims.token.ConcreteToken;
 import edu.wpi.checksims.token.TokenList;
 import edu.wpi.checksims.token.TokenType;
 
-import java.util.List;
+import java.util.Arrays;
 
 /**
  * Splits a file on a line-by-line basis
@@ -44,10 +44,14 @@ public class FileLineTokenizer implements FileTokenizer {
     }
 
     @Override
-    public TokenList splitFile(List<String> strings) {
+    public TokenList splitFile(String string) {
         TokenList toReturn = new TokenList(this.getType());
 
-        strings.stream()
+        if(string == null) {
+            return toReturn;
+        }
+
+        Arrays.stream(string.split("\n"))
                 .map((str) -> new ConcreteToken(str, TokenType.LINE))
                 .forEachOrdered(toReturn::add);
 

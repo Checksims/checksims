@@ -27,39 +27,20 @@ import edu.wpi.checksims.token.TokenType;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import static org.junit.Assert.*;
 
 /**
  * Tests for the FileCharTokenizer
  */
 public class FileCharTokenizerTest {
-    private static List<String> empty;
-    private static List<String> oneWord;
-    private static List<String> twoWords;
-    private static List<String> withTabs;
-    private static List<String> multipleStrings;
+    private static final String empty = "";
+    private static final String oneWord = "hello";
+    private static final String twoWords = "hello world";
+    private static final String withTabs = "with\ttabs\t";
     private static FileCharTokenizer c;
 
     @BeforeClass
     public static void setUp() {
-        empty = new LinkedList<>();
-
-        oneWord = new LinkedList<>();
-        oneWord.add("hello");
-
-        twoWords = new LinkedList<>();
-        twoWords.add("hello world");
-
-        withTabs = new LinkedList<>();
-        withTabs.add("with\ttabs\t");
-
-        multipleStrings = new LinkedList<>();
-        multipleStrings.add("hello");
-        multipleStrings.add("world");
-
         c = FileCharTokenizer.getInstance();
     }
 
@@ -126,28 +107,6 @@ public class FileCharTokenizerTest {
         expected.add(new ConcreteToken('b', TokenType.CHARACTER));
         expected.add(new ConcreteToken('s', TokenType.CHARACTER));
         expected.add(new ConcreteToken('\t', TokenType.CHARACTER));
-
-        assertNotNull(results);
-        assertFalse(results.isEmpty());
-        assertEquals(results.size(), 10);
-        assertEquals(results, expected);
-    }
-
-    @Test
-    public void testMultipleStringsCorrectlyParsed() {
-        TokenList results = c.splitFile(multipleStrings);
-
-        TokenList expected = new TokenList(TokenType.CHARACTER);
-        expected.add(new ConcreteToken('h', TokenType.CHARACTER));
-        expected.add(new ConcreteToken('e', TokenType.CHARACTER));
-        expected.add(new ConcreteToken('l', TokenType.CHARACTER));
-        expected.add(new ConcreteToken('l', TokenType.CHARACTER));
-        expected.add(new ConcreteToken('o', TokenType.CHARACTER));
-        expected.add(new ConcreteToken('w', TokenType.CHARACTER));
-        expected.add(new ConcreteToken('o', TokenType.CHARACTER));
-        expected.add(new ConcreteToken('r', TokenType.CHARACTER));
-        expected.add(new ConcreteToken('l', TokenType.CHARACTER));
-        expected.add(new ConcreteToken('d', TokenType.CHARACTER));
 
         assertNotNull(results);
         assertFalse(results.isEmpty());

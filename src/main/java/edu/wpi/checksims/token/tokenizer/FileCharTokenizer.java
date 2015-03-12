@@ -27,7 +27,6 @@ import edu.wpi.checksims.token.TokenType;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Split a file into a list of character tokens.
@@ -46,16 +45,18 @@ public class FileCharTokenizer implements FileTokenizer {
     }
 
     @Override
-    public TokenList splitFile(List<String> strings) {
+    public TokenList splitFile(String string) {
         TokenList toReturn = new TokenList(this.getType());
 
-        for(String s : strings) {
-            char[] chars = s.toCharArray();
-
-            Arrays.stream(ArrayUtils.toObject(chars))
-                    .map((character) -> new ConcreteToken(character, TokenType.CHARACTER))
-                    .forEachOrdered(toReturn::add);
+        if(string == null) {
+            return toReturn;
         }
+
+        char[] chars = string.toCharArray();
+
+        Arrays.stream(ArrayUtils.toObject(chars))
+                .map((character) -> new ConcreteToken(character, TokenType.CHARACTER))
+                .forEachOrdered(toReturn::add);
 
         return toReturn;
     }

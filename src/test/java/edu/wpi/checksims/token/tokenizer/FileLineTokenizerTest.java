@@ -27,31 +27,20 @@ import edu.wpi.checksims.token.TokenType;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import static org.junit.Assert.*;
 
 /**
  * Test for FileLineTokenizer, which is itself very simple, and thus not extensively tested
  */
 public class FileLineTokenizerTest {
-    private static List<String> empty;
-    private static List<String> oneString;
-    private static List<String> twoStrings;
+    private static final String empty = null;
+    private static final String oneString = "hello";
+    private static final String multiLine = "hello\nworld\n";
+    private static final String multiLineNoTrailing = "hello\nworld";
     private static FileLineTokenizer l;
 
     @BeforeClass
     public static void setUp() {
-        empty = new LinkedList<>();
-
-        oneString = new LinkedList<>();
-        oneString.add("hello");
-
-        twoStrings = new LinkedList<>();
-        twoStrings.add("hello");
-        twoStrings.add("world");
-
         l = FileLineTokenizer.getInstance();
     }
 
@@ -77,8 +66,22 @@ public class FileLineTokenizerTest {
     }
 
     @Test
-    public void TestTwoStringsReturnsTwoStrings() {
-        TokenList results = l.splitFile(twoStrings);
+    public void TestMultiLineReturnsTwoStrings() {
+        TokenList results = l.splitFile(multiLine);
+
+        TokenList expected = new TokenList(TokenType.LINE);
+        expected.add(new ConcreteToken("hello", TokenType.LINE));
+        expected.add(new ConcreteToken("world", TokenType.LINE));
+
+        assertNotNull(results);
+        assertFalse(results.isEmpty());
+        assertEquals(results.size(), 2);
+        assertEquals(results, expected);
+    }
+
+    @Test
+    public void TestMultiLineNoTrailingReturnsTwoStrings() {
+        TokenList results = l.splitFile(multiLineNoTrailing);
 
         TokenList expected = new TokenList(TokenType.LINE);
         expected.add(new ConcreteToken("hello", TokenType.LINE));

@@ -66,8 +66,8 @@ public class SmithWaterman implements SimilarityDetector {
     public AlgorithmResults detectSimilarity(Submission a, Submission b) throws ChecksimException {
         if(!a.getTokenType().equals(b.getTokenType())) {
             throw new ChecksimException("Token list type mismatch: submission " + a.getName() + " has type " +
-                    a.getTokenList().type.toString() + ", while submission " + b.getName() + " has type " +
-                    b.getTokenList().type.toString());
+                    a.getContentAsTokens().type.toString() + ", while submission " + b.getName() + " has type " +
+                    b.getContentAsTokens().type.toString());
         }
 
         return applySmithWatermanPlagiarismDetection(a, b, this.params);
@@ -83,11 +83,11 @@ public class SmithWaterman implements SimilarityDetector {
     }
 
     static AlgorithmResults applySmithWatermanPlagiarismDetection(Submission a, Submission b, SmithWatermanParameters params) {
-        SmithWatermanResults firstRun = applySmithWaterman(a.getTokenList(), b.getTokenList(), params);
+        SmithWatermanResults firstRun = applySmithWaterman(a.getContentAsTokens(), b.getContentAsTokens(), params);
 
         if(firstRun == null || !firstRun.hasMatch()) {
             // No similarities found on first run, no need to loop
-            return new AlgorithmResults(a, b, 0, 0, a.getTokenList(), b.getTokenList());
+            return new AlgorithmResults(a, b, 0, 0, a.getContentAsTokens(), b.getContentAsTokens());
         }
 
         // Represents the total portions of the tokenization lists matched by the Smith-Waterman algorithm

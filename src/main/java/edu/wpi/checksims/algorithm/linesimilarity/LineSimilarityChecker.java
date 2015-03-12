@@ -91,8 +91,8 @@ public class LineSimilarityChecker implements SimilarityDetector {
      */
     @Override
     public AlgorithmResults detectSimilarity(Submission a, Submission b) throws ChecksimException {
-        TokenList linesA = a.getTokenList();
-        TokenList linesB = b.getTokenList();
+        TokenList linesA = a.getContentAsTokens();
+        TokenList linesB = b.getContentAsTokens();
         TokenList finalA = TokenList.cloneTokenList(linesA);
         TokenList finalB = TokenList.cloneTokenList(linesB);
 

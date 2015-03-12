@@ -99,6 +99,6 @@ public class CommonCodeRemover {
         logs.trace("Submission " + in.getName() + " contained " + d.format(100 * percentMatched) + "% common code");
         logs.trace("Removed " + identTokens + " common tokens (of " + in.getNumTokens() + " total)");
 
-        return new ConcreteSubmission(in.getName(), finalList);
+        return new ConcreteSubmission(in.getName(), in.getContentAsString(), finalList);
     }
 }

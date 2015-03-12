@@ -35,8 +35,13 @@ public abstract class AbstractSubmissionDecorator implements Submission {
     }
 
     @Override
-    public TokenList getTokenList() {
-        return wrappedSubmission.getTokenList();
+    public TokenList getContentAsTokens() {
+        return wrappedSubmission.getContentAsTokens();
+    }
+
+    @Override
+    public String getContentAsString() {
+        return wrappedSubmission.getContentAsString();
     }
 
     @Override

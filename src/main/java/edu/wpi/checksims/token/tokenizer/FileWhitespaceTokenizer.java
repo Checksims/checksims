@@ -26,7 +26,6 @@ import edu.wpi.checksims.token.TokenList;
 import edu.wpi.checksims.token.TokenType;
 
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Split a file into tokens based on spaces
@@ -45,17 +44,19 @@ public class FileWhitespaceTokenizer implements FileTokenizer {
     }
 
     @Override
-    public TokenList splitFile(List<String> strings) {
+    public TokenList splitFile(String string) {
         TokenList toReturn = new TokenList(this.getType());
 
-        for(String s : strings) {
-            String[] split = s.split("\\s+");
-
-            Arrays.stream(split)
-                    .filter((str) -> !str.isEmpty())
-                    .map((str) -> new ConcreteToken(str, TokenType.WHITESPACE))
-                    .forEachOrdered(toReturn::add);
+        if(string == null) {
+            return toReturn;
         }
+
+        String[] split = string.split("\\s+");
+
+        Arrays.stream(split)
+                .filter((str) -> !str.isEmpty())
+                .map((str) -> new ConcreteToken(str, TokenType.WHITESPACE))
+                .forEachOrdered(toReturn::add);
 
         return toReturn;
     }

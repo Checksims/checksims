@@ -45,13 +45,13 @@ public final class ValidityIgnoringSubmission extends AbstractSubmissionDecorato
 
         Submission otherSubmission = (Submission)other;
 
-        if(!otherSubmission.getTokenType().equals(this.getTokenType()) || !otherSubmission.getName().equals(this.getName()) || !(otherSubmission.getNumTokens() == this.getNumTokens())) {
+        if(!otherSubmission.getTokenType().equals(this.getTokenType()) || !otherSubmission.getName().equals(this.getName()) || !(otherSubmission.getNumTokens() == this.getNumTokens()) || !(otherSubmission.getContentAsString().equals(this.getContentAsString()))) {
             return false;
         }
 
         Supplier<TokenList> tokenListSupplier = () -> new TokenList(this.getTokenType());
-        TokenList thisList = this.getTokenList().stream().map((token) -> new ValidityIgnoringToken(token)).collect(Collectors.toCollection(tokenListSupplier));
-        TokenList otherList = otherSubmission.getTokenList().stream().map((token) -> new ValidityIgnoringToken(token)).collect(Collectors.toCollection(tokenListSupplier));
+        TokenList thisList = this.getContentAsTokens().stream().map((token) -> new ValidityIgnoringToken(token)).collect(Collectors.toCollection(tokenListSupplier));
+        TokenList otherList = otherSubmission.getContentAsTokens().stream().map((token) -> new ValidityIgnoringToken(token)).collect(Collectors.toCollection(tokenListSupplier));
 
         return thisList.equals(otherList);
     }

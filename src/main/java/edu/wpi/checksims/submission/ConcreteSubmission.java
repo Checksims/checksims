@@ -31,16 +31,23 @@ import edu.wpi.checksims.token.TokenType;
  */
 public final class ConcreteSubmission implements Submission {
     private final TokenList tokenList;
+    private final String content;
     private final String name;
 
-    public ConcreteSubmission(String name, TokenList tokens) {
+    public ConcreteSubmission(String name, String content, TokenList tokens) {
         this.name = name;
+        this.content = content;
         this.tokenList = TokenList.immutableCopy(tokens);
     }
 
     @Override
-    public TokenList getTokenList() {
+    public TokenList getContentAsTokens() {
         return tokenList;
+    }
+
+    @Override
+    public String getContentAsString() {
+        return content;
     }
 
     @Override
@@ -71,7 +78,7 @@ public final class ConcreteSubmission implements Submission {
 
         Submission otherSubmission = (Submission)other;
 
-        return otherSubmission.getName().equals(this.name) && otherSubmission.getNumTokens() == this.getNumTokens() && otherSubmission.getTokenList().equals(this.tokenList);
+        return otherSubmission.getName().equals(this.name) && otherSubmission.getNumTokens() == this.getNumTokens() && otherSubmission.getContentAsTokens().equals(this.tokenList) && otherSubmission.getContentAsString().equals(this.content);
     }
 
     @Override
