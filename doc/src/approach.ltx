@@ -7,7 +7,7 @@ detection tool with the following requirements:
  or no training, and should produce output in a form that can be easily
  interpreted.
 \item The output itself should not be a definitive accusation of academic
- wrongdoing; instead, it simply should flag suspicious submissions for further
+ wrongdoing; instead, it should simply flag suspicious submissions for further
  review by course staff.
 \item The detector should to be complete and usable within seven weeks; this
  requirement placed a severe time limit on implementation and encouraged the
@@ -70,13 +70,13 @@ requirements outlined above. \textit{Checksims} is a client-based Java
 application implementing a pair of similarity detection algorithms and
 several output formats. It performs similarity detection on an arbitrary
 number of student submissions within a single assignment, and it produces
-output that can be used to easily determine which submissions need to be
-checked by hand for unauthorized copying.
+output that can easily identify which submissions need to be checked by hand
+for unauthorized copying.
 
 \textit{Checksims} uses a simple, modular architecture designed for easy
 extensibility. It is designed to be trivial to add new similarity
 detection algorithms or output strategies without significant changes to the
-program thus enabling future projects to expand on our work and offer further
+program, thus enabling future projects to expand on our work and offer further
 features without requiring significant changes to the core program,
 increasing productivity and decreasing the likelihood of introducing bugs.
 
@@ -120,8 +120,8 @@ It is assumed that each submission is contained within a single subdirectory
 of the input directory --- that is, all student code is located in
 subdirectories of the input directory, and each subdirectory contains the code
 of exactly one student. All files within a single subdirectory are considered
-to belong to a single student, and are compared with the match pattern to
-determine whether they are checked. This allows \textit{Checksims} to only
+to belong to a single student, and are compared with a \textit{match pattern}
+to determine whether they are checked. This allows \textit{Checksims} to only
 include source files; for example, a match pattern of \texttt{*.\{c,h\}} would
 only match C source files, and would ignore README files.
 
@@ -158,7 +158,7 @@ the sequence ``0 1 2 3 0'' (note the repeated identifier for the repeated
 character). This choice is less efficient when tokens represent individual
 characters of the input submission (32-bit integers representing UTF-8
 characters which are usually 8 bits), but it offers a
-substantial space and performance advantage for tokenization algorithms which
+substantial space and performance advantage for tokenization algorithms that
 represent substrings of the input as tokens (for example, line tokenization,
 which splits the input submission at newline characters to form tokens). Given
 that we expect most uses of this program to use string-backed tokens (for
