@@ -114,24 +114,20 @@ course policy, but not a matter of academic dishonesty.
 
 \subsubsection{Detection of Academic Dishonesty}
 There has been a great deal of research focused on the detection of academic 
-dishonesty (both in plaintext and source code); Thomas Lancaster presents a 
-thorough overview of existing work in his 2005 paper, including a comparison 
-of all existing academic dishonesty detection solutions available at time of 
-publication \cite{lancaster05}. The detection of unauthorized copying draws 
-heavily on the fields of Natural Language Processing and Information 
-Retrieval to process student submissions and efficiently store and retrieve 
-information about similarities \cite{beth14}.
+dishonesty. The detection of unauthorized copying draws heavily on the fields
+of Natural Language Processing and Information Retrieval to process student
+submissions and efficiently store and retrieve information about similarities
+\cite{beth14}. Thomas Lancaster presents a thorough overview of existing work
+in his 2005 paper, including a comparison of all existing academic dishonesty
+detection solutions available at time of publication \cite{lancaster05}.
 
-Academic dishonesty detection is generally broken into two broad fields. The
-first is the detection of unauthorized copying in source code, and the second
-the detection of unauthorized copying in natural language. The source code
-detection problem is generally considered the easier of the two problems, given
-that programming languages follow a fixed grammar. The need for advanced 
-natural language processing is mostly eliminated, given the constraints on 
-what is valid source code \cite{clough03}. Given the problem we are 
-attempting to solve, we are naturally more interested in source code 
-similarity detection.
-% TODO do we cite lancaster05?
+Academic dishonesty detection is often broken into two broad fields: detection
+of unauthorized copying in source code, and detection of unauthorized copying
+in natural language \cite{lancaster05, clough03}. The source code detection
+problem is generally considered the easier of the two problems, because
+programming languages follow fixed grammars; the explicit, unabmiguous syntax
+of programming languages eliminates the need for advanced natural
+language processing. We focus on source code similarity detection.
 
 
 \paragraph{Obfuscation}
@@ -198,7 +194,6 @@ perpetrators of crimes from trace evidence. A number of commonly-used
 similarity detection algorithms were originally developed for bioinformatics
 use --- for example, the Smith-Waterman algorithm described in Section~
 \ref{sec:smithwatermanlit} \cite{smith1981identification}.
-% TODO Could use a general citation for similarity checking in bioinformatics
 
 
 \subsubsection{Copyright Infringement Detection}
@@ -222,7 +217,6 @@ unusually similar. Structural comparisons compare the content of submissions
 --- for example, comparing the specific tokens that form the inputs
 \cite{arwin2006plagiarism}. Within structural comparisons, there are two
 broad subcategories: Vector-Distance algorithms and Fingerprinting algorithms.
-% TODO Lancaster05 good citation for here
 
 
 \subsubsection{Syntax Awareness in Comparison}
@@ -269,12 +263,37 @@ to catch similarities that might otherwise be undetectable
 \cite{whale1990identification} \cite{arwin2006plagiarism} \cite{lancaster05}.
 
 
+\subsubsection{Greedy String Tiling}
+\label{sec:gst}
+Greedy String Tiling is a popular algorithm that is most notably used by
+\textit{JPlag}, descrbed in Section~\ref{sec:jplag} \cite{prechelt00}. First,
+the algorithm locates the longest string that is shared between the two
+documents and designates that string as a ``tile''. It replaces the tile with
+the empty string, then tiles the next longest substring that is not already
+part of a tile. It continues tiling the next largest shared string until the
+largest match falls below some floor. The algorithm is guaranteed to terminate
+because the length of the maximum match decreases with each step. Greedy string
+tiling runs in $O(n^3)$ worst case time, but in $O(n)$ best case. (TODO
+informal argument about performance characteristics).
+
+\textit{JPlag} introduced several improvements on Greedy String Tiling. First,
+it searches for matching strings using Karp-Rabin string matching, as
+described in Section~\ref{sec:karp-rabin}. Second, when searching for the
+longest common substring between documents, it skips a number of comparisons
+equal to the longest common substring found so far. If the next character
+after that jump is a match, then, and only then, does the algorithm step back
+to try to verify the string. Finally, \textit{JPlag} enforces that the
+shorter document is always treated as the query document. \textit{Jplag}'s
+optimizations reduce the average-case running time of GST to $O(n)$
+\cite{prechelt00}.
+
+
 \subsubsection{Vector-Distance Algorithms}
 Vector-distance algorithms compare two or more inputs and identify the
 number and sequence of edits that must be made to transform one of the inputs
 into the other(s). The complement of this sequence of edits is the set of
 things that did not change --- the similarities between the two documents.
-Vector-Distance algorithms are typically the slowest of all  similarity
+Vector-Distance algorithms are typically the slowest of all similarity
 detection algorithms, but fingerprinting and feature comparison may not
 identify the best possible match.
 
@@ -334,13 +353,13 @@ removing the need for recomputation of the unchanged parts of the array.
 Fingerprinting algorithms (also known as \textit{feature extraction
 algorithms}) extract a number of \textit{fingerprints} (or 
 	\textit{features}) which can be used to identify a document. These
-\textit{fingerprints} are then added to a database (with a list of references
+fingerprints are then added to a database (with a list of references
 back to the inputs which contained them). To identify similarities, an input's
-\textit{fingerprints} are computed, added to the database, and then looked up
+fingerprints are computed, added to the database, and then looked up
 to see whether any submissions other than the current one have the same
-\textit{fingerprints} \cite{hoad03}.
+fingerprints \cite{schleimer03}.
 
-\textit{Fingerprints} are typically the hashes of one or more tokens of the
+Fingerprints are typically the hashes of one or more tokens of the
 input. Typically, before being inserted into the database, a small subset of
 the tokens is selected, and the rest are discarded; this is done to reduce the
 number of entries required in the database. A typical solution might be to
@@ -349,27 +368,33 @@ number $p$, but better fingerprint selectors exist \cite{schleimer03}.
 
 
 \paragraph{Karp-Rabin String Matching}
+\label{sec:karp-rabin}
 The archetypal fingerprinting algorithm is \textit{Karp-Rabin} string matching.
 \textit{Karp-Rabin} generates ``rolling hashes'' of the two input submissions
 (the hash of characters $N$ to $M$ of the input, then the hash of characters 
  $N + 1$ to $M + 1$, and so on). The sets of hashes for the inputs are checked
 against each other, and the matches are used to identify common substrings.
 \cite{karp87}. \textit{Karp-Rabin} string matching is a fundamental technique
-used and built on by many later string-matching papers \cite{schleimer03}
-\cite{buss94} \cite{arwin2006plagiarism} \cite{burrows07} \cite{clough03}
-\cite{johnson94}.
+used and built on by many later string-matching papers \cite{schleimer03,
+buss94, clough03, arwin2006plagiarism, burrows07, johnson94}.
 
 \paragraph{$n$-gram Fingerprinting}
 \label{sec:ngram}
 By far the most common document fingerprinting approach is called 
-\textit{n-gram fingerprinting}. The document is tokenized and considered as
+\textit{n-gram fingerprinting}. Figure~\ref{fig:n-gram} presents an overview of
+\textit{n-gram} fingerprinting. The document is tokenized and considered as
 sequences of $n$ tokens, or \textit{n-grams}. The \textit{n-grams} overlap, so
-that there an $m$ character document is considered as $m - n + 1$ 
-\textit{n-grams}. The hashes of these \textit{n-grams} are stored in a
-database and checked against those from other documents. The hashes are
-usually stored with pointers to their occurrences to aid in detection.
+that a document with $L$ tokens is considered as $L - n + 1$ \textit{n-grams}.
+The hashes of these \textit{n-grams} are stored in a database and checked
+against those from other documents. The hashes are usually stored with
+pointers to their occurrences to aid in detection.
 
-TODO ILLUSTRATION
+\begin{figure}
+\centering
+\includegraphics{ngram-diagram.png}
+\caption{An overview of \textit{n-gram} fingerprinting}
+\label{fig:n-gram}
+\end{figure}
 
 Most corpora are far too large to store the the hashes of every \textit{n-gram}
 from every document in the database. Usually, a small subset of all hashes are
@@ -389,8 +414,6 @@ into \textit{windows} of size $t$. Winnowing always selects exactly one hash
 from each window, guaranteeing that a match of $t$ or more consecutive tokens
 is identified.
 
-TODO ILLUSTRATION
-
 Winnowing has proven to be extremely powerful; it is used by the current
 industry standard source code similarity detector, \textit{Measure of Software
 Similarity}, or MOSS, described in Section~\ref{sec:moss}.
@@ -405,30 +428,42 @@ defining features --- for example, line count, word count, character count,
 average word per line \cite{arwin2006plagiarism}.
 
 Feature comparison algorithms were common in the early days of similarity
-detection in the 1980s and early 1990s \cite{clough03}. However, it has become
-less popular of late because of the growing effectiveness of structural
-comparison algorithms such as \textit{Smith-Waterman} and fingerprinting.
-Feature comparison algorithms can be just as accurate as structural 
-comparison algorithms, but require a great deal of tuning as the differences 
-in the profiles of documents containing unauthorized copying and those that 
-do not are typically very small \cite{arwin2006plagiarism}. We found one 
-reference to the creation of a similarity detection system using this 
-algorithm after 2000, but no others \cite{jones01}. The paper describing this 
-system provided no evidence that the aforementioned criticisms were not valid,
-and did not provide any results to substantiate its effectiveness. Given 
-the lack of popularity of this approach and its noted disadvantages, we did not 
-pursue this line of inquiry.
-% Could cite lancaster05
+detection in the 1980s and early 1990s \cite{parker89, clough03}. However, it
+has become less popular of late because of the growing effectiveness of
+structural comparison algorithms such as \textit{Smith-Waterman} and
+fingerprinting. Feature comparison algorithms can be just as accurate as
+structural comparison algorithms, but require a great deal of tuning as the
+differences in the profiles of documents containing unauthorized copying and
+those that do not are typically very small \cite{arwin2006plagiarism}. We
+found one reference to the creation of a similarity detection system using
+this algorithm after 2000, but no others \cite{jones01}. The paper describing
+this system provided no evidence that the aforementioned criticisms were not
+valid, and did not provide any results to substantiate its effectiveness.
+Given the lack of popularity of this approach and its noted disadvantages, we
+did not pursue this line of inquiry.
 
 
-\iffalse
 \subsubsection{Other Approaches}
-TODO
-% Debate: are these worth mentioning at all?
-% Reference ciesielski08
-% Reference belkhouche04
-% Reference lancaster05
-\fi
+Burrows, Tahaghoghi, and Zobel have developed a highly scalable approach to
+similarity detection using advanced information retrieval techniques, which can
+handle checking for similarity among tens of thousands of source code documents
+\cite{burrows07}. The Burrows approach requires users to select a function of
+two documents that outputs a ``similarity score'' for them. Because the
+effectiveness of the Burrows approach requires using an intelligent similarity
+scoring function, a number of such functions have been developed, including the
+Okapi BM25 function and a family of functions developed by Ciesielski, Nelson,
+and Tahaghogi using genetic programming \cite{ciesielski08}.
+
+Belkhouche, Nix, and Hassell have contributed an elaborate academic dishonesty
+detection approach that compares C programs by converting them to structures
+representing control flow, data tables, and other high-level concepts. Their
+implementation is highly language-specific \cite{belkhouche04}.
+
+So many other unauthorized copying detectors have been developed that
+describing all of them here would be impractical. Lancaster and Culwin have
+constructed a detailed and very helpful taxonomy of commonly known copy
+detection tools, and have described those tools in terms of that taxonomy
+\cite{lancaster05}.
 
 
 \subsection{Existing Solutions}
@@ -468,14 +503,23 @@ our advisor, our primary customer, does not consider to be unauthorized
 copying. The secrecy of MOSS's tuning parameters and database also prevent
 researchers from independently evaluating its performance or reproducing any of
 its results.
-% TODO Cite aiken05 - NEED TO FIND PAPER
 
 
 \subsubsection{JPlag}
-TODO
+\label{sec:jplag}
+\textit{JPlag} is a web service developed by Guido Malpohl in 1996.
+\textit{JPlag} compares closely with the performance of MOSS, and some academic
+dishonesty detection tool developers choose to forgo testing their own tools
+against MOSS in favor of \textit{JPlag} \cite{prechelt00, ciesielski08}.
 
+\textit{JPlag} allows users to submit an archive of programming files to its
+web service; the files will then be compared pairwise against each other.
+\textit{Jplag} first runs the programs through a parser or scanner for the
+appropriate programming language, then uses the outputs from the parser or
+scanner as the input strings to its backend algorithm; only the front-end
+parsing step is language-dependent \cite{prechelt00}. \textit{JPlag} is
+advertised to support C, C++, Java, Scheme, C\#, and even natural language.
 
-\subsubsection{Other Programs}
-TODO
-% Cite all the one-off systems that are mentioned in our lit review
-% And then never appear again
+\textit{JPlag}'s core algorithm is Greedy String Tiling, with a number of
+optimizations, as described in Section~\ref{sec:gst}.
+

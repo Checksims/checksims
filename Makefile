@@ -23,7 +23,7 @@ test:
 docs: main userguide devguide
 
 builddir:
-	mkdir -p $(LATEX_DIST)
+	mkdir -p $(LATEX_ROOT)/dist
 
 main: builddir $(LATEX_DIST)/main.pdf
 
@@ -41,6 +41,6 @@ $(LATEX_DIST)/developer_guide_only.pdf: $(LATEX_SRC)/developer_guide_only.ltx $(
 	$(LATEX) $(LATEX_BUILD_ARGS) $(LATEX_SRC)/developer_guide_only.ltx
 
 clean:
-	rm -rf $(LATEX_DIST) $(LATEX_BUILD)
+	rm -rf $(LATEX_ROOT)/dist
 	mvn clean
 
