@@ -77,12 +77,12 @@ directories, which contained the usernames of the submitters. Simply renaming
 the directories was enough to remove this as a concern. Comments were the
 next concern, containing the vast majority of remaining personally
 identifiable information. Identifying information like names and usernames
-almost never occurred outside of comments. After consulting with several
-professors, it was decided that stripping comments and submission names was
-sufficient to satisfy the requirement that personally identifying information
-was removed, with the caveat that a professor manually review anonymized code
-to ensure that no obvious identifying information remained. Professor Lauer
-graciously offered to perform this final vetting.
+almost never occurred outside of comments. After consulting with the Computer
+Science department head, it was decided that stripping comments and submission
+names was sufficient to satisfy the requirement that personally identifying
+information was removed, with the caveat that a professor manually review
+anonymized code to ensure that no obvious identifying information remained.
+Professor Lauer graciously offered to perform this final vetting.
 
 
 A script was constructed in Bash to accomplish this goal in a largely-automated
@@ -198,8 +198,8 @@ These simulated corpora only exist for natural language, however, where our
 search is for similarity in source code. We are not confident that results
 obtained by testing Checksims against these corpora will correspond to our
 tool's performance against source code. However, we did use them in the
-project as unit tests for individual algorithms, providing a verifiable set
-of results we can test for, but we do not infer anything about the tool's
+project as functional tests for individual algorithms, providing a verifiable
+set of results we can test for, but we do not infer anything about the tool's
 quality from their results. 
 
 \section{Experimental Verification}
