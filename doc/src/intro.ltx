@@ -1,16 +1,15 @@
 \section{Introduction}
 \label{sec:intro}
-Over the past year, we have heard reports of a number of cases of academic
-dishonesty occurring in the Computer Science department and the Electrical and
-Computer Engineering department at Worcester Polytechnic Institute.
-Most have concerned the unauthorized and unacknowledged
-copying of source code. The first reports came from Nicholas DeMarinis,
-a Teaching Assistant in an ECE department embedded systems programming course,
-who noticed several instances of source code which he considered to be
-suspiciously similar in an embedded systems programming course. He identified
-several cases of academic dishonesty, including one where students had
-extensively obfuscated the copied code.
-
+Some members of the Computer Science and Electrical and Computer Engineering
+departments at Worcester Polytechnic Institute have perceived a recent increase
+in academic dishonesty. Most have concerned the unauthorized and
+unacknowledged copying of program source code. The first reports came from
+Nicholas DeMarinis, a Teaching Assistant in an ECE department embedded
+systems programming course, who noticed several instances of source code
+which he considered to be suspiciously similar in an embedded systems
+programming course. He identified several cases of academic dishonesty,
+including one where students had extensively obfuscated the copied code.
+ 
 Meanwhile, Professor Hugh C. Lauer of the Computer Science department found
 several instances of academic dishonesty in his own courses. A member of the
 course staff of his introductory programming class found a pair of students who
@@ -20,20 +19,22 @@ identified another set of students with very similar assignments~--- this time,
 by noticing that both students had submitted assignments which had identical,
 incorrect output.
 
-In both cases, the unauthorized copying was caught mostly by luck.
+In both cases, the unauthorized copying was caught mostly by coincidence.
 Both courses had more than one teaching assistant; if the copied assignments
 had been graded by different teaching assistants, the copying would almost
-certainly not have been identified. The course staff could not have been so
-lucky all the time, so many cases of unauthorized copying have most likely
-gone undetected.
+certainly not have been identified. It is statistically unlikely that copied
+assignments happen to be graded by the same course staff members every time,
+which leads us to believe that many cases of unauthorized copying have most
+likely gone undetected.
 
-The copying does not slip through because the course staff cannot recognize it.
-Dishonest students escape because there are so many assignments that the staff
-could not possibly review them all. in short, the problem is caused by data
-overload, which computers are well-equipped to manage. So, Professor Lauer
-commissioned us, the authors, to construct a system for automatically
-detecting suspicious assignments, with the intent of integrating it into his
-low-level courses to help identify assignments that require manual review.
+The copying does not slip through because the course staff cannot recognize
+dishonesty when they see it. Instead, dishonest students escape because there
+are so many assignments that the staff does not have time to properly check
+them all for copying. in short, the problem is caused by data overload, which
+computers are well equipped to manage. So, Professor Lauer commissioned us to
+construct a system for automatically detecting suspicious assignments, with the
+intent of integrating it into his low-level courses to help identify
+assignments that require manual review.
 
 
 \subsection{Defining Academic Dishonesty}
@@ -48,12 +49,12 @@ Section~\ref{sec:dishonesty}.
 
 In Professor Lauer's lower level courses, students are encouraged to collaborate
 on a white board and design pseudocode solutions, but they must type in and
-debug their own programs from the pseudocode. The direct copying of source code
-is prohibited. This way, the code must pass ``through the brain''~--- the
+debug their own programs from there. The direct copying of source code is
+prohibited. This way, the code must pass ``through the brain''~--- the
 students will gain more understanding by typing independently than by copying
-code directly. Direct copying does constitute academic dishonesty. Such rules
-are described in the course syllabus, and are usually explained directly
-during the first lecture as well.
+code directly. In Professor Lauer's view, direct copying does constitute
+academic dishonesty. Such rules are described in the course syllabus, and are
+usually explained directly during the first lecture as well.
 
 Using source code from the web follows much the same rules as collaborating
 with other students. The use of pre-existing pseudocode (or using existing code
