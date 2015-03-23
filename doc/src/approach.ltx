@@ -244,16 +244,18 @@ collisions. Even a trivial change (a single letter added or removed, for
 example) results in a different hash, causing the changed token to not be
 matched. Indeed, all of the obfuscation techniques in
 Section~\ref{sec:obfuscation} can defeat the \textit{Line Comparison}
-algorithm, unless preprocessors are applied to combat them. Furthermore, almost
-all hashes enforce the property that any change in the input results in major
-changes to the output. Therefore, it is impossible to tell the degree of
-similarity between two tokens simply by comparing their hashes. This makes it
-impossible to identify similar lines just from their hashes, preventing 
-textit{Line Comparison} from being used to identify very similar hashes. Line
-Comparison remains in \textit{Checksims} both as a proof of concept and
-example of a simple algorithm, and to quickly identify extremely similar or
-identical submissions (an initial check that can be run prior to a slower
-but more accurate algorithm such as \textit{Smith-Waterman}).
+algorithm, unless preprocessors --- which cannot easily thwart sophisticated
+obfuscations such as arithmetic operand reordering --- are applied to
+combat them. Furthermore, almost all hashes enforce the property that any
+change in the input results in major changes to the output. Therefore, it is
+impossible to tell the degree of similarity between two tokens simply by
+comparing their hashes. Therefore, it is impossible to identify similar lines
+just from their hashes, preventing  \textit{Line Comparison} from being used
+to identify very similar hashes. Line Comparison remains in \textit{Checksims}
+both as a proof of concept and example of a simple algorithm, and to
+quickly identify extremely similar or identical submissions (an initial check
+that can be run prior to a slower but more accurate algorithm such as
+\textit{Smith-Waterman}).
 
 \textit{Line Comparison} is designed to work with tokens
 that represent lines; its usefulness with significantly coarser or finer
@@ -269,13 +271,14 @@ using \textit{Line Comparison} with character tokenization.
 \label{sec:smithwaterman}
 The \textit{Smith-Waterman} algorithm is the primary similarity detection
 algorithm included in \textit{Checksims}. It is described in
-Section~\ref{sec:smithwatermanlit}, and was first used in academic dishonesty
-detection by Robert Irving \cite{irving04}. When run against our test corpus,
-Smith-Waterman defeated multiple methods of obfuscation described in
-Section~\ref{sec:obfuscation}, including changed identifier names. We believe
-\textit{Smith-Waterman} caught most of the instances of academic dishonesty in
-our test corpus. For more information about Smith-Waterman's performance, see
-Section~\ref{sec:results}. TODO add refs to specific sections discussing SW
+Section~\ref{sec:smithwatermanlit}. \textit{Smith-Waterman}'s first published
+use in academic dishonesty detection was by Robert Irving \cite{irving04}. When
+run against our test corpus, Smith-Waterman defeated multiple methods of
+obfuscation described in Section~\ref{sec:obfuscation}, including changed
+identifier names. We believe \textit{Smith-Waterman} caught most of the
+instances of academic dishonesty in our test corpus. For more information
+about Smith-Waterman's performance, see Section~\ref{sec:results}.
+% TODO add refs to specific sections discussing SW
 
 \textit{Smith-Waterman} scales poorly. Its running time and memory usage both
 scale as $O(m * n)$ where $m$ and $n$ are the size of the two submissions
