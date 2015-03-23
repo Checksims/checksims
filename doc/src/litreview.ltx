@@ -1,20 +1,18 @@
 \section{Definitions}
-Several terms are fundamental to the field of similarity detection which are
-not in common use. For clarity, we provide definitions for them here.
+Several fundamental similarity detection terms are not in common use. For
+clarity, we provide their definitions here.
 
 \begin{itemize}
 \item The terms \textit{academic dishonesty} and \textit{unauthorized copying}
 	are used throughout this paper to refer to the use of another's work
-	without permission or attribution. In this context, it refers to students
-	who use another person's work without attribution and/or without the
-	permission of the instructor to do so. This is often referred to as
-	``cheating'' or ``plagiarism'' in general use, but we deliberately avoid
-	these terms where possible, as they can be perceived to be controversial
-	or judgmental.
+	without attribution and without the permission of the instructor. Such
+        behavior is often referred to as ``cheating'' or ``plagiarism,'' but we
+        deliberately avoid those terms where possible, as they can be perceived
+        to be controversial or judgmental.
 \item A \textit{corpus} (plural \textit{corpora}) is a body of work. A corpus
-	may contain many documents written by many people. A typical corpus in the
-	world of academic dishonesty detection might be all the student
-	submissions for a specific assignment.
+        may contain many documents written by many people. An example of a
+        corpus in the world of academic dishonesty detection might be all the
+        student	submissions for a specific assignment.
 \iffalse
 % Commented out as these terms are never used
 \item Similarities between works contained within a single corpus are referred
@@ -27,14 +25,14 @@ not in common use. For clarity, we provide definitions for them here.
 	breaks an input string up in a consistent manner (for example, at each
 	newline). \textit{Tokens} are formed from the broken-up chunks of the
 	input.
-\item A \textit{False Positive} for given tool is a result which is matched by
-	the tool, but should not be included. In the context of a similarity
-	detection system, it would be two or more submissions which are flagged as
-	unusually similar, but are not considered to be academic dishonesty.
-\item A \textit{False Negative} for a given tool is a result which not matched
-	by the tool, but should have been included. In the context of a similarity
-	detection system, it would be two results which are not flagged as
-	unusually similar in spite of having been created by unauthorized copying.
+\item A \textit{False Positive} is a result that is reported, but
+        should not have been. In the context of a similarity detection system,
+        it would be two or more submissions that are flagged as unusually
+        similar, but are not considered to be illegaly copied.
+\item A \textit{False Negative} is a result that is not reported by the tool,
+        but should have been. In the context of a similarity detection system,
+        it would be two results that are not flagged as unusually similar in
+        spite of having been created by unauthorized copying.
 \end{itemize}
 
 
@@ -43,44 +41,45 @@ This section summarizes our review of existing literature in the area of
 similarity detection. It is focused on three areas: what is academic
 dishonesty (Section~\ref{sec:dishonesty}), what algorithms exist for detecting
 academic dishonesty (Section~\ref{sec:algo}), and what preexisting solutions
-are there that might also solve the specific problems which were the impetus
-for our solution (Section~\ref{sec:existing}).
+might also solve the specific problems that inspired our solution
+(Section~\ref{sec:existing}).
 
 \subsection{Academic Dishonesty}
 \label{sec:dishonesty}
 There have been a number of scholarly attempts to provide a definition for the
-term ``academic dishonesty'' (and the associated term ``plagiarism'', which we
-avoid). Thomas Lancaster, in a 2005 survey of similarity detection systems,
-defines academic dishonesty as ``The process by which students submit work for
-academic credit which contains other people's unacknowledged words or ideas''
-\cite{lancaster05}. Lancaster provides a solid foundation, but there is still a
-question of what specific acts constitute academic dishonesty.
+term ``academic dishonesty.'' Thomas Lancaster, in a 2005 survey of similarity
+detection systems, defines academic dishonesty as ``The process by which
+students submit work for academic credit which contains other people's
+unacknowledged words or ideas'' \cite{lancaster05}. Lancaster provides a
+solid foundation, but there is still a question of what specific acts
+constitute academic dishonesty.
 
-The question of academic dishonesty has been further complicated by the
-emergence of code-hosting websites such as \textit{Github} and
-\textit{Bitbucket}, and Q\&A sites such as \textit{StackOverflow}. Students
-may host code they wrote for a class on \textit{Github}, where it may be
-copied without permission or attribution by their classmates (or students in
-another class who were given the same assignment). In the case of
-\textit{StackOverflow}, students may ask questions on how to complete an 
-assignment. The answers they receive might include example source code, and 
-most would agree that copying this example code (again, without attribution 
-and likely without permission) constitutes academic dishonesty. However, 
-some professors feel that the use of any information (even hints as to 
-algorithms, or pseudocode versions of a solution) obtained from such a 
-source constitutes academic dishonesty. In the case of copying from a site like
-\textit{GitHub} without the knowledge of the creator, almost anyone familiar
-with academia would agree that the student who copied the given code was guilty
-of unauthorized copying. However, many go further, arguing that the student who
-originally hosted the code is guilty of academic dishonesty for enabling
-copying to take place \cite{cosma06}. In all cases, different instructors
-have different definitions of which offenses constitute unauthorized copying,
-complicating the creation of tools to assist in detecting the practice.
+The definition of academic dishonesty has been complicated by the emergence
+of code-hosting websites such as \textit{GitHub} and \textit{Bitbucket}, and
+Q\&A sites such as \textit{StackOverflow}. On \textit{StackOverflow}, students
+may ask questions on how to complete an assignment. The answers they receive
+might include example source code, and most would agree that copying this
+example code without attribution constitutes academic dishonesty. However, some
+professors feel that the use of any information, even hints as to algorithms
+or pseudocode versions of a solution, obtained from such a source constitutes
+academic dishonesty.
 
-There is no consensus among academics as to what degree of copying constitutes
-academic dishonesty, but most professors insist that they ``know it when they
-see it''. Mike Joy and Michael Luck provide some example behaviors that they
-would consider dishonest \cite{joy1999}:
+Students may also host code they wrote for a class on \textit{GitHub}, where
+classmates or future students may copy the code without permission or
+attribution. In such cases, almost anyone familiar with academia would agree
+that the student who copied the given code was guilty of unauthorized copying.
+However, many go further, arguing that the student who originally hosted
+the code is guilty of academic dishonesty for enabling copying to take
+place~--- even if that student is unaware that the copying occurred
+\cite{cosma06}.
+
+In all cases, different instructors have different definitions
+of which offenses constitute unauthorized copying, complicating the creation
+of tools to assist in detecting the practice. There is no consensus among
+academics as to what degree of copying constitutes academic dishonesty, but
+most professors insist that they ``know it when they see it.'' Mike Joy and
+Michael Luck provide some example behaviors that they would consider dishonest
+\cite{joy1999}:
 \begin{itemize}
 \item ``A weak student produces work in close collaboration with a
  colleage\textit{[sic.]} in the belief that it is acceptable.''\\
@@ -91,23 +90,24 @@ would consider dishonest \cite{joy1999}:
  needed.''\\
 \end{itemize}
 
-A 2006 survey of professors in the UK on academic dishonesty produced a broad
-spectrum of results for what professors perceive is (and is not) academic
-dishonesty \cite{cosma06}. The sharing of source code, comments, overall
-design, documentation, and user interface were all near-universally perceived
-to be unauthorized copying amongst respondents to the survey. Specifically
-for source code, use of code from other sources without acknowledgment (even
-if the source code was adapted to the student's specific application, or
-rewritten from another language) was again near-universally considered to be
-academic dishonesty. However, many respondents noted that the degree of
-adaptation was an important factor, noting that while 100\% similarity was
-almost certainly indicative of unauthorized copying, there was a point at
-which the changes to the code would cause it to no longer be a case of
-unauthorized copying; respondents disagreed as to where, exactly, this point
-was. A majority of respondents indicated that almost every offense involving
-the unauthorized duplication of source code could, indeed, be considered
-academic dishonesty given the right circumstances, save cases where the code
-copied was written by the submitting student. In such cases (for example, the
+A 2006 survey of UK professors produced a broad spectrum of results for what
+professors perceive is (and is not) academic dishonesty \cite{cosma06}. The
+sharing of source code, comments, overall design, documentation, and user
+interface were all near-universally perceived to be unauthorized copying.
+Specifically, use of code from other sources without acknowledgment (even if
+the source code was adapted to the student's specific application, or rewritten
+from another language) was considered to be academic dishonesty.
+
+However, many respondents noted that the degree of adaptation was an important
+factor, indicating that while 100\% similarity was almost certainly indicative
+of unauthorized copying, sufficient changes to the code would render it
+``original''; respondents disagreed as to what, exactly, constitutes
+``sufficient changes.''
+
+A majority of respondents indicated that almost every offense involving the
+unauthorized duplication of source code could indeed be considered academic
+dishonesty given the right circumstances, except in cases where the code copied
+was written by the submitting student. In such cases (for example, the
 submission of an assignment written previously for a different class, with
 slight modifications), most respondents answered that it was a violation of
 course policy, but not a matter of academic dishonesty.
@@ -124,7 +124,7 @@ detection solutions available at time of publication \cite{lancaster05}.
 Academic dishonesty detection is often broken into two broad fields: detection
 of unauthorized copying in source code, and detection of unauthorized copying
 in natural language \cite{lancaster05, clough03}. The source code detection
-problem is generally considered the easier of the two problems, because
+problem is generally considered the easier of the two, because
 programming languages follow fixed grammars; the explicit, unabmiguous syntax
 of programming languages eliminates the need for advanced natural
 language processing. We focus on source code similarity detection.
@@ -132,17 +132,17 @@ language processing. We focus on source code similarity detection.
 
 \paragraph{Obfuscation}
 \label{sec:obfuscation}
-In the case of academic dishonesty, violators have an interest in preventing
+When engaging in academic dishonesty, violators have an interest in preventing
 the detection of similarities in their programs. Consequently, they often
 take steps to obfuscate code in an attempt to hide or remove similarities.
-Programs and algorithms that attempt to detect malware or academic dishonesty
-must be resistant to common obfuscation techniques to be successful.
+Programs and algorithms that attempt to detect academic dishonesty must be
+resistant to common obfuscation techniques to be successful.
 
 Geoffrey Whale listed 12 methods of defeating similarity detection in a 1990
-paper \cite{whale1990identification}. Whale's list, widely cited, is reproduced
-below, and is considered a definitive enumeration of methods of disguising
-unauthorized copying. It is presented in order of sophistication, least to
-greatest.
+paper \cite{whale1990identification}. Whale's widely cited list is reproduced
+below. It is considered a definitive enumeration of methods of disguising
+unauthorized copying. % TODO cite
+It is typically presented in order of sophistication, least to greatest.
 \begin{enumerate}
 \item Changing comments or formatting (for example, adding whitespace)
 \item Changing identifiers
@@ -169,7 +169,7 @@ applications.
 There are a number of fields with an interest in detecting similarities between
 input documents, most for purposes completely different than ours. These
 inputs are not necessarily source code, but the fields in question may have
-developed general-purpose algorithms or techniques which could be useful in the
+developed general-purpose algorithms or techniques that could be useful in the
 construction of our application.
 
 
@@ -235,7 +235,7 @@ when preparing to compile or execute code, performing this parsing is not an
 undue burden when tokenizing submissions. By parsing input submissions into an
 abstract syntax tree (as a compiler or interpreter normally would do to
 compile or execute the code), similarity detection can be performed on a
-representation of the program where similarities which might be ambiguous in
+representation of the program where similarities that might be ambiguous in
 plaintext become clear. For example, the operations $1 + 2$ and $2 + 1$ are
 identical in purpose, but plaintext comparison would typically not be able to
 identify their similarity beyond the shared $+$ character. However, parsing
@@ -268,7 +268,7 @@ to catch similarities that might otherwise be undetectable
 Greedy String Tiling is a popular algorithm that is most notably used by
 \textit{JPlag}, descrbed in Section~\ref{sec:jplag} \cite{prechelt00}. First,
 the algorithm locates the longest string that is shared between the two
-documents and designates that string as a ``tile''. It replaces the tile with
+documents and designates that string as a ``tile.'' It replaces the tile with
 the empty string, then tiles the next longest substring that is not already
 part of a tile. It continues tiling the next largest shared string until the
 largest match falls below some floor. The algorithm is guaranteed to terminate
@@ -307,8 +307,8 @@ seeks to find the optimal alignment of two strings. Unlike algorithms that
 solve the traditional longest common substring problem, the
 \textit{Smith-Waterman} algorithm is tolerant of skipped or unmatched
 characters. Figure~\ref{fig:stringalignment} shows a sample alignment of two
-strings, ``ABCDEFG'' and ``ABCDXG''. The longest common substring of the two
-would be ``ABCD'', but a local alignment also captures the matched ``G''
+strings, ``ABCDEFG'' and ``ABCDXG.'' The longest common substring of the two
+would be ``ABCD,'' but a local alignment also captures the matched ``G''
 character.
 
 \begin{figure}
@@ -344,7 +344,7 @@ In 2004, Robert Irving adapted the Smith-Waterman algorithm for program
 similarity detection \cite{irving04}. By repeatedly applying the algorithm to
 a pair of inputs, removing the detected overlay afterwards, Irving was able to
 identify all the local alignments of the two inputs over a given threshold. He
-presents a set of optimizations to the original Smith-Waterman algorithm which
+presents a set of optimizations to the original Smith-Waterman algorithm that 
 improve its performance when applied repeatedly to the same inputs by
 removing the need for recomputation of the unchanged parts of the array.
 
@@ -352,9 +352,9 @@ removing the need for recomputation of the unchanged parts of the array.
 \subsubsection{Fingerprinting Algorithms}
 Fingerprinting algorithms (also known as \textit{feature extraction
 algorithms}) extract a number of \textit{fingerprints} (or 
-	\textit{features}) which can be used to identify a document. These
+	\textit{features}) that can be used to identify a document. These
 fingerprints are then added to a database (with a list of references
-back to the inputs which contained them). To identify similarities, an input's
+back to the inputs that contained them). To identify similarities, an input's
 fingerprints are computed, added to the database, and then looked up
 to see whether any submissions other than the current one have the same
 fingerprints \cite{schleimer03}.
@@ -363,7 +363,7 @@ Fingerprints are typically the hashes of one or more tokens of the
 input. Typically, before being inserted into the database, a small subset of
 the tokens is selected, and the rest are discarded; this is done to reduce the
 number of entries required in the database. A typical solution might be to
-discard all hashes except those which are congruent to $0$ modulo a certain
+discard all hashes except those that are congruent to $0$ modulo a certain
 number $p$, but better fingerprint selectors exist \cite{schleimer03}.
 
 
@@ -422,7 +422,7 @@ Similarity}, or MOSS, described in Section~\ref{sec:moss}.
 \subsubsection{Feature Comparison}
 Feature Comparison, also known as \textit{Attribute Counting}, attempts to
 compare features of inputs not related to their structure (comparing the actual
-tokens which form the inputs). These comparisons are typically based on
+tokens that form the inputs). These comparisons are typically based on
 \textit{profiles} of the input, representing a composite of a number of
 defining features --- for example, line count, word count, character count,
 average word per line \cite{arwin2006plagiarism}.
@@ -498,7 +498,7 @@ similarity detection systems are published, they often compare their results
 with those of MOSS. 
 
 All academic dishonesty detectors suffer from the diversity of definitions of
-unauthorized copying, and MOSS is no exception. MOSS often flags behavior which
+unauthorized copying, and MOSS is no exception. MOSS often flags behavior that
 our advisor, our primary customer, does not consider to be unauthorized
 copying. The secrecy of MOSS's tuning parameters and database also prevent
 researchers from independently evaluating its performance or reproducing any of
