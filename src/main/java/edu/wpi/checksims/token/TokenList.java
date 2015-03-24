@@ -48,6 +48,50 @@ public class TokenList extends PredicatedList<Token> {
     }
 
     /**
+     * Join each token in the list in order, using a tokenization-appropriate separating character
+     *
+     * @param onlyValid If true, ignore invalid tokens when joining
+     * @return String composed of each element in the token list, in order, separated by appropriate character
+     */
+    public String join(boolean onlyValid) {
+        if(this.size() == 0) {
+            return "";
+        }
+
+        StringBuilder b = new StringBuilder();
+        String sepChar;
+
+        switch(type) {
+            case CHARACTER:
+                sepChar = "";
+                break;
+            case WHITESPACE:
+                sepChar = " ";
+                break;
+            case LINE:
+                sepChar = "\n";
+                break;
+            default:
+                sepChar = "";
+                break;
+        }
+
+        this.stream().forEachOrdered((token) -> {
+            if(!onlyValid || token.isValid()) {
+                b.append(token.getTokenAsString());
+                b.append(sepChar);
+            }
+        });
+
+        // Trim the last trailing whitespace in whitespace tokenization
+        if(type.equals(TokenType.WHITESPACE)) {
+            return b.toString().trim();
+        }
+
+        return b.toString();
+    }
+
+    /**
      * Peforms a shallow copy of a TokenList, returning an immutable version of the initial list
      *
      * @param cloneFrom List to copy

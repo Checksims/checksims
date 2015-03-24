@@ -32,7 +32,9 @@ import static org.junit.Assert.*;
 public class TokenListTest {
     private TokenList emptyCharacter;
     private TokenList oneElementWhitespace;
+    private TokenList twoElementsWhitespace;
     private TokenList oneElementLine;
+    private TokenList twoElementsLine;
     private TokenList oneElementCharacter;
     private TokenList twoElementsCharacter;
     private TokenList threeElementsCharacter;
@@ -44,7 +46,9 @@ public class TokenListTest {
         ConcreteToken b = new ConcreteToken('b', TokenType.CHARACTER);
         ConcreteToken c = new ConcreteToken('c', TokenType.CHARACTER);
         ConcreteToken w = new ConcreteToken("whitespace", TokenType.WHITESPACE);
+        ConcreteToken x = new ConcreteToken("space", TokenType.WHITESPACE);
         ConcreteToken l = new ConcreteToken("line line line", TokenType.LINE);
+        ConcreteToken m = new ConcreteToken("another line", TokenType.LINE);
         ConcreteToken inval = new ConcreteToken('i', TokenType.CHARACTER, false);
 
         emptyCharacter = new TokenList(TokenType.CHARACTER);
@@ -55,8 +59,16 @@ public class TokenListTest {
         oneElementWhitespace = new TokenList(TokenType.WHITESPACE);
         oneElementWhitespace.add(w);
 
+        twoElementsWhitespace = new TokenList(TokenType.WHITESPACE);
+        twoElementsWhitespace.add(w);
+        twoElementsWhitespace.add(x);
+
         oneElementLine = new TokenList(TokenType.LINE);
         oneElementLine.add(l);
+
+        twoElementsLine = new TokenList(TokenType.LINE);
+        twoElementsLine.add(l);
+        twoElementsLine.add(m);
 
         twoElementsCharacter = new TokenList(TokenType.CHARACTER);
         twoElementsCharacter.add(a);
@@ -174,5 +186,100 @@ public class TokenListTest {
         clone.get(0).setValid(!clone.get(0).isValid());
 
         assertFalse(clone.equals(oneElementCharacter));
+    }
+
+    @Test
+    public void TestJoinEmptyList() {
+        String joined = emptyCharacter.join(false);
+
+        assertNotNull(joined);
+        assertTrue(joined.isEmpty());
+    }
+
+    @Test
+    public void TestJoinSingleCharacter() {
+        String joined = oneElementCharacter.join(false);
+
+        assertNotNull(joined);
+        assertFalse(joined.isEmpty());
+        assertEquals(joined, "a");
+    }
+
+    @Test
+    public void TestJoinMultiElementCharacter() {
+        String joinedTwo = twoElementsCharacter.join(false);
+
+        assertNotNull(joinedTwo);
+        assertFalse(joinedTwo.isEmpty());
+        assertEquals(joinedTwo, "ab");
+
+        String joinedThree = threeElementsCharacter.join(false);
+
+        assertNotNull(joinedThree);
+        assertFalse(joinedThree.isEmpty());
+        assertEquals(joinedThree, "abc");
+    }
+
+    @Test
+    public void TestJoinSameOnAllValid() {
+        String joinedTrue = threeElementsCharacter.join(true);
+        String joinedFalse = threeElementsCharacter.join(false);
+
+        assertEquals(joinedFalse, joinedTrue);
+    }
+
+    @Test
+    public void TestJoinIgnoresInvalidIfAsked() {
+        String joined = twoElementsOneInvalidCharacter.join(true);
+
+        assertNotNull(joined);
+        assertFalse(joined.isEmpty());
+        assertEquals(joined, "a");
+    }
+
+    @Test
+    public void TestJoinInvalidDifferent() {
+        String joinedIgnore = twoElementsOneInvalidCharacter.join(false);
+        String joinedNoIgnore = twoElementsOneInvalidCharacter.join(true);
+
+        assertNotEquals(joinedIgnore, joinedNoIgnore);
+        assertEquals(joinedIgnore, "ai");
+        assertEquals(joinedNoIgnore, "a");
+    }
+
+    @Test
+    public void TestJoinWhitespaceDoesNotLeaveTrailingSpace() {
+        String joined = oneElementWhitespace.join(false);
+
+        assertNotNull(joined);
+        assertFalse(joined.isEmpty());
+        assertEquals(joined, "whitespace");
+    }
+
+    @Test
+    public void TestJoinMultiEltWhitespace() {
+        String joined = twoElementsWhitespace.join(false);
+
+        assertNotNull(joined);
+        assertFalse(joined.isEmpty());
+        assertEquals(joined, "whitespace space");
+    }
+
+    @Test
+    public void TestJoinLineAddsNewline() {
+        String joined = oneElementLine.join(false);
+
+        assertNotNull(joined);
+        assertFalse(joined.isEmpty());
+        assertEquals(joined, "line line line\n");
+    }
+
+    @Test
+    public void TestJoinMultiEltLine() {
+        String joined = twoElementsLine.join(false);
+
+        assertNotNull(joined);
+        assertFalse(joined.isEmpty());
+        assertEquals(joined, "line line line\nanother line\n");
     }
 }
