@@ -28,6 +28,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -46,22 +49,8 @@ public class FileLineReader {
 
         logs.trace("Reading file " + f.getPath());
 
-        StringBuilder content = new StringBuilder();
+        String text = new String(Files.readAllBytes(f.toPath()), StandardCharsets.UTF_8);
 
-        BufferedReader b = new BufferedReader(new FileReader(f));
-
-        String lineRead = b.readLine();
-
-        while(lineRead != null) {
-            if(!lineRead.isEmpty()) {
-                content.append(lineRead);
-            }
-
-            lineRead = b.readLine();
-        }
-
-        b.close();
-
-        return content.toString();
+        return text;
     }
 }
