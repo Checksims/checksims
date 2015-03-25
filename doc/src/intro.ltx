@@ -1,43 +1,40 @@
 \section{Introduction}
 \label{sec:intro}
-Over the past year, we have heard reports of a number of cases of academic
-dishonesty occurring at Worcester Polytechnic Institute. Specifically, most of
-these have concerned the unauthorized and unacknowledged copying of source code
-within the Electrical and Computer Engineering and Computer Science departments.
-The first reports came from Nicholas DeMarinis, a Teaching Assistant in the
-Electrical and Computer Engineering department, who noticed several instances
-of source code which he considered to be suspiciously similar in an embedded
-systems programming course. He identified several cases of academic dishonesty,
-including one where the students had extensively obfuscated the copied code.
-
+Some members of the Computer Science and Electrical and Computer Engineering
+departments at Worcester Polytechnic Institute have perceived a recent increase
+in academic dishonesty. Most have concerned the unauthorized and
+unacknowledged copying of program source code. The first reports came from
+Nicholas DeMarinis, a Teaching Assistant in an ECE department embedded
+systems programming course, who noticed several instances of source code
+which he considered to be suspiciously similar in an embedded systems
+programming course. He identified several cases of academic dishonesty,
+including one where students had extensively obfuscated the copied code.
+ 
 Meanwhile, Professor Hugh C. Lauer of the Computer Science department found
 several instances of academic dishonesty in his own courses. A member of the
-course staff of a low-level programming class he was teaching found a pair of
-students who submitted near-identical assignments, which he brought to
-Professor Lauer's attention. Several assignments later, another member of the
-course staff identified another set of students with very similar assignments
---- this time, by noticing that both students had submitted assignments which
-had identical, incorrect output.
+course staff of his introductory programming class found a pair of students who
+submitted near-identical assignments, which he brought to Professor Lauer's
+attention. Several assignments later, another member of the course staff
+identified another set of students with very similar assignments~--- this time,
+by noticing that both students had submitted assignments which had identical,
+incorrect output.
 
-In both of these cases, the unauthorized copying was caught mostly by luck.
-Both courses had more than one teaching assistant; if the two assignments which
-contained unauthorized copying were graded by different teaching assistants,
-the copying would almost certainly not have been identified. This draws
-questions to how many cases of academic dishonesty occurred which were not
-identified.
+In both cases, the unauthorized copying was caught mostly by coincidence.
+Both courses had more than one teaching assistant; if the copied assignments
+had been graded by different teaching assistants, the copying would almost
+certainly not have been identified. It is statistically unlikely that copied
+assignments happen to be graded by the same course staff members every time,
+which leads us to believe that many cases of unauthorized copying have most
+likely gone undetected.
 
-The issue does not appear to be that course staff cannot identify unauthorized
-copying when it is present. Instead, there are so many assignments that the
-staff could not possibly review all of them to identify such cases. The
-problem is one of data overload, which is a field computers are well-equipped
-to deal with. A solution for flagging potential cases of unauthorized copying
-for review by course staff has the potential to greatly increase detection of
-academic dishonesty.
- 
-Professor Lauer commissioned us, the authors, to construct a system for
-automatically detecting suspicious assignments, with the intent of integrating
-it into his low-level courses as a tool to identify which assignments require
-manual review.
+The copying does not slip through because the course staff cannot recognize
+dishonesty when they see it. Instead, dishonest students escape because there
+are so many assignments that the staff does not have time to properly check
+them all for copying. in short, the problem is caused by data overload, which
+computers are well equipped to manage. So, Professor Lauer commissioned us to
+construct a system for automatically detecting suspicious assignments, with the
+intent of integrating it into his low-level courses to help identify
+assignments that require manual review.
 
 
 \subsection{Defining Academic Dishonesty}
@@ -51,16 +48,16 @@ definitions of academic dishonesty is contained in
 Section~\ref{sec:dishonesty}.
 
 In Professor Lauer's lower level courses, students are encouraged to collaborate
-on a whiteboard and design pseudocode solutions, but they must type in and
-debug their own programs from these solutions. The direct copying of source
-code is, however, prohibited. This way, the code must pass ``through the
-brain'' --- the students will gain more understanding by typing
-independently than by copying code directly. Direct copying from other sources
-does constitute academic dishonesty. Such rules are described in the course
-syllabus, and are usually explained directly during the first lecture as well.
+on a white board and design pseudocode solutions, but they must type in and
+debug their own programs from there. The direct copying of source code is
+prohibited. This way, the code must pass ``through the brain''~--- the
+students will gain more understanding by typing independently than by copying
+code directly. In Professor Lauer's view, direct copying does constitute
+academic dishonesty. Such rules are described in the course syllabus, and are
+usually explained directly during the first lecture as well.
 
 Using source code from the web follows much the same rules as collaborating
-with other students. The use of preexisting pseudocode (or using existing code
+with other students. The use of pre-existing pseudocode (or using existing code
 as pseudocode or inspiration) is considered acceptable, so long as the student
 types his or her own solution, and does not copy his or her entire solution
 from the Internet.
@@ -68,11 +65,11 @@ from the Internet.
 
 \subsection{Project Goals}
 \label{sec:goals}
-The overall goal of this project was to produce a software tool to provide easy
-flagging of unusually similar source code submissions for followup by course
-staff. The tool must be an easy-to-use desktop application. Future work would
-focus on integrating the tool into the grading workflow by adding integration
-with existing software tools (for example, for project submission). To
+The goal of this project is to produce a software tool to provide easy flagging
+of unusually similar source code submissions for followup by course staff.
+The tool must be an easy-to-use desktop application. Future work would focus
+on streamlining the grading workflow by integrating the similarity detection
+tool with existing software tools (for example, for project submission). To
 facilitate future modifications and expansion, the tool must be open-source
 and modular.
 
