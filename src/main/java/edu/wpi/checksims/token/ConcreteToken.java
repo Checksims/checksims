@@ -100,26 +100,6 @@ public final class ConcreteToken implements Token {
         this.isValid = isValid;
     }
 
-    @Override
-    public Token lowerCase() {
-        Object lowerToken;
-
-        switch(type) {
-            case CHARACTER:
-                lowerToken = Character.toLowerCase((Character)getToken());
-                break;
-            case WHITESPACE:
-                // Fall through to line
-            case LINE:
-                lowerToken = ((String)getToken()).toLowerCase();
-                break;
-            default:
-                throw new RuntimeException("Unsupported token type!");
-        }
-
-        return new ConcreteToken(lowerToken, type, isValid);
-    }
-
     /**
      * @param other Object to compare to
      * @return True if object compared to is a Token with same type and equiv. tokenization value

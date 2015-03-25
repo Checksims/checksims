@@ -22,7 +22,10 @@
 package edu.wpi.checksims.token;
 
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import static org.junit.Assert.*;
 
@@ -38,6 +41,10 @@ public class TokenTest {
     private static Token aValidityIgnoring;
     private static Token aValidityEnsuring;
     private static Token aValidityEnsuringValid;
+    private static Token aImmutable;
+
+    @Rule
+    public ExpectedException expectedEx = ExpectedException.none();
 
     @BeforeClass
     public static void setUp() {
@@ -49,6 +56,7 @@ public class TokenTest {
         aValidityIgnoring = new ValidityIgnoringToken(aInvalid);
         aValidityEnsuring = new ValidityEnsuringToken(aInvalid);
         aValidityEnsuringValid = new ValidityEnsuringToken(aValid);
+        aImmutable = new ImmutableToken(aValid);
     }
 
     @Test
@@ -98,29 +106,19 @@ public class TokenTest {
     }
 
     @Test
-    public void TestCharacterTokenLowercase() {
-        ConcreteToken upper = new ConcreteToken('H', TokenType.CHARACTER);
-        ConcreteToken lower = new ConcreteToken('h', TokenType.CHARACTER);
+    public void TestImmutableTokenThrowsExceptionOnModify() {
+        expectedEx.expect(UnsupportedOperationException.class);
+        expectedEx.expectMessage("Cannot modify immutable token!");
 
-        assertEquals(lower.lowerCase(), lower);
-        assertEquals(upper.lowerCase(), lower);
+        aImmutable.setValid(false);
     }
 
     @Test
-    public void TestWhitespaceTokenLowercase() {
-        ConcreteToken upper = new ConcreteToken("HELLO", TokenType.WHITESPACE);
-        ConcreteToken lower = new ConcreteToken("hello", TokenType.WHITESPACE);
-
-        assertEquals(lower.lowerCase(), lower);
-        assertEquals(upper.lowerCase(), lower);
-    }
-
-    @Test
-    public void TestLineTokenLowercase() {
-        ConcreteToken upper = new ConcreteToken("Hello World", TokenType.LINE);
-        ConcreteToken lower = new ConcreteToken("hello world", TokenType.LINE);
-
-        assertEquals(lower.lowerCase(), lower);
-        assertEquals(upper.lowerCase(), lower);
+    public void TestImmutableTokenDoesNotImpactEquality() {
+        assertTrue(aImmutable.equals(aValid));
+        assertTrue(aImmutable.equals(aValidTwo));
+        assertFalse(aImmutable.equals(aInvalid));
+        assertFalse(aImmutable.equals(bValid));
+        assertFalse(aImmutable.equals(bInvalid));
     }
 }

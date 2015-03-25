@@ -100,7 +100,7 @@ public class TestLowercasePreprocessor {
     public void TestOneElementCharacterLowercase() {
         Submission result = instance.process(oneElementListCharacter);
 
-        Submission expected = new ConcreteSubmission(oneElementListCharacter.getName(), oneElementListCharacter.getContentAsString(), oneElementListCharacterIsLowerCase.getContentAsTokens());
+        Submission expected = new ConcreteSubmission(oneElementListCharacter.getName(), oneElementListCharacter.getContentAsString().toLowerCase(), oneElementListCharacterIsLowerCase.getContentAsTokens());
 
         assertNotNull(result);
         assertFalse(result.getContentAsTokens().isEmpty());
@@ -124,7 +124,7 @@ public class TestLowercasePreprocessor {
     public void TestOneElementWhitespaceLowercase() {
         Submission result = instance.process(oneElementListWhitespace);
 
-        Submission expected = new ConcreteSubmission(oneElementListWhitespace.getName(), oneElementListWhitespace.getContentAsString(), oneElementListWhitespaceIsLowerCase.getContentAsTokens());
+        Submission expected = new ConcreteSubmission(oneElementListWhitespace.getName(), oneElementListWhitespace.getContentAsString().toLowerCase(), oneElementListWhitespaceIsLowerCase.getContentAsTokens());
 
         assertNotNull(result);
         assertFalse(result.getContentAsTokens().isEmpty());
@@ -148,7 +148,7 @@ public class TestLowercasePreprocessor {
     public void TestOneElementLineLowercase() {
         Submission result = instance.process(oneElementListLine);
 
-        Submission expected = new ConcreteSubmission(oneElementListLine.getName(), oneElementListLine.getContentAsString(), oneElementListLineIsLowerCase.getContentAsTokens());
+        Submission expected = new ConcreteSubmission(oneElementListLine.getName(), oneElementListLine.getContentAsString().toLowerCase(), oneElementListLineIsLowerCase.getContentAsTokens());
 
         assertNotNull(result);
         assertFalse(result.getContentAsTokens().isEmpty());
@@ -175,11 +175,12 @@ public class TestLowercasePreprocessor {
         TokenList expectedList = new TokenList(TokenType.CHARACTER);
         expectedList.add(new ConcreteToken('h', TokenType.CHARACTER));
         expectedList.add(new ConcreteToken('e', TokenType.CHARACTER));
-        Submission expected = new ConcreteSubmission(twoElementListCharacter.getName(), twoElementListCharacter.getContentAsString(), expectedList);
+        Submission expected = new ConcreteSubmission(twoElementListCharacter.getName(), twoElementListCharacter.getContentAsString().toLowerCase(), expectedList);
 
         assertNotNull(result);
         assertFalse(result.getContentAsTokens().isEmpty());
         assertEquals(result.getNumTokens(), 2);
+        assertEquals(result.getContentAsTokens(), expectedList);
         assertEquals(result, expected);
     }
 
@@ -191,11 +192,12 @@ public class TestLowercasePreprocessor {
         expectedList.add(new ConcreteToken('h', TokenType.CHARACTER));
         expectedList.add(new ConcreteToken('e', TokenType.CHARACTER));
         expectedList.add(new ConcreteToken('l', TokenType.CHARACTER));
-        Submission expected = new ConcreteSubmission(threeElementListCharacter.getName(), threeElementListCharacter.getContentAsString(), expectedList);
+        Submission expected = new ConcreteSubmission(threeElementListCharacter.getName(), threeElementListCharacter.getContentAsString().toLowerCase(), expectedList);
 
         assertNotNull(result);
         assertFalse(result.getContentAsTokens().isEmpty());
         assertEquals(result.getNumTokens(), 3);
+        assertEquals(result.getContentAsTokens(), expectedList);
         assertEquals(result, expected);
     }
 }

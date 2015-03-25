@@ -33,6 +33,6 @@ public final class ImmutableToken extends AbstractTokenDecorator {
 
     @Override
     public void setValid(boolean isValid) {
-        throw new NotImplementedException("Cannot modify immutable token!");
+        throw new UnsupportedOperationException("Cannot modify immutable token!");
     }
 }

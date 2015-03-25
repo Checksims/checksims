@@ -25,6 +25,7 @@ import edu.wpi.checksims.submission.ConcreteSubmission;
 import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.token.Token;
 import edu.wpi.checksims.token.TokenList;
+import edu.wpi.checksims.token.tokenizer.FileTokenizer;
 
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -52,8 +53,12 @@ public class LowercasePreprocessor implements SubmissionPreprocessor {
 
     @Override
     public Submission process(Submission submission) {
-        Supplier<TokenList> tokenListSupplier = () -> new TokenList(submission.getContentAsTokens().type);
+        FileTokenizer tokenizer = FileTokenizer.getTokenizer(submission.getTokenType());
 
-        return new ConcreteSubmission(submission.getName(), submission.getContentAsString(), submission.getContentAsTokens().stream().map(Token::lowerCase).collect(Collectors.toCollection(tokenListSupplier)));
+        // Lowercase the content of the submission, then retokenize
+        String contentLower = submission.getContentAsString().toLowerCase();
+        TokenList tokenizedLower = tokenizer.splitFile(contentLower);
+
+        return new ConcreteSubmission(submission.getName(), contentLower, tokenizedLower);
     }
 }

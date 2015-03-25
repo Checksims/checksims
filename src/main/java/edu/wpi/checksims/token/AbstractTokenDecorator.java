@@ -62,11 +62,6 @@ public abstract class AbstractTokenDecorator implements Token {
     }
 
     @Override
-    public Token lowerCase() {
-        return wrappedToken.lowerCase();
-    }
-
-    @Override
     public boolean equals(Object other) {
         return other instanceof Token && wrappedToken.equals(other);
 

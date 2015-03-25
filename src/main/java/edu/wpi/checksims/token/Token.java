@@ -56,11 +56,6 @@ public interface Token {
     void setValid(boolean isValid);
 
     /**
-     * @return Lowercase version of this token - matching type and validity
-     */
-    Token lowerCase();
-
-    /**
      * @param token Token to clone
      * @return Clone of token
      */
