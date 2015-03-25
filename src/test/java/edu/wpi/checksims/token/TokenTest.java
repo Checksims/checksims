@@ -21,6 +21,7 @@
 
 package edu.wpi.checksims.token;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -29,6 +30,73 @@ import static org.junit.Assert.*;
  * Basic tests on Tokens
  */
 public class TokenTest {
+    private static Token aValid;
+    private static Token aInvalid;
+    private static Token bValid;
+    private static Token bInvalid;
+    private static Token aValidTwo;
+    private static Token aValidityIgnoring;
+    private static Token aValidityEnsuring;
+    private static Token aValidityEnsuringValid;
+
+    @BeforeClass
+    public static void setUp() {
+        aValid = new ConcreteToken('a', TokenType.CHARACTER, true);
+        aInvalid = new ConcreteToken('a', TokenType.CHARACTER, false);
+        bValid = new ConcreteToken('b', TokenType.CHARACTER, true);
+        bInvalid = new ConcreteToken('b', TokenType.CHARACTER, false);
+        aValidTwo = new ConcreteToken('a', TokenType.CHARACTER, true);
+        aValidityIgnoring = new ValidityIgnoringToken(aInvalid);
+        aValidityEnsuring = new ValidityEnsuringToken(aInvalid);
+        aValidityEnsuringValid = new ValidityEnsuringToken(aValid);
+    }
+
+    @Test
+    public void TestNormalEqualityIsTransitive() {
+        assertTrue(aValid.equals(aValidTwo));
+        assertTrue(aValidTwo.equals(aValid));
+    }
+
+    @Test
+    public void TestNormalEqualityRespectsTokenContent() {
+        assertFalse(aValid.equals(bValid));
+        assertFalse(aInvalid.equals(bInvalid));
+    }
+
+    @Test
+    public void TestNormalTokenEqualityRespectsValidity() {
+        assertFalse(aValid.equals(aInvalid));
+        assertFalse(bInvalid.equals(bValid));
+    }
+
+    @Test
+    public void TestValidityIgnoringEqualitySameContent() {
+        assertTrue(aValidityIgnoring.equals(aValid));
+        assertTrue(aValidityIgnoring.equals(aInvalid));
+    }
+
+    @Test
+    public void TestValidityIgnoringEqualityDifferentContent() {
+        assertFalse(aValidityIgnoring.equals(bValid));
+        assertFalse(aValidityIgnoring.equals(bInvalid));
+    }
+
+    @Test
+    public void TestValidityEnsuringEqualitySameContent() {
+        assertTrue(aValidityEnsuringValid.equals(aValid));
+        assertFalse(aValidityEnsuringValid.equals(aInvalid));
+        assertFalse(aValidityEnsuring.equals(aInvalid));
+        assertFalse(aValidityEnsuring.equals(aValid));
+    }
+
+    @Test
+    public void TestValidityEnsuringEqualityDifferentContent() {
+        assertFalse(aValidityEnsuring.equals(bValid));
+        assertFalse(aValidityEnsuring.equals(bInvalid));
+        assertFalse(aValidityEnsuringValid.equals(bValid));
+        assertFalse(aValidityEnsuringValid.equals(bInvalid));
+    }
+
     @Test
     public void TestCharacterTokenLowercase() {
         ConcreteToken upper = new ConcreteToken('H', TokenType.CHARACTER);
