@@ -29,6 +29,7 @@ import edu.wpi.checksims.token.TokenType;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -64,7 +65,7 @@ public class TestPreprocessSubmissions {
 
     @Test
     public void testEmptyReturnsEmpty() {
-        List<Submission> results = PreprocessSubmissions.process((s) -> s, empty);
+        Collection<Submission> results = PreprocessSubmissions.process((s) -> s, empty);
 
         assertNotNull(results);
         assertTrue(results.isEmpty());
@@ -72,28 +73,28 @@ public class TestPreprocessSubmissions {
 
     @Test
     public void testOneSubmissionIdentity() {
-        List<Submission> results = PreprocessSubmissions.process((s) -> s, oneSubmission);
+        Collection<Submission> results = PreprocessSubmissions.process((s) -> s, oneSubmission);
 
         assertNotNull(results);
         assertEquals(results.size(), 1);
         assertEquals(results, oneSubmission);
-        assertEquals(results.get(0), oneSubmission.get(0));
+        assertTrue(results.contains(oneSubmission.get(0)));
     }
 
     @Test
     public void testOneSubmissionRename() {
-        List<Submission> results = PreprocessSubmissions.process((s) -> new ConcreteSubmission("renamed", s.getContentAsString(), s.getContentAsTokens()), oneSubmission);
+        Collection<Submission> results = PreprocessSubmissions.process((s) -> new ConcreteSubmission("renamed", s.getContentAsString(), s.getContentAsTokens()), oneSubmission);
 
         Submission expected = new ConcreteSubmission("renamed", oneSubmission.get(0).getContentAsString(), oneSubmission.get(0).getContentAsTokens());
 
         assertNotNull(results);
         assertEquals(results.size(), 1);
-        assertEquals(results.get(0), expected);
+        assertTrue(results.contains(expected));
     }
 
     @Test
     public void testTwoSubmissionIdentity() {
-        List<Submission> results = PreprocessSubmissions.process((s) -> s, twoSubmissions);
+        Collection<Submission> results = PreprocessSubmissions.process((s) -> s, twoSubmissions);
 
         assertNotNull(results);
         assertEquals(results.size(), 2);
@@ -103,7 +104,7 @@ public class TestPreprocessSubmissions {
 
     @Test
     public void testTwoSubmissionRename() {
-        List<Submission> results = PreprocessSubmissions.process((s) -> new ConcreteSubmission("renamed " + s.getName(), s.getContentAsString(), s.getContentAsTokens()), twoSubmissions);
+        Collection<Submission> results = PreprocessSubmissions.process((s) -> new ConcreteSubmission("renamed " + s.getName(), s.getContentAsString(), s.getContentAsTokens()), twoSubmissions);
 
         List<Submission> expected = new LinkedList<>();
         expected.add(new ConcreteSubmission("renamed " + twoSubmissions.get(0).getName(), twoSubmissions.get(0).getContentAsString(), twoSubmissions.get(0).getContentAsTokens()));
