@@ -16,7 +16,7 @@
  *
  * CDDL HEADER END
  *
- * Copyright (c) 2014 Matthew Heon and Dolan Murvihill
+ * Copyright (c) 2014-2015 Matthew Heon and Dolan Murvihill
  */
 
 package edu.wpi.checksims.algorithm;
@@ -32,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -44,7 +45,7 @@ public class CommonCodeRemover {
 
     private CommonCodeRemover() {}
 
-    public static List<Submission> removeCommonCodeFromSubmissionsInList(List<Submission> removeFrom, Submission common, SimilarityDetector algorithm) {
+    public static Collection<Submission> removeCommonCodeFromSubmissionsInList(Collection<Submission> removeFrom, Submission common, SimilarityDetector algorithm) {
         if(removeFrom.isEmpty()) {
             logs.debug("No submissions to perform common code removal on!");
             return removeFrom;

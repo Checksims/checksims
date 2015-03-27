@@ -16,11 +16,12 @@
  *
  * CDDL HEADER END
  *
- * Copyright (c) 2014 Matthew Heon and Dolan Murvihill
+ * Copyright (c) 2014-2015 Matthew Heon and Dolan Murvihill
  */
 
 package edu.wpi.checksims;
 
+import com.google.common.collect.ImmutableList;
 import edu.wpi.checksims.algorithm.AlgorithmRegistry;
 import edu.wpi.checksims.algorithm.CommonCodeRemover;
 import edu.wpi.checksims.algorithm.SimilarityDetector;
@@ -127,7 +128,7 @@ public class ChecksimRunner {
 
             f.printHelp(systemErr, 80, "checksims [args] glob directory [directory2 ...]", "checksims: check similarity of student submissions", getOpts(), 2, 4, "");
 
-            System.err.println("\nSupported Plagiarism Detection Algorithms:");
+            System.err.println("\nSupported Similarity Detection Algorithms:");
             AlgorithmRegistry.getInstance().getSupportedAlgorithmNames().stream().forEach((name) -> System.err.print(name + ", "));
             System.err.println("\nDefault algorithm is " + AlgorithmRegistry.getInstance().getDefaultAlgorithmName());
 
@@ -138,10 +139,6 @@ public class ChecksimRunner {
             System.err.println("\nAvailable Preprocessors:");
             PreprocessorRegistry.getInstance().getPreprocessorNames().stream().forEach((name) -> System.err.print(name + ", "));
             System.err.println();
-
-
-            // TODO print supported algorithms, output strategies, preprocessors
-            // And defaults of those too!
 
             System.exit(0);
         }
@@ -172,17 +169,17 @@ public class ChecksimRunner {
             submissionDirs.add(new File(unusedArgs[i]));
         }
 
+        // Create a base config to work from
+        ChecksimConfig config = new ChecksimConfig();
+
         // Parse plagiarism detection algorithm
-        SimilarityDetector algorithm;
         if(cli.hasOption("a")) {
             try {
-                algorithm = AlgorithmRegistry.getInstance().getAlgorithmInstance(cli.getOptionValue("a"));
+                config = config.setAlgorithm(AlgorithmRegistry.getInstance().getAlgorithmInstance(cli.getOptionValue("a")));
             } catch(ChecksimException e) {
                 logs.error("Error obtaining algorithm!");
                 throw new RuntimeException(e);
             }
-        } else {
-            algorithm = AlgorithmRegistry.getInstance().getDefaultAlgorithm();
         }
 
         // Parse recursive flag
@@ -196,39 +193,35 @@ public class ChecksimRunner {
         TokenType tokenization;
         if(cli.hasOption("t")) {
             try {
-                tokenization = TokenType.fromString(cli.getOptionValue("t"));
+                config = config.setTokenization(TokenType.fromString(cli.getOptionValue("t")));
             } catch(ChecksimException e) {
                 logs.error("Error obtaining tokenization!");
                 throw new RuntimeException(e);
             }
-        } else {
-            // If the user didn't specify, use the algorithm's default tokenization
-            tokenization = algorithm.getDefaultTokenType();
         }
+        FileTokenizer tokenizer = FileTokenizer.getTokenizer(config.getTokenization());
 
         // Parse common code detection
         boolean removeCommonCode = cli.hasOption("c");
-        File commonCodeDirectory = null;
-        // TODO may be desirable for this to be configurable
-        // For now default to linecompare
-        SimilarityDetector commonCodeRemovalAlgorithm;
-        try {
-            commonCodeRemovalAlgorithm = AlgorithmRegistry.getInstance().getAlgorithmInstance("linecompare");
-        } catch(ChecksimException e) {
-            logs.error("Cannot obtain instance of linecompare algorithm!");
-            throw new RuntimeException(e);
-        }
         if(removeCommonCode) {
-            commonCodeDirectory = new File(cli.getOptionValue("c"));
-            logs.info("Removing common code (given in directory " + commonCodeDirectory.getName() + ")");
+            File commonCodeDir = new File(cli.getOptionValue("c"));
+            Submission commonCode = Submission.submissionFromDir(commonCodeDir, glob, tokenizer, recursive);
+            config = config.setCommonCodeRemoval(true, commonCode);
+            // TODO may be desirable for this to be configurable
+            try {
+                config = config.setCommonCodeRemovalAlgorithm(AlgorithmRegistry.getInstance().getAlgorithmInstance("linecompare"));
+            } catch(ChecksimException e) {
+                logs.error("Cannot obtain instance of linecompare algorithm!");
+                throw new RuntimeException(e);
+            }
         }
 
         // Parse file output value
         boolean outputToFile = cli.hasOption("f");
-        File outputFileAsFile = null;
         if(outputToFile) {
-            outputFileAsFile = new File(cli.getOptionValue("f"));
-            logs.info("Saving output to file " + outputFileAsFile.getName());
+            File outputFile = new File(cli.getOptionValue("f"));
+            config.setOutputToFile(true, outputFile);
+            logs.info("Saving output to file " + outputFile.getName());
         }
 
         if(cli.hasOption("j")) {
@@ -244,8 +237,8 @@ public class ChecksimRunner {
 
         // Parse preprocessors
         // Ensure no duplicates
-        List<SubmissionPreprocessor> preprocessors = SetUniqueList.setUniqueList(new LinkedList<>());
         if(cli.hasOption("p")) {
+            List<SubmissionPreprocessor> preprocessors = SetUniqueList.setUniqueList(new LinkedList<>());
             String[] splitPreprocessors = cli.getOptionValue("p").split(",");
             try {
                 for (String s : splitPreprocessors) {
@@ -256,12 +249,13 @@ public class ChecksimRunner {
                 logs.error("Error obtaining preprocessors!");
                 throw new RuntimeException(e);
             }
+            config = config.setPreprocessors(preprocessors);
         }
 
         // Parse output strategies
         // Ensure no duplicates
-        List<SimilarityMatrixPrinter> outputStrategies = SetUniqueList.setUniqueList(new LinkedList<>());
         if(cli.hasOption("o")) {
+            List<SimilarityMatrixPrinter> outputStrategies = SetUniqueList.setUniqueList(new LinkedList<>());
             String[] desiredStrategies = cli.getOptionValue("o").split(",");
 
             try {
@@ -273,12 +267,20 @@ public class ChecksimRunner {
                 logs.error("Error obtaining output strategies!");
                 throw new RuntimeException(e);
             }
-        } else {
-            outputStrategies.add(OutputRegistry.getInstance().getDefaultStrategy());
+            config = config.setOutputPrinters(outputStrategies);
         }
 
-        ChecksimConfig config = new ChecksimConfig(algorithm, tokenization, preprocessors, submissionDirs, recursive, removeCommonCode, commonCodeRemovalAlgorithm, commonCodeDirectory, glob,
-                outputStrategies, outputToFile, outputFileAsFile);
+        // Generate submissions to work on
+        List<Submission> submissions = new LinkedList<>();
+        for(File dir : submissionDirs) {
+            try {
+                submissions.addAll(Submission.submissionListFromDir(dir, glob, tokenizer, recursive));
+            } catch(IOException e) {
+                logs.error("Error creating submissions from directory!");
+                throw new RuntimeException(e);
+            }
+        }
+        config.setSubmissions(submissions);
 
         runChecksims(config);
 
@@ -286,18 +288,15 @@ public class ChecksimRunner {
     }
 
     public static void runChecksims(ChecksimConfig config) {
-        FileTokenizer tokenizer = FileTokenizer.getTokenizer(config.tokenization);
-
-        List<Submission> submissions = new LinkedList<>();
-
+        // Check to see that the config is usable and user-specified CLI opts are good
         try {
-            for (File f : config.submissionDirectories) {
-                submissions.addAll(Submission.submissionListFromDir(f, config.globMatcher, tokenizer, config.recursive));
-            }
-        } catch(IOException e) {
-            logs.error("Error creating submissions from directory!");
+            config.isReady();
+        } catch(ChecksimException e) {
+            logs.error("Error: invalid run configuration specified!");
             throw new RuntimeException(e);
         }
+
+        ImmutableList<Submission> submissions = config.getSubmissions();
 
         logs.info("Got " + submissions.size() + " submissions to test.");
 
@@ -307,35 +306,27 @@ public class ChecksimRunner {
         }
 
         // If we are performing common code detection...
-        if(config.removeCommonCode) {
-            // Create a submission for the common code
-            Submission common;
-            try {
-                common = Submission.submissionFromDir(config.commonCodeDirectory, config.globMatcher, tokenizer, config.recursive);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
+        if(config.doRemoveCommonCode()) {
             // Perform common code removal before preprocessor application
-            submissions = CommonCodeRemover.removeCommonCodeFromSubmissionsInList(submissions, common, config.commonCodeRemovalAlgorithm);
+            submissions = ImmutableList.copyOf(CommonCodeRemover.removeCommonCodeFromSubmissionsInList(submissions, config.getCommonCode(), config.getCommonCodeRemovalAlgorithm()));
         }
 
         // Apply all preprocessors
-        for(SubmissionPreprocessor p : config.preprocessors) {
-            submissions = PreprocessSubmissions.process(p::process, submissions);
+        for(SubmissionPreprocessor p : config.getPreprocessors()) {
+            submissions = ImmutableList.copyOf(PreprocessSubmissions.process(p::process, submissions));
         }
 
         // Apply algorithm to submission
-        SimilarityMatrix results = SimilarityMatrix.generate(submissions, config.algorithm);
+        SimilarityMatrix results = SimilarityMatrix.generate(submissions, config.getAlgorithm());
 
-        for(SimilarityMatrixPrinter p : config.outputPrinters) {
+        for(SimilarityMatrixPrinter p : config.getOutputPrinters()) {
             String output = p.printMatrix(results);
 
             logs.info("Generating " + p.getName() + " output");
 
-            if (config.outputToFile) {
+            if (config.doOutputToFile()) {
                 try {
-                    FileStringWriter.writeStringToFile(new File(config.outputFile.getAbsolutePath() + "." + p.getName()), output);
+                    FileStringWriter.writeStringToFile(new File(config.getOutputFile().getAbsolutePath() + "." + p.getName()), output);
                 } catch (IOException e) {
                     logs.error("Error printing output to file!");
                     throw new RuntimeException(e);

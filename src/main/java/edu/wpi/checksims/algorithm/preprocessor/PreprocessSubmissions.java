@@ -16,7 +16,7 @@
  *
  * CDDL HEADER END
  *
- * Copyright (c) 2014 Matthew Heon and Dolan Murvihill
+ * Copyright (c) 2014-2015 Matthew Heon and Dolan Murvihill
  */
 
 package edu.wpi.checksims.algorithm.preprocessor;
@@ -25,6 +25,7 @@ import edu.wpi.checksims.submission.Submission;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -49,7 +50,7 @@ public class PreprocessSubmissions {
      * @param submissions Input list of submissions to apply to
      * @return New list formed by applying the mapping function to each submission. Retains order of input list.
      */
-    public static List<Submission> process(Function<Submission, Submission> mapping, List<Submission> submissions) {
+    public static Collection<Submission> process(Function<Submission, Submission> mapping, Collection<Submission> submissions) {
         Supplier<List<Submission>> linkedListFactory = LinkedList::new;
         AtomicInteger submissionIndex = new AtomicInteger();
 
