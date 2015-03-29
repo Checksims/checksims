@@ -177,6 +177,7 @@ public class ChecksimRunner {
         if(cli.hasOption("a")) {
             try {
                 config = config.setAlgorithm(AlgorithmRegistry.getInstance().getAlgorithmInstance(cli.getOptionValue("a")));
+                config = config.setTokenization(config.getAlgorithm().getDefaultTokenType());
             } catch(ChecksimException e) {
                 logs.error("Error obtaining algorithm!");
                 throw new RuntimeException(e);
