@@ -35,6 +35,7 @@ import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.token.TokenType;
 import edu.wpi.checksims.token.tokenizer.FileTokenizer;
 import edu.wpi.checksims.util.file.FileStringWriter;
+import edu.wpi.checksims.util.threading.ParallelAlgorithm;
 import org.apache.commons.cli.*;
 import org.apache.commons.collections4.list.SetUniqueList;
 import org.slf4j.Logger;
@@ -232,6 +233,7 @@ public class ChecksimRunner {
                 throw new RuntimeException("Must specify positive number of threads - got " + threads);
             }
 
+            ParallelAlgorithm.setThreadCount(threads);
             System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "" + threads);
         }
 
@@ -280,7 +282,7 @@ public class ChecksimRunner {
                 throw new RuntimeException(e);
             }
         }
-        config.setSubmissions(submissions);
+        config = config.setSubmissions(submissions);
 
         runChecksims(config);
 

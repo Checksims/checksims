@@ -29,6 +29,7 @@ import edu.wpi.checksims.submission.Submission;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -73,7 +74,7 @@ public class SimilarityMatrix {
         Collections.sort(submissionsSorted, (a, b) -> a.getName().compareTo(b.getName()));
 
         // Get results for all possible pairs of submissions
-        List<AlgorithmResults> algorithmResults = AlgorithmRunner.runAlgorithm(submissionsSorted, algorithm);
+        Collection<AlgorithmResults> algorithmResults = AlgorithmRunner.runAlgorithm(submissionsSorted, algorithm);
 
         // First, null the diagonal of the results array
         for(int i = 0; i < submissionsSorted.size(); i++) {
