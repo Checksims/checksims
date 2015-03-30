@@ -21,19 +21,10 @@
 
 package edu.wpi.checksims.token;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import com.google.common.collect.Maps;
-
-import java.util.concurrent.atomic.AtomicInteger;
-
 /**
  * Interface for comparable tokens of various types
  */
 public final class ConcreteToken implements Token {
-    private static final BiMap<Object, Integer> lexemeMap = Maps.synchronizedBiMap(HashBiMap.create());
-    private static final AtomicInteger lexemeIndex = new AtomicInteger();
-
     private boolean isValid;
     private final int lexeme;
     private final TokenType type;
@@ -45,13 +36,7 @@ public final class ConcreteToken implements Token {
     public ConcreteToken(Object token, TokenType type, boolean isValid) {
         this.isValid = isValid;
         this.type = type;
-
-        if(lexemeMap.containsKey(token)) {
-            this.lexeme = lexemeMap.get(token);
-        } else {
-            this.lexeme = lexemeIndex.getAndIncrement();
-            lexemeMap.put(token, lexeme);
-        }
+        this.lexeme = LexemeMap.getLexemeForToken(token);
     }
 
     private ConcreteToken(int lexeme, TokenType type, boolean isValid) {
@@ -72,11 +57,7 @@ public final class ConcreteToken implements Token {
 
     @Override
     public Object getToken() {
-        if(!lexemeMap.inverse().containsKey(lexeme)) {
-            throw new RuntimeException("No mapping for lexeme " + lexeme);
-        }
-
-        return lexemeMap.inverse().get(lexeme);
+        return LexemeMap.getTokenForLexeme(lexeme);
     }
 
     @Override
