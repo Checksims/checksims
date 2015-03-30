@@ -21,23 +21,12 @@
 
 package edu.wpi.checksims.algorithm;
 
-import edu.wpi.checksims.ChecksimException;
-import edu.wpi.checksims.submission.ConcreteSubmission;
 import edu.wpi.checksims.submission.Submission;
-import edu.wpi.checksims.submission.ValidityIgnoringSubmission;
-import edu.wpi.checksims.token.TokenList;
-import edu.wpi.checksims.token.TokenType;
-import edu.wpi.checksims.token.tokenizer.FileTokenizer;
-import edu.wpi.checksims.util.UnorderedPair;
 import edu.wpi.checksims.util.threading.ParallelAlgorithm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.DecimalFormat;
 import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 /**
  * Remove common code from submissions
@@ -56,6 +45,8 @@ public final class CommonCodeRemover {
      * @return Submissions from removeFrom rebuilt without common code
      */
     public static Collection<Submission> removeCommonCodeFromSubmissions(Collection<Submission> removeFrom, Submission common, SimilarityDetector algorithm) {
+        logs.info("Performing common code removal on " + removeFrom.size() + " submissions");
+
         return ParallelAlgorithm.parallelCommonCodeRemoval(algorithm, common, removeFrom);
     }
 }
