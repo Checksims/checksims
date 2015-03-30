@@ -140,8 +140,7 @@ resistant to common obfuscation techniques to be successful.
 
 Geoffrey Whale listed 12 methods of defeating similarity detection in a 1990
 paper \cite{whale1990identification}. Whale's widely cited list is reproduced
-below. It is considered a definitive enumeration of methods of disguising
-unauthorized copying. % TODO cite
+below.
 It is typically presented in order of sophistication, least to greatest.
 \begin{enumerate}
 \item Changing comments or formatting (for example, adding whitespace)
@@ -273,8 +272,8 @@ the empty string, then tiles the next longest substring that is not already
 part of a tile. It continues tiling the next largest shared string until the
 largest match falls below some floor. The algorithm is guaranteed to terminate
 because the length of the maximum match decreases with each step. Greedy string
-tiling runs in $O(n^3)$ worst case time, but in $O(n)$ best case. (TODO
-informal argument about performance characteristics).
+tiling runs in $O(n^3)$ worst case time, but in $O(n)$ best case
+\cite{prechelt00}.
 
 \textit{JPlag} introduced several improvements on Greedy String Tiling. First,
 it searches for matching strings using Karp-Rabin string matching, as
