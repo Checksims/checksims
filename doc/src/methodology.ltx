@@ -89,7 +89,8 @@ Professor Lauer graciously offered to perform this final vetting.
 A script was constructed in Bash to accomplish this goal in a largely-automated
 fashion to make it feasible to obtain large bodies of test code. Given the
 nature of the script, its use is limited to submissions written in languages
-that use C-style comments.
+that use comments delineated with the ``\texttt{//}'' and ``\texttt{/* */}''
+symbols.
 
 % TODO add citation for remcomms sed script
 
@@ -118,7 +119,9 @@ only be 70\% to 80\%. Indeed, there is the potential that removing comments
 might increase the accuracy of a similarity detection program (though it could
 also decrease accuracy under other circumstances). Because it is trivial to
 strip comments from files before running \textit{Checksims}, we believe these
-results represent a lower bound on the tool's effectiveness.
+results represent a lower bound on the tool's effectiveness. The question of
+whether \textit{Checksims} might be even more effective on source code with
+comments is beyond the scope of this analysis.
 
 
 \paragraph{Baseline Output}
@@ -127,9 +130,9 @@ data for \textit{Checksims}. While the output of the program can be
 investigated to verify that any reported similarities do exist and to eliminate
 false positives, it is impossible to identify false negatives (submissions
 that contain unusual similarities but are not flagged by our software)
-without baseline output identifying all similar submissions. Because we
-consider consider false negatives a very undesirable characteristic, we would
-prefer to verify that they are not present. 
+without baseline output identifying all similar submissions. We consider
+consider false negatives a very undesirable characteristic, so we would prefer
+to verify that they are not present. 
 
 A manual investigation of an assignment would certainly prove the most precise
 manner of identifying similarities. However, since our obtained test data
