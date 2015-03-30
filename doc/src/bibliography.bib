@@ -321,7 +321,7 @@
   year={2004},
   annote={
     \setlength{\parskip}{1.5ex}
-    a similarity detection algorithm for plaintexts intended for plagiarism
+    A similarity detection algorithm for plaintexts intended for plagiarism
     detection. According to conclusion, very accurate, but slow --- perhaps too slow
     for anything but very small batches of files.}
 }
@@ -334,40 +334,40 @@
   organization={ieee},
   annote={
     \setlength{\parskip}{1.5ex}
-    presents a tool for locating similarities in text, including source code. the
+    Presents a tool for locating similarities in text, including source code. The
     tool works in six steps:
     \begin{enumerate}
-    \item \label{itm:txt} perform text-to-text transformations on each file
-    \item \label{itm:substrings} break the text into potentially overlapping
+    \item \label{itm:txt} Perform text-to-text transformations on each file
+    \item \label{itm:substrings} Break the text into potentially overlapping
       substrings
-    \item \label{itm:rawmatch} generate a database of ``raw matches'' by
+    \item \label{itm:rawmatch} Generate a database of ``raw matches'' by
       finding the substrings that match
-    \item \label{itm:iterate} iterate to describe the matches more concisely
-    \item \label{itm:correct} perform task-specific data reduction
-    \item \label{itm:summarize} summarize high-level matches
+    \item \label{itm:iterate} Iterate to describe the matches more concisely
+    \item \label{itm:correct} Perform task-specific data reduction
+    \item \label{itm:summarize} Summarize high-level matches
     \end{enumerate}
     \par
-    steps \ref{itm:substrings}, \ref{itm:rawmatch}, and \ref{itm:iterate} work
+    Steps \ref{itm:substrings}, \ref{itm:rawmatch}, and \ref{itm:iterate} work
     only on exact matches, so any partial matching must be done via
-    normalization in step \ref{itm:txt}. common transformations include white
-    space removal, comment removal, and identifier renaming. steps
+    normalization in step \ref{itm:txt}. Common transformations include white
+    space removal, comment removal, and identifier renaming. Steps
     \ref{itm:substrings}-\ref{itm:iterate} have the advantage of being
-    language-agnostic. note that this approach is reminiscent of the document
-    fingerprinting approaches to plagiarism detection. step \ref{itm:rawmatch}
+    language-agnostic. Note that this approach is reminiscent of the document
+    fingerprinting approaches to plagiarism detection. Step \ref{itm:rawmatch}
     is done by karp-rabin string matching \cite{karp87}. In step
     \ref{itm:iterate}, they perform tasks such as merging consecutive matches
-    and other ``lossless'' compression strategies. step \ref{itm:correct} is
+    and other ``lossless'' compression strategies. Step \ref{itm:correct} is
     where one might  perform ``lossy'' compression, such as eliminating certain
     text (like, for instance, a copyright notice) that is expected to be
     cloned.
     \par
     The authors tested their prototype on gcc, versions 2.5.8 and 2.3.3; both
     releases together total \num{1440} files with a combined size of \num{40} megabytes.
-    they found a total of \num{988} ``clusters,'' or matched substrings. \num{315} of these
+    They found a total of \num{988} ``clusters,'' or matched substrings. \num{315} of these
     clusters were of type ``abx'' (contained in one file from each release) or
     type ``ab='' (contained in one file from each release with the same name).
-    these represent code that was not changed between releases, or that was
-    moved to a different location. there were a very large number of abx
+    These represent code that was not changed between releases, or that was
+    moved to a different location. There were a very large number of abx
     clusters as a result of a large naming convention change done by the gcc
     team between the two releases. They identified some software cloning, and
     areas of massive changes. The authors reported very few nonsense matches.}
@@ -383,9 +383,9 @@
   organization={consortium for computing sciences in colleges},
   annote={
     \setlength{\parskip}{1.5ex}
-    a developed example of ``feature comparison'' --- creates
+    A developed example of ``feature comparison'' --- creates
     and examines ``profiles'' of program features (line count, number of unique
-    tokens, average line length, number of spaces, that sort of thing). no evidence
+    tokens, average line length, number of spaces, that sort of thing). No evidence
     is presented that it is actually effective, and indeed they do not test on
     real-world data (only note that they intend to use it in their own courses)}
 }
@@ -401,18 +401,18 @@
   annote={
     \setlength{\parskip}{1.5ex}
     \par
-    Joy and Luck provides a definition of plagiarism, ``unacknowledged copying of documents
-    or programs,'' and names several potential causes of plagiarism.
+    Joy and Luck provide a definition of plagiarism, ``unacknowledged copying of documents
+    or programs,'' and name several potential causes of plagiarism.
     \par
     Joy and Luck describe
     two obfuscation techniques: lexical changes (comment changes, formatting,
     changing identifier names, etc.) and structural changes (loop replacement, ifs
     to cases, statement ordering, refactoring, etc.)
     \par
-    Joy and Luck describe two pair comparison techniques: comparing attribute counts, and
+    They describe two pair comparison techniques: comparing attribute counts, and
     comparing structure.
     \par
-    presents an algorithm called sherlock, with the following requirements:
+    They present an algorithm called sherlock, with the following requirements:
     \begin{itemize}
     \item must be reliable
     \item must be simple to change for a new language
@@ -425,7 +425,7 @@
      ``runs'' with a maximum allowed size and density of ``anomalies.'' looks for and
      reports maximum length runs.
     \par
-     presents a very interesting visualization with a point for each submission
+     Presents a very interesting visualization with a point for each submission
      and similarities connected by lines; shorter lines correspond to closer
      matches.}
 }
@@ -441,15 +441,15 @@
   annote={
     \setlength{\parskip}{1.5ex}
     \par
-    this is a seminal paper that is cited by almost every article in this
-    bibliography. it seems that almost all program similarity detection tools use
+    This is a seminal paper that is cited by almost every article in this
+    bibliography. It seems that almost all program similarity detection tools use
     karp-rabin string matching to search for and verify matches.
     \par
-    presents a generalized string-matching algorithm that works in ``real time''
+    Presents a generalized string-matching algorithm that works in ``real time''
     (each bit of input can be processed as soon as it comes in and requires
-    constant time) and in a constant number of registers. it requires keeping a
+    constant time) and in a constant number of registers. It requires keeping a
     substring in memory of the same length as the one you are searching for.
-    authors claim that it seems to be competitive on classical strings only
+    Authors claim that it seems to be competitive on classical strings only
     for larger substring sizes, but it has a huge advantage in being able to
     search two-dimensional arrays, higher dimensional arrays, and even irregular shapes
     with the same mathematical background.
@@ -494,7 +494,7 @@
   publisher={springer},
   annote={
     \setlength{\parskip}{1.5ex}
-    a discussion of diff3, a three-way version of the conventional diff algorithm. this
+    a discussion of diff3, a three-way version of the conventional diff algorithm. This
     could be used for plagiarism detection (detect similarities between two files
     that are not shared by a third, given reference code shared by all students).}
 }
@@ -508,7 +508,7 @@
   annote={
     \setlength{\parskip}{1.5ex}
     another paper that doesn't really solve the plagiarism prolem, and instead
-    attempts to find duplicate/dead code. this one is interesting because of its
+    attempts to find duplicate/dead code. This one is interesting because of its
     categorization metrics, though --- it attempts to classify code as either a
     straight duplicate, close copy, or unclassifiable (some duplicated code, but
     not enough to conclusively classify).}
@@ -665,9 +665,7 @@
     those characters would be completely undetected by mod-50.
     \par
     Winnowing ended up fingerprinting extremely densely in low-entropy data, so the
-    authors presented a very minor adjustment called ``robust winnowing'' to correct
-    it. Robust winnowing is not a local algorithm, but performed better than
-    winnowing.}
+    authors presented a very minor adjustment called ``robust winnowing'' to correct.
 }
 @article{shivakumar95,
   title={SCAM: A copy detection mechanism for digital documents},
@@ -717,5 +715,4 @@
     most common approaches at the time. The paper closes with a comparison of
     the effectiveness of the most popular approaches.}
 }
-
 
