@@ -24,6 +24,7 @@ package edu.wpi.checksims.algorithm;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import edu.wpi.checksims.ChecksimException;
+import edu.wpi.checksims.algorithm.linesimilarity.LineSimilarityChecker;
 import edu.wpi.checksims.util.reflection.ReflectiveInstantiator;
 
 import java.util.List;
@@ -31,8 +32,10 @@ import java.util.stream.Collectors;
 
 /**
  * Registry for all supported plagiarism detection algorithms
+ *
+ * @todo This, AlgorithmRegistry, and PreprocessorRegistry share a lot of code. Investigate refactoring to reduce reuse.
  */
-public class AlgorithmRegistry {
+public final class AlgorithmRegistry {
     private final List<SimilarityDetector> supportedAlgorithms;
 
     private static AlgorithmRegistry instance;
@@ -65,16 +68,26 @@ public class AlgorithmRegistry {
     }
 
     /**
-     * For convenience's sake, the first algorithm added to the list of detectors is considered to be the default
+     * The default algorithm is Line Comparison, unless it is for some reason unavailable
      *
-     * @return Default plagiarism detection algorithm
+     * In such cases that Line Comparison is unavailable, we default to the first available algorithm
+     *
+     * @return Default similarity detection algorithm
      */
     public SimilarityDetector getDefaultAlgorithm() {
-        return supportedAlgorithms.get(0);
+        String lineSimilarityName = LineSimilarityChecker.getInstance().getName();
+
+        // Try and return an instance of LineSimilarityChecker
+        // If we fail, default to the first algorithm on the list
+        try {
+            return getAlgorithmInstance(lineSimilarityName);
+        } catch(ChecksimException e) {
+            return supportedAlgorithms.get(0);
+        }
     }
 
     /**
-     * @return Name of default plagiarism detection algorithm
+     * @return Name of default similarity detection algorithm
      */
     public String getDefaultAlgorithmName() {
         return getDefaultAlgorithm().getName();

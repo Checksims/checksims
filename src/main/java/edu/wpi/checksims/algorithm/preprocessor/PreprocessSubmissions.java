@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 /**
  * Apply a preprocessor (maps Submission to Submission) to a given list of submissions
  */
-public class PreprocessSubmissions {
+public final class PreprocessSubmissions {
     private static Logger logs;
 
     private PreprocessSubmissions() {}

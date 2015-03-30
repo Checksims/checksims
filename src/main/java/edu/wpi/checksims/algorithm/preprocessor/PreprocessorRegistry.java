@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 /**
  * Registry to obtain valid preprocessors
  */
-public class PreprocessorRegistry {
+public final class PreprocessorRegistry {
     private final List<SubmissionPreprocessor> validPreprocessors;
 
     private static PreprocessorRegistry instance;
@@ -57,6 +57,9 @@ public class PreprocessorRegistry {
         validPreprocessors = ImmutableList.copyOf(preprocessors);
     }
 
+    /**
+     * @return Singleton instance of PreprocessorRegistry
+     */
     public static PreprocessorRegistry getInstance() {
         if(instance == null) {
             instance = new PreprocessorRegistry();
@@ -65,10 +68,20 @@ public class PreprocessorRegistry {
         return instance;
     }
 
+    /**
+     * @return Names of all preprocessors available for use
+     */
     public List<String> getPreprocessorNames() {
         return validPreprocessors.stream().map(SubmissionPreprocessor::getName).collect(Collectors.toList());
     }
 
+    /**
+     * Get an instance of a preprocessor with given name
+     *
+     * @param name Name of requested preprocessor
+     * @return Instance of preprocessor
+     * @throws ChecksimException Thrown if no preprocessor with that name exists, or said preprocessor cannot be instantiated
+     */
     public SubmissionPreprocessor getPreprocessor(String name) throws ChecksimException {
         String lowerName = name.toLowerCase();
 

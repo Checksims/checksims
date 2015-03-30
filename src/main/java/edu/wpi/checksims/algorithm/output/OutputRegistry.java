@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 /**
  * Registry for valid output strategies
  */
-public class OutputRegistry {
+public final class OutputRegistry {
     private final List<SimilarityMatrixPrinter> outputStrategies;
 
     private static OutputRegistry instance;
@@ -56,6 +56,9 @@ public class OutputRegistry {
         this.outputStrategies = ImmutableList.copyOf(instances);
     }
 
+    /**
+     * @return Sole instance of the OutputRegistry singleton
+     */
     public static OutputRegistry getInstance() {
         if(instance == null) {
             instance = new OutputRegistry();
@@ -64,6 +67,13 @@ public class OutputRegistry {
         return instance;
     }
 
+    /**
+     * Get an instance of the output strategy matching the given name
+     *
+     * @param name Name of output strategy to obtain
+     * @return Instance of requested output strategy
+     * @throws ChecksimException Thrown if requested output strategy does not exist or cannot be obtained
+     */
     public SimilarityMatrixPrinter getOutputStrategy(String name) throws ChecksimException {
         String lowerName = name.toLowerCase();
         List<SimilarityMatrixPrinter> matchingStrategies = outputStrategies.stream().filter((strategy) -> strategy.getName().equals(lowerName)).collect(Collectors.toList());
@@ -77,14 +87,33 @@ public class OutputRegistry {
         return matchingStrategies.get(0);
     }
 
+    /**
+     * @return A list of the names of all supported output strategies
+     */
     public List<String> getAllOutputStrategyNames() {
         return outputStrategies.stream().map(SimilarityMatrixPrinter::getName).collect(Collectors.toList());
     }
 
+    /**
+     * The default output strategy is the Threshold Printer
+     *
+     * If the Threshold Printer is for some reason unavailable, the first available output strategy is used instead
+     *
+     * @return Instance of the default output strategy
+     */
     public SimilarityMatrixPrinter getDefaultStrategy() {
-        return outputStrategies.get(0);
+        String thresholdPrinterName = SimilarityMatrixThresholdPrinter.getInstance().getName();
+
+        try {
+            return getOutputStrategy(thresholdPrinterName);
+        } catch(ChecksimException e) {
+            return outputStrategies.get(0);
+        }
     }
 
+    /**
+     * @return Name of the default output strategy
+     */
     public String getDefaultStrategyName() {
         return getDefaultStrategy().getName();
     }
