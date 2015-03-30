@@ -7,26 +7,24 @@ add so many features which we felt might be valuable. There is much work that
 can be done in the future to add these missing features.
 
 We feel that one of the most important features which can be added to
-\textit{Checksims} at present is the capability to use fingerprinting
-algorithms without the requirement of stateless, pairwise comparisons. Adding
-the ability to use fingerprinting algorithms with a persistent database of
-student submissions would allow fast checking not only within a single
-assignment (as \textit{Checksims} does today), but also against every previous
-assignment previously run through the detector --- detecting students who, for
-example, used another student's assignment from a previous year. Furthermore,
-advanced fingerprinting algorithms can offer most of the accuracy of
-Vector-Distance approaches (like \textit{Smith-Waterman}) while being
-substantially faster (for details, see the description of MOSS in
+\textit{Checksims} is the ability to use fingerprinting algorithms with a
+persistent database of student submissions; such an improvement would allow
+fast checking not only within a single assignment (as \textit{Checksims} does
+today), but also against every assignment previously run through the detector
+--- detecting students who, for example, used another student's assignment
+from a previous year. Furthermore, advanced fingerprinting algorithms offer
+most of the accuracy of Vector Distance approaches (like
+\textit{Smith-Waterman}) while being substantially faster; for details, see
 Section~\ref{sec:moss}). The addition of a fast comparison algorithm based on
 MOSS would alleviate the speed disadvantages of \textit{Smith-Waterman} on
 large classes and assignments.
 
 To add some of the benefits of fingerprinting algorithms to the
-\textit{Smith-Waterman} algorithm, we believe it would be useful to add the
-ability to specify an ``archive'' directory, which would contain a number of
-student submissions from previous years. The archived submissions would be
-compared against all student submissions from the current year, but not against
-each other, greatly reducing the number of comparisons that must be made and
+\textit{Smith-Waterman} algorithm, it would be useful to add the ability to
+specify an ``archive'' directory, which would contain a number of student
+submissions from previous years. The archived submissions would be compared
+against all student submissions from the current year, but not against each
+other, greatly reducing the number of comparisons that must be made and
 removing extraneous results about previous years. Adding such a feature would
 be a relatively small set of changes which would make the
 \textit{Smith-Waterman} algorithm much more usable when comparing with past
@@ -42,21 +40,18 @@ cases of similarity substantially.
 
 Usability improvements for \textit{Checksims} could also come from tools to
 make it easier to apply to assignments. Professor Lauer has suggested
-integration with online homework submission systems (such as \textit{Turnin})
-which would run a \textit{Checksims} scan automatically after submissions for
-an assignment are closed. Another option would be a GUI wrapper for
-\textit{Checksims} to automate common tasks (for example, placing student
-submissions into separate folders, or decompressing submissions given as .zip
-or .tar files).
+integration with \textit{TurnIn}, an in-house project submission platform used
+at WPI, which could run a \textit{Checksims} scan automatically after
+submissions for each assignment are closed. Another option would be a GUI
+wrapper for \textit{Checksims} to automate common tasks (for example, placing
+student submissions into separate folders, or decompressing submissions given
+as .zip or .tar files).
 
-Given that one of the goals of \textit{Checksims} is to serve as a platform for
-future research into similarity detection, it is only proper that we should
-suggest some research which could be performed using it. It was suggested to
-the authors that the comparison of programs at runtime could provide useful
-metrics for similarity detection --- for example, Valgrind profiling of memory
-use and execution time. We did not find significant investigation into such
-techniques in our literature review, and they could certainly be investigated
-using \textit{Checksims}.
+It was suggested to the authors that the comparison of programs at runtime
+could provide useful metrics for similarity detection --- for example,
+Valgrind profiling of memory use and execution time. We did not find
+significant investigation into such techniques in our literature review, and
+they could certainly be investigated using \textit{Checksims}.
 
 \section{Conclusion}
 TO DO TO DO TO DO
