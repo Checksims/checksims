@@ -99,6 +99,10 @@ public class LineSimilarityChecker implements SimilarityDetector {
         if(!a.getTokenType().equals(b.getTokenType())) {
             throw new ChecksimException("Token list type mismatch: submission " + a.getName() + " has type " +
                     linesA.type.toString() + ", while submission " + b.getName() + " has type " + linesB.type.toString());
+        } else if(a.equals(b)) {
+            finalA.stream().forEach((token) -> token.setValid(false));
+            finalB.stream().forEach((token) -> token.setValid(false));
+            return new AlgorithmResults(a, b, a.getNumTokens(), b.getNumTokens(), finalA, finalB);
         }
 
         MessageDigest hasher;

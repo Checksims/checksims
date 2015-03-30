@@ -64,6 +64,6 @@ public final class AlgorithmResults {
 
     @Override
     public String toString() {
-        return "Plagiarism comparison of submissions named " + a.getName() + " and " + b.getName();
+        return "Similarity results for submissions named " + a.getName() + " and " + b.getName();
     }
 }

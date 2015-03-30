@@ -46,7 +46,7 @@ public final class AlgorithmRunner {
         Set<UnorderedPair<Submission>> allPairs = UnorderedPair.generatePairsFromList(submissions);
 
         // Perform parallel analysis of all submission pairs to generate a results list
-        Collection<AlgorithmResults> results = ParallelAlgorithm.applyAlgorithm(algorithm, allPairs);
+        Collection<AlgorithmResults> results = ParallelAlgorithm.parallelSimilarityDetection(algorithm, allPairs);
 
         long endTime = System.currentTimeMillis();
         long timeElapsed = endTime - startTime;

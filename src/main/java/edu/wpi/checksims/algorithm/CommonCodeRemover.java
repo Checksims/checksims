@@ -28,6 +28,8 @@ import edu.wpi.checksims.submission.ValidityIgnoringSubmission;
 import edu.wpi.checksims.token.TokenList;
 import edu.wpi.checksims.token.TokenType;
 import edu.wpi.checksims.token.tokenizer.FileTokenizer;
+import edu.wpi.checksims.util.UnorderedPair;
+import edu.wpi.checksims.util.threading.ParallelAlgorithm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,82 +42,20 @@ import java.util.stream.Collectors;
 /**
  * Remove common code from submissions
  */
-public class CommonCodeRemover {
+public final class CommonCodeRemover {
     private static final Logger logs = LoggerFactory.getLogger(CommonCodeRemover.class);
 
     private CommonCodeRemover() {}
 
-    public static Collection<Submission> removeCommonCodeFromSubmissionsInList(Collection<Submission> removeFrom, Submission common, SimilarityDetector algorithm) {
-        if(removeFrom.isEmpty()) {
-            logs.debug("No submissions to perform common code removal on!");
-            return removeFrom;
-        }
-
-        AtomicInteger submissionsProcessed = new AtomicInteger(0);
-        long startTime = System.currentTimeMillis();
-
-        List<Submission> toReturn = removeFrom.stream().parallel().map((submission) -> {
-            try {
-                logs.info("Removing common code from submission " + submissionsProcessed.incrementAndGet() + "/" + removeFrom.size());
-
-                return removeCommonCodeFromSubmission(submission, common, algorithm);
-            } catch(ChecksimException e) {
-                throw new RuntimeException(e);
-            }
-        }).collect(Collectors.toList());
-
-        long endTime = System.currentTimeMillis();
-        long elapsedTime = endTime - startTime;
-        logs.info("Common code removal took " + elapsedTime + "ms");
-
-
-        return toReturn;
-    }
-
-    public static Submission removeCommonCodeFromSubmission(Submission in, Submission common, SimilarityDetector algorithm) throws ChecksimException {
-        logs.debug("Performing common code removal on submission " + in.getName());
-
-        TokenType type = algorithm.getDefaultTokenType();
-        FileTokenizer tokenizer = FileTokenizer.getTokenizer(type);
-
-        // Re-tokenize input and common code using given token type
-        TokenList redoneIn = tokenizer.splitFile(in.getContentAsString());
-        TokenList redoneCommon = tokenizer.splitFile(common.getContentAsString());
-
-        // Create new submissions with retokenized input
-        Submission computeIn = new ConcreteSubmission(in.getName(), in.getContentAsString(), redoneIn);
-        Submission computeCommon = new ConcreteSubmission(common.getName(), common.getContentAsString(), redoneCommon);
-
-        // Use the new submissions to compute this
-        AlgorithmResults results = algorithm.detectSimilarity(computeIn, computeCommon);
-
-        // The results contains two TokenLists, representing the final state of the submissions after similarity detection
-        // All common code should be marked invalid for the input submission's final list
-        TokenList listWithCommonInvalid;
-        float percentMatched;
-        int identTokens;
-        if(new ValidityIgnoringSubmission(results.a).equals(in)) {
-            listWithCommonInvalid = results.finalListA;
-            percentMatched = results.percentMatchedA();
-            identTokens = results.identicalTokensA;
-        } else {
-            listWithCommonInvalid = results.finalListB;
-            percentMatched = results.percentMatchedB();
-            identTokens = results.identicalTokensB;
-        }
-
-        // Recreate the string body of the submission from this new list
-        String newBody = listWithCommonInvalid.join(true);
-
-        // Retokenize the new body with the original tokenization
-        TokenType oldType = in.getTokenType();
-        FileTokenizer oldTokenizer = FileTokenizer.getTokenizer(oldType);
-        TokenList finalListGoodTokenization = oldTokenizer.splitFile(newBody);
-
-        DecimalFormat d = new DecimalFormat("###.00");
-        logs.trace("Submission " + in.getName() + " contained " + d.format(100 * percentMatched) + "% common code");
-        logs.trace("Removed " + identTokens + " common tokens (of " + in.getNumTokens() + " total)");
-
-        return new ConcreteSubmission(in.getName(), newBody, finalListGoodTokenization);
+    /**
+     * Perform common code removal
+     *
+     * @param removeFrom Collection of submissions to remove common code from
+     * @param common Common code to remove
+     * @param algorithm Algorithm to use for common code removal
+     * @return Submissions from removeFrom rebuilt without common code
+     */
+    public static Collection<Submission> removeCommonCodeFromSubmissions(Collection<Submission> removeFrom, Submission common, SimilarityDetector algorithm) {
+        return ParallelAlgorithm.parallelCommonCodeRemoval(algorithm, common, removeFrom);
     }
 }

@@ -21,8 +21,6 @@
 
 package edu.wpi.checksims.token;
 
-import org.apache.commons.lang.NotImplementedException;
-
 /**
  * An immutable view of a token
  */
