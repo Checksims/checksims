@@ -70,8 +70,8 @@ requirements outlined above. \textit{Checksims} is a client-based Java
 application implementing a pair of similarity detection algorithms and
 several output formats. It performs similarity detection on an arbitrary
 number of student submissions within a single assignment, and it produces
-output that can easily identify which submissions need to be checked by hand
-for unauthorized copying.
+output that can easily identify submissions that need to be checked by hand for
+unauthorized copying.
 
 \textit{Checksims} uses a simple, modular architecture designed for easy
 extensibility. It is designed to be trivial to add new similarity
@@ -230,7 +230,7 @@ result.
 
 It is worth noting that line comparison is actually a \textit{feature
 extraction} algorithm, and could be run with a central database of
-submissions if desired. However, since \textit {Checksims} only implements
+submissions if desired. However, since \textit{Checksims} only implements
 pairwise comparisons, the ``database'' used is a hash table that must be
 rebuilt every time a submission is compared. The current architecture is not
 particularly efficient, but because of the high speed of modern hashing
