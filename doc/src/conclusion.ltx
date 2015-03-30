@@ -14,7 +14,7 @@ today), but also against every assignment previously run through the detector
 --- detecting students who, for example, used another student's assignment
 from a previous year. Furthermore, advanced fingerprinting algorithms offer
 most of the accuracy of Vector Distance approaches (like
-\textit{Smith-Waterman}) while being substantially faster for details, see
+\textit{Smith-Waterman}) while being substantially faster; for details, see
 Section~\ref{sec:moss}). The addition of a fast comparison algorithm based on
 MOSS would alleviate the speed disadvantages of \textit{Smith-Waterman} on
 large classes and assignments.
@@ -40,12 +40,12 @@ cases of similarity substantially.
 
 Usability improvements for \textit{Checksims} could also come from tools to
 make it easier to apply to assignments. Professor Lauer has suggested
-integration with online homework submission systems such as the most popular
-in-house system used at WPI, which could run a \textit{Checksims} scan
-automatically after submissions for each assignment are closed. Another option
-would be a GUI wrapper for \textit{Checksims} to automate common tasks (for
-example, placing student submissions into separate folders, or decompressing
-submissions given as .zip or .tar files).
+integration with \textit{TurnIn}, an in-house project submission platform used
+at WPI, which could run a \textit{Checksims} scan automatically after
+submissions for each assignment are closed. Another option would be a GUI
+wrapper for \textit{Checksims} to automate common tasks (for example, placing
+student submissions into separate folders, or decompressing submissions given
+as .zip or .tar files).
 
 It was suggested to the authors that the comparison of programs at runtime
 could provide useful metrics for similarity detection --- for example,
