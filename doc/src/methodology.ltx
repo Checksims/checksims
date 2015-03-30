@@ -22,18 +22,18 @@ though again not without issues.
 \subsubsection{Student Code}
 Source code from students in Computer Science classes is an attractive test
 data option at first glance. This most closely matches the intended use case
-for Checksims --- the identification of similar code submissions for
+for \textit{Checksims} --- the identification of similar code submissions for
 programming projects. A set of test data built from submissions from previous
-offerings of the same classes that Checksims may be deployed in will most
-closely mirror its use in the real world. 
+offerings of the same classes that \textit{Checksims} may be deployed in will
+most closely mirror its use in the real world. 
 
-Using student code does, however, provide a number of strong concerns. The
+Using student code does, however, raise a number of important concerns. The
 first of these is a substantial privacy concern. Student submissions are
 typically only available to the course staff (a professor and typically
 several teaching assistants). The students, when submitting, were not
 notified that their programs might be used in an academic study. Furthermore,
-it might be possible to obtain an approximation of a student's grade based on
-his or her submission, compromising that student's academic privacy.
+it might be possible to obtain an approximation of a particular student's grade
+based on that student's submission, compromising his or her academic privacy.
 
 % Consider moving if there's a good place for it
 \iffalse
@@ -84,11 +84,13 @@ information was removed, with the caveat that a professor manually review
 anonymized code to ensure that no obvious identifying information remained.
 Professor Lauer graciously offered to perform this final vetting.
 
+% TODO add bash script as listing to report
 
 A script was constructed in Bash to accomplish this goal in a largely-automated
 fashion to make it feasible to obtain large bodies of test code. Given the
-nature of the script, its use is limited to submissions using one of the C
-family of languages (C, C++, and Java being the most typically used).
+nature of the script, its use is limited to submissions written in languages
+that use comments delineated with the ``\texttt{//}'' and ``\texttt{/* */}''
+symbols.
 
 % TODO add citation for remcomms sed script
 
@@ -115,22 +117,22 @@ substantially alter results --- for example, two submissions that differed
 only by comments would appear as 100\% similar when, with comments, they might
 only be 70\% to 80\%. Indeed, there is the potential that removing comments
 might increase the accuracy of a similarity detection program (though it could
-also decrease accuracy under other circumstances) . Work on this matter
-remains outside the scope of this paper; our use of source code without
-comments was forced by previously-mentioned circumstances, and we use it on
-the assumption that it represents code encountered in the real world with a
-reasonable degree of accuracy.
+also decrease accuracy under other circumstances). Because it is trivial to
+strip comments from files before running \textit{Checksims}, we believe these
+results represent a lower bound on the tool's effectiveness. The question of
+whether \textit{Checksims} might be even more effective on source code with
+comments is beyond the scope of this analysis.
 
 
 \paragraph{Baseline Output}
 A baseline for comparison was necessary to truly use student code as test
 data for \textit{Checksims}. While the output of the program can be
-investigated to verify that any reported similarities do exist and to weed out
+investigated to verify that any reported similarities do exist and to eliminate
 false positives, it is impossible to identify false negatives (submissions
 that contain unusual similarities but are not flagged by our software)
-without baseline output identifying all similar submissions. Given that we
-consider false negatives a very undesirable characteristic, it is necessary
-that we possess the means to verify they are not present.
+without baseline output identifying all similar submissions. We consider
+consider false negatives a very undesirable characteristic, so we would prefer
+to verify that they are not present. 
 
 A manual investigation of an assignment would certainly prove the most precise
 manner of identifying similarities. However, since our obtained test data
@@ -154,35 +156,33 @@ positives (and doing so is far less time intensive than a manual audit), we
 chose to use a similarity detection program with a less stringent definition
 of similarity to obtain baseline results, then manually remove false positives.
 In doing so, we would also obtain a figure for the number of false positives
-such a system would produce if used in place of Checksims, providing insight as
-to how necessary the construction of a new system was.
+such a system would produce if used in place of \textit{Checksims}, providing
+insight as to how necessary the construction of a new system was.
 
 We chose to use MOSS to generate our baseline results. MOSS, described in
 Section~\ref{sec:moss}, is a freely available similarity detection service
-intended for identifying academic dishonesty. It is anecdotally known to
-have a stricter definition of similarity and academic dishonesty than the one
-used to construct Checksims (though previous use of MOSS by Professor
-Lauer's course staff). Furthermore, MOSS is considered \textit{the} benchmark
-in similarity detection by most researchers. Numerous papers on new
-algorithms in similarity detection will compare their results against MOSS
-\cite{belkhouche04, beth04}.
-By doing the same, we can obtain a measure of our output quality compared
-against what is often said to be the golden standard in academic dishonesty
+intended for identifying academic dishonesty. Based on previous use, our
+advisor believes it uses a more sensitive definition of academic dishonesty
+than that used to construct \textit{Checksims}. Furthermore, MOSS is considered
+\textit{the} benchmark in similarity detection by most researchers. Numerous
+papers on new algorithms in similarity detection compare their results against
+MOSS \cite{belkhouche04, beth14}. By doing the same, we can obtain a measure
+of our output quality compared against the gold standard in academic dishonesty
 detection for source code \cite{beth14}.
 
 % TODO cite papers which compare against MOSS
 
 It is noteworthy that using MOSS for baseline results will not completely
-remove false negatives as a factor. If both MOSS and Checksims fail to detect
+eliminate false negatives. If both MOSS and \textit{Checksims} fail to detect
 an unusual similarity, our experiment will fail to record a false negative.
-We judge this not particularly likely, given the quality and maturity
-of the algorithms used by MOSS (described in Section~\ref{sec:moss}). It is
-unlikely that MOSS will miss similarities indicate of academic dishonesty
-\cite{schleimer03}. Similarities that manage to escape both MOSS and Checksims
-will continue to be a challenge, but we are not aiming to produce a perfect
-solution, only one that is ``good enough'' --- we do not expect
-\textit{Checksims} to catch cases that have eluded the industry-benchmark
-solution.
+We believe this event will be uncommon because of the quality and maturity of
+the algorithms used by MOSS (described in Section~\ref{sec:moss}). It
+is unlikely that MOSS will miss similarities indicative of academic
+dishonesty \cite{schleimer03}. Similarities that manage to escape both MOSS
+and \textit{Checksims} will continue to be a challenge, but we are not aiming
+to produce a perfect solution, only one that is ``good enough'' --- we do not
+expect \textit{Checksims} to catch cases that have eluded the industry
+benchmark solution.
 
 
 \subsubsection{Simulated Similarity}
@@ -195,23 +195,23 @@ easily be verified. There are no privacy concerns, because the test data was
 ``written'' procedurally by a program.
 
 These simulated corpora only exist for natural language, however, where our
-search is for similarity in source code. We are not confident that results
-obtained by testing Checksims against these corpora will correspond to our
-tool's performance against source code. However, we did use them in the
-project as functional tests for individual algorithms, providing a verifiable
-set of results we can test for, but we do not infer anything about the tool's
-quality from their results. 
+search is for similarity in source code. We have no reason to be confident that
+results obtained by testing \textit{Checksims} against natural language will
+correspond to our tool's performance against source code. We did use them in
+the project as functional tests for individual algorithms, providing a
+reproducible set of results to test for, but we do not infer anything about
+the tool's quality from their results. 
 
 \section{Experimental Verification}
 \label{sec:methods}
-Having obtained a large volume of test data, several experiments were then
-executed to provide full-scale functional testing of \textit{Checksims}.
-Comparisons between the two shipped algorithms, \textit{Line Comparison} and
-\textit{Smith-Waterman}, provide the benefits and disadvantages of both
-algorithms. Comparisons against MOSS provide proof of a low false-negative
+After obtaining a large volume of test data, we executed several experiments
+to provide full-scale functional testing of \textit{Checksims}. Comparisons
+between the two shipped algorithms, \textit{Line Comparison} and
+\textit{Smith-Waterman}, illustrate the benefits and disadvantages of both
+algorithms. Comparisons against MOSS demonstrate a low false-negative
 rate and a benchmark against a proven similarity detection program. Together,
-these experiments provided data to allow us to draw conclusions on whether 
-textit{Checksims} was ready for its intended job --- deployment for use by
+the experiments provided data to allow us to draw conclusions on whether 
+\textit{Checksims} was ready for its intended job --- deployment for use by
 WPI course staff.
 
 
@@ -230,7 +230,6 @@ which will fail to identify lines that differ by even one character. However,
 \textit{Smith-Waterman}'s quadratic runtime and large memory  requirements
 should mean that it is slower by far than \textit{Line Comparison}.
 
-We hope to verify our use cases for these algorithms with this experiment.
 \textit{Smith-Waterman} is hypothesized to trade speed for accuracy, and 
 \textit{Line Comparison} accuracy for speed; if both hypotheses are correct,
 then each algorithm has a use case and should be included in the final release.
