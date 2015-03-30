@@ -84,22 +84,25 @@ information was removed, with the caveat that a professor manually review
 anonymized code to ensure that no obvious identifying information remained.
 Professor Lauer graciously offered to perform this final vetting.
 
-% TODO add bash script as listing to report
+\begin{lstlisting}
+# TODO; the anonymization script, in full, will go here
+\end{lstlisting}
 
 A script was constructed in Bash to accomplish this goal in a largely-automated
 fashion to make it feasible to obtain large bodies of test code. Given the
 nature of the script, its use is limited to submissions written in languages
 that use comments delineated with the ``\texttt{//}'' and ``\texttt{/* */}''
-symbols.
-
-% TODO add citation for remcomms sed script
+symbols. The anonymization script used signiicant parts of the
+\textit{remcomms} Sed script for removing C comments, developed by Stewart
+Ravenhall.
 
 Using this script, a large volume of test code was obtained from several past
 offerings of CS2301 (Systems Programming for Non-Majors, taught in C) and
 CS2303 (Systems Programming Concepts, taught in C and C++). All programming
 assignments for 9 previous offerings of these courses were obtained, totaling
-to over 357 thousand lines of code (as computed by David A. Wheeler's
-``SLOCCount'' program). Six of the nine courses were taught by Professor Lauer,
+to over 357 thousand lines of code \footnote{as computed by David A. Wheeler's
+``SLOCCount'' program, a free program for computing the number of lines in a
+body of source code}. Six of the nine courses were taught by Professor Lauer,
 the rest by other instructors. TODO average submission size, average students
 per class.
 
@@ -169,8 +172,6 @@ papers on new algorithms in similarity detection compare their results against
 MOSS \cite{belkhouche04, beth14}. By doing the same, we can obtain a measure
 of our output quality compared against the gold standard in academic dishonesty
 detection for source code \cite{beth14}.
-
-% TODO cite papers which compare against MOSS
 
 It is noteworthy that using MOSS for baseline results will not completely
 eliminate false negatives. If both MOSS and \textit{Checksims} fail to detect
