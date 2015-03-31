@@ -16,12 +16,10 @@
  *
  * CDDL HEADER END
  *
- * Copyright (c) 2014 Matthew Heon and Dolan Murvihill
+ * Copyright (c) 2014-2015 Matthew Heon and Dolan Murvihill
  */
 
 package edu.wpi.checksims.token;
-
-import org.apache.commons.lang.NotImplementedException;
 
 /**
  * An immutable view of a token

@@ -16,7 +16,7 @@
  *
  * CDDL HEADER END
  *
- * Copyright (c) 2014 Matthew Heon and Dolan Murvihill
+ * Copyright (c) 2014-2015 Matthew Heon and Dolan Murvihill
  */
 
 package edu.wpi.checksims.util;

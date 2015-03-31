@@ -37,6 +37,7 @@ public class FileLineTokenizerTest {
     private static final String oneString = "hello";
     private static final String multiLine = "hello\nworld\n";
     private static final String multiLineNoTrailing = "hello\nworld";
+    private static final String threeLine = "A\nB\nC\n";
     private static FileLineTokenizer l;
 
     @BeforeClass
@@ -90,6 +91,21 @@ public class FileLineTokenizerTest {
         assertNotNull(results);
         assertFalse(results.isEmpty());
         assertEquals(results.size(), 2);
+        assertEquals(results, expected);
+    }
+
+    @Test
+    public void TestThreeLineSplit() {
+        TokenList results = l.splitFile(threeLine);
+
+        TokenList expected = new TokenList(TokenType.LINE);
+        expected.add(new ConcreteToken("A", TokenType.LINE));
+        expected.add(new ConcreteToken("B", TokenType.LINE));
+        expected.add(new ConcreteToken("C", TokenType.LINE));
+
+        assertNotNull(results);
+        assertFalse(results.isEmpty());
+        assertEquals(results.size(), 3);
         assertEquals(results, expected);
     }
 }
