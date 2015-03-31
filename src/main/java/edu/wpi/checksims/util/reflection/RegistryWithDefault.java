@@ -21,7 +21,7 @@
 
 package edu.wpi.checksims.util.reflection;
 
-import edu.wpi.checksims.ChecksimException;
+import edu.wpi.checksims.ChecksimsException;
 
 /**
  * Extension of a Registry with the ability to retrieve a default value
@@ -42,7 +42,7 @@ public class RegistryWithDefault<T extends NamedInstantiable> extends Registry<T
 
         try {
             instanceOfDefault = super.getImplementationInstance(defaultImplementation);
-        } catch(ChecksimException e) {
+        } catch(ChecksimsException e) {
             throw new RuntimeException("Requested default implementation is not available", e);
         }
 

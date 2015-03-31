@@ -21,7 +21,7 @@
 
 package edu.wpi.checksims.token;
 
-import edu.wpi.checksims.ChecksimException;
+import edu.wpi.checksims.ChecksimsException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -46,7 +46,7 @@ public enum TokenType {
         return "Token of type " + name;
     }
 
-    public static TokenType fromString(String input) throws ChecksimException {
+    public static TokenType fromString(String input) throws ChecksimsException {
         String lowerInput = input.toLowerCase();
 
         TokenType[] types = TokenType.class.getEnumConstants();
@@ -56,12 +56,12 @@ public enum TokenType {
 
         // If we find nothing, throw an exception
         if(matching.size() == 0) {
-            throw new ChecksimException("No tokenization with name " + input + " found!");
+            throw new ChecksimsException("No tokenization with name " + input + " found!");
         }
 
         // If we get two or more, there's a serious problem
         if(matching.size() > 1) {
-            throw new ChecksimException("FATAL: Encountered multiple tokenizations with identical names!");
+            throw new ChecksimsException("FATAL: Encountered multiple tokenizations with identical names!");
         }
 
         // Otherwise, just return the sole thing we filtered to

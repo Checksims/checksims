@@ -23,11 +23,17 @@ package edu.wpi.checksims;
 
 /**
  * Generic exception for project
+ *
+ * TODO create more specific exceptions for specific actions and areas of the project
  */
-public class ChecksimException extends Exception {
+public class ChecksimsException extends Exception {
     private static final long serialVersionUID = 1L;
 
-    public ChecksimException(String message) {
+    public ChecksimsException(String message) {
         super(message);
+    }
+
+    public ChecksimsException(String message, Exception parent) {
+        super(message, parent);
     }
 }

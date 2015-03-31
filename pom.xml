@@ -93,7 +93,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>edu.wpi.checksims.ChecksimRunner</mainClass>
+                            <mainClass>edu.wpi.checksims.ChecksimsRunner</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -105,7 +105,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>edu.wpi.checksims.ChecksimRunner</mainClass>
+                            <mainClass>edu.wpi.checksims.ChecksimsRunner</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

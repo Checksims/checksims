@@ -21,20 +21,14 @@
 
 package edu.wpi.checksims;
 
-import com.google.common.collect.ImmutableList;
 import edu.wpi.checksims.algorithm.AlgorithmRegistry;
-import edu.wpi.checksims.algorithm.CommonCodeRemover;
 import edu.wpi.checksims.algorithm.output.OutputRegistry;
-import edu.wpi.checksims.algorithm.output.SimilarityMatrix;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrixPrinter;
-import edu.wpi.checksims.algorithm.preprocessor.PreprocessSubmissions;
 import edu.wpi.checksims.algorithm.preprocessor.PreprocessorRegistry;
 import edu.wpi.checksims.algorithm.preprocessor.SubmissionPreprocessor;
 import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.token.TokenType;
 import edu.wpi.checksims.token.tokenizer.FileTokenizer;
-import edu.wpi.checksims.util.file.FileStringWriter;
-import edu.wpi.checksims.util.threading.ParallelAlgorithm;
 import org.apache.commons.cli.*;
 import org.apache.commons.collections4.list.SetUniqueList;
 import org.slf4j.Logger;
@@ -48,10 +42,28 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Entry point for Checksims
+ * Parses Checksims' command-line options
  */
-public class ChecksimRunner {
-    private static Logger logs;
+public class ChecksimsCommandLine {
+    static Logger startLogger(int level) {
+        if(level == 1) {
+            // Set verbose logging level
+            System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "DEBUG");
+        } else if(level == 2) {
+            // Set very verbose logging level
+            System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
+        } else if(level == 0) {
+            System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
+        } else {
+            throw new RuntimeException("Unrecognized verbosity level passed to startLogger!");
+        }
+
+        System.setProperty(SimpleLogger.SHOW_LOG_NAME_KEY, "false");
+        System.setProperty(SimpleLogger.SHOW_THREAD_NAME_KEY, "false");
+        System.setProperty(SimpleLogger.LEVEL_IN_BRACKETS_KEY, "true");
+
+        return LoggerFactory.getLogger(ChecksimsCommandLine.class);
+    }
 
     static Options getOpts() {
         Options opts = new Options();
@@ -91,32 +103,13 @@ public class ChecksimRunner {
         return parser.parse(getOpts(), args);
     }
 
-    static Logger startLogger(int level) {
-        if(level == 1) {
-            // Set verbose logging level
-            System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "DEBUG");
-        } else if(level == 2) {
-            // Set very verbose logging level
-            System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
-        } else if(level == 0) {
-            System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
-        } else {
-            throw new RuntimeException("Unrecognized verbosity level passed to startLogger!");
-        }
-
-        System.setProperty(SimpleLogger.SHOW_LOG_NAME_KEY, "false");
-        System.setProperty(SimpleLogger.SHOW_THREAD_NAME_KEY, "false");
-        System.setProperty(SimpleLogger.LEVEL_IN_BRACKETS_KEY, "true");
-
-        return LoggerFactory.getLogger(ChecksimRunner.class);
-    }
-
     /**
      * Parse CLI arguments into a ChecksimsConfig
      *
      * Also configs static logger, and sets parallelism level in ParallelAlgorithm
      *
      * TODO Convert many of these RuntimeExceptions to checked exceptions
+     * TODO add unit tests
      *
      * @param args CLI arguments to parse
      * @return Config created from CLI arguments
@@ -148,6 +141,7 @@ public class ChecksimRunner {
         }
 
         // Parse verbose setting
+        Logger logs;
         if(cli.hasOption("vv")) {
             logs = startLogger(2);
         } else if(cli.hasOption("v")) {
@@ -181,7 +175,7 @@ public class ChecksimRunner {
             try {
                 config = config.setAlgorithm(AlgorithmRegistry.getInstance().getImplementationInstance(cli.getOptionValue("a")));
                 config = config.setTokenization(config.getAlgorithm().getDefaultTokenType());
-            } catch(ChecksimException e) {
+            } catch(ChecksimsException e) {
                 logs.error("Error obtaining algorithm!");
                 throw new RuntimeException(e);
             }
@@ -198,7 +192,7 @@ public class ChecksimRunner {
         if(cli.hasOption("t")) {
             try {
                 config = config.setTokenization(TokenType.fromString(cli.getOptionValue("t")));
-            } catch(ChecksimException e) {
+            } catch(ChecksimsException e) {
                 logs.error("Error obtaining tokenization!");
                 throw new RuntimeException(e);
             }
@@ -220,7 +214,7 @@ public class ChecksimRunner {
             // TODO may be desirable for this to be configurable
             try {
                 config = config.setCommonCodeRemovalAlgorithm(AlgorithmRegistry.getInstance().getImplementationInstance("linecompare"));
-            } catch(ChecksimException e) {
+            } catch(ChecksimsException e) {
                 logs.error("Cannot obtain instance of linecompare algorithm!");
                 throw new RuntimeException(e);
             }
@@ -230,20 +224,12 @@ public class ChecksimRunner {
         boolean outputToFile = cli.hasOption("f");
         if(outputToFile) {
             File outputFile = new File(cli.getOptionValue("f"));
-            config.setOutputToFile(true, outputFile);
+            config = config.setOutputToFile(true, outputFile);
             logs.info("Saving output to file " + outputFile.getName());
         }
 
         if(cli.hasOption("j")) {
-            int threads = Integer.parseInt(cli.getOptionValue("j"));
-
-            if (threads < 1) {
-                logs.error("Invalid job count specified!");
-                throw new RuntimeException("Must specify positive number of threads - got " + threads);
-            }
-
-            ParallelAlgorithm.setThreadCount(threads);
-            System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "" + threads);
+            config = config.setNumThreads(Integer.parseInt(cli.getOptionValue("j")));
         }
 
         // Parse preprocessors
@@ -256,7 +242,7 @@ public class ChecksimRunner {
                     SubmissionPreprocessor p = PreprocessorRegistry.getInstance().getImplementationInstance(s);
                     preprocessors.add(p);
                 }
-            } catch(ChecksimException e) {
+            } catch(ChecksimsException e) {
                 logs.error("Error obtaining preprocessors!");
                 throw new RuntimeException(e);
             }
@@ -274,7 +260,7 @@ public class ChecksimRunner {
                     SimilarityMatrixPrinter p = OutputRegistry.getInstance().getImplementationInstance(s);
                     outputStrategies.add(p);
                 }
-            } catch(ChecksimException e) {
+            } catch(ChecksimsException e) {
                 logs.error("Error obtaining output strategies!");
                 throw new RuntimeException(e);
             }
@@ -293,72 +279,8 @@ public class ChecksimRunner {
         }
         config = config.setSubmissions(submissions);
 
+        logs.trace("CLI parsing complete!");
+
         return config;
-    }
-
-    public static void main(String[] args) throws IOException {
-        ChecksimConfig config;
-
-        try {
-            config = parseCLI(args);
-        } catch (ParseException e) {
-            logs.error("Error parsing command-line options!");
-            throw new RuntimeException(e);
-        }
-
-        runChecksims(config);
-
-        System.exit(0);
-    }
-
-    public static void runChecksims(ChecksimConfig config) {
-        // Check to see that the config is usable and user-specified CLI opts are good
-        try {
-            config.isReady();
-        } catch(ChecksimException e) {
-            logs.error("Error: invalid run configuration specified!");
-            throw new RuntimeException(e);
-        }
-
-        ImmutableList<Submission> submissions = config.getSubmissions();
-
-        logs.info("Got " + submissions.size() + " submissions to test.");
-
-        if(submissions.size() == 0) {
-            logs.error("No student submissions were found! Nothing to do!");
-            System.exit(0);
-        }
-
-        // If we are performing common code detection...
-        if(config.doRemoveCommonCode()) {
-            // Perform common code removal before preprocessor application
-            submissions = ImmutableList.copyOf(CommonCodeRemover.removeCommonCodeFromSubmissions(submissions, config.getCommonCode(), config.getCommonCodeRemovalAlgorithm()));
-        }
-
-        // Apply all preprocessors
-        for(SubmissionPreprocessor p : config.getPreprocessors()) {
-            submissions = ImmutableList.copyOf(PreprocessSubmissions.process(p::process, submissions));
-        }
-
-        // Apply algorithm to submission
-        SimilarityMatrix results = SimilarityMatrix.generate(submissions, config.getAlgorithm());
-
-        for(SimilarityMatrixPrinter p : config.getOutputPrinters()) {
-            String output = p.printMatrix(results);
-
-            logs.info("Generating " + p.getName() + " output");
-
-            if (config.doOutputToFile()) {
-                try {
-                    FileStringWriter.writeStringToFile(new File(config.getOutputFile().getAbsolutePath() + "." + p.getName()), output);
-                } catch (IOException e) {
-                    logs.error("Error printing output to file!");
-                    throw new RuntimeException(e);
-                }
-            } else {
-                System.out.println("\n\n");
-                System.out.println(output);
-            }
-        }
     }
 }

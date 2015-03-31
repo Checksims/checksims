@@ -51,12 +51,13 @@ public final class ChecksimConfig {
     private ImmutableList<SimilarityMatrixPrinter> outputPrinters;
     private boolean outputToFile;
     private File outputFile;
+    private int numThreads;
 
     private static final File NOT_EXIST = new File("NULL_FILE_DOES_NOT_EXIST");
 
     private ChecksimConfig(SimilarityDetector algorithm, TokenType tokenization, List<SubmissionPreprocessor> preprocessors,
                           List<Submission> submissions, boolean removeCommonCode, SimilarityDetector commonCodeRemovalAlgorithm,
-                          Submission commonCode, List<SimilarityMatrixPrinter> outputPrinters, boolean outputToFile, File outputFile) {
+                          Submission commonCode, List<SimilarityMatrixPrinter> outputPrinters, boolean outputToFile, File outputFile, int numThreads) {
         this.algorithm = algorithm;
         this.tokenization = tokenization;
         this.removeCommonCode = removeCommonCode;
@@ -69,6 +70,7 @@ public final class ChecksimConfig {
         this.outputPrinters = ImmutableList.copyOf(outputPrinters);
         this.outputToFile = outputToFile;
         this.outputFile = outputFile;
+        this.numThreads = numThreads;
     }
 
     /**
@@ -85,31 +87,36 @@ public final class ChecksimConfig {
         this.outputPrinters = ImmutableList.copyOf(Arrays.asList(OutputRegistry.getInstance().getDefaultImplementation()));
         this.outputToFile = false;
         this.outputFile = NOT_EXIST;
+        this.numThreads = Runtime.getRuntime().availableProcessors();
     }
 
     /**
      * Check is this config is ready to be used
      */
-    public void isReady() throws ChecksimException {
+    public void isReady() throws ChecksimsException {
         if(submissions.isEmpty()) {
-            throw new ChecksimException("No submissions provided - cannot run Checksims!");
+            throw new ChecksimsException("No submissions provided - cannot run Checksims!");
         }
 
         if(outputPrinters.isEmpty()) {
-            throw new ChecksimException("No output printers provided - cannot run Checksims!");
+            throw new ChecksimsException("No output printers provided - cannot run Checksims!");
         }
 
         if(removeCommonCode && commonCode.getContentAsString().isEmpty()) {
-            throw new ChecksimException("Common code removal specified but common code is empty - possible user error?");
+            throw new ChecksimsException("Common code removal specified but common code is empty - possible user error?");
         }
 
         if(outputToFile && this.outputFile.equals(NOT_EXIST)) {
-            throw new ChecksimException("Output to file requested, but valid file not given!");
+            throw new ChecksimsException("Output to file requested, but valid file not given!");
+        }
+
+        if(numThreads <= 0) {
+            throw new ChecksimsException("Number of threads specified as " + numThreads + ", must be greater than 0!");
         }
     }
 
     private ChecksimConfig getCopy() {
-        return new ChecksimConfig(algorithm, tokenization, preprocessors, submissions, removeCommonCode, commonCodeRemovalAlgorithm, commonCode, outputPrinters, outputToFile, outputFile);
+        return new ChecksimConfig(algorithm, tokenization, preprocessors, submissions, removeCommonCode, commonCodeRemovalAlgorithm, commonCode, outputPrinters, outputToFile, outputFile, numThreads);
     }
 
     /**
@@ -241,6 +248,17 @@ public final class ChecksimConfig {
     }
 
     /**
+     * @param numThreads Number of threads to be used for parallel operations
+     * @return Copy of configuration with new number of threads set
+     */
+    public ChecksimConfig setNumThreads(int numThreads) {
+        ChecksimConfig newConfig = getCopy();
+        newConfig.numThreads = numThreads;
+
+        return newConfig;
+    }
+
+    /**
      * @return Similarity detection algorithm to use
      */
     public SimilarityDetector getAlgorithm() {
@@ -308,6 +326,13 @@ public final class ChecksimConfig {
      */
     public File getOutputFile() {
         return outputFile;
+    }
+
+    /**
+     * @return Number of threads that will be used for parallel operations
+     */
+    public int getNumThreads() {
+        return numThreads;
     }
 
     @Override

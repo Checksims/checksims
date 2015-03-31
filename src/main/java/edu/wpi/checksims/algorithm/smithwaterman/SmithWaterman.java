@@ -21,7 +21,7 @@
 
 package edu.wpi.checksims.algorithm.smithwaterman;
 
-import edu.wpi.checksims.ChecksimException;
+import edu.wpi.checksims.ChecksimsException;
 import edu.wpi.checksims.algorithm.AlgorithmResults;
 import edu.wpi.checksims.algorithm.SimilarityDetector;
 import edu.wpi.checksims.submission.Submission;
@@ -63,9 +63,9 @@ public class SmithWaterman implements SimilarityDetector {
      * @return AlgorithmResults indicating number of matched tokens
      */
     @Override
-    public AlgorithmResults detectSimilarity(Submission a, Submission b) throws ChecksimException {
+    public AlgorithmResults detectSimilarity(Submission a, Submission b) throws ChecksimsException {
         if(!a.getTokenType().equals(b.getTokenType())) {
-            throw new ChecksimException("Token list type mismatch: submission " + a.getName() + " has type " +
+            throw new ChecksimsException("Token list type mismatch: submission " + a.getName() + " has type " +
                     a.getContentAsTokens().type.toString() + ", while submission " + b.getName() + " has type " +
                     b.getContentAsTokens().type.toString());
         }

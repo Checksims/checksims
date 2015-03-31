@@ -1,6 +1,6 @@
 package edu.wpi.checksims.algorithm.linesimilarity;
 
-import edu.wpi.checksims.ChecksimException;
+import edu.wpi.checksims.ChecksimsException;
 import edu.wpi.checksims.algorithm.AlgorithmResults;
 import edu.wpi.checksims.algorithm.SimilarityDetector;
 import edu.wpi.checksims.submission.ConcreteSubmission;
@@ -37,13 +37,13 @@ public class LineSimilarityCheckerTest {
         lineCompare = LineSimilarityChecker.getInstance();
     }
 
-    @Test(expected = ChecksimException.class)
-    public void TestErrorOnTokenTypeMismatch() throws ChecksimException {
+    @Test(expected = ChecksimsException.class)
+    public void TestErrorOnTokenTypeMismatch() throws ChecksimsException {
         lineCompare.detectSimilarity(empty, new ConcreteSubmission("Error", "", new TokenList(TokenType.CHARACTER)));
     }
 
     @Test
-    public void TestEmptySubmissionIsZeroPercentSimilar() throws ChecksimException {
+    public void TestEmptySubmissionIsZeroPercentSimilar() throws ChecksimsException {
         AlgorithmResults results = lineCompare.detectSimilarity(empty, empty);
 
         assertNotNull(results);
@@ -54,7 +54,7 @@ public class LineSimilarityCheckerTest {
     }
 
     @Test
-    public void TestEmptySubmissionAndNonemptySubmission() throws ChecksimException {
+    public void TestEmptySubmissionAndNonemptySubmission() throws ChecksimsException {
         AlgorithmResults results = lineCompare.detectSimilarity(empty, abc);
 
         assertNotNull(results);
@@ -86,7 +86,7 @@ public class LineSimilarityCheckerTest {
     }
 
     @Test
-    public void TestSubmissionStrictSubset() throws ChecksimException {
+    public void TestSubmissionStrictSubset() throws ChecksimsException {
         AlgorithmResults results = lineCompare.detectSimilarity(abc, abcde);
 
         TokenList expectedAbc = TokenList.cloneTokenList(abc.getContentAsTokens());
@@ -115,7 +115,7 @@ public class LineSimilarityCheckerTest {
     }
 
     @Test
-    public void TestSubmissionsNoOverlap() throws ChecksimException {
+    public void TestSubmissionsNoOverlap() throws ChecksimsException {
         AlgorithmResults results = lineCompare.detectSimilarity(abc, def);
 
         assertNotNull(results);
@@ -137,7 +137,7 @@ public class LineSimilarityCheckerTest {
     }
 
     @Test
-    public void TestSubmissionsSomeOverlap() throws ChecksimException {
+    public void TestSubmissionsSomeOverlap() throws ChecksimsException {
         AlgorithmResults results = lineCompare.detectSimilarity(abcde, def);
 
         TokenList expectedAbcde = TokenList.cloneTokenList(abcde.getContentAsTokens());
@@ -167,7 +167,7 @@ public class LineSimilarityCheckerTest {
     }
 
     @Test
-    public void TestSubmissionsDuplicatedToken() throws ChecksimException {
+    public void TestSubmissionsDuplicatedToken() throws ChecksimsException {
         AlgorithmResults results = lineCompare.detectSimilarity(aabc, abc);
 
         TokenList expectedAbc = TokenList.cloneTokenList(abc.getContentAsTokens());

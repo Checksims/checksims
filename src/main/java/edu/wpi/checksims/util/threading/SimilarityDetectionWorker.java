@@ -21,7 +21,7 @@
 
 package edu.wpi.checksims.util.threading;
 
-import edu.wpi.checksims.ChecksimException;
+import edu.wpi.checksims.ChecksimsException;
 import edu.wpi.checksims.algorithm.AlgorithmResults;
 import edu.wpi.checksims.algorithm.SimilarityDetector;
 import edu.wpi.checksims.submission.Submission;
@@ -67,7 +67,7 @@ public class SimilarityDetectionWorker implements Callable<AlgorithmResults> {
 
         try {
             return algorithm.detectSimilarity(submissions.first, submissions.second);
-        } catch (ChecksimException e) {
+        } catch (ChecksimsException e) {
             logs.error("Fatal error running " + algorithm.getName() + " on submissions " + submissions.first.getName() + " and " + submissions.second.getName());
             throw new RuntimeException(e);
         }

@@ -23,7 +23,7 @@ package edu.wpi.checksims.util.reflection;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import edu.wpi.checksims.ChecksimException;
+import edu.wpi.checksims.ChecksimsException;
 
 import java.util.Collection;
 import java.util.List;
@@ -72,15 +72,15 @@ public class Registry<T extends NamedInstantiable> {
      *
      * @param name Name to search for
      * @return Instance of implementation with given name
-     * @throws ChecksimException Thrown if no instance with given name can be found
+     * @throws edu.wpi.checksims.ChecksimsException Thrown if no instance with given name can be found
      */
-    public T getImplementationInstance(String name) throws ChecksimException {
+    public T getImplementationInstance(String name) throws ChecksimsException {
         List<T> matchingImpls = registeredHandlers.stream().filter((handler) -> handler.getName().equalsIgnoreCase(name)).collect(Collectors.toList());
 
         if(matchingImpls.size() == 0) {
-            throw new ChecksimException("No implementation available with name " + name);
+            throw new ChecksimsException("No implementation available with name " + name);
         } else if(matchingImpls.size() > 1) {
-            throw new ChecksimException("INTERNAL ERROR: Two implementations found with same name " + name +" !");
+            throw new ChecksimsException("INTERNAL ERROR: Two implementations found with same name " + name +" !");
         }
 
         return matchingImpls.get(0);
