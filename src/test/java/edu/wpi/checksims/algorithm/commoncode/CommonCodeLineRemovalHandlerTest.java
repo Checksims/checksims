@@ -1,6 +1,7 @@
-package edu.wpi.checksims.algorithm;
+package edu.wpi.checksims.algorithm.commoncode;
 
 import com.google.common.collect.Iterables;
+import edu.wpi.checksims.algorithm.SimilarityDetector;
 import edu.wpi.checksims.algorithm.linesimilarity.LineSimilarityChecker;
 import edu.wpi.checksims.submission.ConcreteSubmission;
 import edu.wpi.checksims.submission.Submission;
@@ -13,14 +14,13 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.LinkedList;
 
 import static org.junit.Assert.*;
 
 /**
- * Tests for common code removal
+ * Tests for the Common Code Line Removal Handler
  */
-public class CommonCodeRemoverTest {
+public class CommonCodeLineRemovalHandlerTest {
     private static Submission empty;
     private static Submission abc;
     private static Submission abcde;
@@ -54,8 +54,8 @@ public class CommonCodeRemoverTest {
     @Test
     public void TestRemoveCommonCodePreservesTokenType() {
         Collection<Submission> removeFrom = Arrays.asList(abc);
-
-        Collection<Submission> results = CommonCodeRemover.removeCommonCodeFromSubmissions(removeFrom, empty, lineCompare);
+        CommonCodeLineRemovalHandler handler = new CommonCodeLineRemovalHandler(empty);
+        Collection<Submission> results = handler.handleCommonCode(removeFrom);
 
         Submission fromResults = Iterables.get(results, 0);
 
@@ -71,8 +71,8 @@ public class CommonCodeRemoverTest {
     @Test
     public void TestRemoveEmptyCommonCode() {
         Collection<Submission> removeFrom = Arrays.asList(abc, abcde);
-
-        Collection<Submission> results = CommonCodeRemover.removeCommonCodeFromSubmissions(removeFrom, empty, lineCompare);
+        CommonCodeLineRemovalHandler handler = new CommonCodeLineRemovalHandler(empty);
+        Collection<Submission> results = handler.handleCommonCode(removeFrom);
 
         assertNotNull(results);
         System.out.println(results.toString());
@@ -84,8 +84,8 @@ public class CommonCodeRemoverTest {
     @Test
     public void TestRemoveCommonCodeFromEmpty() {
         Collection<Submission> removeFrom = Arrays.asList(empty);
-
-        Collection<Submission> results = CommonCodeRemover.removeCommonCodeFromSubmissions(removeFrom, abc, lineCompare);
+        CommonCodeLineRemovalHandler handler = new CommonCodeLineRemovalHandler(abc);
+        Collection<Submission> results = handler.handleCommonCode(removeFrom);
 
         assertNotNull(results);
         assertEquals(results.size(), 1);

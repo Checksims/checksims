@@ -46,7 +46,6 @@ public class SimilarityMatrix {
         this.results = results;
     }
 
-    // TODO should really clone() this list, or set it to immutable
     public List<Submission> getSubmissions() {
         return this.submissions;
     }

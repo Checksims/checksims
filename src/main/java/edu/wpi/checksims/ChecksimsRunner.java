@@ -29,6 +29,7 @@ import edu.wpi.checksims.algorithm.preprocessor.PreprocessSubmissions;
 import edu.wpi.checksims.algorithm.preprocessor.SubmissionPreprocessor;
 import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.util.file.FileStringWriter;
+import edu.wpi.checksims.util.output.OutputPrinter;
 import edu.wpi.checksims.util.threading.ParallelAlgorithm;
 import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
@@ -49,7 +50,7 @@ public class ChecksimsRunner {
      * @param args CLI arguments
      */
     public static void main(String[] args) {
-        ChecksimConfig config;
+        ChecksimsConfig config;
 
         try {
             config = ChecksimsCommandLine.parseCLI(args);
@@ -71,7 +72,7 @@ public class ChecksimsRunner {
      *
      * @param config Configuration defining how Checksims will be run
      */
-    public static void runChecksims(ChecksimConfig config) {
+    public static void runChecksims(ChecksimsConfig config) {
         // Check to see that the config is usable and user-specified CLI opts are good
         try {
             config.isReady();
@@ -94,11 +95,8 @@ public class ChecksimsRunner {
             System.exit(0);
         }
 
-        // If we are performing common code detection...
-        if(config.doRemoveCommonCode()) {
-            // Perform common code removal before preprocessor application
-            submissions = ImmutableList.copyOf(CommonCodeRemover.removeCommonCodeFromSubmissions(submissions, config.getCommonCode(), config.getCommonCodeRemovalAlgorithm()));
-        }
+        // Apply the common code handler (which may just be a pass-through operation, if there is no common code)
+        submissions = ImmutableList.copyOf(config.getCommonCodeHandler().handleCommonCode(submissions));
 
         // Apply all preprocessors
         for(SubmissionPreprocessor p : config.getPreprocessors()) {
@@ -108,22 +106,12 @@ public class ChecksimsRunner {
         // Apply algorithm to submission
         SimilarityMatrix results = SimilarityMatrix.generate(submissions, config.getAlgorithm());
 
+        // Output using all output printers
+        OutputPrinter printer = config.getOutputMethod();
         for(SimilarityMatrixPrinter p : config.getOutputPrinters()) {
-            String output = p.printMatrix(results);
-
             logs.info("Generating " + p.getName() + " output");
 
-            if (config.doOutputToFile()) {
-                try {
-                    FileStringWriter.writeStringToFile(new File(config.getOutputFile().getAbsolutePath() + "." + p.getName()), output);
-                } catch (IOException e) {
-                    logs.error("Error printing output to file!");
-                    throw new RuntimeException(e);
-                }
-            } else {
-                System.out.println("\n\n");
-                System.out.println(output);
-            }
+            printer.print(results, p);
         }
     }
 }

@@ -22,6 +22,8 @@
 package edu.wpi.checksims;
 
 import edu.wpi.checksims.algorithm.AlgorithmRegistry;
+import edu.wpi.checksims.algorithm.commoncode.CommonCodeHandler;
+import edu.wpi.checksims.algorithm.commoncode.CommonCodeLineRemovalHandler;
 import edu.wpi.checksims.algorithm.output.OutputRegistry;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrixPrinter;
 import edu.wpi.checksims.algorithm.preprocessor.PreprocessorRegistry;
@@ -29,6 +31,8 @@ import edu.wpi.checksims.algorithm.preprocessor.SubmissionPreprocessor;
 import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.token.TokenType;
 import edu.wpi.checksims.token.tokenizer.FileTokenizer;
+import edu.wpi.checksims.util.output.OutputAsFilePrinter;
+import edu.wpi.checksims.util.output.OutputPrinter;
 import org.apache.commons.cli.*;
 import org.apache.commons.collections4.list.SetUniqueList;
 import org.slf4j.Logger;
@@ -108,14 +112,13 @@ public class ChecksimsCommandLine {
      *
      * Also configs static logger, and sets parallelism level in ParallelAlgorithm
      *
-     * TODO Convert many of these RuntimeExceptions to checked exceptions
      * TODO add unit tests
      *
      * @param args CLI arguments to parse
      * @return Config created from CLI arguments
      * @throws ParseException Thrown on error parsing CLI arguments
      */
-    static ChecksimConfig parseCLI(String[] args) throws ParseException, ChecksimsException {
+    static ChecksimsConfig parseCLI(String[] args) throws ParseException, ChecksimsException {
         CommandLine cli = parseOpts(args);
 
         // Print CLI Help
@@ -169,7 +172,7 @@ public class ChecksimsCommandLine {
         }
 
         // Create a base config to work from
-        ChecksimConfig config = new ChecksimConfig();
+        ChecksimsConfig config = new ChecksimsConfig();
 
         // Parse plagiarism detection algorithm
         if(cli.hasOption("a")) {
@@ -200,16 +203,16 @@ public class ChecksimsCommandLine {
             } catch(IOException e) {
                 throw new ChecksimsException("Error obtaining common code", e);
             }
-            config = config.setCommonCodeRemoval(true, commonCode);
-            // TODO may be desirable for this to be configurable
-            config = config.setCommonCodeRemovalAlgorithm(AlgorithmRegistry.getInstance().getImplementationInstance("linecompare"));
+            CommonCodeHandler handler = new CommonCodeLineRemovalHandler(commonCode);
+            config = config.setCommonCodeHandler(handler);
         }
 
         // Parse file output value
         boolean outputToFile = cli.hasOption("f");
         if(outputToFile) {
             File outputFile = new File(cli.getOptionValue("f"));
-            config = config.setOutputToFile(true, outputFile);
+            OutputPrinter filePrinter = new OutputAsFilePrinter(outputFile);
+            config = config.setOutputMethod(filePrinter);
             logs.info("Saving output to file " + outputFile.getName());
         }
 
