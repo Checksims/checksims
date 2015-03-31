@@ -115,10 +115,11 @@ public class ChecksimsCommandLine {
      * @return Config created from CLI arguments
      * @throws ParseException Thrown on error parsing CLI arguments
      */
-    static ChecksimConfig parseCLI(String[] args) throws ParseException {
+    static ChecksimConfig parseCLI(String[] args) throws ParseException, ChecksimsException {
         CommandLine cli = parseOpts(args);
 
         // Print CLI Help
+        // TODO might want to make this a separate function?
         if(cli.hasOption("h")) {
             HelpFormatter f = new HelpFormatter();
             PrintWriter systemErr = new PrintWriter(System.err, true);
@@ -154,7 +155,7 @@ public class ChecksimsCommandLine {
         String[] unusedArgs = cli.getArgs();
 
         if(unusedArgs.length < 2) {
-            throw new RuntimeException("Expecting at least two arguments: File match glob, and folder(s) to check");
+            throw new ChecksimsException("Expecting at least two arguments: File match glob, and folder(s) to check");
         }
 
         // First non-flag argument is the glob matcher
@@ -172,13 +173,8 @@ public class ChecksimsCommandLine {
 
         // Parse plagiarism detection algorithm
         if(cli.hasOption("a")) {
-            try {
-                config = config.setAlgorithm(AlgorithmRegistry.getInstance().getImplementationInstance(cli.getOptionValue("a")));
-                config = config.setTokenization(config.getAlgorithm().getDefaultTokenType());
-            } catch(ChecksimsException e) {
-                logs.error("Error obtaining algorithm!");
-                throw new RuntimeException(e);
-            }
+            config = config.setAlgorithm(AlgorithmRegistry.getInstance().getImplementationInstance(cli.getOptionValue("a")));
+            config = config.setTokenization(config.getAlgorithm().getDefaultTokenType());
         }
 
         // Parse recursive flag
@@ -190,12 +186,7 @@ public class ChecksimsCommandLine {
 
         // Parse tokenization
         if(cli.hasOption("t")) {
-            try {
-                config = config.setTokenization(TokenType.fromString(cli.getOptionValue("t")));
-            } catch(ChecksimsException e) {
-                logs.error("Error obtaining tokenization!");
-                throw new RuntimeException(e);
-            }
+            config = config.setTokenization(TokenType.fromString(cli.getOptionValue("t")));
         }
         FileTokenizer tokenizer = FileTokenizer.getTokenizer(config.getTokenization());
 
@@ -207,17 +198,11 @@ public class ChecksimsCommandLine {
             try {
                 commonCode = Submission.submissionFromDir(commonCodeDir, glob, tokenizer, recursive);
             } catch(IOException e) {
-                logs.error("Cannot obtain common code to remove!");
-                throw new RuntimeException(e);
+                throw new ChecksimsException("Error obtaining common code", e);
             }
             config = config.setCommonCodeRemoval(true, commonCode);
             // TODO may be desirable for this to be configurable
-            try {
-                config = config.setCommonCodeRemovalAlgorithm(AlgorithmRegistry.getInstance().getImplementationInstance("linecompare"));
-            } catch(ChecksimsException e) {
-                logs.error("Cannot obtain instance of linecompare algorithm!");
-                throw new RuntimeException(e);
-            }
+            config = config.setCommonCodeRemovalAlgorithm(AlgorithmRegistry.getInstance().getImplementationInstance("linecompare"));
         }
 
         // Parse file output value
@@ -237,14 +222,9 @@ public class ChecksimsCommandLine {
         if(cli.hasOption("p")) {
             List<SubmissionPreprocessor> preprocessors = SetUniqueList.setUniqueList(new LinkedList<>());
             String[] splitPreprocessors = cli.getOptionValue("p").split(",");
-            try {
-                for (String s : splitPreprocessors) {
-                    SubmissionPreprocessor p = PreprocessorRegistry.getInstance().getImplementationInstance(s);
-                    preprocessors.add(p);
-                }
-            } catch(ChecksimsException e) {
-                logs.error("Error obtaining preprocessors!");
-                throw new RuntimeException(e);
+            for (String s : splitPreprocessors) {
+                SubmissionPreprocessor p = PreprocessorRegistry.getInstance().getImplementationInstance(s);
+                preprocessors.add(p);
             }
             config = config.setPreprocessors(preprocessors);
         }
@@ -255,15 +235,11 @@ public class ChecksimsCommandLine {
             List<SimilarityMatrixPrinter> outputStrategies = SetUniqueList.setUniqueList(new LinkedList<>());
             String[] desiredStrategies = cli.getOptionValue("o").split(",");
 
-            try {
-                for(String s : desiredStrategies) {
-                    SimilarityMatrixPrinter p = OutputRegistry.getInstance().getImplementationInstance(s);
-                    outputStrategies.add(p);
-                }
-            } catch(ChecksimsException e) {
-                logs.error("Error obtaining output strategies!");
-                throw new RuntimeException(e);
+            for(String s : desiredStrategies) {
+                SimilarityMatrixPrinter p = OutputRegistry.getInstance().getImplementationInstance(s);
+                outputStrategies.add(p);
             }
+
             config = config.setOutputPrinters(outputStrategies);
         }
 
@@ -273,8 +249,7 @@ public class ChecksimsCommandLine {
             try {
                 submissions.addAll(Submission.submissionListFromDir(dir, glob, tokenizer, recursive));
             } catch(IOException e) {
-                logs.error("Error creating submissions from directory!");
-                throw new RuntimeException(e);
+                throw new ChecksimsException("Error creating submissions from directory", e);
             }
         }
         config = config.setSubmissions(submissions);

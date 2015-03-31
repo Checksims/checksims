@@ -55,6 +55,8 @@ public class ChecksimsRunner {
             config = ChecksimsCommandLine.parseCLI(args);
         } catch (ParseException e) {
             throw new RuntimeException("Error parsing command-line options", e);
+        } catch (ChecksimsException e) {
+            throw new RuntimeException("Error interpreting command-line options", e);
         }
 
         logs = LoggerFactory.getLogger(ChecksimsRunner.class);
