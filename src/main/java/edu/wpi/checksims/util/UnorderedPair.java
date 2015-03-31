@@ -72,6 +72,12 @@ public class UnorderedPair<T> {
                 (other.first.equals(second) && other.second.equals(first));
     }
 
+    /**
+     * Note that standard equality is order-dependent - UnorderedPair(a,b) will not be equal to UnorderedPair(b,a)!
+     *
+     * @param other Object to compare to
+     * @return True if both objects are identical
+     */
     @Override
     public boolean equals(Object other) {
         if(!(other instanceof UnorderedPair)) {

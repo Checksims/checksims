@@ -46,6 +46,8 @@ public final class PreprocessSubmissions {
      *
      * Is NOT expected to preserve tokenization validity, as these are to be applied before that is significant
      *
+     * TODO make parallel via ParallelAlgorithm
+     *
      * @param mapping Mapping function to apply. SHOULD NOT MUTATE THE EXISTING TOKEN - should return a new tokenization
      * @param submissions Input list of submissions to apply to
      * @return New list formed by applying the mapping function to each submission. Retains order of input list.

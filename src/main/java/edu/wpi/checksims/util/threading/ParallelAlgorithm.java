@@ -34,7 +34,7 @@ import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 /**
- * Apply a given similarity detection algorithm to a given set of unordered pairs
+ * Apply a given algorithm to a given set of data in parallel
  */
 public final class ParallelAlgorithm {
     private ParallelAlgorithm() {}
@@ -48,6 +48,13 @@ public final class ParallelAlgorithm {
      */
     public static void setThreadCount(int threads) {
         threadCount = threads;
+    }
+
+    /**
+     * @return Number of threads to be used for execution
+     */
+    public static int getThreadCount() {
+        return threadCount;
     }
 
     /**
@@ -93,7 +100,7 @@ public final class ParallelAlgorithm {
 
         logs.info("Starting work using " + threadCount + " threads.");
 
-        // Invoke the executor on all the ChecksimsWorker instances
+        // Invoke the executor on all the worker instances
         try {
             // Create a monitoring thread to show progress
             MonitorThread monitor = new MonitorThread(executor);
@@ -127,51 +134,5 @@ public final class ParallelAlgorithm {
             logs.error("Could not schedule execution of all comparisons --- possibly too few resources available?");
             throw new RuntimeException(e);
         }
-    }
-}
-
-class MonitorThread implements Runnable {
-    private final ThreadPoolExecutor toMonitor;
-    private boolean doRun;
-    long currentComplete;
-    long total;
-
-    private static Logger logs = LoggerFactory.getLogger(MonitorThread.class);
-
-    MonitorThread(ThreadPoolExecutor toMonitor) {
-        this.toMonitor = toMonitor;
-        doRun = true;
-        currentComplete = 0;
-        total = toMonitor.getTaskCount();
-    }
-
-    public void shutDown() {
-        this.doRun = false;
-    }
-
-    @Override
-    public void run() {
-        while(doRun) {
-            long newComplete = toMonitor.getCompletedTaskCount();
-            total = toMonitor.getTaskCount();
-
-            // Only print if we have an update
-            if(newComplete != currentComplete) {
-                currentComplete = newComplete;
-                logs.info("Processed " + currentComplete + "/" + total + " tasks");
-            }
-
-            try {
-                Thread.sleep(250);
-            } catch (InterruptedException e) {
-                logs.error("Interrupted while sleeping!");
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "Monitoring thread for a ThreadPoolExecutor";
     }
 }

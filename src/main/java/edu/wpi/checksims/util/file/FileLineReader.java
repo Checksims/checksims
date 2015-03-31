@@ -32,7 +32,7 @@ import java.nio.file.Files;
 /**
  * Read a file into a list of strings
  */
-public class FileLineReader {
+public final class FileLineReader {
     private FileLineReader() {}
 
     public static String readFile(File f) throws IOException {

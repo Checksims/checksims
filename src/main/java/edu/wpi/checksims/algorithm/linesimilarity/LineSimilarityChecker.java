@@ -83,11 +83,11 @@ public class LineSimilarityChecker implements SimilarityDetector {
     }
 
     /**
-     * Detect plagiarism using line similarity comparator
+     * Detect similarities using line similarity comparator
      *
      * @param a First submission to check
      * @param b Second submission to check
-     * @return Number of identical lines in both submissions
+     * @return Results of the similarity detection
      */
     @Override
     public AlgorithmResults detectSimilarity(Submission a, Submission b) throws ChecksimsException {
