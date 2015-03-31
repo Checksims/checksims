@@ -19,33 +19,16 @@
  * Copyright (c) 2014-2015 Matthew Heon and Dolan Murvihill
  */
 
-package edu.wpi.checksims.algorithm.output;
-
-import edu.wpi.checksims.util.reflection.RegistryWithDefault;
+package edu.wpi.checksims.util.reflection;
 
 /**
- * Registry for valid output strategies
+ * All implementations which desire to be instantiated by a Registry must implement this interface
  */
-public final class OutputRegistry extends RegistryWithDefault<SimilarityMatrixPrinter> {
-    private static OutputRegistry instance;
-
-    private OutputRegistry() {
-        super("edu.wpi.checksims.algorithm.output", SimilarityMatrixPrinter.class, SimilarityMatrixThresholdPrinter.getInstance().getName());
-    }
-
+public interface NamedInstantiable {
     /**
-     * @return Sole instance of the OutputRegistry singleton
+     * MUST BE UNIQUE FOR EACH IMPLEMENTATION CLASS
+     *
+     * @return Name of the implementation as it will be seen in the registry
      */
-    public static OutputRegistry getInstance() {
-        if(instance == null) {
-            instance = new OutputRegistry();
-        }
-
-        return instance;
-    }
-
-    @Override
-    public String toString() {
-        return "Singleton instance of OutputRegistry";
-    }
+    public String getName();
 }

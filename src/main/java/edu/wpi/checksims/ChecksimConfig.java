@@ -75,14 +75,14 @@ public final class ChecksimConfig {
      * Base constructor, returns base config
      */
     public ChecksimConfig() {
-        this.algorithm = AlgorithmRegistry.getInstance().getDefaultAlgorithm();
+        this.algorithm = AlgorithmRegistry.getInstance().getDefaultImplementation();
         this.tokenization = this.algorithm.getDefaultTokenType();
         this.submissions = ImmutableList.copyOf(new LinkedList<>());
         this.preprocessors = ImmutableList.copyOf(new LinkedList<>());
         this.removeCommonCode = false;
         this.commonCodeRemovalAlgorithm = this.algorithm;
         this.commonCode = new ConcreteSubmission("Empty/Null Submission", "", new TokenList(this.tokenization));
-        this.outputPrinters = ImmutableList.copyOf(Arrays.asList(OutputRegistry.getInstance().getDefaultStrategy()));
+        this.outputPrinters = ImmutableList.copyOf(Arrays.asList(OutputRegistry.getInstance().getDefaultImplementation()));
         this.outputToFile = false;
         this.outputFile = NOT_EXIST;
     }
@@ -224,7 +224,7 @@ public final class ChecksimConfig {
     /**
      * @param doOutputToFile Whether to output to a file (if not set, output will be to STDOUT)
      * @param outputTo File to output to. Ignored (and not saved!) if doOutputToFile is false
-     * @return
+     * @return Copy of configuration with new file output config
      */
     public ChecksimConfig setOutputToFile(boolean doOutputToFile, File outputTo) {
         if(doOutputToFile && outputTo == null) {

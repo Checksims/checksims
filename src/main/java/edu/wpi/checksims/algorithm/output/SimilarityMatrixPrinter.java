@@ -21,11 +21,18 @@
 
 package edu.wpi.checksims.algorithm.output;
 
+import edu.wpi.checksims.util.reflection.NamedInstantiable;
+
 /**
  * Interface for various approaches for outputting a similarity matrix as a string
  */
-public interface SimilarityMatrixPrinter {
-    public String getName();
+public interface SimilarityMatrixPrinter extends NamedInstantiable {
+    /**
+     * Print the given SimilarityMatrix in a defined format
+     *
+     * @param matrix Matrix to print
+     * @return Some implementation-defined output representing the matrix
+     */
     public String printMatrix(SimilarityMatrix matrix);
 }
 

@@ -24,6 +24,7 @@ package edu.wpi.checksims.algorithm;
 import edu.wpi.checksims.ChecksimException;
 import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.token.TokenType;
+import edu.wpi.checksims.util.reflection.NamedInstantiable;
 
 /**
  * Detect similarities between two submissions
@@ -34,14 +35,10 @@ import edu.wpi.checksims.token.TokenType;
  * This is required as reflection is used to automatically detect and instantiate all similarity detection algorithms
  * present at runtime.
  */
-public interface SimilarityDetector {
+public interface SimilarityDetector extends NamedInstantiable {
     /**
-     * MUST BE UNIQUE FOR EACH SIMILARITY DETECTOR
-     *
-     * @return Name of the plagiarism detector used to invoke it at the CLI
+     * @return Default token type to be used for this similarity detector
      */
-    public String getName();
-
     public TokenType getDefaultTokenType();
 
     /**

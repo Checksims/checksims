@@ -21,42 +21,17 @@
 
 package edu.wpi.checksims.algorithm;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import edu.wpi.checksims.ChecksimException;
 import edu.wpi.checksims.algorithm.linesimilarity.LineSimilarityChecker;
-import edu.wpi.checksims.util.reflection.ReflectiveInstantiator;
-
-import java.util.List;
-import java.util.stream.Collectors;
+import edu.wpi.checksims.util.reflection.RegistryWithDefault;
 
 /**
- * Registry for all supported plagiarism detection algorithms
- *
- * @todo This, AlgorithmRegistry, and PreprocessorRegistry share a lot of code. Investigate refactoring to reduce reuse.
+ * Registry for all supported similarity detection algorithms
  */
-public final class AlgorithmRegistry {
-    private final List<SimilarityDetector> supportedAlgorithms;
-
+public final class AlgorithmRegistry extends RegistryWithDefault<SimilarityDetector> {
     private static AlgorithmRegistry instance;
 
     private AlgorithmRegistry() {
-        List<SimilarityDetector> detectors = ReflectiveInstantiator.reflectiveInstantiator("edu.wpi.checksims.algorithm", SimilarityDetector.class);
-
-        if(detectors.isEmpty()) {
-            throw new RuntimeException("No plagiarism detection algorithms registered! Cannot continue!");
-        }
-
-        // Get a list without duplicates
-        // If it's a different size, then duplicates existed, which is bad
-        // Throw a RuntimeException for that!
-        ImmutableList<String> noDups = ImmutableSet.copyOf(detectors.stream().map(SimilarityDetector::getName).collect(Collectors.toList())).asList();
-        if(noDups.size() < detectors.size()) {
-            throw new RuntimeException("Some algorithm names were not globally unique!");
-        }
-
-        // The final list should never change at runtime
-        supportedAlgorithms = ImmutableList.copyOf(detectors);
+        super("edu.wpi.checksims.algorithm", SimilarityDetector.class, LineSimilarityChecker.getInstance().getName());
     }
 
     public static AlgorithmRegistry getInstance() {
@@ -67,56 +42,8 @@ public final class AlgorithmRegistry {
         return instance;
     }
 
-    /**
-     * The default algorithm is Line Comparison, unless it is for some reason unavailable
-     *
-     * In such cases that Line Comparison is unavailable, we default to the first available algorithm
-     *
-     * @return Default similarity detection algorithm
-     */
-    public SimilarityDetector getDefaultAlgorithm() {
-        String lineSimilarityName = LineSimilarityChecker.getInstance().getName();
-
-        // Try and return an instance of LineSimilarityChecker
-        // If we fail, default to the first algorithm on the list
-        try {
-            return getAlgorithmInstance(lineSimilarityName);
-        } catch(ChecksimException e) {
-            return supportedAlgorithms.get(0);
-        }
-    }
-
-    /**
-     * @return Name of default similarity detection algorithm
-     */
-    public String getDefaultAlgorithmName() {
-        return getDefaultAlgorithm().getName();
-    }
-
-    /**
-     * @return List of names of supported algorithms
-     */
-    public List<String> getSupportedAlgorithmNames() {
-        return supportedAlgorithms.stream().map(SimilarityDetector::getName).collect(Collectors.toList());
-    }
-
-    /**
-     * Get a specific plagiarism detection algorithm by its CLI name
-     *
-     * @param name CLI invocation name
-     * @return Plagiarism detection algorithm of that name
-     * @throws ChecksimException Thrown on no algorithm or more than one algorithm of that name existing
-     */
-    public SimilarityDetector getAlgorithmInstance(String name) throws ChecksimException {
-        String lowerName = name.toLowerCase(); // Ensure case insensitivity
-        List<SimilarityDetector> detectors = supportedAlgorithms.stream().filter((alg) -> alg.getName().equals(lowerName)).collect(Collectors.toList());
-
-        if(detectors.size() == 0) {
-            throw new ChecksimException("No algorithm with name " + name);
-        } else if(detectors.size() > 1) {
-            throw new ChecksimException("INTERNAL ERROR: two algorithms share the same name!");
-        }
-
-        return detectors.get(0);
+    @Override
+    public String toString() {
+        return "Singleton instance of AlgorithmRegistry";
     }
 }

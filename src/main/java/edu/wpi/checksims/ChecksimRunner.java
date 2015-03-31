@@ -129,15 +129,15 @@ public class ChecksimRunner {
             f.printHelp(systemErr, 80, "checksims [args] glob directory [directory2 ...]", "checksims: check similarity of student submissions", getOpts(), 2, 4, "");
 
             System.err.println("\nSupported Similarity Detection Algorithms:");
-            AlgorithmRegistry.getInstance().getSupportedAlgorithmNames().stream().forEach((name) -> System.err.print(name + ", "));
-            System.err.println("\nDefault algorithm is " + AlgorithmRegistry.getInstance().getDefaultAlgorithmName());
+            AlgorithmRegistry.getInstance().getSupportedImplementationNames().stream().forEach((name) -> System.err.print(name + ", "));
+            System.err.println("\nDefault algorithm is " + AlgorithmRegistry.getInstance().getDefaultImplementationName());
 
             System.err.println("\nSupported Output Strategies:");
-            OutputRegistry.getInstance().getAllOutputStrategyNames().stream().forEach((name) -> System.err.print(name + ", "));
-            System.err.println("\nDefault strategy is " + OutputRegistry.getInstance().getDefaultStrategyName());
+            OutputRegistry.getInstance().getSupportedImplementationNames().stream().forEach((name) -> System.err.print(name + ", "));
+            System.err.println("\nDefault strategy is " + OutputRegistry.getInstance().getDefaultImplementationName());
 
             System.err.println("\nAvailable Preprocessors:");
-            PreprocessorRegistry.getInstance().getPreprocessorNames().stream().forEach((name) -> System.err.print(name + ", "));
+            PreprocessorRegistry.getInstance().getSupportedImplementationNames().stream().forEach((name) -> System.err.print(name + ", "));
             System.err.println();
 
             System.exit(0);
@@ -175,7 +175,7 @@ public class ChecksimRunner {
         // Parse plagiarism detection algorithm
         if(cli.hasOption("a")) {
             try {
-                config = config.setAlgorithm(AlgorithmRegistry.getInstance().getAlgorithmInstance(cli.getOptionValue("a")));
+                config = config.setAlgorithm(AlgorithmRegistry.getInstance().getImplementationInstance(cli.getOptionValue("a")));
                 config = config.setTokenization(config.getAlgorithm().getDefaultTokenType());
             } catch(ChecksimException e) {
                 logs.error("Error obtaining algorithm!");
@@ -191,7 +191,6 @@ public class ChecksimRunner {
         }
 
         // Parse tokenization
-        TokenType tokenization;
         if(cli.hasOption("t")) {
             try {
                 config = config.setTokenization(TokenType.fromString(cli.getOptionValue("t")));
@@ -210,7 +209,7 @@ public class ChecksimRunner {
             config = config.setCommonCodeRemoval(true, commonCode);
             // TODO may be desirable for this to be configurable
             try {
-                config = config.setCommonCodeRemovalAlgorithm(AlgorithmRegistry.getInstance().getAlgorithmInstance("linecompare"));
+                config = config.setCommonCodeRemovalAlgorithm(AlgorithmRegistry.getInstance().getImplementationInstance("linecompare"));
             } catch(ChecksimException e) {
                 logs.error("Cannot obtain instance of linecompare algorithm!");
                 throw new RuntimeException(e);
@@ -244,7 +243,7 @@ public class ChecksimRunner {
             String[] splitPreprocessors = cli.getOptionValue("p").split(",");
             try {
                 for (String s : splitPreprocessors) {
-                    SubmissionPreprocessor p = PreprocessorRegistry.getInstance().getPreprocessor(s);
+                    SubmissionPreprocessor p = PreprocessorRegistry.getInstance().getImplementationInstance(s);
                     preprocessors.add(p);
                 }
             } catch(ChecksimException e) {
@@ -262,7 +261,7 @@ public class ChecksimRunner {
 
             try {
                 for(String s : desiredStrategies) {
-                    SimilarityMatrixPrinter p = OutputRegistry.getInstance().getOutputStrategy(s);
+                    SimilarityMatrixPrinter p = OutputRegistry.getInstance().getImplementationInstance(s);
                     outputStrategies.add(p);
                 }
             } catch(ChecksimException e) {
