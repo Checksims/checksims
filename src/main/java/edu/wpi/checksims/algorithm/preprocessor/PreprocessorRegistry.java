@@ -43,4 +43,9 @@ public final class PreprocessorRegistry extends Registry<SubmissionPreprocessor>
 
         return instance;
     }
+
+    @Override
+    public String toString() {
+        return "Singleton instance of PreprocessorRegistry";
+    }
 }
