@@ -118,7 +118,7 @@ public class SimilarityMatrixThresholdPrinter implements SimilarityMatrixPrinter
 
         // Sort low to high
         // Then reverse to get expected high to low ordering
-        Collections.sort(highestEntries, (sortA, sortB) -> new Float(sortA.matchPercentA).compareTo(new Float(sortB.matchPercentA)));
+        Collections.sort(highestEntries, (sortA, sortB) -> new Float(sortA.matchPercentA).compareTo(sortB.matchPercentA));
         Collections.reverse(highestEntries);
 
         for(SimilarityEntry e : highestEntries) {

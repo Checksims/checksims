@@ -66,7 +66,7 @@ public final class ConcreteToken implements Token {
     }
 
     /**
-     * @return Whether this tokenization is valid
+     * @return Whether this token is valid
      */
     @Override
     public boolean isValid() {
@@ -74,7 +74,7 @@ public final class ConcreteToken implements Token {
     }
 
     /**
-     * @param isValid New value for validity of this tokenization
+     * @param isValid New value for validity of this token
      */
     @Override
     public void setValid(boolean isValid) {
@@ -106,6 +106,12 @@ public final class ConcreteToken implements Token {
         return lexeme;
     }
 
+    /**
+     * Perform a deep-copy of a token, returning a new, identical instance
+     *
+     * @param token Token to copy
+     * @return New, identical copy of that token
+     */
     public static Token cloneToken(Token token) {
         return new ConcreteToken(token.getLexeme(), token.getType(), token.isValid());
     }

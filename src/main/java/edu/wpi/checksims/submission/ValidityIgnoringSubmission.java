@@ -50,8 +50,8 @@ public final class ValidityIgnoringSubmission extends AbstractSubmissionDecorato
         }
 
         Supplier<TokenList> tokenListSupplier = () -> new TokenList(this.getTokenType());
-        TokenList thisList = this.getContentAsTokens().stream().map((token) -> new ValidityIgnoringToken(token)).collect(Collectors.toCollection(tokenListSupplier));
-        TokenList otherList = otherSubmission.getContentAsTokens().stream().map((token) -> new ValidityIgnoringToken(token)).collect(Collectors.toCollection(tokenListSupplier));
+        TokenList thisList = this.getContentAsTokens().stream().map(ValidityIgnoringToken::new).collect(Collectors.toCollection(tokenListSupplier));
+        TokenList otherList = otherSubmission.getContentAsTokens().stream().map(ValidityIgnoringToken::new).collect(Collectors.toCollection(tokenListSupplier));
 
         return thisList.equals(otherList);
     }

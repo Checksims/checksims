@@ -50,8 +50,8 @@ public final class ValidityEnsuringSubmission extends AbstractSubmissionDecorato
         }
 
         Supplier<TokenList> tokenListSupplier = () -> new TokenList(this.getTokenType());
-        TokenList thisList = this.getContentAsTokens().stream().map((token) -> new ValidityEnsuringToken(token)).collect(Collectors.toCollection(tokenListSupplier));
-        TokenList otherList = otherSubmission.getContentAsTokens().stream().map((token) -> new ValidityEnsuringToken(token)).collect(Collectors.toCollection(tokenListSupplier));
+        TokenList thisList = this.getContentAsTokens().stream().map(ValidityEnsuringToken::new).collect(Collectors.toCollection(tokenListSupplier));
+        TokenList otherList = otherSubmission.getContentAsTokens().stream().map(ValidityEnsuringToken::new).collect(Collectors.toCollection(tokenListSupplier));
 
         return thisList.equals(otherList);
     }

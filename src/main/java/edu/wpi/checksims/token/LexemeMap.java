@@ -60,7 +60,8 @@ public final class LexemeMap {
     /**
      * Throws RuntimeException if lexeme does not map to any key.
      *
-     * @todo Investigate conversion to checked exception?
+     * TODO Investigate conversion to checked exception?
+     *
      * @param lexeme Lexeme being requested
      * @return Token of given type
      */

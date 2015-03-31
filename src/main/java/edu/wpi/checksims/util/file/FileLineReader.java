@@ -24,15 +24,10 @@ package edu.wpi.checksims.util.file;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Read a file into a list of strings
@@ -49,8 +44,6 @@ public class FileLineReader {
 
         logs.trace("Reading file " + f.getPath());
 
-        String text = new String(Files.readAllBytes(f.toPath()), StandardCharsets.UTF_8);
-
-        return text;
+        return new String(Files.readAllBytes(f.toPath()), StandardCharsets.UTF_8);
     }
 }

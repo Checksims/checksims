@@ -37,8 +37,6 @@ import java.util.Set;
 public final class AlgorithmRunner {
     private AlgorithmRunner() {}
 
-    private static int threadCount = Runtime.getRuntime().availableProcessors();
-
     public static Collection<AlgorithmResults> runAlgorithm(List<Submission> submissions, SimilarityDetector algorithm) {
         Logger logs = LoggerFactory.getLogger(AlgorithmRunner.class);
         long startTime = System.currentTimeMillis();

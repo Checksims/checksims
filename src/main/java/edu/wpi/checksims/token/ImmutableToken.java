@@ -29,6 +29,9 @@ public final class ImmutableToken extends AbstractTokenDecorator {
         super(wrappedToken);
     }
 
+    /**
+     * @param isValid Ignored - this method always throws an UnsupportedOperationException
+     */
     @Override
     public void setValid(boolean isValid) {
         throw new UnsupportedOperationException("Cannot modify immutable token!");

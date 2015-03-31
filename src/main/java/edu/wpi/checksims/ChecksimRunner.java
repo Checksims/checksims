@@ -111,15 +111,19 @@ public class ChecksimRunner {
         return LoggerFactory.getLogger(ChecksimRunner.class);
     }
 
-    public static void main(String[] args) throws IOException {
-        // TODO should split CLI handling into separate function and add unit tests
-
-        CommandLine cli;
-        try {
-            cli = parseOpts(args);
-        } catch(ParseException e) {
-            throw new RuntimeException(e);
-        }
+    /**
+     * Parse CLI arguments into a ChecksimsConfig
+     *
+     * Also configs static logger, and sets parallelism level in ParallelAlgorithm
+     *
+     * TODO Convert many of these RuntimeExceptions to checked exceptions
+     *
+     * @param args CLI arguments to parse
+     * @return Config created from CLI arguments
+     * @throws ParseException Thrown on error parsing CLI arguments
+     */
+    static ChecksimConfig parseCLI(String[] args) throws ParseException {
+        CommandLine cli = parseOpts(args);
 
         // Print CLI Help
         if(cli.hasOption("h")) {
@@ -205,7 +209,13 @@ public class ChecksimRunner {
         boolean removeCommonCode = cli.hasOption("c");
         if(removeCommonCode) {
             File commonCodeDir = new File(cli.getOptionValue("c"));
-            Submission commonCode = Submission.submissionFromDir(commonCodeDir, glob, tokenizer, recursive);
+            Submission commonCode;
+            try {
+                commonCode = Submission.submissionFromDir(commonCodeDir, glob, tokenizer, recursive);
+            } catch(IOException e) {
+                logs.error("Cannot obtain common code to remove!");
+                throw new RuntimeException(e);
+            }
             config = config.setCommonCodeRemoval(true, commonCode);
             // TODO may be desirable for this to be configurable
             try {
@@ -282,6 +292,19 @@ public class ChecksimRunner {
             }
         }
         config = config.setSubmissions(submissions);
+
+        return config;
+    }
+
+    public static void main(String[] args) throws IOException {
+        ChecksimConfig config;
+
+        try {
+            config = parseCLI(args);
+        } catch (ParseException e) {
+            logs.error("Error parsing command-line options!");
+            throw new RuntimeException(e);
+        }
 
         runChecksims(config);
 

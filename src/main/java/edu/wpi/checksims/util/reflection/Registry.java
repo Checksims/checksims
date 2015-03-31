@@ -41,7 +41,7 @@ public class Registry<T extends NamedInstantiable> {
      * @param initPath Package to (recursively) search for implementations
      * @param baseClazz Base class or interface which all implementations in the registry extend or implement
      */
-    public Registry(String initPath, Class baseClazz) {
+    public Registry(String initPath, Class<T> baseClazz) {
         List<T> handlers = ReflectiveInstantiator.reflectiveInstantiator(initPath, baseClazz);
 
         if(handlers.isEmpty()) {
@@ -64,7 +64,7 @@ public class Registry<T extends NamedInstantiable> {
      * @return Names of all supported implementations in this registry
      */
     public Collection<String> getSupportedImplementationNames() {
-        return registeredHandlers.stream().map((handler) -> handler.getName()).collect(Collectors.toList());
+        return registeredHandlers.stream().map(NamedInstantiable::getName).collect(Collectors.toList());
     }
 
     /**

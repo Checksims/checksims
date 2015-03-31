@@ -24,8 +24,6 @@ package edu.wpi.checksims.token.tokenizer;
 import edu.wpi.checksims.token.TokenList;
 import edu.wpi.checksims.token.TokenType;
 
-import java.util.List;
-
 /**
  * Interface to read in a file and return it as a list of tokens of a certain type
  */

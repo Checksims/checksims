@@ -37,7 +37,7 @@ public class RegistryWithDefault<T extends NamedInstantiable> extends Registry<T
      * @param baseClazz Base class or interface which all implementations in the registry extend or implement
      * @param defaultImplementation Name of default implementation for this registry
      */
-    public RegistryWithDefault(String initPath, Class baseClazz, String defaultImplementation) {
+    public RegistryWithDefault(String initPath, Class<T> baseClazz, String defaultImplementation) {
         super(initPath, baseClazz);
 
         try {
