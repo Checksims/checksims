@@ -22,7 +22,9 @@
 package edu.wpi.checksims.token;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static org.junit.Assert.*;
 
@@ -39,6 +41,9 @@ public class TokenListTest {
     private TokenList twoElementsCharacter;
     private TokenList threeElementsCharacter;
     private TokenList twoElementsOneInvalidCharacter;
+
+    @Rule
+    public ExpectedException expectedEx = ExpectedException.none();
 
     @Before
     public void setUp() {
@@ -186,6 +191,58 @@ public class TokenListTest {
         clone.get(0).setValid(!clone.get(0).isValid());
 
         assertFalse(clone.equals(oneElementCharacter));
+    }
+
+    @Test
+    public void TestImmutableCopyOnEmptyIsStillEmpty() {
+        TokenList immutableClone = TokenList.immutableCopy(emptyCharacter);
+
+        assertNotNull(immutableClone);
+        assertTrue(immutableClone.isEmpty());
+        assertEquals(immutableClone.type, emptyCharacter.type);
+    }
+
+    @Test
+    public void TestImmutableCopyDoesNotModify() {
+        TokenList immutableClone = TokenList.immutableCopy(oneElementCharacter);
+
+        assertNotNull(immutableClone);
+        assertFalse(immutableClone.isEmpty());
+        assertEquals(immutableClone.type, oneElementCharacter.type);
+        assertEquals(immutableClone.size(), oneElementCharacter.size());
+        assertEquals(immutableClone, oneElementCharacter);
+    }
+
+    @Test
+    public void TestImmutableCopyOnMultiElement() {
+        TokenList immutableClone = TokenList.immutableCopy(threeElementsCharacter);
+
+        assertNotNull(immutableClone);
+        assertFalse(immutableClone.isEmpty());
+        assertEquals(immutableClone.type, threeElementsCharacter.type);
+        assertEquals(immutableClone.size(), threeElementsCharacter.size());
+        assertEquals(immutableClone, threeElementsCharacter);
+    }
+
+    @Test
+    public void TestImmutableCopyPreservesValidity() {
+        TokenList immutableClone = TokenList.immutableCopy(twoElementsOneInvalidCharacter);
+
+        assertNotNull(immutableClone);
+        assertFalse(immutableClone.isEmpty());
+        assertEquals(immutableClone.type, twoElementsOneInvalidCharacter.type);
+        assertEquals(immutableClone.size(), twoElementsOneInvalidCharacter.size());
+        assertFalse(immutableClone.get(1).isValid());
+        assertEquals(immutableClone, twoElementsOneInvalidCharacter);
+    }
+
+    @Test
+    public void TestImmutableCopyPreventsModification() {
+        expectedEx.expect(UnsupportedOperationException.class);
+
+        TokenList immutableClone = TokenList.immutableCopy(emptyCharacter);
+
+        immutableClone.add(new ConcreteToken('E', TokenType.CHARACTER));
     }
 
     @Test

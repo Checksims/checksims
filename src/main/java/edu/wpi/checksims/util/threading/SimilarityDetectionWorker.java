@@ -32,13 +32,15 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.Callable;
 
 /**
- * Basic unit of thread execution. Takes two Submissions, applies an algorithm to them, returns results.
+ * Basic unit of thread execution for similarity detection.
+ *
+ * Takes two Submissions, applies an algorithm to them, returns results.
  */
-public class ChecksimsWorker implements Callable<AlgorithmResults> {
+public class SimilarityDetectionWorker implements Callable<AlgorithmResults> {
     private final SimilarityDetector algorithm;
     private final UnorderedPair<Submission> submissions;
 
-    private static Logger logs = LoggerFactory.getLogger(ChecksimsWorker.class);
+    private static Logger logs = LoggerFactory.getLogger(SimilarityDetectionWorker.class);
 
     /**
      * Construct a Callable to perform pairwise similarity detection for one pair of assignments
@@ -46,7 +48,7 @@ public class ChecksimsWorker implements Callable<AlgorithmResults> {
      * @param algorithm Algorithm to use
      * @param submissions Assignments to compare
      */
-    public ChecksimsWorker(SimilarityDetector algorithm, UnorderedPair<Submission> submissions) {
+    public SimilarityDetectionWorker(SimilarityDetector algorithm, UnorderedPair<Submission> submissions) {
         this.algorithm = algorithm;
         this.submissions = submissions;
     }
@@ -69,5 +71,10 @@ public class ChecksimsWorker implements Callable<AlgorithmResults> {
             logs.error("Fatal error running " + algorithm.getName() + " on submissions " + submissions.first.getName() + " and " + submissions.second.getName());
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Similarity detection worker for submissions \"" + submissions.first.getName() + "\" and \"" + submissions.second.getName() + "\"";
     }
 }

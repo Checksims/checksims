@@ -24,7 +24,6 @@ package edu.wpi.checksims;
 import com.google.common.collect.ImmutableList;
 import edu.wpi.checksims.algorithm.AlgorithmRegistry;
 import edu.wpi.checksims.algorithm.CommonCodeRemover;
-import edu.wpi.checksims.algorithm.SimilarityDetector;
 import edu.wpi.checksims.algorithm.output.OutputRegistry;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrix;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrixPrinter;
@@ -311,7 +310,7 @@ public class ChecksimRunner {
         // If we are performing common code detection...
         if(config.doRemoveCommonCode()) {
             // Perform common code removal before preprocessor application
-            submissions = ImmutableList.copyOf(CommonCodeRemover.removeCommonCodeFromSubmissionsInList(submissions, config.getCommonCode(), config.getCommonCodeRemovalAlgorithm()));
+            submissions = ImmutableList.copyOf(CommonCodeRemover.removeCommonCodeFromSubmissions(submissions, config.getCommonCode(), config.getCommonCodeRemovalAlgorithm()));
         }
 
         // Apply all preprocessors

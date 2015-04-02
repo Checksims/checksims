@@ -16,7 +16,7 @@
  *
  * CDDL HEADER END
  *
- * Copyright (c) 2014 Matthew Heon and Dolan Murvihill
+ * Copyright (c) 2014-2015 Matthew Heon and Dolan Murvihill
  */
 
 package edu.wpi.checksims.algorithm;
@@ -64,6 +64,6 @@ public final class AlgorithmResults {
 
     @Override
     public String toString() {
-        return "Plagiarism comparison of submissions named " + a.getName() + " and " + b.getName();
+        return "Similarity results for submissions named " + a.getName() + " and " + b.getName();
     }
 }
