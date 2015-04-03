@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -81,6 +82,13 @@ public final class ParallelAlgorithm {
     public static Collection<AlgorithmResults> parallelSimilarityDetection(SimilarityDetector algorithm, Collection<UnorderedPair<Submission>> pairs) {
         // Map the pairs to ChecksimsWorker instances
         Collection<SimilarityDetectionWorker> workers = pairs.stream().map((pair) -> new SimilarityDetectionWorker(algorithm, pair)).collect(Collectors.toList());
+
+        return executeTasks(workers);
+    }
+
+    public static Collection<Submission> parallelSubmissionPreprocessing(Function<Submission, Submission> preprocessor, Collection<Submission> submissions) {
+        // Map the submissions to PreprocessorWorker instances
+        Collection<PreprocessorWorker> workers = submissions.stream().map((submission) -> new PreprocessorWorker(submission, preprocessor)).collect(Collectors.toList());
 
         return executeTasks(workers);
     }
