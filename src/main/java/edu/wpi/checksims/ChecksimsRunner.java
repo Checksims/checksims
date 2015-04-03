@@ -22,21 +22,16 @@
 package edu.wpi.checksims;
 
 import com.google.common.collect.ImmutableList;
-import edu.wpi.checksims.algorithm.CommonCodeRemover;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrix;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrixPrinter;
 import edu.wpi.checksims.algorithm.preprocessor.PreprocessSubmissions;
 import edu.wpi.checksims.algorithm.preprocessor.SubmissionPreprocessor;
 import edu.wpi.checksims.submission.Submission;
-import edu.wpi.checksims.util.file.FileStringWriter;
 import edu.wpi.checksims.util.output.OutputPrinter;
 import edu.wpi.checksims.util.threading.ParallelAlgorithm;
 import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.io.IOException;
 
 /**
  * Entry point for Checksims

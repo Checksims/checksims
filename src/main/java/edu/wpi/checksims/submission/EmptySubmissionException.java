@@ -19,21 +19,19 @@
  * Copyright (c) 2014-2015 Matthew Heon and Dolan Murvihill
  */
 
-package edu.wpi.checksims;
+package edu.wpi.checksims.submission;
+
+import edu.wpi.checksims.ChecksimsException;
 
 /**
- * Generic exception for project
- *
- * TODO create more specific exceptions for specific actions and areas of the project
+ * Exception thrown when an empty submission is created or encountered
  */
-public class ChecksimsException extends Exception {
-    private static final long serialVersionUID = 1L;
-
-    public ChecksimsException(String message) {
+public class EmptySubmissionException extends ChecksimsException {
+    public EmptySubmissionException(String message) {
         super(message);
     }
 
-    public ChecksimsException(String message, Throwable cause) {
+    public EmptySubmissionException(String message, Throwable cause) {
         super(message, cause);
     }
 }

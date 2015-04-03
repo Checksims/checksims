@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 /**
  * Tests for the File Line Reader
  */
-public class FileLineReaderTest {
+public class FileReaderTest {
     private static File text1;
     private static File empty;
     private static File sampleC;
@@ -22,19 +22,19 @@ public class FileLineReaderTest {
 
     @BeforeClass
     public static void setUp() {
-        text1 = new File(FileLineReaderTest.class.getResource("text1.txt").getPath());
-        empty = new File(FileLineReaderTest.class.getResource("empty.txt").getPath());
-        sampleC = new File(FileLineReaderTest.class.getResource("sample.c").getPath());
+        text1 = new File(FileReaderTest.class.getResource("text1.txt").getPath());
+        empty = new File(FileReaderTest.class.getResource("empty.txt").getPath());
+        sampleC = new File(FileReaderTest.class.getResource("sample.c").getPath());
     }
 
     @Test(expected = IOException.class)
     public void TestReadNonexistantFile() throws Exception {
-        FileLineReader.readFile(new File("does_not_exist.notexist"));
+        FileReader.readFile(new File("does_not_exist.notexist"));
     }
 
     @Test
     public void TestReadEmptyFile() throws Exception {
-        String result = FileLineReader.readFile(empty);
+        String result = FileReader.readFile(empty);
 
         assertNotNull(result);
         assertTrue(result.isEmpty());
@@ -42,7 +42,7 @@ public class FileLineReaderTest {
 
     @Test
     public void TestReadSingleLineFile() throws Exception {
-        String result = FileLineReader.readFile(text1);
+        String result = FileReader.readFile(text1);
 
         assertNotNull(result);
         assertFalse(result.isEmpty());
@@ -51,7 +51,7 @@ public class FileLineReaderTest {
 
     @Test
     public void TestReadInSimpleProgram() throws Exception {
-        String result = FileLineReader.readFile(sampleC);
+        String result = FileReader.readFile(sampleC);
 
         assertNotNull(result);
         assertFalse(result.isEmpty());

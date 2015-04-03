@@ -34,6 +34,7 @@ import static org.junit.Assert.*;
  */
 public class FileLineTokenizerTest {
     private static final String empty = null;
+    private static final String emptyNotNull = "";
     private static final String oneString = "hello";
     private static final String multiLine = "hello\nworld\n";
     private static final String multiLineNoTrailing = "hello\nworld";
@@ -48,6 +49,14 @@ public class FileLineTokenizerTest {
     @Test
     public void TestEmptyReturnsEmpty() {
         TokenList results = l.splitFile(empty);
+
+        assertNotNull(results);
+        assertTrue(results.isEmpty());
+    }
+
+    @Test
+    public void TestEmptyNotNullReturnsEmpty() {
+        TokenList results = l.splitFile(emptyNotNull);
 
         assertNotNull(results);
         assertTrue(results.isEmpty());

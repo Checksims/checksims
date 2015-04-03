@@ -24,17 +24,14 @@ package edu.wpi.checksims.submission;
 import edu.wpi.checksims.token.TokenList;
 import edu.wpi.checksims.token.TokenType;
 import edu.wpi.checksims.token.tokenizer.FileTokenizer;
-import edu.wpi.checksims.util.file.FileLineReader;
+import edu.wpi.checksims.util.file.FileReader;
 import org.apache.commons.collections4.list.SetUniqueList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.PathMatcher;
-import java.nio.file.Paths;
-import java.util.Arrays;
+import java.nio.file.*;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -86,20 +83,25 @@ public interface Submission {
         List<Submission> submissions = SetUniqueList.setUniqueList(new LinkedList<>());
         Logger local = LoggerFactory.getLogger(Submission.class);
 
-        if(!directory.exists() || !directory.isDirectory()) {
-            throw new IOException("Directory " + directory.getName() + " does not exist or is not a directory!");
+        if(!directory.exists()) {
+            throw new NoSuchFileException("Does not exist: " + directory.getAbsolutePath());
+        } else if(!directory.isDirectory()) {
+            throw new NotDirectoryException("Not a directory: " + directory.getAbsolutePath());
         }
 
         // List all the subdirectories we find
         File[] contents = directory.listFiles(File::isDirectory);
 
         for(File f : contents) {
-            Submission s = submissionFromDir(f, glob, splitter, recursive);
-
-            if(s != null) {
+            try {
+                Submission s = submissionFromDir(f, glob, splitter, recursive);
                 submissions.add(s);
-                local.debug("Created submission with name " + s.getName());
-            } else {
+                if(s.getContentAsString().isEmpty()) {
+                    local.warn("Warning: Submission " + s.getName() + " is empty!");
+                } else {
+                    local.debug("Created submission with name " + s.getName());
+                }
+            } catch (NoMatchingFilesException e) {
                 local.warn("Could not create submission from directory " + f.getName() + " - no files matching pattern found!");
             }
         }
@@ -116,18 +118,18 @@ public interface Submission {
      * @return Single submission from all files matching the glob in given directory
      * @throws IOException Thrown on error interacting with file
      */
-    public static Submission submissionFromDir(File directory, String glob, FileTokenizer splitter, boolean recursive) throws IOException {
-        String dirName = directory.getName();
-
-        if(!directory.exists() || !directory.isDirectory()) {
-            throw new IOException("Directory " + dirName + " does not exist or is not a directory!");
+    public static Submission submissionFromDir(File directory, String glob, FileTokenizer splitter, boolean recursive) throws IOException, NoMatchingFilesException {
+        if(!directory.exists()) {
+            throw new NoSuchFileException("Does not exist: " + directory.getAbsolutePath());
+        } else if(!directory.isDirectory()) {
+            throw new NotDirectoryException("Not a directory: " + directory.getAbsolutePath());
         }
 
         // TODO consider verbose logging of which files we're adding to the submission?
 
         List<File> files = getAllMatchingFiles(directory, glob, recursive);
 
-        return submissionFromFiles(dirName, files, splitter);
+        return submissionFromFiles(directory.getName(), files, splitter);
     }
 
     /**
@@ -137,9 +139,13 @@ public interface Submission {
      * @param glob Match pattern used to identify files to include
      * @return List of all matching files in this directory and subdirectories
      */
-    static List<File> getAllMatchingFiles(File directory, String glob, boolean recursive) {
+    static List<File> getAllMatchingFiles(File directory, String glob, boolean recursive) throws NoSuchFileException, NotDirectoryException {
         List<File> allFiles = new LinkedList<>();
         Logger logs = LoggerFactory.getLogger(Submission.class);
+
+        if(directory == null) {
+            throw new RuntimeException("Null pointer passed as file to getAllMatchingFiles()!");
+        }
 
         if(recursive) {
             logs.trace("Recursively traversing directory " + directory.getName());
@@ -153,7 +159,9 @@ public interface Submission {
 
         // Recursively call on all subdirectories if specified
         if(recursive) {
-            Arrays.stream(subdirs).forEach((f) -> allFiles.addAll(getAllMatchingFiles(f, glob, true)));
+            for(File subdir : subdirs) {
+                allFiles.addAll(getAllMatchingFiles(subdir, glob, true));
+            }
         }
 
         return allFiles;
@@ -166,8 +174,18 @@ public interface Submission {
      * @param glob Match pattern used to identify files to include
      * @return Array of files which match in this single directory
      */
-    static File[] getMatchingFilesFromDir(File directory, String glob) {
+    static File[] getMatchingFilesFromDir(File directory, String glob) throws NoSuchFileException, NotDirectoryException {
         PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:" + glob);
+
+        if(directory == null) {
+            throw new RuntimeException("Null file passed to getMatchingFilesFromDir!");
+        }
+
+        if(!directory.exists()) {
+            throw new NoSuchFileException("Does not exist: " + directory.getAbsolutePath());
+        } else if(!directory.isDirectory()) {
+            throw new NotDirectoryException("Not a directory: " + directory.getAbsolutePath());
+        }
 
         return directory.listFiles((f) -> matcher.matches(Paths.get(f.getAbsolutePath()).getFileName()));
     }
@@ -178,14 +196,15 @@ public interface Submission {
      * @param name Name of the new submission
      * @param files List of files to include in submission
      * @param splitter Tokenizer for files in the submission
-     * @return A new submission including a list containing a tokenization list consisting of the appended tokenization lists of every file included, or null if no files given
+     * @return A new submission including a list containing a tokenization list consisting of the appended tokenization lists of every file included
      * @throws IOException Thrown on error reading from file
+     * @throws edu.wpi.checksims.submission.NoMatchingFilesException Thrown if no files are given
      */
-    public static Submission submissionFromFiles(String name, List<File> files, FileTokenizer splitter) throws IOException {
+    public static Submission submissionFromFiles(String name, List<File> files, FileTokenizer splitter) throws IOException, NoMatchingFilesException {
         Logger logs = LoggerFactory.getLogger(Submission.class);
 
         if(files.size() == 0) {
-            return null;
+            throw new NoMatchingFilesException("No matching files found, cannot create submission!");
         }
 
         TokenList tokenList = new TokenList(splitter.getType());
@@ -194,7 +213,13 @@ public interface Submission {
 
         // Could do this with a .stream().forEach(...) but we'd have to handle the IOException inside
         for(File f : files) {
-            fileContent.append(FileLineReader.readFile(f));
+            String content = FileReader.readFile(f);
+
+            fileContent.append(content);
+
+            if(!content.endsWith("\n") && !content.isEmpty()) {
+                fileContent.append("\n");
+            }
         }
 
         String contentString = fileContent.toString();

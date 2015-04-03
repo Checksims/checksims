@@ -19,21 +19,21 @@
  * Copyright (c) 2014-2015 Matthew Heon and Dolan Murvihill
  */
 
-package edu.wpi.checksims;
+package edu.wpi.checksims.submission;
+
+import edu.wpi.checksims.ChecksimsException;
+
+import java.io.IOException;
 
 /**
- * Generic exception for project
- *
- * TODO create more specific exceptions for specific actions and areas of the project
+ * Thrown when creating a submission if no files are found that match
  */
-public class ChecksimsException extends Exception {
-    private static final long serialVersionUID = 1L;
-
-    public ChecksimsException(String message) {
+public class NoMatchingFilesException extends ChecksimsException {
+    public NoMatchingFilesException(String message) {
         super(message);
     }
 
-    public ChecksimsException(String message, Throwable cause) {
+    public NoMatchingFilesException(String message, Throwable cause) {
         super(message, cause);
     }
 }

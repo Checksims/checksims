@@ -47,7 +47,7 @@ public class FileLineTokenizer implements FileTokenizer {
     public TokenList splitFile(String string) {
         TokenList toReturn = new TokenList(this.getType());
 
-        if(string == null) {
+        if(string == null || string.isEmpty()) {
             return toReturn;
         }
 

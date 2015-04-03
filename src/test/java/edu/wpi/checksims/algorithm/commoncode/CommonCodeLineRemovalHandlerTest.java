@@ -9,6 +9,7 @@ import edu.wpi.checksims.token.TokenList;
 import edu.wpi.checksims.token.TokenType;
 import edu.wpi.checksims.token.tokenizer.FileTokenizer;
 import edu.wpi.checksims.util.threading.CommonCodeRemovalWorker;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -26,8 +27,8 @@ public class CommonCodeLineRemovalHandlerTest {
     private static Submission abcde;
     private static SimilarityDetector lineCompare;
 
-    @BeforeClass
-    public static void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         FileTokenizer tokenizer = FileTokenizer.getTokenizer(TokenType.CHARACTER);
 
         empty = new ConcreteSubmission("Empty", "", new TokenList(TokenType.CHARACTER));
