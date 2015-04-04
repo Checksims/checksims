@@ -42,10 +42,10 @@ public class OutputAsFilePrinter implements OutputPrinter {
     }
 
     /**
-     * @return Absolute path of the base output file
+     * @return File we output to
      */
-    public String getBaseName() {
-        return baseName.getAbsolutePath();
+    public File getFile() {
+        return baseName;
     }
 
     /**

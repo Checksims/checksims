@@ -24,6 +24,7 @@ package edu.wpi.checksims;
 import edu.wpi.checksims.algorithm.AlgorithmRegistry;
 import edu.wpi.checksims.algorithm.commoncode.CommonCodeHandler;
 import edu.wpi.checksims.algorithm.commoncode.CommonCodeLineRemovalHandler;
+import edu.wpi.checksims.algorithm.commoncode.CommonCodePassthroughHandler;
 import edu.wpi.checksims.algorithm.output.OutputRegistry;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrixPrinter;
 import edu.wpi.checksims.algorithm.preprocessor.PreprocessorRegistry;
@@ -50,6 +51,8 @@ import java.util.List;
  * Parses Checksims' command-line options
  */
 public class ChecksimsCommandLine {
+    private static Logger logs;
+
     static Logger startLogger(int level) {
         if(level == 1) {
             // Set verbose logging level
@@ -109,67 +112,40 @@ public class ChecksimsCommandLine {
     }
 
     /**
-     * Parse CLI arguments into a ChecksimsConfig
-     *
-     * Also configs static logger, and sets parallelism level in ParallelAlgorithm
-     *
-     * TODO add unit tests
-     *
-     * @param args CLI arguments to parse
-     * @return Config created from CLI arguments
-     * @throws ParseException Thrown on error parsing CLI arguments
+     * Print help message
      */
-    static ChecksimsConfig parseCLI(String[] args) throws ParseException, ChecksimsException {
-        CommandLine cli = parseOpts(args);
+    static void printHelp() {
+        HelpFormatter f = new HelpFormatter();
+        PrintWriter systemErr = new PrintWriter(System.err, true);
 
-        // Print CLI Help
-        // TODO might want to make this a separate function?
-        if(cli.hasOption("h")) {
-            HelpFormatter f = new HelpFormatter();
-            PrintWriter systemErr = new PrintWriter(System.err, true);
+        f.printHelp(systemErr, 80, "checksims [args] glob directory [directory2 ...]", "checksims: check similarity of student submissions", getOpts(), 2, 4, "");
 
-            f.printHelp(systemErr, 80, "checksims [args] glob directory [directory2 ...]", "checksims: check similarity of student submissions", getOpts(), 2, 4, "");
+        System.err.println("\nSupported Similarity Detection Algorithms:");
+        AlgorithmRegistry.getInstance().getSupportedImplementationNames().stream().forEach((name) -> System.err.print(name + ", "));
+        System.err.println("\nDefault algorithm is " + AlgorithmRegistry.getInstance().getDefaultImplementationName());
 
-            System.err.println("\nSupported Similarity Detection Algorithms:");
-            AlgorithmRegistry.getInstance().getSupportedImplementationNames().stream().forEach((name) -> System.err.print(name + ", "));
-            System.err.println("\nDefault algorithm is " + AlgorithmRegistry.getInstance().getDefaultImplementationName());
+        System.err.println("\nSupported Output Strategies:");
+        OutputRegistry.getInstance().getSupportedImplementationNames().stream().forEach((name) -> System.err.print(name + ", "));
+        System.err.println("\nDefault strategy is " + OutputRegistry.getInstance().getDefaultImplementationName());
 
-            System.err.println("\nSupported Output Strategies:");
-            OutputRegistry.getInstance().getSupportedImplementationNames().stream().forEach((name) -> System.err.print(name + ", "));
-            System.err.println("\nDefault strategy is " + OutputRegistry.getInstance().getDefaultImplementationName());
+        System.err.println("\nAvailable Preprocessors:");
+        PreprocessorRegistry.getInstance().getSupportedImplementationNames().stream().forEach((name) -> System.err.print(name + ", "));
+        System.err.println();
 
-            System.err.println("\nAvailable Preprocessors:");
-            PreprocessorRegistry.getInstance().getSupportedImplementationNames().stream().forEach((name) -> System.err.print(name + ", "));
-            System.err.println();
+        System.exit(0);
+    }
 
-            System.exit(0);
-        }
-
-        // Parse verbose setting
-        Logger logs;
-        if(cli.hasOption("vv")) {
-            logs = startLogger(2);
-        } else if(cli.hasOption("v")) {
-            logs = startLogger(1);
-        } else {
-            logs = startLogger(0);
-        }
-
-        // Get unconsumed arguments
-        String[] unusedArgs = cli.getArgs();
-
-        if(unusedArgs.length < 2) {
-            throw new ChecksimsException("Expecting at least two arguments: File match glob, and folder(s) to check");
-        }
-
-        // First non-flag argument is the glob matcher
-        // All the rest are directories containing student submissions
-        String glob = unusedArgs[0];
-        List<File> submissionDirs = new LinkedList<>();
-
-        for(int i = 1; i < unusedArgs.length; i++) {
-            logs.debug("Adding directory " + unusedArgs[i]);
-            submissionDirs.add(new File(unusedArgs[i]));
+    /**
+     * Parse basic CLI flags and produce a ChecksimsConfig
+     *
+     * @param cli Parsed command line
+     * @return Config derived from parsed CLI
+     * @throws ChecksimsException Thrown on invalid user input or internal error
+     */
+    static ChecksimsConfig parseBaseFlags(CommandLine cli) throws ChecksimsException {
+        // If we don't have a logger, set one up
+        if(logs == null) {
+            logs = LoggerFactory.getLogger(ChecksimsCommandLine.class);
         }
 
         // Create a base config to work from
@@ -181,37 +157,9 @@ public class ChecksimsCommandLine {
             config = config.setTokenization(config.getAlgorithm().getDefaultTokenType());
         }
 
-        // Parse recursive flag
-        boolean recursive = false;
-        if(cli.hasOption("r")) {
-            recursive = true;
-            logs.trace("Recursively traversing subdirectories of student directories");
-        }
-
         // Parse tokenization
         if(cli.hasOption("t")) {
             config = config.setTokenization(TokenType.fromString(cli.getOptionValue("t")));
-        }
-        FileTokenizer tokenizer = FileTokenizer.getTokenizer(config.getTokenization());
-
-        // Parse common code detection
-        boolean removeCommonCode = cli.hasOption("c");
-        if(removeCommonCode) {
-            File commonCodeDir = new File(cli.getOptionValue("c"));
-            Submission commonCode;
-            try {
-                commonCode = Submission.submissionFromDir(commonCodeDir, glob, tokenizer, recursive);
-            } catch(IOException e) {
-                throw new ChecksimsException("Error obtaining common code", e);
-            }
-            try {
-                CommonCodeHandler handler = new CommonCodeLineRemovalHandler(commonCode);
-                config = config.setCommonCodeHandler(handler);
-            } catch(EmptySubmissionException e) {
-                // The common code submission was empty
-                // Inform the user we're not actually removing common code because of this
-                logs.warn(e.getMessage());
-            }
         }
 
         // Parse file output value
@@ -223,6 +171,7 @@ public class ChecksimsCommandLine {
             logs.info("Saving output to file " + outputFile.getName());
         }
 
+        // Parse number of threads to use
         if(cli.hasOption("j")) {
             config = config.setNumThreads(Integer.parseInt(cli.getOptionValue("j")));
         }
@@ -253,15 +202,134 @@ public class ChecksimsCommandLine {
             config = config.setOutputPrinters(outputStrategies);
         }
 
+        return config;
+    }
+
+    /**
+     * Parse common code removal settings
+     *
+     * If the -c flag is not present, a CommonCodePassthroughHandler will be returned
+     *
+     * TODO add unit tests
+     *
+     * @param cli Parsed command line options
+     * @param glob Glob matcher to use when building common code submission
+     * @param tokenizer Tokenizer to use when building common code submission
+     * @param recursive Whether to recursively traverse common code directory
+     * @return Handler for common code
+     * @throws ChecksimsException Thrown if no files matching the glob pattern are found in the common code directory
+     * @throws IOException Thrown on error creating common code submission
+     */
+    static CommonCodeHandler parseCommonCodeSetting(CommandLine cli, String glob, FileTokenizer tokenizer, boolean recursive) throws ChecksimsException, IOException {
+        // Parse common code detection
+        boolean removeCommonCode = cli.hasOption("c");
+        if(removeCommonCode) {
+            File commonCodeDir = new File(cli.getOptionValue("c"));
+            Submission commonCode = Submission.submissionFromDir(commonCodeDir, glob, tokenizer, recursive);
+
+            try {
+                return new CommonCodeLineRemovalHandler(commonCode);
+            } catch(EmptySubmissionException e) {
+                // The common code submission was empty
+                // Inform the user we're not actually removing common code because of this
+                logs.warn(e.getMessage());
+                return CommonCodePassthroughHandler.getInstance();
+            }
+        }
+
+        return CommonCodePassthroughHandler.getInstance();
+    }
+
+    /**
+     * Build the collection of submissions Checksims will be run on
+     *
+     * TODO add unit tests
+     *
+     * @param cli Parsed command line options
+     * @param glob Glob matcher to use when building submissions
+     * @param tokenizer Tokenizer to use when building submissions
+     * @param recursive Whether to recursively traverse when building submissions
+     * @return Collection of submissions which will be used to run Checksims
+     * @throws IOException Thrown on issue reading files or traversing directories to build submissions
+     */
+    static List<Submission> getSubmissions(CommandLine cli, String glob, FileTokenizer tokenizer, boolean recursive) throws IOException {
+        String[] unusedArgs = cli.getArgs();
+        List<File> submissionDirs = new LinkedList<>();
+
+        // The first element in args should be the glob matcher, so start at index 1
+        for(int i = 1; i < unusedArgs.length; i++) {
+            logs.debug("Adding directory " + unusedArgs[i]);
+            submissionDirs.add(new File(unusedArgs[i]));
+        }
+
         // Generate submissions to work on
         List<Submission> submissions = new LinkedList<>();
         for(File dir : submissionDirs) {
-            try {
-                submissions.addAll(Submission.submissionListFromDir(dir, glob, tokenizer, recursive));
-            } catch(IOException e) {
-                throw new ChecksimsException("Error creating submissions from directory", e);
-            }
+            submissions.addAll(Submission.submissionListFromDir(dir, glob, tokenizer, recursive));
         }
+
+        return submissions;
+    }
+
+    /**
+     * Parse CLI arguments into a ChecksimsConfig
+     *
+     * Also configures logger, and sets parallelism level in ParallelAlgorithm
+     *
+     * TODO add unit tests
+     *
+     * @param args CLI arguments to parse
+     * @return Config created from CLI arguments
+     * @throws ParseException Thrown on error parsing CLI arguments
+     * @throws IOException Thrown on error building a submission from files
+     */
+    static ChecksimsConfig parseCLI(String[] args) throws ParseException, ChecksimsException, IOException {
+        CommandLine cli = parseOpts(args);
+
+        // Print CLI Help
+        if(cli.hasOption("h")) {
+            printHelp();
+        }
+
+        // Parse verbose setting
+        if(cli.hasOption("vv")) {
+            logs = startLogger(2);
+        } else if(cli.hasOption("v")) {
+            logs = startLogger(1);
+        } else {
+            logs = startLogger(0);
+        }
+
+        // Parse recursive flag
+        boolean recursive = false;
+        if(cli.hasOption("r")) {
+            recursive = true;
+            logs.trace("Recursively traversing subdirectories of student directories");
+        }
+
+        // Get unconsumed arguments
+        String[] unusedArgs = cli.getArgs();
+
+        if(unusedArgs.length < 2) {
+            throw new ChecksimsException("Expecting at least two arguments: File match glob, and folder(s) to check");
+        }
+
+        // First non-flag argument is the glob matcher
+        // All the rest are directories containing student submissions
+        String glob = unusedArgs[0];
+
+        // First, parse basic flags
+        ChecksimsConfig config = parseBaseFlags(cli);
+
+        // Set up a tokenizer to use
+        FileTokenizer tokenizer = FileTokenizer.getTokenizer(config.getTokenization());
+
+        // Next, parse common code settings
+        CommonCodeHandler handler = parseCommonCodeSetting(cli, glob, tokenizer, recursive);
+        config = config.setCommonCodeHandler(handler);
+
+        // Next, build submissions
+        List<Submission> submissions = getSubmissions(cli, glob, tokenizer, recursive);
         config = config.setSubmissions(submissions);
 
         logs.trace("CLI parsing complete!");

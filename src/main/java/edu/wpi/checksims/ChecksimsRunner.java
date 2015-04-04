@@ -33,6 +33,8 @@ import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+
 /**
  * Entry point for Checksims
  */
@@ -53,6 +55,8 @@ public class ChecksimsRunner {
             throw new RuntimeException("Error parsing command-line options", e);
         } catch (ChecksimsException e) {
             throw new RuntimeException("Error interpreting command-line options", e);
+        } catch(IOException e) {
+            throw new RuntimeException("Error building submissions", e);
         }
 
         logs = LoggerFactory.getLogger(ChecksimsRunner.class);

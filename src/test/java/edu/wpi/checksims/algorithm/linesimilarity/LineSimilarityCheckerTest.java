@@ -198,4 +198,25 @@ public class LineSimilarityCheckerTest {
             assertEquals(results.finalListA, expectedAabc);
         }
     }
+
+    @Test
+    public void TestSubmissionDuplicatedTokenNotInOtherSubmission() throws ChecksimsException {
+        AlgorithmResults results = lineCompare.detectSimilarity(aabc, def);
+
+        assertEquals(results.identicalTokensA, 0);
+        assertEquals(results.identicalTokensB, 0);
+
+        if(aabc.equals(results.a)) {
+            assertEquals(results.b, def);
+
+            assertEquals(results.finalListA, aabc.getContentAsTokens());
+            assertEquals(results.finalListB, def.getContentAsTokens());
+        } else {
+            assertEquals(aabc, results.b);
+            assertEquals(def, results.a);
+
+            assertEquals(results.finalListB, aabc.getContentAsTokens());
+            assertEquals(results.finalListA, def.getContentAsTokens());
+        }
+    }
 }
