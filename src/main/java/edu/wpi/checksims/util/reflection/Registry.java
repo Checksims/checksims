@@ -99,6 +99,8 @@ public class Registry<T extends NamedInstantiable> {
      *
      * All subclasses MUST implement a static, no arguments getInstance method
      *
+     * TODO investigate whether it is possible to exclude anonymous classes, so we can make anonymous classes for unit tests
+     *
      * @param packageName Package name to instantiate in
      * @param subclassesOf Class to instantiate subclasses of
      * @param <T> Type of the original class, which all subclasses will be as well

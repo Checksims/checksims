@@ -80,14 +80,16 @@ public class CommonCodeRemovalWorker implements Callable<Submission> {
         TokenList listWithCommonInvalid;
         float percentMatched;
         int identTokens;
-        if(new ValidityIgnoringSubmission(results.a).equals(removeFrom)) {
+        if(new ValidityIgnoringSubmission(results.a).equals(computeIn)) {
             listWithCommonInvalid = results.finalListA;
             percentMatched = results.percentMatchedA();
             identTokens = results.identicalTokensA;
-        } else {
+        } else if(new ValidityIgnoringSubmission(results.b).equals(computeIn)) {
             listWithCommonInvalid = results.finalListB;
             percentMatched = results.percentMatchedB();
             identTokens = results.identicalTokensB;
+        } else {
+            throw new RuntimeException("Unreachable code!");
         }
 
         // Recreate the string body of the submission from this new list

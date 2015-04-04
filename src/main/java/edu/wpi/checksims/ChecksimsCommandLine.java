@@ -28,6 +28,7 @@ import edu.wpi.checksims.algorithm.output.OutputRegistry;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrixPrinter;
 import edu.wpi.checksims.algorithm.preprocessor.PreprocessorRegistry;
 import edu.wpi.checksims.algorithm.preprocessor.SubmissionPreprocessor;
+import edu.wpi.checksims.submission.EmptySubmissionException;
 import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.token.TokenType;
 import edu.wpi.checksims.token.tokenizer.FileTokenizer;
@@ -203,8 +204,14 @@ public class ChecksimsCommandLine {
             } catch(IOException e) {
                 throw new ChecksimsException("Error obtaining common code", e);
             }
-            CommonCodeHandler handler = new CommonCodeLineRemovalHandler(commonCode);
-            config = config.setCommonCodeHandler(handler);
+            try {
+                CommonCodeHandler handler = new CommonCodeLineRemovalHandler(commonCode);
+                config = config.setCommonCodeHandler(handler);
+            } catch(EmptySubmissionException e) {
+                // The common code submission was empty
+                // Inform the user we're not actually removing common code because of this
+                logs.warn(e.getMessage());
+            }
         }
 
         // Parse file output value

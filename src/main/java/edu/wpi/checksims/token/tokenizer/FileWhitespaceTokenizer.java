@@ -43,6 +43,12 @@ public class FileWhitespaceTokenizer implements FileTokenizer {
         return instance;
     }
 
+    /**
+     * Split a string into whitespace-delineated tokens
+     *
+     * @param string Input string
+     * @return List of WHITESPACE tokens representing the input submission
+     */
     @Override
     public TokenList splitFile(String string) {
         TokenList toReturn = new TokenList(this.getType());

@@ -43,6 +43,12 @@ public class FileLineTokenizer implements FileTokenizer {
         return instance;
     }
 
+    /**
+     * Split string into newline-delineated tokens
+     *
+     * @param string String to split
+     * @return List of LINE tokens representing the input string
+     */
     @Override
     public TokenList splitFile(String string) {
         TokenList toReturn = new TokenList(this.getType());

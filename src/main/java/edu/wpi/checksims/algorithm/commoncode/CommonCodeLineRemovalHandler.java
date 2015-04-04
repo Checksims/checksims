@@ -24,6 +24,7 @@ package edu.wpi.checksims.algorithm.commoncode;
 import edu.wpi.checksims.ChecksimsException;
 import edu.wpi.checksims.algorithm.AlgorithmRegistry;
 import edu.wpi.checksims.algorithm.SimilarityDetector;
+import edu.wpi.checksims.submission.EmptySubmissionException;
 import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.util.threading.ParallelAlgorithm;
 import org.slf4j.Logger;
@@ -43,7 +44,11 @@ public class CommonCodeLineRemovalHandler implements CommonCodeHandler {
      *
      * @param common Common code to remove
      */
-    public CommonCodeLineRemovalHandler(Submission common) {
+    public CommonCodeLineRemovalHandler(Submission common) throws EmptySubmissionException {
+        if(common.getContentAsString().isEmpty()) {
+            throw new EmptySubmissionException("Common code submission is empty, cowardly refusing to remove!");
+        }
+
         this.common = common;
         try {
             this.lineCompare = AlgorithmRegistry.getInstance().getImplementationInstance("linecompare");

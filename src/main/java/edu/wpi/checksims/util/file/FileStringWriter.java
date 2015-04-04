@@ -31,11 +31,20 @@ import java.io.PrintWriter;
 /**
  * Write string to file
  */
-public class FileStringWriter {
+public final class FileStringWriter {
     private FileStringWriter() {}
 
+    /**
+     * Write a string to a file
+     *
+     * @param f File to write to
+     * @param str String to write
+     * @throws IOException Thrown on error writing to file
+     */
     public static void writeStringToFile(File f, String str) throws IOException {
         PrintWriter writer = new PrintWriter(f.getAbsolutePath());
+
+        // TODO should warn if overwriting... Or even refuse without a flag?
 
         Logger logs = LoggerFactory.getLogger(FileStringWriter.class);
         logs.info("Writing output to file " + f.getName());
