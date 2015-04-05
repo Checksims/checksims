@@ -99,7 +99,7 @@ public class ChecksimsRunner {
 
         // Apply all preprocessors
         for(SubmissionPreprocessor p : config.getPreprocessors()) {
-            submissions = ImmutableList.copyOf(PreprocessSubmissions.process(p::process, submissions));
+            submissions = ImmutableList.copyOf(PreprocessSubmissions.process(p, submissions));
         }
 
         // Apply algorithm to submission

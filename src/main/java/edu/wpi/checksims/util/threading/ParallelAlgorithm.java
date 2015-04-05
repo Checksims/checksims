@@ -23,6 +23,7 @@ package edu.wpi.checksims.util.threading;
 
 import edu.wpi.checksims.algorithm.AlgorithmResults;
 import edu.wpi.checksims.algorithm.SimilarityDetector;
+import edu.wpi.checksims.algorithm.preprocessor.SubmissionPreprocessor;
 import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.util.UnorderedPair;
 import org.slf4j.Logger;
@@ -31,7 +32,6 @@ import org.slf4j.LoggerFactory;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -86,7 +86,7 @@ public final class ParallelAlgorithm {
         return executeTasks(workers);
     }
 
-    public static Collection<Submission> parallelSubmissionPreprocessing(Function<Submission, Submission> preprocessor, Collection<Submission> submissions) {
+    public static Collection<Submission> parallelSubmissionPreprocessing(SubmissionPreprocessor preprocessor, Collection<Submission> submissions) {
         // Map the submissions to PreprocessorWorker instances
         Collection<PreprocessorWorker> workers = submissions.stream().map((submission) -> new PreprocessorWorker(submission, preprocessor)).collect(Collectors.toList());
 

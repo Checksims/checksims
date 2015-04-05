@@ -21,21 +21,21 @@
 
 package edu.wpi.checksims.util.threading;
 
+import edu.wpi.checksims.algorithm.preprocessor.SubmissionPreprocessor;
 import edu.wpi.checksims.submission.Submission;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Callable;
-import java.util.function.Function;
 
 /**
  * Worker for parallel preprocessor application
  */
 public class PreprocessorWorker implements Callable<Submission> {
     private final Submission preprocess;
-    private final Function<Submission, Submission> preprocessor;
+    private final SubmissionPreprocessor preprocessor;
 
-    public PreprocessorWorker(Submission toPreprocess, Function<Submission, Submission> preprocessor) {
+    public PreprocessorWorker(Submission toPreprocess, SubmissionPreprocessor preprocessor) {
         this.preprocess = toPreprocess;
         this.preprocessor = preprocessor;
     }
@@ -50,9 +50,9 @@ public class PreprocessorWorker implements Callable<Submission> {
     public Submission call() throws Exception {
         Logger logs = LoggerFactory.getLogger(PreprocessorWorker.class);
 
-        logs.trace("Preprocessing submission " + preprocess.getName());
+        logs.trace("Preprocessing submission " + preprocess.getName() + " with preprocessor " + preprocess.getName());
 
-        return preprocessor.apply(preprocess);
+        return preprocessor.process(preprocess);
     }
 
     @Override

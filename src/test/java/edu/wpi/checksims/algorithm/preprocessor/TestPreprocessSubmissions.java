@@ -42,6 +42,8 @@ public class TestPreprocessSubmissions {
     private static List<Submission> empty;
     private static List<Submission> oneSubmission;
     private static List<Submission> twoSubmissions;
+    private static SubmissionPreprocessor identity;
+    private static SubmissionPreprocessor renamer;
 
     @BeforeClass
     public static void setUp() {
@@ -61,11 +63,35 @@ public class TestPreprocessSubmissions {
         twoSubmissions = new LinkedList<>();
         twoSubmissions.add(a);
         twoSubmissions.add(b);
+
+        identity = new SubmissionPreprocessor() {
+            @Override
+            public Submission process(Submission submission) {
+                return submission;
+            }
+
+            @Override
+            public String getName() {
+                return "identity";
+            }
+        };
+
+        renamer = new SubmissionPreprocessor() {
+            @Override
+            public Submission process(Submission submission) {
+                return new ConcreteSubmission("renamed " + submission.getName(), submission.getContentAsString(), submission.getContentAsTokens());
+            }
+
+            @Override
+            public String getName() {
+                return "renamer";
+            }
+        };
     }
 
     @Test
     public void testEmptyReturnsEmpty() {
-        Collection<Submission> results = PreprocessSubmissions.process((s) -> s, empty);
+        Collection<Submission> results = PreprocessSubmissions.process(identity, empty);
 
         assertNotNull(results);
         assertTrue(results.isEmpty());
@@ -73,7 +99,7 @@ public class TestPreprocessSubmissions {
 
     @Test
     public void testOneSubmissionIdentity() {
-        Collection<Submission> results = PreprocessSubmissions.process((s) -> s, oneSubmission);
+        Collection<Submission> results = PreprocessSubmissions.process(identity, oneSubmission);
 
         assertNotNull(results);
         assertEquals(results.size(), 1);
@@ -83,9 +109,9 @@ public class TestPreprocessSubmissions {
 
     @Test
     public void testOneSubmissionRename() {
-        Collection<Submission> results = PreprocessSubmissions.process((s) -> new ConcreteSubmission("renamed", s.getContentAsString(), s.getContentAsTokens()), oneSubmission);
+        Collection<Submission> results = PreprocessSubmissions.process(renamer, oneSubmission);
 
-        Submission expected = new ConcreteSubmission("renamed", oneSubmission.get(0).getContentAsString(), oneSubmission.get(0).getContentAsTokens());
+        Submission expected = new ConcreteSubmission("renamed " + oneSubmission.get(0).getName(), oneSubmission.get(0).getContentAsString(), oneSubmission.get(0).getContentAsTokens());
 
         assertNotNull(results);
         assertEquals(results.size(), 1);
@@ -94,7 +120,7 @@ public class TestPreprocessSubmissions {
 
     @Test
     public void testTwoSubmissionIdentity() {
-        Collection<Submission> results = PreprocessSubmissions.process((s) -> s, twoSubmissions);
+        Collection<Submission> results = PreprocessSubmissions.process(identity, twoSubmissions);
 
         assertNotNull(results);
         assertEquals(results.size(), 2);
@@ -104,7 +130,7 @@ public class TestPreprocessSubmissions {
 
     @Test
     public void testTwoSubmissionRename() {
-        Collection<Submission> results = PreprocessSubmissions.process((s) -> new ConcreteSubmission("renamed " + s.getName(), s.getContentAsString(), s.getContentAsTokens()), twoSubmissions);
+        Collection<Submission> results = PreprocessSubmissions.process(renamer, twoSubmissions);
 
         List<Submission> expected = new LinkedList<>();
         expected.add(new ConcreteSubmission("renamed " + twoSubmissions.get(0).getName(), twoSubmissions.get(0).getContentAsString(), twoSubmissions.get(0).getContentAsTokens()));

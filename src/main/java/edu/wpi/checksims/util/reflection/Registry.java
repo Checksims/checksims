@@ -46,6 +46,8 @@ public class Registry<T extends NamedInstantiable> {
     /**
      * Create a Registry instance for implementations of a given base class in the given package and subpackages
      *
+     * Please note that inner classes *WILL NOT BE REGISTERED* - only top-level classes will be included in a registry!
+     *
      * @param initPath Package to (recursively) search for implementations
      * @param baseClazz Base class or interface which all implementations in the registry extend or implement
      */
@@ -99,7 +101,7 @@ public class Registry<T extends NamedInstantiable> {
      *
      * All subclasses MUST implement a static, no arguments getInstance method
      *
-     * TODO investigate whether it is possible to exclude anonymous classes, so we can make anonymous classes for unit tests
+     * Please note that reflectiveInstantiator ignores inner classes --- all classes instantiated will be top level
      *
      * @param packageName Package name to instantiate in
      * @param subclassesOf Class to instantiate subclasses of
@@ -120,6 +122,12 @@ public class Registry<T extends NamedInstantiable> {
         // Iterate through all of the subclasses
         subtypes.stream().forEach((type) -> {
             logs.debug("Initializing class " + type.getName());
+
+            // We don't want to instantiate inner classes
+            // So check enclosing class. If it's not null, we've found an inner class.
+            if(type.getEnclosingClass() != null) {
+               return;
+            }
 
             try {
                 // Get getInstance method of the class

@@ -26,7 +26,6 @@ import edu.wpi.checksims.util.threading.ParallelAlgorithm;
 import org.slf4j.Logger;
 
 import java.util.Collection;
-import java.util.function.Function;
 
 /**
  * Apply a preprocessor (maps Submission to Submission) to a given list of submissions
@@ -41,11 +40,11 @@ public final class PreprocessSubmissions {
      *
      * Is NOT expected to preserve tokenization validity, as these are to be applied before that is significant
      *
-     * @param mapping Mapping function to apply. SHOULD NOT MUTATE THE EXISTING TOKENS - should return a new tokenization
+     * @param preprocessor Preprocessor to apply. SHOULD NOT MUTATE THE EXISTING TOKENS
      * @param submissions Input list of submissions to apply to
      * @return New list formed by applying the mapping function to each submission. Retains order of input list.
      */
-    public static Collection<Submission> process(Function<Submission, Submission> mapping, Collection<Submission> submissions) {
-        return ParallelAlgorithm.parallelSubmissionPreprocessing(mapping, submissions);
+    public static Collection<Submission> process(SubmissionPreprocessor preprocessor, Collection<Submission> submissions) {
+        return ParallelAlgorithm.parallelSubmissionPreprocessing(preprocessor, submissions);
     }
 }
