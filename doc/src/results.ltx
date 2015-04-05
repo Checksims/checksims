@@ -182,6 +182,21 @@ using the methodology explained in Section~\ref{sec:mosscompare}. These
 submissions were run through MOSS, and the results were compared to those
 obtained using \textit{Checksims} with the Smith-Waterman algorithm. 
 
+For the purposes of this comparison, we must define significant results in both
+\textit{Checksims} and MOSS. In \textit{Checksims} and throughout this paper,
+we have generally defined this as any result with a similarity percentage of
+over 70\%. MOSS, however, does not have such a definition, and instead presents
+results ordered by number of similar tokens, with nothing to signify which
+results are worthy of being inspected and which are not. For each comparison,
+we were able to identify a point in the results where results after had many
+fewer similar tokens than results before; we used these points to define
+significant results in MOSS, with any results coming before being considered
+significant. We acknowledge that this is not an optimal method of selecting
+significant results, but could not find a better solution. Given the ease of
+selecting relevant results in \textit{Checksims}, we suggest that the overall
+usability of our results may be better than MOSS, though no further research
+was done on this.
+
 Overall, we found that every significant similarity identified by MOSS was
 also identified by \textit{Checksims}. The reverse, however, was not true.
 Several small submissions (of 75 lines and under) were identified as being
