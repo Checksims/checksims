@@ -24,6 +24,7 @@ package edu.wpi.checksims.algorithm.preprocessor;
 import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.util.threading.ParallelAlgorithm;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 
@@ -31,8 +32,6 @@ import java.util.Collection;
  * Apply a preprocessor (maps Submission to Submission) to a given list of submissions
  */
 public final class PreprocessSubmissions {
-    private static Logger logs;
-
     private PreprocessSubmissions() {}
 
     /**
@@ -45,6 +44,10 @@ public final class PreprocessSubmissions {
      * @return New list formed by applying the mapping function to each submission. Retains order of input list.
      */
     public static Collection<Submission> process(SubmissionPreprocessor preprocessor, Collection<Submission> submissions) {
+        Logger logs = LoggerFactory.getLogger(PreprocessSubmissions.class);
+
+        logs.info("Preprocessing " + submissions.size() + " submissions with preprocessor " + preprocessor.getName());
+
         return ParallelAlgorithm.parallelSubmissionPreprocessing(preprocessor, submissions);
     }
 }

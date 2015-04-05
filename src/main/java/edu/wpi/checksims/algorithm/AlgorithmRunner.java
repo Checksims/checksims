@@ -43,6 +43,8 @@ public final class AlgorithmRunner {
 
         Set<UnorderedPair<Submission>> allPairs = UnorderedPair.generatePairsFromList(submissions);
 
+        logs.info("Performing similarity detection on " + allPairs.size() + " pairs using algorithm " + algorithm.getName());
+
         // Perform parallel analysis of all submission pairs to generate a results list
         Collection<AlgorithmResults> results = ParallelAlgorithm.parallelSimilarityDetection(algorithm, allPairs);
 

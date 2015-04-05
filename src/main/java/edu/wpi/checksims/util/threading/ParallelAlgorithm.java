@@ -43,12 +43,16 @@ public final class ParallelAlgorithm {
     private static Logger logs = LoggerFactory.getLogger(ParallelAlgorithm.class);
 
     private static int threadCount = Runtime.getRuntime().availableProcessors();
+    private static ThreadPoolExecutor executor = new ThreadPoolExecutor(threadCount, threadCount, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<>(), new ThreadPoolExecutor.AbortPolicy());;
 
     /**
      * @param threads Number of threads to be used for execution
      */
     public static void setThreadCount(int threads) {
         threadCount = threads;
+        executor.shutdown();
+        // Set up the executor again with the new thread count
+        executor = new ThreadPoolExecutor(threadCount, threadCount, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<>(), new ThreadPoolExecutor.AbortPolicy());
     }
 
     /**
@@ -104,8 +108,6 @@ public final class ParallelAlgorithm {
      * @return Collection of Ts
      */
     private static <T, T2 extends Callable<T>> Collection<T> executeTasks(Collection<T2> tasks) {
-        ThreadPoolExecutor executor = new ThreadPoolExecutor(threadCount, threadCount, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<>(), new ThreadPoolExecutor.AbortPolicy());
-
         logs.info("Starting work using " + threadCount + " threads.");
 
         // Invoke the executor on all the worker instances
@@ -116,12 +118,6 @@ public final class ParallelAlgorithm {
             monitorThread.start();
 
             List<Future<T>> results = executor.invokeAll(tasks);
-
-            executor.shutdown();
-
-            while(!executor.isTerminated()) {
-                Thread.sleep(250);
-            }
 
             // Stop the monitor
             monitor.shutDown();
