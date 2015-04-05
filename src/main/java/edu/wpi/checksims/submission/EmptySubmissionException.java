@@ -27,6 +27,8 @@ import edu.wpi.checksims.ChecksimsException;
  * Exception thrown when an empty submission is created or encountered
  */
 public class EmptySubmissionException extends ChecksimsException {
+    private static final long serialVersionUID = 1L;
+
     public EmptySubmissionException(String message) {
         super(message);
     }

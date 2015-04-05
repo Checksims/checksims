@@ -37,12 +37,14 @@ import edu.wpi.checksims.util.output.OutputAsFilePrinter;
 import edu.wpi.checksims.util.output.OutputPrinter;
 import org.apache.commons.cli.*;
 import org.apache.commons.collections4.list.SetUniqueList;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.impl.SimpleLogger;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
@@ -52,6 +54,20 @@ import java.util.List;
  */
 public final class ChecksimsCommandLine {
     private static Logger logs;
+
+    static String getChecksimsVersion() {
+        InputStream resource = ChecksimsCommandLine.class.getResourceAsStream("version.txt");
+
+        if(resource == null) {
+            return "Error obtaining version number: could not obtain input stream for version.txt";
+        }
+
+        try {
+            return IOUtils.toString(resource);
+        } catch (IOException e) {
+            return "Error obtaining version number: " + e.getMessage();
+        }
+    }
 
     static Logger startLogger(int level) {
         if(level == 1) {
@@ -87,6 +103,7 @@ public final class ChecksimsCommandLine {
         Option help = new Option("h", "help", false, "show usage information");
         Option common = new Option("c", "common", true, "remove common code contained in given directory");
         Option recursive = new Option("r", "recursive", false, "recursively traverse subdirectories to generate submissions");
+        Option version = new Option("version", false, "print version of Checksims");
 
         opts.addOption(alg);
         opts.addOption(token);
@@ -99,6 +116,7 @@ public final class ChecksimsCommandLine {
         opts.addOption(help);
         opts.addOption(common);
         opts.addOption(recursive);
+        opts.addOption(version);
 
         return opts;
     }
@@ -131,6 +149,8 @@ public final class ChecksimsCommandLine {
         System.err.println("\nAvailable Preprocessors:");
         PreprocessorRegistry.getInstance().getSupportedImplementationNames().stream().forEach((name) -> System.err.print(name + ", "));
         System.err.println();
+
+        System.err.println("\nChecksims Version " + getChecksimsVersion() + "\n\n");
 
         System.exit(0);
     }
@@ -289,6 +309,12 @@ public final class ChecksimsCommandLine {
         // Print CLI Help
         if(cli.hasOption("h")) {
             printHelp();
+        }
+
+        // Print version
+        if(cli.hasOption("version")) {
+            System.err.println("Checksims version " + getChecksimsVersion());
+            System.exit(0);
         }
 
         // Parse verbose setting

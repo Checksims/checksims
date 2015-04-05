@@ -29,6 +29,8 @@ import java.io.IOException;
  * Thrown when creating a submission if no files are found that match
  */
 public class NoMatchingFilesException extends ChecksimsException {
+    private static final long serialVersionUID = 1L;
+
     public NoMatchingFilesException(String message) {
         super(message);
     }
