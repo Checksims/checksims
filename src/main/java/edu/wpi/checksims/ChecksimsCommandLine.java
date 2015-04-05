@@ -50,7 +50,7 @@ import java.util.List;
 /**
  * Parses Checksims' command-line options
  */
-public class ChecksimsCommandLine {
+public final class ChecksimsCommandLine {
     private static Logger logs;
 
     static Logger startLogger(int level) {

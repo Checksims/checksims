@@ -24,6 +24,18 @@ public class PreprocessorRegistryTest {
         assertEquals(preprocessor.getName(), lowerCaseName);
     }
 
+    @Test
+    public void TestWhitespaceDedupIsIncluded() throws ChecksimsException {
+        String dedupName = WhitespaceDeduplicationPreprocessor.getInstance().getName();
+        Collection<String> supported = PreprocessorRegistry.getInstance().getSupportedImplementationNames();
+
+        assertNotNull(supported);
+        assertTrue(supported.contains(dedupName));
+
+        SubmissionPreprocessor preprocessor = PreprocessorRegistry.getInstance().getImplementationInstance(dedupName);
+        assertEquals(preprocessor.getName(), dedupName);
+    }
+
     @Test(expected = ChecksimsException.class)
     public void TestNonExistantThrowsException() throws ChecksimsException {
         PreprocessorRegistry.getInstance().getImplementationInstance("does not exist");

@@ -3,6 +3,7 @@ package edu.wpi.checksims;
 import edu.wpi.checksims.algorithm.AlgorithmRegistry;
 import edu.wpi.checksims.algorithm.output.OutputRegistry;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrixPrinter;
+import edu.wpi.checksims.algorithm.preprocessor.SubmissionPreprocessor;
 import edu.wpi.checksims.token.TokenType;
 import edu.wpi.checksims.util.output.OutputAsFilePrinter;
 import edu.wpi.checksims.util.output.OutputToStdoutPrinter;
@@ -239,7 +240,6 @@ public class ChecksimsCommandLineTest {
         ChecksimsCommandLine.parseCLI(invalid);
     }
 
-    // TODO when we have more preprocessors test preprocessor1,preprocessor2
     @Test
     public void TestParsePreprocessors() throws Exception {
         String[] onePreprocessor = new String[] { "-p", "lowercase" };
@@ -247,6 +247,7 @@ public class ChecksimsCommandLineTest {
         String[] caps = new String[] { "-p", "lOwErcASE" };
         String[] verbose = new String[] { "--preprocess", "lowercase" };
         String[] empty = new String[] {};
+        String[] twoPreprocessors = new String[] { "-p", "lowercase,deduplicate" };
 
         CommandLine cli1 = ChecksimsCommandLine.parseOpts(onePreprocessor);
         ChecksimsConfig config1 = ChecksimsCommandLine.parseBaseFlags(cli1);
@@ -276,6 +277,14 @@ public class ChecksimsCommandLineTest {
         ChecksimsConfig config5 = ChecksimsCommandLine.parseBaseFlags(cli5);
         assertNotNull(config5);
         assertTrue(config5.getPreprocessors().isEmpty());
+
+        CommandLine cli6 = ChecksimsCommandLine.parseOpts(twoPreprocessors);
+        ChecksimsConfig config6 = ChecksimsCommandLine.parseBaseFlags(cli6);
+        assertNotNull(config6);
+        assertEquals(2, config6.getPreprocessors().size());
+        List<String> names = config6.getPreprocessors().stream().map(SubmissionPreprocessor::getName).collect(Collectors.toList());
+        assertTrue(names.contains("lowercase"));
+        assertTrue(names.contains("deduplicate"));
     }
 
     @Test(expected = ChecksimsException.class)
