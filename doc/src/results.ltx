@@ -177,7 +177,55 @@ accuracy of the \textit{Smith-Waterman} algorithm.
 
 
 \subsection{MOSS Comparison}
-TODO GRAPHS AND ANALYSIS
+We identified six submissions from our overall dataset to run through MOSS
+using the methodology explained in Section~\ref{sec:mosscompare}. These
+submissions were run through MOSS, and the results were compared to those
+obtained using \textit{Checksims} with the Smith-Waterman algorithm. 
+
+Overall, we found that every significant similarity identified by MOSS was
+also identified by \textit{Checksims}. The reverse, however, was not true.
+Several small submissions (of 75 lines and under) were identified as being
+very similar to other submissions by \textit{Checksims}, but were not found
+similar by MOSS. We found 8 such submissions, and visually examined each to
+make a final determination of which piece of similarity detection software was
+correct. We sided with \textit{Checksims} in all cases, as the assignments were
+very similar on visual examination. This may indicate a weakness of MOSS with
+very small submissions, but we have insufficient data to draw conclusions.
+
+% TODO insert graph with results
+
+It is worth noting that the definition of similar matches differs between
+\textit{Checksims} and MOSS. \textit{Checksims} ranks similarities based on
+the percent of tokens in an assignment that match another assignment. MOSS,
+on the other hand, ranks similarities based on the overall number of tokens
+matching another assignment. Because of this, some matches considered
+significant by \textit{Checksims} are not considered significant to MOSS, which
+we observed several times in the results. Small submissions containing a high
+percentage of matched tokens were ranked far higher by \textit{Checksims} than
+MOSS, though MOSS did identify the similar tokens (and high percentage
+similarity). We consider such submissions to be identified by both
+\textit{Checksims} and MOSS, even though they were ranked highly by one and not
+the other. We did not observe any matches ranked highly by MOSS but not
+\textit{Checksims}, though this could theoretically occur in very large
+submissions with a large number of matching tokens, but a low percentage of
+matching tokens.
+
+Our comparison also does not test one of the potential strengths of MOSS over
+\textit{Checksims}. MOSS performs syntax-aware comparisons, which lets it
+perform much more powerful normalizations than \textit{Checksims} is capable of
+at present. These normalizations are described in
+Section~\ref{sec:syntaxaware}, and should allow MOSS to defeat deliberate
+attempts to obfuscate similar code which would otherwise go unnoticed.
+Comparing data including such submissions might highlight the advantages of
+MOSS over \textit{Checksims}, but we could not find any submissions in our
+dataset which showed significant effort to obfuscate similarities. Because of
+this, our comparisons are more favorable to \textit{Checksims} than the real
+world may be. It is possible that the prevalence of deliberately obfuscated
+similarities may rise if knowledge that a similarity detection system is in use
+becomes widespread, which would make the performance of \textit{Checksims} in
+such cases more important, and we would like to perform further experiments in
+this direction.
+
 
 \section{Real-World Usage}
 During development, \textit{Checksims} was used in real-world situations on two
