@@ -136,6 +136,7 @@ operation of \textit{Checksims}. These are detailed below:
 \item \texttt{-v}, \texttt{--verbose}: Verbose debugging output.
 \item \texttt{-vv}, \texttt{--veryverbose}: Very verbose debugging output.
 	Overrides \texttt{-v} if both are specified.
+\item \texttt{--version}: Print current version of Checksims.
 \end{itemize}
 
 \textit{Checksims} contains built-in usage information and descriptions of its
@@ -300,8 +301,10 @@ trivial attempts to obfuscate similarities will prevent detection.
 \subsection{Description of Preprocessors}
 After a submission is converted into tokens, these tokens can then be
 manipulated to improve detection accuracy. This is accomplished by the use of
-predefined preprocessors. At present, only one preprocessor is available,
-namely the lowercase preprocessor that converts all letters to lowercase.
+predefined preprocessors. Two preprocessors are presently available. The
+\texttt{lowercase} preprocessor converts all letters to lowercase. The
+\texttt{deduplicate} preprocessors remove duplicated whitespace (spaces, tabs,
+and newlines).
 
 
 \subsection{Description of Algorithms}
