@@ -26,6 +26,7 @@ import edu.wpi.checksims.algorithm.AlgorithmRegistry;
 import edu.wpi.checksims.algorithm.SimilarityDetector;
 import edu.wpi.checksims.submission.EmptySubmissionException;
 import edu.wpi.checksims.submission.Submission;
+import edu.wpi.checksims.util.reflection.NoSuchImplementationException;
 import edu.wpi.checksims.util.threading.ParallelAlgorithm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +53,7 @@ public class CommonCodeLineRemovalHandler implements CommonCodeHandler {
         this.common = common;
         try {
             this.lineCompare = AlgorithmRegistry.getInstance().getImplementationInstance("linecompare");
-        } catch(ChecksimsException e) {
+        } catch(NoSuchImplementationException e) {
             throw new RuntimeException("Could not obtain instance of LineCompare!", e);
         }
     }

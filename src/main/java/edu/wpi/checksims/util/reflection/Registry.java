@@ -82,15 +82,15 @@ public class Registry<T extends NamedInstantiable> {
      *
      * @param name Name to search for
      * @return Instance of implementation with given name
-     * @throws edu.wpi.checksims.ChecksimsException Thrown if no instance with given name can be found
+     * @throws NoSuchImplementationException Thrown if no instance with given name can be found
      */
-    public T getImplementationInstance(String name) throws ChecksimsException {
+    public T getImplementationInstance(String name) throws NoSuchImplementationException {
         List<T> matchingImpls = registeredHandlers.stream().filter((handler) -> handler.getName().equalsIgnoreCase(name)).collect(Collectors.toList());
 
         if(matchingImpls.size() == 0) {
-            throw new ChecksimsException("No implementation available with name " + name);
+            throw new NoSuchImplementationException("No implementation available with name " + name);
         } else if(matchingImpls.size() > 1) {
-            throw new ChecksimsException("INTERNAL ERROR: Two implementations found with same name " + name +" !");
+            throw new RuntimeException("INTERNAL ERROR: Two implementations found with same name " + name +" !");
         }
 
         return matchingImpls.get(0);
@@ -102,6 +102,8 @@ public class Registry<T extends NamedInstantiable> {
      * All subclasses MUST implement a static, no arguments getInstance method
      *
      * Please note that reflectiveInstantiator ignores inner classes --- all classes instantiated will be top level
+     *
+     * TODO consider returning either collection or Set. Set makes most sense.
      *
      * @param packageName Package name to instantiate in
      * @param subclassesOf Class to instantiate subclasses of
@@ -126,7 +128,8 @@ public class Registry<T extends NamedInstantiable> {
             // We don't want to instantiate inner classes
             // So check enclosing class. If it's not null, we've found an inner class.
             if(type.getEnclosingClass() != null) {
-               return;
+                logs.trace("Not adding anonymous class " + type.getName() + " to registry");
+                return;
             }
 
             try {
@@ -151,7 +154,7 @@ public class Registry<T extends NamedInstantiable> {
             } catch (NoSuchMethodException e) {
                 throw new RuntimeException("Class " + type.getName() + " has no getInstance method!");
             } catch (InvocationTargetException | IllegalAccessException e) {
-                throw new RuntimeException("Error invoking getInstance for class " + type.getName() + ": " + e.getMessage());
+                throw new RuntimeException("Error invoking getInstance for class " + type.getName(), e);
             }
         });
 

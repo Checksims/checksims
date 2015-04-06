@@ -21,6 +21,7 @@
 
 package edu.wpi.checksims.algorithm.output;
 
+import edu.wpi.checksims.util.reflection.NoSuchImplementationException;
 import edu.wpi.checksims.util.reflection.RegistryWithDefault;
 
 /**
@@ -29,7 +30,7 @@ import edu.wpi.checksims.util.reflection.RegistryWithDefault;
 public final class OutputRegistry extends RegistryWithDefault<SimilarityMatrixPrinter> {
     private static OutputRegistry instance;
 
-    private OutputRegistry() {
+    private OutputRegistry() throws NoSuchImplementationException {
         super("edu.wpi.checksims.algorithm.output", SimilarityMatrixPrinter.class, SimilarityMatrixThresholdPrinter.getInstance().getName());
     }
 
@@ -38,7 +39,11 @@ public final class OutputRegistry extends RegistryWithDefault<SimilarityMatrixPr
      */
     public static OutputRegistry getInstance() {
         if(instance == null) {
-            instance = new OutputRegistry();
+            try {
+                instance = new OutputRegistry();
+            } catch(NoSuchImplementationException e) {
+                throw new RuntimeException("Error instantiating OutputRegistry", e);
+            }
         }
 
         return instance;
