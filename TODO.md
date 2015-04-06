@@ -16,6 +16,7 @@ Code Cleanup
 
 Minor Improvements
 - Archive directory support
+- Add handling for empty submissions (flag to include, default do not include)
 
 Major new features
 - Comment stripping preprocessors
@@ -24,4 +25,3 @@ Major new features
 Major Reworks
 - Framework for non-pairwise comparisons (possible with shared state)
 - Framework for new types of Tokens (AST-based, character-backed, etc)
-

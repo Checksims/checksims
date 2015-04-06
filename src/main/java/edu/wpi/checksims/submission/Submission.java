@@ -24,13 +24,14 @@ package edu.wpi.checksims.submission;
 import edu.wpi.checksims.token.TokenList;
 import edu.wpi.checksims.token.TokenType;
 import edu.wpi.checksims.token.tokenizer.FileTokenizer;
-import edu.wpi.checksims.util.file.FileReader;
 import org.apache.commons.collections4.list.SetUniqueList;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -213,7 +214,7 @@ public interface Submission {
 
         // Could do this with a .stream().forEach(...) but we'd have to handle the IOException inside
         for(File f : files) {
-            String content = FileReader.readFile(f);
+            String content = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
 
             fileContent.append(content);
 
