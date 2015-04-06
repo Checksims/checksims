@@ -23,10 +23,11 @@ package edu.wpi.checksims.util.output;
 
 import edu.wpi.checksims.algorithm.output.SimilarityMatrix;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrixPrinter;
-import edu.wpi.checksims.util.file.FileStringWriter;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Output results to a file
@@ -60,7 +61,7 @@ public class OutputAsFilePrinter implements OutputPrinter {
         String output = printWith.printMatrix(toPrint);
 
         try {
-            FileStringWriter.writeStringToFile(outputTo, output);
+            FileUtils.writeStringToFile(outputTo, output, StandardCharsets.UTF_8);
         } catch(IOException e) {
             throw new RuntimeException("Could not write output to file", e);
         }
