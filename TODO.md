@@ -10,7 +10,6 @@ Unit Tests:
 
 Code Cleanup
 - Exception rewrite. More specific exceptions than just ChecksimsException
-- Remove FileReader, replace with Apache Commons IO FileUtils.readFileToString()
 - Remove UnorderedPair, replace with Apache Commons Pair. Add PairGenerationStrategy interface.
 - Rewrite of Smith-Waterman, removing many otherwise-unused utility classes and adding tests
 
