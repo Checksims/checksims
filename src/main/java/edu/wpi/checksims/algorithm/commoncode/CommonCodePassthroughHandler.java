@@ -25,6 +25,8 @@ import edu.wpi.checksims.submission.Submission;
 
 import java.util.Collection;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Do not remove or otherwise interact with common code - just pass through every submission
  */
@@ -52,6 +54,8 @@ public final class CommonCodePassthroughHandler implements CommonCodeHandler {
      */
     @Override
     public Collection<Submission> handleCommonCode(Collection<Submission> input) {
+        checkNotNull(input);
+
         return input;
     }
 

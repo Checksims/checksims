@@ -30,6 +30,8 @@ import edu.wpi.checksims.token.tokenizer.FileTokenizer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Lowercases tokens to prevent case from interfering with comparisons
  */
@@ -53,6 +55,8 @@ public class LowercasePreprocessor implements SubmissionPreprocessor {
 
     @Override
     public Submission process(Submission submission) {
+        checkNotNull(submission);
+
         FileTokenizer tokenizer = FileTokenizer.getTokenizer(submission.getTokenType());
 
         // Lowercase the content of the submission, then retokenize

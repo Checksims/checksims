@@ -34,6 +34,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * A matrix of submissions, for reporting similarities
  */
@@ -65,6 +68,10 @@ public class SimilarityMatrix {
      * @return Array of algorithm results, with results[i,j] being the results of comparing students i and j
      */
     public static SimilarityMatrix generate(List<Submission> submissions, SimilarityDetector algorithm) {
+        checkNotNull(submissions);
+        checkArgument(submissions.size() >= 2);
+        checkNotNull(algorithm);
+
         float[][] results = new float[submissions.size()][submissions.size()];
         List<Submission> submissionsSorted = new LinkedList<>(submissions);
         Logger logs = LoggerFactory.getLogger(SimilarityMatrix.class);

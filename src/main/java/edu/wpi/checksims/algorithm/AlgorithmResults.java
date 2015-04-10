@@ -24,6 +24,8 @@ package edu.wpi.checksims.algorithm;
 import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.token.TokenList;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Results for a pairwise comparison algorithm
  */
@@ -36,6 +38,11 @@ public final class AlgorithmResults {
     public final TokenList finalListB;
 
     public AlgorithmResults(Submission a, Submission b, int identicalTokensA, int identicalTokensB, TokenList finalListA, TokenList finalListB) {
+        checkNotNull(a);
+        checkNotNull(b);
+        checkNotNull(finalListA);
+        checkNotNull(finalListB);
+
         this.a = a;
         this.b = b;
         this.identicalTokensA = identicalTokensA;

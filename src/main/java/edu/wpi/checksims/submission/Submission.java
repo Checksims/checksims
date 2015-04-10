@@ -37,6 +37,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Interface for Submissions
  *
@@ -81,6 +84,11 @@ public interface Submission {
      * @throws java.io.IOException Thrown on error interacting with file or filesystem
      */
     public static List<Submission> submissionListFromDir(File directory, String glob, FileTokenizer splitter, boolean recursive) throws IOException {
+        checkNotNull(directory);
+        checkNotNull(glob);
+        checkArgument(!glob.isEmpty());
+        checkNotNull(splitter);
+
         List<Submission> submissions = SetUniqueList.setUniqueList(new LinkedList<>());
         Logger local = LoggerFactory.getLogger(Submission.class);
 
@@ -120,6 +128,11 @@ public interface Submission {
      * @throws IOException Thrown on error interacting with file
      */
     public static Submission submissionFromDir(File directory, String glob, FileTokenizer splitter, boolean recursive) throws IOException, NoMatchingFilesException {
+        checkNotNull(directory);
+        checkNotNull(glob);
+        checkArgument(!glob.isEmpty());
+        checkNotNull(splitter);
+
         if(!directory.exists()) {
             throw new NoSuchFileException("Does not exist: " + directory.getAbsolutePath());
         } else if(!directory.isDirectory()) {
@@ -141,6 +154,10 @@ public interface Submission {
      * @return List of all matching files in this directory and subdirectories
      */
     static List<File> getAllMatchingFiles(File directory, String glob, boolean recursive) throws NoSuchFileException, NotDirectoryException {
+        checkNotNull(directory);
+        checkNotNull(glob);
+        checkArgument(!glob.isEmpty());
+
         List<File> allFiles = new LinkedList<>();
         Logger logs = LoggerFactory.getLogger(Submission.class);
 
@@ -176,6 +193,10 @@ public interface Submission {
      * @return Array of files which match in this single directory
      */
     static File[] getMatchingFilesFromDir(File directory, String glob) throws NoSuchFileException, NotDirectoryException {
+        checkNotNull(directory);
+        checkNotNull(glob);
+        checkArgument(!glob.isEmpty());
+
         PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:" + glob);
 
         if(directory == null) {
@@ -202,6 +223,11 @@ public interface Submission {
      * @throws edu.wpi.checksims.submission.NoMatchingFilesException Thrown if no files are given
      */
     public static Submission submissionFromFiles(String name, List<File> files, FileTokenizer splitter) throws IOException, NoMatchingFilesException {
+        checkNotNull(name);
+        checkArgument(!name.isEmpty());
+        checkNotNull(files);
+        checkNotNull(splitter);
+
         Logger logs = LoggerFactory.getLogger(Submission.class);
 
         if(files.size() == 0) {

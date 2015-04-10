@@ -28,6 +28,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Prints all similarity matrix entries over a certain threshold
  */
@@ -81,6 +83,8 @@ public class SimilarityMatrixThresholdPrinter implements SimilarityMatrixPrinter
 
     @Override
     public String printMatrix(SimilarityMatrix matrix) {
+        checkNotNull(matrix);
+
         StringBuilder b = new StringBuilder();
         float[][] similarityMatrix = matrix.getResults();
         int matrixSize = matrix.getSubmissions().size();

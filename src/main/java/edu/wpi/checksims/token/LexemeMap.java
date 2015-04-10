@@ -27,6 +27,8 @@ import com.google.common.collect.Maps;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Maps lexemes (integers) to the original token contents
  */
@@ -42,6 +44,8 @@ public final class LexemeMap {
      * @return Lexeme representing this token. If no such lexeme existed prior, it is created and mapped to the token.
      */
     public static synchronized int getLexemeForToken(Object token) {
+        checkNotNull(token);
+
         if(!lexemeMap.containsKey(token)) {
             int newLexeme = lexemeIndex.getAndIncrement();
 

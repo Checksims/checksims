@@ -29,6 +29,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Output results to a file
  */
@@ -57,6 +59,9 @@ public class OutputAsFilePrinter implements OutputPrinter {
      */
     @Override
     public void print(SimilarityMatrix toPrint, SimilarityMatrixPrinter printWith) {
+        checkNotNull(toPrint);
+        checkNotNull(printWith);
+
         File outputTo = new File(baseName.getAbsolutePath() + "." + printWith.getName());
         String output = printWith.printMatrix(toPrint);
 

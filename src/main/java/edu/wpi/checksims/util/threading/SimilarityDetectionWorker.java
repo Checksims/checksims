@@ -31,6 +31,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Callable;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Basic unit of thread execution for similarity detection.
  *
@@ -49,6 +51,9 @@ public class SimilarityDetectionWorker implements Callable<AlgorithmResults> {
      * @param submissions Assignments to compare
      */
     public SimilarityDetectionWorker(SimilarityDetector algorithm, UnorderedPair<Submission> submissions) {
+        checkNotNull(algorithm);
+        checkNotNull(submissions);
+
         this.algorithm = algorithm;
         this.submissions = submissions;
     }

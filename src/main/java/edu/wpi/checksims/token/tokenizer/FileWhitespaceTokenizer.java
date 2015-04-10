@@ -27,6 +27,8 @@ import edu.wpi.checksims.token.TokenType;
 
 import java.util.Arrays;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Split a file into tokens based on spaces
  */
@@ -51,11 +53,9 @@ public class FileWhitespaceTokenizer implements FileTokenizer {
      */
     @Override
     public TokenList splitFile(String string) {
-        TokenList toReturn = new TokenList(this.getType());
+        checkNotNull(string);
 
-        if(string == null) {
-            return toReturn;
-        }
+        TokenList toReturn = new TokenList(this.getType());
 
         String[] split = string.split("\\s+");
 

@@ -177,7 +177,7 @@ public class ChecksimsCommandLineTest {
     public void TestParseNumThreads() throws Exception {
         String[] one = new String[] { "-j", "1" };
         String[] two = new String[] { "-j", "2" };
-        String[] zero = new String[] { "-j", "0" };
+        String[] zero = new String[] { "-j", "8" };
         String[] twoDigit = new String[] { "-j", "16" };
         String[] fullArg = new String[] { "--jobs", "4" };
         String[] noArgs = new String[] {};
@@ -195,7 +195,7 @@ public class ChecksimsCommandLineTest {
         CommandLine cli3 = ChecksimsCommandLine.parseOpts(zero);
         ChecksimsConfig config3 = ChecksimsCommandLine.parseBaseFlags(cli3);
         assertNotNull(config3);
-        assertEquals(0, config3.getNumThreads());
+        assertEquals(8, config3.getNumThreads());
 
         CommandLine cli4 = ChecksimsCommandLine.parseOpts(twoDigit);
         ChecksimsConfig config4 = ChecksimsCommandLine.parseBaseFlags(cli4);

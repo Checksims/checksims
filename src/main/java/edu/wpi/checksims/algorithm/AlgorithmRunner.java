@@ -31,6 +31,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Run a plagiarism detection algorithm on a list of submissions
  */
@@ -38,6 +41,10 @@ public final class AlgorithmRunner {
     private AlgorithmRunner() {}
 
     public static Collection<AlgorithmResults> runAlgorithm(List<Submission> submissions, SimilarityDetector algorithm) {
+        checkNotNull(submissions);
+        checkArgument(submissions.size() >= 2);
+        checkNotNull(algorithm);
+
         Logger logs = LoggerFactory.getLogger(AlgorithmRunner.class);
         long startTime = System.currentTimeMillis();
 

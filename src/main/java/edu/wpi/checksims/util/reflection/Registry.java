@@ -23,7 +23,6 @@ package edu.wpi.checksims.util.reflection;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import edu.wpi.checksims.ChecksimsException;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +35,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Parent class for all registry implementations
@@ -52,6 +53,9 @@ public class Registry<T extends NamedInstantiable> {
      * @param baseClazz Base class or interface which all implementations in the registry extend or implement
      */
     public Registry(String initPath, Class<T> baseClazz) {
+        checkNotNull(initPath);
+        checkNotNull(baseClazz);
+
         List<T> handlers = reflectiveInstantiator(initPath, baseClazz);
 
         if(handlers.isEmpty()) {

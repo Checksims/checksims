@@ -28,6 +28,8 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.Arrays;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Split a file into a list of character tokens.
  */
@@ -52,11 +54,9 @@ public class FileCharTokenizer implements FileTokenizer {
      */
     @Override
     public TokenList splitFile(String string) {
-        TokenList toReturn = new TokenList(this.getType());
+        checkNotNull(string);
 
-        if(string == null) {
-            return toReturn;
-        }
+        TokenList toReturn = new TokenList(this.getType());
 
         char[] chars = string.toCharArray();
 

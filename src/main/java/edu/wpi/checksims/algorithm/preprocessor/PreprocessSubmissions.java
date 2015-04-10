@@ -28,6 +28,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Apply a preprocessor (maps Submission to Submission) to a given list of submissions
  */
@@ -44,6 +46,9 @@ public final class PreprocessSubmissions {
      * @return New list formed by applying the mapping function to each submission. Retains order of input list.
      */
     public static Collection<Submission> process(SubmissionPreprocessor preprocessor, Collection<Submission> submissions) {
+        checkNotNull(preprocessor);
+        checkNotNull(submissions);
+
         Logger logs = LoggerFactory.getLogger(PreprocessSubmissions.class);
 
         logs.info("Preprocessing " + submissions.size() + " submissions with preprocessor " + preprocessor.getName());

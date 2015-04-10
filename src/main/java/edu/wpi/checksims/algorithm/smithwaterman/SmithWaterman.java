@@ -31,6 +31,8 @@ import edu.wpi.checksims.token.ValidityEnsuringToken;
 import edu.wpi.checksims.util.TwoDimArrayCoord;
 import edu.wpi.checksims.util.TwoDimIntArray;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Performs the actual Smith-Waterman algorithm
  */
@@ -64,6 +66,9 @@ public class SmithWaterman implements SimilarityDetector {
      */
     @Override
     public AlgorithmResults detectSimilarity(Submission a, Submission b) throws ChecksimsException {
+        checkNotNull(a);
+        checkNotNull(b);
+
         if(!a.getTokenType().equals(b.getTokenType())) {
             throw new ChecksimsException("Token list type mismatch: submission " + a.getName() + " has type " +
                     a.getContentAsTokens().type.toString() + ", while submission " + b.getName() + " has type " +

@@ -24,6 +24,8 @@ package edu.wpi.checksims.submission;
 import edu.wpi.checksims.token.TokenList;
 import edu.wpi.checksims.token.TokenType;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Superclass for submission decorators
  */
@@ -31,6 +33,8 @@ public abstract class AbstractSubmissionDecorator implements Submission {
     private final Submission wrappedSubmission;
 
     public AbstractSubmissionDecorator(Submission wrappedSubmission) {
+        checkNotNull(wrappedSubmission);
+
         this.wrappedSubmission = wrappedSubmission;
     }
 

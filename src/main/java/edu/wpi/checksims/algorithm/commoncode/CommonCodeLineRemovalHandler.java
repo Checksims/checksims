@@ -33,6 +33,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Remove common code from input submissions using the LineSimilarityChecker algorithm
  */
@@ -46,6 +48,8 @@ public class CommonCodeLineRemovalHandler implements CommonCodeHandler {
      * @param common Common code to remove
      */
     public CommonCodeLineRemovalHandler(Submission common) throws EmptySubmissionException {
+        checkNotNull(common);
+
         if(common.getContentAsString().isEmpty()) {
             throw new EmptySubmissionException("Common code submission is empty, cowardly refusing to remove!");
         }
@@ -66,6 +70,8 @@ public class CommonCodeLineRemovalHandler implements CommonCodeHandler {
      */
     @Override
     public Collection<Submission> handleCommonCode(Collection<Submission> input) {
+        checkNotNull(input);
+
         Logger logs = LoggerFactory.getLogger(CommonCodeLineRemovalHandler.class);
 
         logs.info("Removing common code from " + input.size() + " submissions");

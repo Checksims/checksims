@@ -37,37 +37,23 @@ import edu.wpi.checksims.util.output.OutputAsFilePrinter;
 import edu.wpi.checksims.util.output.OutputPrinter;
 import org.apache.commons.cli.*;
 import org.apache.commons.collections4.list.SetUniqueList;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.impl.SimpleLogger;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Parses Checksims' command-line options
  */
 public final class ChecksimsCommandLine {
     private static Logger logs;
-
-    static String getChecksimsVersion() {
-        InputStream resource = ChecksimsCommandLine.class.getResourceAsStream("version.txt");
-
-        if(resource == null) {
-            return "Error obtaining version number: could not obtain input stream for version.txt";
-        }
-
-        try {
-            return IOUtils.toString(resource);
-        } catch (IOException e) {
-            return "Error obtaining version number: " + e.getMessage();
-        }
-    }
 
     static Logger startLogger(int level) {
         if(level == 1) {
@@ -123,6 +109,8 @@ public final class ChecksimsCommandLine {
 
     // Parse a given set of CLI arguments
     static CommandLine parseOpts(String[] args) throws ParseException {
+        checkNotNull(args);
+
         Parser parser = new GnuParser();
 
         // Parse the CLI args
@@ -150,7 +138,7 @@ public final class ChecksimsCommandLine {
         PreprocessorRegistry.getInstance().getSupportedImplementationNames().stream().forEach((name) -> System.err.print(name + ", "));
         System.err.println();
 
-        System.err.println("\nChecksims Version " + getChecksimsVersion() + "\n\n");
+        System.err.println("\nChecksims Version " + ChecksimsRunner.getChecksimsVersion() + "\n\n");
 
         System.exit(0);
     }
@@ -163,6 +151,8 @@ public final class ChecksimsCommandLine {
      * @throws ChecksimsException Thrown on invalid user input or internal error
      */
     static ChecksimsConfig parseBaseFlags(CommandLine cli) throws ChecksimsException {
+        checkNotNull(cli);
+
         // If we don't have a logger, set one up
         if(logs == null) {
             logs = LoggerFactory.getLogger(ChecksimsCommandLine.class);
@@ -241,6 +231,9 @@ public final class ChecksimsCommandLine {
      * @throws IOException Thrown on error creating common code submission
      */
     static CommonCodeHandler parseCommonCodeSetting(CommandLine cli, String glob, FileTokenizer tokenizer, boolean recursive) throws ChecksimsException, IOException {
+        checkNotNull(cli);
+        checkNotNull(glob);
+
         // Parse common code detection
         boolean removeCommonCode = cli.hasOption("c");
         if(removeCommonCode) {
@@ -272,9 +265,16 @@ public final class ChecksimsCommandLine {
      * @return Collection of submissions which will be used to run Checksims
      * @throws IOException Thrown on issue reading files or traversing directories to build submissions
      */
-    static List<Submission> getSubmissions(CommandLine cli, String glob, FileTokenizer tokenizer, boolean recursive) throws IOException {
+    static List<Submission> getSubmissions(CommandLine cli, String glob, FileTokenizer tokenizer, boolean recursive) throws IOException, ChecksimsException {
+        checkNotNull(cli);
+        checkNotNull(glob);
+
         String[] unusedArgs = cli.getArgs();
         List<File> submissionDirs = new LinkedList<>();
+
+        if(unusedArgs.length < 2) {
+            throw new ChecksimsException("Expected at least 2 arguments: glob pattern and a submission directory!");
+        }
 
         // The first element in args should be the glob matcher, so start at index 1
         for(int i = 1; i < unusedArgs.length; i++) {
@@ -304,6 +304,8 @@ public final class ChecksimsCommandLine {
      * @throws IOException Thrown on error building a submission from files
      */
     static ChecksimsConfig parseCLI(String[] args) throws ParseException, ChecksimsException, IOException {
+        checkNotNull(args);
+
         CommandLine cli = parseOpts(args);
 
         // Print CLI Help
@@ -313,7 +315,7 @@ public final class ChecksimsCommandLine {
 
         // Print version
         if(cli.hasOption("version")) {
-            System.err.println("Checksims version " + getChecksimsVersion());
+            System.err.println("Checksims version " + ChecksimsRunner.getChecksimsVersion());
             System.exit(0);
         }
 

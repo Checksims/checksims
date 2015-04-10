@@ -47,14 +47,6 @@ public class FileLineTokenizerTest {
     }
 
     @Test
-    public void TestEmptyReturnsEmpty() {
-        TokenList results = l.splitFile(empty);
-
-        assertNotNull(results);
-        assertTrue(results.isEmpty());
-    }
-
-    @Test
     public void TestEmptyNotNullReturnsEmpty() {
         TokenList results = l.splitFile(emptyNotNull);
 

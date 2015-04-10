@@ -26,6 +26,8 @@ import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.token.TokenList;
 import edu.wpi.checksims.token.tokenizer.FileTokenizer;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Remove duplicated whitespace characters
  */
@@ -53,6 +55,8 @@ public class WhitespaceDeduplicationPreprocessor implements SubmissionPreprocess
      */
     @Override
     public Submission process(Submission submission) {
+        checkNotNull(submission);
+
         String tabsAndSpacesDedup = submission.getContentAsString().replaceAll("[ \t]+", " ");
         String unixNewlineDedup = tabsAndSpacesDedup.replaceAll("\n+", "\n");
         String windowsNewlineDedup = unixNewlineDedup.replaceAll("(\r\n)+", "\r\n");

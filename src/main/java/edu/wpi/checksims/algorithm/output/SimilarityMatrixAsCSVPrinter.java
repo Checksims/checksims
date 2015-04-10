@@ -26,6 +26,8 @@ import edu.wpi.checksims.submission.Submission;
 import java.text.DecimalFormat;
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Print similarity matrix to CSV format
  */
@@ -50,6 +52,8 @@ public class SimilarityMatrixAsCSVPrinter implements SimilarityMatrixPrinter {
 
     @Override
     public String printMatrix(SimilarityMatrix matrix) {
+        checkNotNull(matrix);
+
         StringBuilder buffer = new StringBuilder();
         float[][] similarityMatrix = matrix.getResults();
         List<Submission> submissions = matrix.getSubmissions();

@@ -37,6 +37,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Implements a line-by-line similarity checker
  */
@@ -91,6 +93,9 @@ public class LineSimilarityChecker implements SimilarityDetector {
      */
     @Override
     public AlgorithmResults detectSimilarity(Submission a, Submission b) throws ChecksimsException {
+        checkNotNull(a);
+        checkNotNull(b);
+
         TokenList linesA = a.getContentAsTokens();
         TokenList linesB = b.getContentAsTokens();
         TokenList finalA = TokenList.cloneTokenList(linesA);

@@ -29,6 +29,8 @@ import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.text.DecimalFormat;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Output a similarity matrix as HTML
  */
@@ -52,6 +54,8 @@ public class SimilarityMatrixAsHTMLPrinter implements SimilarityMatrixPrinter {
 
     @Override
     public String printMatrix(SimilarityMatrix matrix) {
+        checkNotNull(matrix);
+
         DecimalFormat f = new DecimalFormat("###.00");
         InputStream stream = SimilarityMatrixAsHTMLPrinter.class.getResourceAsStream("/edu/wpi/checksims/algorithm/output/htmlOutput.vm");
 

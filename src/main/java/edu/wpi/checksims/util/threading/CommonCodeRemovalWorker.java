@@ -35,6 +35,8 @@ import org.slf4j.LoggerFactory;
 import java.text.DecimalFormat;
 import java.util.concurrent.Callable;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Basic unit of thread execution for Common Code Removal
  */
@@ -45,7 +47,18 @@ public class CommonCodeRemovalWorker implements Callable<Submission> {
 
     private static Logger logs = LoggerFactory.getLogger(CommonCodeRemovalWorker.class);
 
+    /**
+     * Create a Callable worker to perform common code removal on a single submission
+     *
+     * @param algorithm Algorithm to use to detect common code
+     * @param common Common code to remove
+     * @param removeFrom Submission to remove code from
+     */
     public CommonCodeRemovalWorker(SimilarityDetector algorithm, Submission common, Submission removeFrom) {
+        checkNotNull(algorithm);
+        checkNotNull(common);
+        checkNotNull(removeFrom);
+
         this.algorithm = algorithm;
         this.common = common;
         this.removeFrom = removeFrom;

@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * A list of tokens of a specific type
  */
@@ -39,6 +41,9 @@ public class TokenList extends PredicatedList<Token> {
 
     public TokenList(TokenType type) {
         super(new LinkedList<>(), (token) -> token.getType().equals(type));
+        
+        checkNotNull(type);
+
         this.type = type;
     }
 
@@ -98,6 +103,8 @@ public class TokenList extends PredicatedList<Token> {
      * @return Immutable copy of cloneFrom
      */
     public static TokenList immutableCopy(TokenList cloneFrom) {
+        checkNotNull(cloneFrom);
+
         return new TokenList(cloneFrom.type, ImmutableList.copyOf(cloneFrom));
     }
 
@@ -108,6 +115,8 @@ public class TokenList extends PredicatedList<Token> {
      * @return Cloned copy of the tokenization list
      */
     public static TokenList cloneTokenList(TokenList cloneFrom) {
+        checkNotNull(cloneFrom);
+
         Supplier<TokenList> tokenListSupplier = () -> new TokenList(cloneFrom.type);
 
         return cloneFrom.stream().map(Token::cloneToken).collect(Collectors.toCollection(tokenListSupplier));

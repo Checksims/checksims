@@ -27,6 +27,8 @@ import edu.wpi.checksims.token.TokenType;
 
 import java.util.Arrays;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Splits a file on a line-by-line basis
  */
@@ -51,9 +53,11 @@ public class FileLineTokenizer implements FileTokenizer {
      */
     @Override
     public TokenList splitFile(String string) {
+        checkNotNull(string);
+
         TokenList toReturn = new TokenList(this.getType());
 
-        if(string == null || string.isEmpty()) {
+        if(string.isEmpty()) {
             return toReturn;
         }
 

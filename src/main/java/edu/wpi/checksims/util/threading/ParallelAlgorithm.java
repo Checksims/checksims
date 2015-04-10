@@ -34,6 +34,9 @@ import java.util.List;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Apply a given algorithm to a given set of data in parallel
  */
@@ -43,12 +46,14 @@ public final class ParallelAlgorithm {
     private static Logger logs = LoggerFactory.getLogger(ParallelAlgorithm.class);
 
     private static int threadCount = Runtime.getRuntime().availableProcessors();
-    private static ThreadPoolExecutor executor = new ThreadPoolExecutor(threadCount, threadCount, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<>(), new ThreadPoolExecutor.AbortPolicy());;
+    private static ThreadPoolExecutor executor = new ThreadPoolExecutor(threadCount, threadCount, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<>(), new ThreadPoolExecutor.AbortPolicy());
 
     /**
      * @param threads Number of threads to be used for execution
      */
     public static void setThreadCount(int threads) {
+        checkArgument(threads > 0);
+
         threadCount = threads;
         executor.shutdown();
         // Set up the executor again with the new thread count
@@ -71,6 +76,10 @@ public final class ParallelAlgorithm {
      * @return Submissions with common code removed
      */
     public static Collection<Submission> parallelCommonCodeRemoval(SimilarityDetector algorithm, Submission common, Collection<Submission> submissions) {
+        checkNotNull(algorithm);
+        checkNotNull(common);
+        checkNotNull(submissions);
+
         Collection<CommonCodeRemovalWorker> workers = submissions.stream().map((submission) -> new CommonCodeRemovalWorker(algorithm, common, submission)).collect(Collectors.toList());
 
         return executeTasks(workers);
@@ -84,6 +93,9 @@ public final class ParallelAlgorithm {
      * @return Collection of results, one for each pair
      */
     public static Collection<AlgorithmResults> parallelSimilarityDetection(SimilarityDetector algorithm, Collection<UnorderedPair<Submission>> pairs) {
+        checkNotNull(algorithm);
+        checkNotNull(pairs);
+
         // Map the pairs to ChecksimsWorker instances
         Collection<SimilarityDetectionWorker> workers = pairs.stream().map((pair) -> new SimilarityDetectionWorker(algorithm, pair)).collect(Collectors.toList());
 
@@ -91,6 +103,9 @@ public final class ParallelAlgorithm {
     }
 
     public static Collection<Submission> parallelSubmissionPreprocessing(SubmissionPreprocessor preprocessor, Collection<Submission> submissions) {
+        checkNotNull(preprocessor);
+        checkNotNull(submissions);
+
         // Map the submissions to PreprocessorWorker instances
         Collection<PreprocessorWorker> workers = submissions.stream().map((submission) -> new PreprocessorWorker(submission, preprocessor)).collect(Collectors.toList());
 
@@ -108,6 +123,8 @@ public final class ParallelAlgorithm {
      * @return Collection of Ts
      */
     private static <T, T2 extends Callable<T>> Collection<T> executeTasks(Collection<T2> tasks) {
+        checkNotNull(tasks);
+
         logs.info("Starting work using " + threadCount + " threads.");
 
         // Invoke the executor on all the worker instances

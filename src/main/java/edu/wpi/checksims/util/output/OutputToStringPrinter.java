@@ -24,6 +24,8 @@ package edu.wpi.checksims.util.output;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrix;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrixPrinter;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Provide results of Checksims as a string
  */
@@ -52,6 +54,9 @@ public class OutputToStringPrinter implements OutputPrinter {
      */
     @Override
     public void print(SimilarityMatrix toPrint, SimilarityMatrixPrinter printWith) {
+        checkNotNull(toPrint);
+        checkNotNull(printWith);
+
         String output = printWith.printMatrix(toPrint);
 
         buffer.append(output);

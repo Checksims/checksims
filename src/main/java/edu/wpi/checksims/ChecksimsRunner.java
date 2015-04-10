@@ -30,10 +30,14 @@ import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.util.output.OutputPrinter;
 import edu.wpi.checksims.util.threading.ParallelAlgorithm;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Entry point for Checksims
@@ -67,22 +71,34 @@ public class ChecksimsRunner {
     }
 
     /**
+     * @return Current version of Checksims
+     */
+    static String getChecksimsVersion() {
+        InputStream resource = ChecksimsCommandLine.class.getResourceAsStream("version.txt");
+
+        if(resource == null) {
+            return "Error obtaining version number: could not obtain input stream for version.txt";
+        }
+
+        try {
+            return IOUtils.toString(resource);
+        } catch (IOException e) {
+            return "Error obtaining version number: " + e.getMessage();
+        }
+    }
+
+    /**
      * Main public entrypoint to Checksims. Runs similarity detection according to given configuration.
      *
      * @param config Configuration defining how Checksims will be run
      */
     public static void runChecksims(ChecksimsConfig config) {
-        // Check to see that the config is usable and user-specified CLI opts are good
-        try {
-            config.isReady();
-        } catch(ChecksimsException e) {
-            logs.error("Error: invalid run configuration specified!");
-            throw new RuntimeException(e);
-        }
+        checkNotNull(config);
 
         // Set parallelism
         int threads = config.getNumThreads();
         ParallelAlgorithm.setThreadCount(threads);
+        // TODO following line may not be necessary as we no longer use parallel streams?
         System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "" + threads);
 
         ImmutableList<Submission> submissions = config.getSubmissions();
