@@ -28,7 +28,7 @@ import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.submission.ValidityIgnoringSubmission;
 import edu.wpi.checksims.token.TokenList;
 import edu.wpi.checksims.token.TokenType;
-import edu.wpi.checksims.token.tokenizer.FileTokenizer;
+import edu.wpi.checksims.token.tokenizer.Tokenizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,7 +75,7 @@ public class CommonCodeRemovalWorker implements Callable<Submission> {
         logs.debug("Performing common code removal on submission " + removeFrom.getName());
 
         TokenType type = algorithm.getDefaultTokenType();
-        FileTokenizer tokenizer = FileTokenizer.getTokenizer(type);
+        Tokenizer tokenizer = Tokenizer.getTokenizer(type);
 
         // Re-tokenize input and common code using given token type
         TokenList redoneIn = tokenizer.splitFile(removeFrom.getContentAsString());
@@ -110,7 +110,7 @@ public class CommonCodeRemovalWorker implements Callable<Submission> {
 
         // Retokenize the new body with the original tokenization
         TokenType oldType = removeFrom.getTokenType();
-        FileTokenizer oldTokenizer = FileTokenizer.getTokenizer(oldType);
+        Tokenizer oldTokenizer = Tokenizer.getTokenizer(oldType);
         TokenList finalListGoodTokenization = oldTokenizer.splitFile(newBody);
 
         DecimalFormat d = new DecimalFormat("###.00");

@@ -53,6 +53,8 @@ public class SimilarityDetectionWorker implements Callable<AlgorithmResults> {
     public SimilarityDetectionWorker(SimilarityDetector algorithm, Pair<Submission, Submission> submissions) {
         checkNotNull(algorithm);
         checkNotNull(submissions);
+        checkNotNull(submissions.getLeft());
+        checkNotNull(submissions.getRight());
 
         this.algorithm = algorithm;
         this.submissions = submissions;

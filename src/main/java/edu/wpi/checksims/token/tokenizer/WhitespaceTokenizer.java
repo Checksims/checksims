@@ -32,14 +32,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Split a file into tokens based on spaces
  */
-public class FileWhitespaceTokenizer implements FileTokenizer {
-    private static FileWhitespaceTokenizer instance;
+public class WhitespaceTokenizer implements Tokenizer {
+    private static WhitespaceTokenizer instance;
 
-    private FileWhitespaceTokenizer() {}
+    private WhitespaceTokenizer() {}
 
-    public static FileWhitespaceTokenizer getInstance() {
+    public static WhitespaceTokenizer getInstance() {
         if(instance == null) {
-            instance = new FileWhitespaceTokenizer();
+            instance = new WhitespaceTokenizer();
         }
 
         return instance;

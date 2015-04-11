@@ -23,7 +23,7 @@ package edu.wpi.checksims.submission;
 
 import edu.wpi.checksims.testutil.SubmissionUtils;
 import edu.wpi.checksims.token.TokenType;
-import edu.wpi.checksims.token.tokenizer.FileTokenizer;
+import edu.wpi.checksims.token.tokenizer.Tokenizer;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -52,7 +52,7 @@ public class SubmissionGenerationTest {
     private File testOneFile;
     private File testRecursive;
     private File testVariedExtensions;
-    private FileTokenizer line;
+    private Tokenizer line;
 
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
@@ -69,7 +69,7 @@ public class SubmissionGenerationTest {
         testRecursive = new File(basePath + "/testRecursive");
         testVariedExtensions = new File(basePath + "/testVariedExtensions");
 
-        line = FileTokenizer.getTokenizer(TokenType.LINE);
+        line = Tokenizer.getTokenizer(TokenType.LINE);
     }
 
     public static List<File> namesToFiles(String prefix, List<String> names) {

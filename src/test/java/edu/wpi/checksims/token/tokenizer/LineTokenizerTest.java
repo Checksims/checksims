@@ -31,12 +31,12 @@ import static org.junit.Assert.*;
 /**
  * Test for FileLineTokenizer, which is itself very simple, and thus not extensively tested
  */
-public class FileLineTokenizerTest {
-    private FileLineTokenizer l;
+public class LineTokenizerTest {
+    private LineTokenizer l;
 
     @Before
     public void setUp() {
-        l = FileLineTokenizer.getInstance();
+        l = LineTokenizer.getInstance();
     }
 
     @Test

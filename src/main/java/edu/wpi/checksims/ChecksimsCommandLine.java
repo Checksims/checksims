@@ -32,7 +32,7 @@ import edu.wpi.checksims.algorithm.preprocessor.SubmissionPreprocessor;
 import edu.wpi.checksims.submission.EmptySubmissionException;
 import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.token.TokenType;
-import edu.wpi.checksims.token.tokenizer.FileTokenizer;
+import edu.wpi.checksims.token.tokenizer.Tokenizer;
 import edu.wpi.checksims.util.output.OutputAsFilePrinter;
 import edu.wpi.checksims.util.output.OutputPrinter;
 import org.apache.commons.cli.*;
@@ -242,7 +242,7 @@ public final class ChecksimsCommandLine {
      * @throws ChecksimsException Thrown if no files matching the glob pattern are found in the common code directory
      * @throws IOException Thrown on error creating common code submission
      */
-    static CommonCodeHandler parseCommonCodeSetting(CommandLine cli, String glob, FileTokenizer tokenizer, boolean recursive) throws ChecksimsException, IOException {
+    static CommonCodeHandler parseCommonCodeSetting(CommandLine cli, String glob, Tokenizer tokenizer, boolean recursive) throws ChecksimsException, IOException {
         checkNotNull(cli);
         checkNotNull(glob);
 
@@ -277,7 +277,7 @@ public final class ChecksimsCommandLine {
      * @return Collection of submissions which will be used to run Checksims
      * @throws IOException Thrown on issue reading files or traversing directories to build submissions
      */
-    static Set<Submission> getSubmissions(CommandLine cli, String glob, FileTokenizer tokenizer, boolean recursive) throws IOException, ChecksimsException {
+    static Set<Submission> getSubmissions(CommandLine cli, String glob, Tokenizer tokenizer, boolean recursive) throws IOException, ChecksimsException {
         checkNotNull(cli);
         checkNotNull(glob);
 
@@ -366,7 +366,7 @@ public final class ChecksimsCommandLine {
         ChecksimsConfig config = parseBaseFlags(cli);
 
         // Set up a tokenizer to use
-        FileTokenizer tokenizer = FileTokenizer.getTokenizer(config.getTokenization());
+        Tokenizer tokenizer = Tokenizer.getTokenizer(config.getTokenization());
 
         // Next, parse common code settings
         CommonCodeHandler handler = parseCommonCodeSetting(cli, glob, tokenizer, recursive);

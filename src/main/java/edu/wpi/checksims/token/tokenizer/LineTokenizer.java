@@ -32,14 +32,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Splits a file on a line-by-line basis
  */
-public class FileLineTokenizer implements FileTokenizer {
-    private static FileLineTokenizer instance;
+public class LineTokenizer implements Tokenizer {
+    private static LineTokenizer instance;
 
-    private FileLineTokenizer() {}
+    private LineTokenizer() {}
 
-    public static FileLineTokenizer getInstance() {
+    public static LineTokenizer getInstance() {
         if(instance == null) {
-            instance = new FileLineTokenizer();
+            instance = new LineTokenizer();
         }
 
         return instance;

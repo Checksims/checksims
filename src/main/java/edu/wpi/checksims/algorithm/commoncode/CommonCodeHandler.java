@@ -23,7 +23,6 @@ package edu.wpi.checksims.algorithm.commoncode;
 
 import edu.wpi.checksims.submission.Submission;
 
-import java.util.Collection;
 import java.util.Set;
 
 /**

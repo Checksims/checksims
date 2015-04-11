@@ -31,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.*;
@@ -126,6 +127,11 @@ public final class ParallelAlgorithm {
      */
     private static <T, T2 extends Callable<T>> Collection<T> executeTasks(Collection<T2> tasks) {
         checkNotNull(tasks);
+
+        if(tasks.size() == 0) {
+            logs.warn("Parallel execution called with no tasks - no work done!");
+            return new LinkedList<>();
+        }
 
         logs.info("Starting work using " + threadCount + " threads.");
 

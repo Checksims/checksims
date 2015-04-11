@@ -24,7 +24,7 @@ package edu.wpi.checksims.testutil;
 import edu.wpi.checksims.submission.ConcreteSubmission;
 import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.token.TokenType;
-import edu.wpi.checksims.token.tokenizer.FileTokenizer;
+import edu.wpi.checksims.token.tokenizer.Tokenizer;
 
 import java.io.File;
 import java.util.Arrays;
@@ -84,7 +84,7 @@ public class SubmissionUtils {
      * @return Submission with given content
      */
     public static Submission submissionFromString(String name, String content, TokenType type) {
-        FileTokenizer tokenizer = FileTokenizer.getTokenizer(type);
+        Tokenizer tokenizer = Tokenizer.getTokenizer(type);
 
         return new ConcreteSubmission(name, content, tokenizer.splitFile(content));
     }

@@ -24,7 +24,7 @@ package edu.wpi.checksims.submission;
 import com.google.common.collect.Ordering;
 import edu.wpi.checksims.token.TokenList;
 import edu.wpi.checksims.token.TokenType;
-import edu.wpi.checksims.token.tokenizer.FileTokenizer;
+import edu.wpi.checksims.token.tokenizer.Tokenizer;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,7 +84,7 @@ public interface Submission {
      * @return Set of submissions including all unique nonempty submissions in the given directory
      * @throws java.io.IOException Thrown on error interacting with file or filesystem
      */
-    public static Set<Submission> submissionListFromDir(File directory, String glob, FileTokenizer splitter, boolean recursive) throws IOException {
+    public static Set<Submission> submissionListFromDir(File directory, String glob, Tokenizer splitter, boolean recursive) throws IOException {
         checkNotNull(directory);
         checkNotNull(glob);
         checkArgument(!glob.isEmpty());
@@ -128,7 +128,7 @@ public interface Submission {
      * @return Single submission from all files matching the glob in given directory
      * @throws IOException Thrown on error interacting with file
      */
-    public static Submission submissionFromDir(File directory, String glob, FileTokenizer splitter, boolean recursive) throws IOException, NoMatchingFilesException {
+    public static Submission submissionFromDir(File directory, String glob, Tokenizer splitter, boolean recursive) throws IOException, NoMatchingFilesException {
         checkNotNull(directory);
         checkNotNull(glob);
         checkArgument(!glob.isEmpty());
@@ -218,7 +218,7 @@ public interface Submission {
      * @throws IOException Thrown on error reading from file
      * @throws edu.wpi.checksims.submission.NoMatchingFilesException Thrown if no files are given
      */
-    public static Submission submissionFromFiles(String name, Set<File> files, FileTokenizer splitter) throws IOException, NoMatchingFilesException {
+    public static Submission submissionFromFiles(String name, Set<File> files, Tokenizer splitter) throws IOException, NoMatchingFilesException {
         checkNotNull(name);
         checkArgument(!name.isEmpty());
         checkNotNull(files);

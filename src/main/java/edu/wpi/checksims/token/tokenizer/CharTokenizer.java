@@ -33,14 +33,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Split a file into a list of character tokens.
  */
-public class FileCharTokenizer implements FileTokenizer {
-    private static FileCharTokenizer instance;
+public class CharTokenizer implements Tokenizer {
+    private static CharTokenizer instance;
 
-    private FileCharTokenizer() {}
+    private CharTokenizer() {}
 
-    public static FileCharTokenizer getInstance() {
+    public static CharTokenizer getInstance() {
         if(instance == null) {
-            instance = new FileCharTokenizer();
+            instance = new CharTokenizer();
         }
 
         return instance;

@@ -31,12 +31,12 @@ import static org.junit.Assert.*;
 /**
  * Test that we can split files by whitespace
  */
-public class FileWhitespaceTokenizerTest {
-    private FileWhitespaceTokenizer s;
+public class WhitespaceTokenizerTest {
+    private WhitespaceTokenizer s;
 
     @Before
     public void setUp() {
-        s = FileWhitespaceTokenizer.getInstance();
+        s = WhitespaceTokenizer.getInstance();
     }
 
     @Test

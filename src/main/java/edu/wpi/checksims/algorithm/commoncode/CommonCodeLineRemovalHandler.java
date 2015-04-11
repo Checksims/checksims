@@ -21,7 +21,6 @@
 
 package edu.wpi.checksims.algorithm.commoncode;
 
-import edu.wpi.checksims.ChecksimsException;
 import edu.wpi.checksims.algorithm.AlgorithmRegistry;
 import edu.wpi.checksims.algorithm.SimilarityDetector;
 import edu.wpi.checksims.submission.EmptySubmissionException;
@@ -31,7 +30,6 @@ import edu.wpi.checksims.util.threading.ParallelAlgorithm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;

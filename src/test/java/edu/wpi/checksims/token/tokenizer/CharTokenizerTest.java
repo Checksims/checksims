@@ -31,12 +31,12 @@ import static org.junit.Assert.*;
 /**
  * Tests for the FileCharTokenizer
  */
-public class FileCharTokenizerTest {
-    private FileCharTokenizer c;
+public class CharTokenizerTest {
+    private CharTokenizer c;
 
     @Before
     public void setUp() {
-        c = FileCharTokenizer.getInstance();
+        c = CharTokenizer.getInstance();
     }
 
     @Test

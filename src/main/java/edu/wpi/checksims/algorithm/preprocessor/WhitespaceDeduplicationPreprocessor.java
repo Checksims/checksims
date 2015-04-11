@@ -24,7 +24,7 @@ package edu.wpi.checksims.algorithm.preprocessor;
 import edu.wpi.checksims.submission.ConcreteSubmission;
 import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.token.TokenList;
-import edu.wpi.checksims.token.tokenizer.FileTokenizer;
+import edu.wpi.checksims.token.tokenizer.Tokenizer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -61,7 +61,7 @@ public class WhitespaceDeduplicationPreprocessor implements SubmissionPreprocess
         String unixNewlineDedup = tabsAndSpacesDedup.replaceAll("\n+", "\n");
         String windowsNewlineDedup = unixNewlineDedup.replaceAll("(\r\n)+", "\r\n");
 
-        FileTokenizer tokenizer = FileTokenizer.getTokenizer(submission.getTokenType());
+        Tokenizer tokenizer = Tokenizer.getTokenizer(submission.getTokenType());
 
         TokenList finalList = tokenizer.splitFile(windowsNewlineDedup);
 
