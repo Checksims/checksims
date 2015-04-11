@@ -32,10 +32,7 @@ import org.junit.rules.ExpectedException;
 import java.io.File;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.NotDirectoryException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static edu.wpi.checksims.testutil.SubmissionUtils.checkSubmissionCollections;
@@ -229,7 +226,7 @@ public class SubmissionGenerationTest {
 
     @Test
     public void TestGenerateListOfSubmissionFromDir() throws Exception {
-        List<Submission> submissionList = Submission.submissionListFromDir(new File(basePath), "*.txt", line, true);
+        Set<Submission> submissionList = Submission.submissionListFromDir(new File(basePath), "*.txt", line, true);
 
         Submission sub1 = Submission.submissionFromDir(test1, "*.txt", line, true);
         Submission sub2 = Submission.submissionFromDir(test2, "*.txt", line, true);

@@ -21,7 +21,7 @@
 
 package edu.wpi.checksims;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrix;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrixPrinter;
 import edu.wpi.checksims.algorithm.preprocessor.PreprocessSubmissions;
@@ -101,7 +101,7 @@ public class ChecksimsRunner {
         // TODO following line may not be necessary as we no longer use parallel streams?
         System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "" + threads);
 
-        ImmutableList<Submission> submissions = config.getSubmissions();
+        ImmutableSet<Submission> submissions = config.getSubmissions();
 
         logs.info("Got " + submissions.size() + " submissions to test.");
 
@@ -111,11 +111,11 @@ public class ChecksimsRunner {
         }
 
         // Apply the common code handler (which may just be a pass-through operation, if there is no common code)
-        submissions = ImmutableList.copyOf(config.getCommonCodeHandler().handleCommonCode(submissions));
+        submissions = ImmutableSet.copyOf(config.getCommonCodeHandler().handleCommonCode(submissions));
 
         // Apply all preprocessors
         for(SubmissionPreprocessor p : config.getPreprocessors()) {
-            submissions = ImmutableList.copyOf(PreprocessSubmissions.process(p, submissions));
+            submissions = ImmutableSet.copyOf(PreprocessSubmissions.process(p, submissions));
         }
 
         if(submissions.size() < 2) {

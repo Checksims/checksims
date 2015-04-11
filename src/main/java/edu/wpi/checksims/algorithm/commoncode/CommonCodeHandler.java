@@ -24,6 +24,7 @@ package edu.wpi.checksims.algorithm.commoncode;
 import edu.wpi.checksims.submission.Submission;
 
 import java.util.Collection;
+import java.util.Set;
 
 /**
  * A handler for Common Code Removal
@@ -35,5 +36,5 @@ public interface CommonCodeHandler {
      * @param input Submissions to handle common code within
      * @return Result of processing submissions for common code
      */
-    public Collection<Submission> handleCommonCode(Collection<Submission> input);
+    public Set<Submission> handleCommonCode(Set<Submission> input);
 }

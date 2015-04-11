@@ -26,13 +26,11 @@ import edu.wpi.checksims.submission.Submission;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import static edu.wpi.checksims.testutil.SubmissionUtils.checkSubmissionCollections;
 import static edu.wpi.checksims.testutil.SubmissionUtils.lineSubmissionFromString;
+import static edu.wpi.checksims.testutil.SubmissionUtils.setFromElements;
 import static org.junit.Assert.*;
 
 /**
@@ -41,9 +39,9 @@ import static org.junit.Assert.*;
 public class PreprocessSubmissionsTest {
     private Submission a;
     private Submission b;
-    private List<Submission> empty;
-    private List<Submission> oneSubmission;
-    private List<Submission> twoSubmissions;
+    private Set<Submission> empty;
+    private Set<Submission> oneSubmission;
+    private Set<Submission> twoSubmissions;
     private SubmissionPreprocessor identity;
     private SubmissionPreprocessor renamer;
 
@@ -52,9 +50,9 @@ public class PreprocessSubmissionsTest {
         a = lineSubmissionFromString("Submission A", "A");
         b = lineSubmissionFromString("Submission B", "B");
 
-        empty = new LinkedList<>();
-        oneSubmission = Arrays.asList(a);
-        twoSubmissions = Arrays.asList(a, b);
+        empty = new HashSet<>();
+        oneSubmission = setFromElements(a);
+        twoSubmissions = setFromElements(a, b);
 
         identity = new SubmissionPreprocessor() {
             @Override

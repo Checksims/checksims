@@ -25,22 +25,21 @@ import edu.wpi.checksims.submission.Submission;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedList;
+import java.util.*;
 
 import static edu.wpi.checksims.testutil.SubmissionUtils.charSubmissionFromString;
 import static edu.wpi.checksims.testutil.SubmissionUtils.checkSubmissionCollections;
+import static edu.wpi.checksims.testutil.SubmissionUtils.setFromElements;
 
 /**
  * Tests for the Common Code passthrough handler
  */
 public class CommonCodePassthroughHandlerTest {
     private CommonCodeHandler passthrough;
-    private Collection<Submission> empty;
-    private Collection<Submission> oneSubmission;
-    private Collection<Submission> twoSubmissions;
-    private Collection<Submission> threeSubmissions;
+    private Set<Submission> empty;
+    private Set<Submission> oneSubmission;
+    private Set<Submission> twoSubmissions;
+    private Set<Submission> threeSubmissions;
 
     @Before
     public void setUp() {
@@ -50,13 +49,13 @@ public class CommonCodePassthroughHandlerTest {
         Submission b = charSubmissionFromString("B", "B");
         Submission c = charSubmissionFromString("C", "C");
 
-        empty = new LinkedList<>();
+        empty = new HashSet<>();
 
-        oneSubmission = Arrays.asList(a);
+        oneSubmission = setFromElements(a);
 
-        twoSubmissions = Arrays.asList(a, b);
+        twoSubmissions = setFromElements(a, b);
 
-        threeSubmissions = Arrays.asList(a, b, c);
+        threeSubmissions = setFromElements(a, b, c);
     }
 
     @Test

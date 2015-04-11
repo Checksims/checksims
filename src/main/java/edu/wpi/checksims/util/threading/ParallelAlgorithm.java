@@ -21,6 +21,7 @@
 
 package edu.wpi.checksims.util.threading;
 
+import com.google.common.collect.ImmutableSet;
 import edu.wpi.checksims.algorithm.AlgorithmResults;
 import edu.wpi.checksims.algorithm.SimilarityDetector;
 import edu.wpi.checksims.algorithm.preprocessor.SubmissionPreprocessor;
@@ -76,14 +77,14 @@ public final class ParallelAlgorithm {
      * @param submissions Submissions to remove from
      * @return Submissions with common code removed
      */
-    public static Collection<Submission> parallelCommonCodeRemoval(SimilarityDetector algorithm, Submission common, Collection<Submission> submissions) {
+    public static Set<Submission> parallelCommonCodeRemoval(SimilarityDetector algorithm, Submission common, Set<Submission> submissions) {
         checkNotNull(algorithm);
         checkNotNull(common);
         checkNotNull(submissions);
 
         Collection<CommonCodeRemovalWorker> workers = submissions.stream().map((submission) -> new CommonCodeRemovalWorker(algorithm, common, submission)).collect(Collectors.toList());
 
-        return executeTasks(workers);
+        return ImmutableSet.copyOf(executeTasks(workers));
     }
 
     /**
@@ -103,14 +104,14 @@ public final class ParallelAlgorithm {
         return executeTasks(workers);
     }
 
-    public static Collection<Submission> parallelSubmissionPreprocessing(SubmissionPreprocessor preprocessor, Collection<Submission> submissions) {
+    public static Set<Submission> parallelSubmissionPreprocessing(SubmissionPreprocessor preprocessor, Set<Submission> submissions) {
         checkNotNull(preprocessor);
         checkNotNull(submissions);
 
         // Map the submissions to PreprocessorWorker instances
         Collection<PreprocessorWorker> workers = submissions.stream().map((submission) -> new PreprocessorWorker(submission, preprocessor)).collect(Collectors.toList());
 
-        return executeTasks(workers);
+        return ImmutableSet.copyOf(executeTasks(workers));
     }
 
     /**

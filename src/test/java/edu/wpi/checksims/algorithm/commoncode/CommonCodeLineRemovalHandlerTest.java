@@ -28,9 +28,9 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Set;
 
-import static edu.wpi.checksims.testutil.SubmissionUtils.charSubmissionFromString;
-import static edu.wpi.checksims.testutil.SubmissionUtils.checkSubmissionCollections;
+import static edu.wpi.checksims.testutil.SubmissionUtils.*;
 
 /**
  * Tests for the Common Code Line Removal Handler
@@ -57,7 +57,7 @@ public class CommonCodeLineRemovalHandlerTest {
     @Test
     public void TestRemoveCommonCodeFromEmpty() throws Exception {
         CommonCodeLineRemovalHandler handler = new CommonCodeLineRemovalHandler(abc);
-        Collection<Submission> removeFrom = Arrays.asList(empty);
+        Set<Submission> removeFrom = setFromElements(empty);
 
         Collection<Submission> result = handler.handleCommonCode(removeFrom);
 
@@ -67,7 +67,7 @@ public class CommonCodeLineRemovalHandlerTest {
     @Test
     public void TestRemoveIdenticalCommonCodeReturnsEmpty() throws Exception {
         CommonCodeLineRemovalHandler handler = new CommonCodeLineRemovalHandler(abc);
-        Collection<Submission> removeFrom = Arrays.asList(abc);
+        Set<Submission> removeFrom = setFromElements(abc);
         Submission expected = charSubmissionFromString(abc.getName(), empty.getContentAsString());
 
         Collection<Submission> results = handler.handleCommonCode(removeFrom);
@@ -78,7 +78,7 @@ public class CommonCodeLineRemovalHandlerTest {
     @Test
     public void TestRemoveCommonCodeNoOverlapReturnsIdentical() throws Exception {
         CommonCodeLineRemovalHandler handler = new CommonCodeLineRemovalHandler(def);
-        Collection<Submission> removeFrom = Arrays.asList(abc);
+        Set<Submission> removeFrom = setFromElements(abc);
 
         Collection<Submission> results = handler.handleCommonCode(removeFrom);
 
@@ -88,7 +88,7 @@ public class CommonCodeLineRemovalHandlerTest {
     @Test
     public void TestRemoveCommonCodePartialOverlap() throws Exception {
         CommonCodeLineRemovalHandler handler = new CommonCodeLineRemovalHandler(abc);
-        Collection<Submission> removeFrom = Arrays.asList(abcde);
+        Set<Submission> removeFrom = setFromElements(abcde);
         Submission expected = charSubmissionFromString(abcde.getName(), "D\nE\n");
 
         Collection<Submission> results = handler.handleCommonCode(removeFrom);
@@ -99,7 +99,7 @@ public class CommonCodeLineRemovalHandlerTest {
     @Test
     public void TestRemoveCommonCodeSubsetOfCommon() throws Exception {
         CommonCodeLineRemovalHandler handler = new CommonCodeLineRemovalHandler(abcde);
-        Collection<Submission> removeFrom = Arrays.asList(abc);
+        Set<Submission> removeFrom = setFromElements(abc);
         Submission expected = charSubmissionFromString(abc.getName(), empty.getContentAsString());
 
         Collection<Submission> results = handler.handleCommonCode(removeFrom);
@@ -110,7 +110,7 @@ public class CommonCodeLineRemovalHandlerTest {
     @Test
     public void TestRemoveCommonCodeMultipleSubmissions() throws Exception {
         CommonCodeLineRemovalHandler handler = new CommonCodeLineRemovalHandler(abc);
-        Collection<Submission> removeFrom = Arrays.asList(abc, abcde, def);
+        Set<Submission> removeFrom = setFromElements(abc, abcde, def);
         Submission expected1 = charSubmissionFromString(abc.getName(), empty.getContentAsString());
         Submission expected2 = charSubmissionFromString(abcde.getName(), "D\nE\n");
         Submission expected3 = def;

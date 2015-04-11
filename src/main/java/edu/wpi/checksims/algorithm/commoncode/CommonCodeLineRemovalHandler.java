@@ -32,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -69,7 +70,7 @@ public class CommonCodeLineRemovalHandler implements CommonCodeHandler {
      * @return Input submissions with lines contained in the common code removed
      */
     @Override
-    public Collection<Submission> handleCommonCode(Collection<Submission> input) {
+    public Set<Submission> handleCommonCode(Set<Submission> input) {
         checkNotNull(input);
 
         Logger logs = LoggerFactory.getLogger(CommonCodeLineRemovalHandler.class);

@@ -25,6 +25,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 
 /**
@@ -73,7 +74,7 @@ public class ChecksimsConfigTest {
         expectedEx.expect(IllegalArgumentException.class);
 
         ChecksimsConfig config = new ChecksimsConfig();
-        config.setSubmissions(new LinkedList<>());
+        config.setSubmissions(new HashSet<>());
     }
 
     @Test

@@ -22,6 +22,7 @@
 package edu.wpi.checksims;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import edu.wpi.checksims.algorithm.AlgorithmRegistry;
 import edu.wpi.checksims.algorithm.SimilarityDetector;
 import edu.wpi.checksims.algorithm.commoncode.CommonCodeHandler;
@@ -37,6 +38,7 @@ import edu.wpi.checksims.util.output.OutputToStdoutPrinter;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -48,14 +50,14 @@ public final class ChecksimsConfig {
     private SimilarityDetector algorithm;
     private TokenType tokenization;
     private ImmutableList<SubmissionPreprocessor> preprocessors;
-    private ImmutableList<Submission> submissions;
+    private ImmutableSet<Submission> submissions;
     private CommonCodeHandler commonCodeHandler;
     private ImmutableList<SimilarityMatrixPrinter> outputPrinters;
     private OutputPrinter outputMethod;
     private int numThreads;
 
     private ChecksimsConfig(SimilarityDetector algorithm, TokenType tokenization, List<SubmissionPreprocessor> preprocessors,
-                            List<Submission> submissions, CommonCodeHandler commonCodeHandler, List<SimilarityMatrixPrinter> outputPrinters,
+                            Set<Submission> submissions, CommonCodeHandler commonCodeHandler, List<SimilarityMatrixPrinter> outputPrinters,
                             OutputPrinter outputMethod, int numThreads) {
         this.algorithm = algorithm;
         this.tokenization = tokenization;
@@ -63,7 +65,7 @@ public final class ChecksimsConfig {
 
         this.preprocessors = ImmutableList.copyOf(preprocessors);
 
-        this.submissions = ImmutableList.copyOf(submissions);
+        this.submissions = ImmutableSet.copyOf(submissions);
 
         this.outputPrinters = ImmutableList.copyOf(outputPrinters);
         this.outputMethod = outputMethod;
@@ -76,7 +78,7 @@ public final class ChecksimsConfig {
     public ChecksimsConfig() {
         this.algorithm = AlgorithmRegistry.getInstance().getDefaultImplementation();
         this.tokenization = this.algorithm.getDefaultTokenType();
-        this.submissions = ImmutableList.copyOf(new LinkedList<>());
+        this.submissions = ImmutableSet.copyOf(new LinkedList<>());
         this.preprocessors = ImmutableList.copyOf(new LinkedList<>());
         this.commonCodeHandler = CommonCodePassthroughHandler.getInstance();
         this.outputPrinters = ImmutableList.copyOf(Arrays.asList(OutputRegistry.getInstance().getDefaultImplementation()));
@@ -131,12 +133,12 @@ public final class ChecksimsConfig {
      * @param newSubmissions New list of submissions to work on
      * @return Copy of configuration with new submissions list
      */
-    public ChecksimsConfig setSubmissions(List<Submission> newSubmissions) {
+    public ChecksimsConfig setSubmissions(Set<Submission> newSubmissions) {
         checkNotNull(newSubmissions);
         checkArgument(!newSubmissions.isEmpty());
 
         ChecksimsConfig newConfig = getCopy();
-        newConfig.submissions = ImmutableList.copyOf(newSubmissions);
+        newConfig.submissions = ImmutableSet.copyOf(newSubmissions);
 
         return newConfig;
     }
@@ -218,7 +220,7 @@ public final class ChecksimsConfig {
     /**
      * @return List of submissions to run on
      */
-    public ImmutableList<Submission> getSubmissions() {
+    public ImmutableSet<Submission> getSubmissions() {
         return submissions;
     }
 

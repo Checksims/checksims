@@ -25,7 +25,6 @@ import com.google.common.collect.Ordering;
 import edu.wpi.checksims.token.TokenList;
 import edu.wpi.checksims.token.TokenType;
 import edu.wpi.checksims.token.tokenizer.FileTokenizer;
-import org.apache.commons.collections4.list.SetUniqueList;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +33,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -82,13 +84,13 @@ public interface Submission {
      * @return Set of submissions including all unique nonempty submissions in the given directory
      * @throws java.io.IOException Thrown on error interacting with file or filesystem
      */
-    public static List<Submission> submissionListFromDir(File directory, String glob, FileTokenizer splitter, boolean recursive) throws IOException {
+    public static Set<Submission> submissionListFromDir(File directory, String glob, FileTokenizer splitter, boolean recursive) throws IOException {
         checkNotNull(directory);
         checkNotNull(glob);
         checkArgument(!glob.isEmpty());
         checkNotNull(splitter);
 
-        List<Submission> submissions = SetUniqueList.setUniqueList(new LinkedList<>());
+        Set<Submission> submissions = new HashSet<>();
         Logger local = LoggerFactory.getLogger(Submission.class);
 
         if(!directory.exists()) {

@@ -35,7 +35,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Generates unordered pairs of submissions
  */
-public class PairGenerator {
+public final class PairGenerator {
     private PairGenerator() {}
 
     /**

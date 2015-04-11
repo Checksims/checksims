@@ -70,7 +70,7 @@ public class SimilarityMatrix {
      * @param algorithm Algorithm to use when detecting plagiarism
      * @return Array of algorithm results, with results[i,j] being the results of comparing students i and j
      */
-    public static SimilarityMatrix generate(List<Submission> submissions, SimilarityDetector algorithm) {
+    public static SimilarityMatrix generate(Set<Submission> submissions, SimilarityDetector algorithm) {
         checkNotNull(submissions);
         checkArgument(submissions.size() >= 2);
         checkNotNull(algorithm);

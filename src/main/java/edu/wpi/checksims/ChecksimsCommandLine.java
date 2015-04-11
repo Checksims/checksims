@@ -44,8 +44,10 @@ import org.slf4j.impl.SimpleLogger;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -275,7 +277,7 @@ public final class ChecksimsCommandLine {
      * @return Collection of submissions which will be used to run Checksims
      * @throws IOException Thrown on issue reading files or traversing directories to build submissions
      */
-    static List<Submission> getSubmissions(CommandLine cli, String glob, FileTokenizer tokenizer, boolean recursive) throws IOException, ChecksimsException {
+    static Set<Submission> getSubmissions(CommandLine cli, String glob, FileTokenizer tokenizer, boolean recursive) throws IOException, ChecksimsException {
         checkNotNull(cli);
         checkNotNull(glob);
 
@@ -293,7 +295,7 @@ public final class ChecksimsCommandLine {
         }
 
         // Generate submissions to work on
-        List<Submission> submissions = new LinkedList<>();
+        Set<Submission> submissions = new HashSet<>();
         for(File dir : submissionDirs) {
             submissions.addAll(Submission.submissionListFromDir(dir, glob, tokenizer, recursive));
         }
@@ -371,7 +373,7 @@ public final class ChecksimsCommandLine {
         config = config.setCommonCodeHandler(handler);
 
         // Next, build submissions
-        List<Submission> submissions = getSubmissions(cli, glob, tokenizer, recursive);
+        Set<Submission> submissions = getSubmissions(cli, glob, tokenizer, recursive);
         config = config.setSubmissions(submissions);
 
         logs.trace("CLI parsing complete!");
