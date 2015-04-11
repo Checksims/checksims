@@ -21,6 +21,7 @@
 
 package edu.wpi.checksims.algorithm.output;
 
+import edu.wpi.checksims.algorithm.InternalAlgorithmError;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
@@ -53,14 +54,14 @@ public class SimilarityMatrixAsHTMLPrinter implements SimilarityMatrixPrinter {
     }
 
     @Override
-    public String printMatrix(SimilarityMatrix matrix) {
+    public String printMatrix(SimilarityMatrix matrix) throws InternalAlgorithmError {
         checkNotNull(matrix);
 
         DecimalFormat f = new DecimalFormat("###.00");
         InputStream stream = SimilarityMatrixAsHTMLPrinter.class.getResourceAsStream("/edu/wpi/checksims/algorithm/output/htmlOutput.vm");
 
         if(stream == null) {
-            throw new RuntimeException("Could not resolve resource for HTML output template!");
+            throw new InternalAlgorithmError("Could not resolve resource for HTML output template!");
         }
 
         InputStreamReader template = new InputStreamReader(stream);

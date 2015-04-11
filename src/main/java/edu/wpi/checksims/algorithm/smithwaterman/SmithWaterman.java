@@ -21,12 +21,13 @@
 
 package edu.wpi.checksims.algorithm.smithwaterman;
 
-import edu.wpi.checksims.ChecksimsException;
 import edu.wpi.checksims.algorithm.AlgorithmResults;
+import edu.wpi.checksims.algorithm.InternalAlgorithmError;
 import edu.wpi.checksims.algorithm.SimilarityDetector;
 import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.token.TokenList;
 import edu.wpi.checksims.token.TokenType;
+import edu.wpi.checksims.token.TokenTypeMismatchException;
 import edu.wpi.checksims.token.ValidityEnsuringToken;
 import edu.wpi.checksims.util.TwoDimArrayCoord;
 import edu.wpi.checksims.util.TwoDimIntArray;
@@ -65,12 +66,12 @@ public class SmithWaterman implements SimilarityDetector {
      * @return AlgorithmResults indicating number of matched tokens
      */
     @Override
-    public AlgorithmResults detectSimilarity(Submission a, Submission b) throws ChecksimsException {
+    public AlgorithmResults detectSimilarity(Submission a, Submission b) throws TokenTypeMismatchException, InternalAlgorithmError {
         checkNotNull(a);
         checkNotNull(b);
 
         if(!a.getTokenType().equals(b.getTokenType())) {
-            throw new ChecksimsException("Token list type mismatch: submission " + a.getName() + " has type " +
+            throw new TokenTypeMismatchException("Token list type mismatch: submission " + a.getName() + " has type " +
                     a.getContentAsTokens().type.toString() + ", while submission " + b.getName() + " has type " +
                     b.getContentAsTokens().type.toString());
         }
@@ -87,7 +88,7 @@ public class SmithWaterman implements SimilarityDetector {
         return new SmithWaterman();
     }
 
-    static AlgorithmResults applySmithWatermanPlagiarismDetection(Submission a, Submission b, SmithWatermanParameters params) throws ChecksimsException {
+    static AlgorithmResults applySmithWatermanPlagiarismDetection(Submission a, Submission b, SmithWatermanParameters params) throws InternalAlgorithmError {
         SmithWatermanResults firstRun = applySmithWaterman(a.getContentAsTokens(), b.getContentAsTokens(), params);
 
         if(firstRun == null || !firstRun.hasMatch()) {
@@ -118,9 +119,9 @@ public class SmithWaterman implements SimilarityDetector {
         int invalTokensB = (int)newB.stream().filter((token) -> !token.isValid()).count();
 
         if(invalTokensA != totalOverlay) {
-            throw new ChecksimsException("Internal error: number of identical tokens (" + totalOverlay + ") does not match number of invalid tokens (" + invalTokensA + ")");
+            throw new InternalAlgorithmError("Internal error: number of identical tokens (" + totalOverlay + ") does not match number of invalid tokens (" + invalTokensA + ")");
         } else if(invalTokensB != totalOverlay) {
-            throw new ChecksimsException("Internal error: number of identical tokens (" + totalOverlay + ") does not match number of invalid tokens (" + invalTokensB + ")");
+            throw new InternalAlgorithmError("Internal error: number of identical tokens (" + totalOverlay + ") does not match number of invalid tokens (" + invalTokensB + ")");
         }
 
         return new AlgorithmResults(a, b, totalOverlay, totalOverlay, newA, newB);

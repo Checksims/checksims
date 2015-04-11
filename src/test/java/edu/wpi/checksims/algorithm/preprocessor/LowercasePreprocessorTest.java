@@ -60,47 +60,47 @@ public class LowercasePreprocessorTest {
     }
 
     @Test
-    public void TestLowercaseEmptyReturnsEmpty() {
+    public void TestLowercaseEmptyReturnsEmpty() throws Exception {
         checkPreprocessSubmissionIdentity(emptyListCharacter, instance);
     }
 
     @Test
-    public void TestOneElementCharacterLowercase() {
+    public void TestOneElementCharacterLowercase() throws Exception {
         checkPreprocessSubmission(oneElementListCharacter, oneElementListCharacter.getContentAsString().toLowerCase(), instance);
     }
 
     @Test
-    public void TestOneElementCharacterLowercaseIdentity() {
+    public void TestOneElementCharacterLowercaseIdentity() throws Exception {
         checkPreprocessSubmissionIdentity(oneElementListCharacterIsLowerCase, instance);
     }
 
     @Test
-    public void TestOneElementWhitespaceLowercase() {
+    public void TestOneElementWhitespaceLowercase() throws Exception {
         checkPreprocessSubmission(oneElementListWhitespace, oneElementListWhitespace.getContentAsString().toLowerCase(), instance);
     }
 
     @Test
-    public void TestOneElementWhitespaceLowercaseIdentity() {
+    public void TestOneElementWhitespaceLowercaseIdentity() throws Exception {
         checkPreprocessSubmissionIdentity(oneElementListWhitespaceIsLowerCase, instance);
     }
 
     @Test
-    public void TestOneElementLineLowercase() {
+    public void TestOneElementLineLowercase() throws Exception {
         checkPreprocessSubmission(oneElementListLine, oneElementListLine.getContentAsString().toLowerCase(), instance);
     }
 
     @Test
-    public void TestOneElementLineLowercaseIdentity() {
+    public void TestOneElementLineLowercaseIdentity() throws Exception {
         checkPreprocessSubmissionIdentity(oneElementListLineIsLowerCase, instance);
     }
 
     @Test
-    public void EnsureOrderingRemainsIdenticalTwoElements() {
+    public void EnsureOrderingRemainsIdenticalTwoElements() throws Exception {
         checkPreprocessSubmission(twoElementListCharacter, twoElementListCharacter.getContentAsString().toLowerCase(), instance);
     }
 
     @Test
-    public void EnsureOrderingRemainsIdenticalThreeElements() {
+    public void EnsureOrderingRemainsIdenticalThreeElements() throws Exception {
         checkPreprocessSubmission(threeElementListCharacter, threeElementListCharacter.getContentAsString().toLowerCase(), instance);
     }
 }

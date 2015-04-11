@@ -21,7 +21,6 @@
 
 package edu.wpi.checksims.algorithm;
 
-import edu.wpi.checksims.ChecksimsException;
 import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.testutil.AlgorithmUtils;
 import edu.wpi.checksims.token.TokenType;
@@ -61,7 +60,7 @@ public class AlgorithmRunnerTest {
             }
 
             @Override
-            public AlgorithmResults detectSimilarity(Submission a, Submission b) throws ChecksimsException {
+            public AlgorithmResults detectSimilarity(Submission a, Submission b) {
                 return new AlgorithmResults(a, b, 0, 0, a.getContentAsTokens(), b.getContentAsTokens());
             }
 

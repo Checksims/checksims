@@ -21,10 +21,11 @@
 
 package edu.wpi.checksims.util.threading;
 
-import edu.wpi.checksims.ChecksimsException;
 import edu.wpi.checksims.algorithm.AlgorithmResults;
+import edu.wpi.checksims.algorithm.InternalAlgorithmError;
 import edu.wpi.checksims.algorithm.SimilarityDetector;
 import edu.wpi.checksims.submission.Submission;
+import edu.wpi.checksims.token.TokenTypeMismatchException;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,8 +75,15 @@ public class SimilarityDetectionWorker implements Callable<AlgorithmResults> {
 
         try {
             return algorithm.detectSimilarity(submissions.getLeft(), submissions.getRight());
-        } catch (ChecksimsException e) {
+        } catch(InternalAlgorithmError e) {
             logs.error("Fatal error running " + algorithm.getName() + " on submissions " + submissions.getLeft().getName() + " and " + submissions.getRight().getName());
+            logs.error(e.getMessage());
+            e.printStackTrace();
+            System.exit(-1);
+
+            return null;
+        } catch(TokenTypeMismatchException e) {
+            logs.error("Token type mismatch on submissions " + submissions.getLeft().getName() + " and " + submissions.getRight().getName());
             logs.error(e.getMessage());
             e.printStackTrace();
             System.exit(-1);

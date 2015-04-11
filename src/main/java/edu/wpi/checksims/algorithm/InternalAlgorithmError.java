@@ -19,22 +19,21 @@
  * Copyright (c) 2014-2015 Matthew Heon and Dolan Murvihill
  */
 
-package edu.wpi.checksims.algorithm.commoncode;
+package edu.wpi.checksims.algorithm;
 
-import edu.wpi.checksims.algorithm.InternalAlgorithmError;
-import edu.wpi.checksims.submission.Submission;
-
-import java.util.Set;
+import edu.wpi.checksims.ChecksimsException;
 
 /**
- * A handler for Common Code Removal
+ * Exception thrown on internal algorithm error
  */
-public interface CommonCodeHandler {
-    /**
-     * Handle common code in given submissions
-     *
-     * @param input Submissions to handle common code within
-     * @return Result of processing submissions for common code
-     */
-    public Set<Submission> handleCommonCode(Set<Submission> input);
+public class InternalAlgorithmError extends ChecksimsException {
+    private static final long serialVersionUID = 1L;
+
+    public InternalAlgorithmError(String message) {
+        super(message);
+    }
+
+    public InternalAlgorithmError(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

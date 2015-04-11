@@ -21,6 +21,7 @@
 
 package edu.wpi.checksims.util.output;
 
+import edu.wpi.checksims.algorithm.InternalAlgorithmError;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrix;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrixPrinter;
 import org.apache.commons.io.FileUtils;
@@ -63,11 +64,10 @@ public class OutputAsFilePrinter implements OutputPrinter {
         checkNotNull(printWith);
 
         File outputTo = new File(baseName.getAbsolutePath() + "." + printWith.getName());
-        String output = printWith.printMatrix(toPrint);
 
         try {
-            FileUtils.writeStringToFile(outputTo, output, StandardCharsets.UTF_8);
-        } catch(IOException e) {
+            FileUtils.writeStringToFile(outputTo, printWith.printMatrix(toPrint), StandardCharsets.UTF_8);
+        } catch(IOException|InternalAlgorithmError e) {
             throw new RuntimeException("Could not write output to file", e);
         }
     }

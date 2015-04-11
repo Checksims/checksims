@@ -69,47 +69,47 @@ public class WhitespaceDeduplicationPreprocessorTest {
     }
 
     @Test
-    public void TestNoEffectOnNoWhitespaceCharacter() {
+    public void TestNoEffectOnNoWhitespaceCharacter() throws Exception {
         checkPreprocessSubmissionIdentity(abcCharacter, preprocessor);
     }
 
     @Test
-    public void TestNoEffectNoWhitespaceWhitespace() {
+    public void TestNoEffectNoWhitespaceWhitespace() throws Exception {
         checkPreprocessSubmissionIdentity(abcWhitespace, preprocessor);
     }
 
     @Test
-    public void TestNoEffectNoWhitespaceLine() {
+    public void TestNoEffectNoWhitespaceLine() throws Exception {
         checkPreprocessSubmissionIdentity(abcLine, preprocessor);
     }
 
     @Test
-    public void TestNoEffectNonDuplicatedCharacter() {
+    public void TestNoEffectNonDuplicatedCharacter() throws Exception {
         checkPreprocessSubmission(characterWhitespaceNonDuplicated, abcNoDupExpected, preprocessor);
     }
 
     @Test
-    public void TestNoEffectNonDuplicatedWhitespace() {
+    public void TestNoEffectNonDuplicatedWhitespace() throws Exception {
         checkPreprocessSubmission(whitespaceWhitespaceNonDuplicated, abcNoDupExpected, preprocessor);
     }
 
     @Test
-    public void TestNoEffectNonDuplicatedLine() {
+    public void TestNoEffectNonDuplicatedLine() throws Exception {
         checkPreprocessSubmission(lineWhitespaceNonDuplicated, abcNoDupExpected, preprocessor);
     }
 
     @Test
-    public void TestDedupCharacter() {
+    public void TestDedupCharacter() throws Exception {
         checkPreprocessSubmission(characterWhitespaceDuplicated, abcDupExpected, preprocessor);
     }
 
     @Test
-    public void TestDedupWhitespace() {
+    public void TestDedupWhitespace() throws Exception {
         checkPreprocessSubmission(whitespaceWhitespaceDuplicated, abcDupExpected, preprocessor);
     }
 
     @Test
-    public void TestDedupLine() {
+    public void TestDedupLine() throws Exception {
         checkPreprocessSubmission(lineWhitespaceDuplicated, abcDupExpected, preprocessor);
     }
 }

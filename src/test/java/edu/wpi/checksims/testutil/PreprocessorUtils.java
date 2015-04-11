@@ -42,7 +42,7 @@ public class PreprocessorUtils {
      * @param expected Expected contents
      * @param preprocessor Preprocessor to apply
      */
-    public static void checkPreprocessSubmission(Submission toTest, String expected, SubmissionPreprocessor preprocessor) {
+    public static void checkPreprocessSubmission(Submission toTest, String expected, SubmissionPreprocessor preprocessor) throws Exception {
         Submission expectedSub;
         switch(toTest.getTokenType()) {
             case CHARACTER:
@@ -68,7 +68,7 @@ public class PreprocessorUtils {
      * @param toTest Submission to preprocess
      * @param preprocessor Preprocessor to apply
      */
-    public static void checkPreprocessSubmissionIdentity(Submission toTest, SubmissionPreprocessor preprocessor) {
+    public static void checkPreprocessSubmissionIdentity(Submission toTest, SubmissionPreprocessor preprocessor) throws Exception {
         Submission result = preprocessor.process(toTest);
         assertEquals(toTest, result);
     }

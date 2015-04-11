@@ -21,13 +21,14 @@
 
 package edu.wpi.checksims.algorithm.linesimilarity;
 
-import edu.wpi.checksims.ChecksimsException;
 import edu.wpi.checksims.algorithm.AlgorithmResults;
+import edu.wpi.checksims.algorithm.InternalAlgorithmError;
 import edu.wpi.checksims.algorithm.SimilarityDetector;
 import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.token.Token;
 import edu.wpi.checksims.token.TokenList;
 import edu.wpi.checksims.token.TokenType;
+import edu.wpi.checksims.token.TokenTypeMismatchException;
 import org.apache.commons.codec.binary.Hex;
 
 import java.security.MessageDigest;
@@ -92,7 +93,7 @@ public class LineSimilarityChecker implements SimilarityDetector {
      * @return Results of the similarity detection
      */
     @Override
-    public AlgorithmResults detectSimilarity(Submission a, Submission b) throws ChecksimsException {
+    public AlgorithmResults detectSimilarity(Submission a, Submission b) throws TokenTypeMismatchException, InternalAlgorithmError {
         checkNotNull(a);
         checkNotNull(b);
 
@@ -102,7 +103,7 @@ public class LineSimilarityChecker implements SimilarityDetector {
         TokenList finalB = TokenList.cloneTokenList(linesB);
 
         if(!a.getTokenType().equals(b.getTokenType())) {
-            throw new ChecksimsException("Token list type mismatch: submission " + a.getName() + " has type " +
+            throw new TokenTypeMismatchException("Token list type mismatch: submission " + a.getName() + " has type " +
                     linesA.type.toString() + ", while submission " + b.getName() + " has type " + linesB.type.toString());
         } else if(a.equals(b)) {
             finalA.stream().forEach((token) -> token.setValid(false));
@@ -116,7 +117,7 @@ public class LineSimilarityChecker implements SimilarityDetector {
         try {
             hasher = MessageDigest.getInstance("SHA-512");
         } catch (NoSuchAlgorithmException e) {
-            throw new ChecksimsException("Error instantiating SHA-512 hash algorithm: " + e.getMessage());
+            throw new InternalAlgorithmError("Error instantiating SHA-512 hash algorithm: " + e.getMessage());
         }
 
         // Create a line database map
@@ -177,9 +178,9 @@ public class LineSimilarityChecker implements SimilarityDetector {
         int invalTokensB = (int)finalB.stream().filter((token) -> !token.isValid()).count();
 
         if(invalTokensA != identicalLinesA) {
-            throw new ChecksimsException("Internal error: number of identical tokens (" + identicalLinesA + ") does not match number of invalid tokens (" + invalTokensA + ")");
+            throw new InternalAlgorithmError("Internal error: number of identical tokens (" + identicalLinesA + ") does not match number of invalid tokens (" + invalTokensA + ")");
         } else if(invalTokensB != identicalLinesB) {
-            throw new ChecksimsException("Internal error: number of identical tokens (" + identicalLinesB + ") does not match number of invalid tokens (" + invalTokensB + ")");
+            throw new InternalAlgorithmError("Internal error: number of identical tokens (" + identicalLinesB + ") does not match number of invalid tokens (" + invalTokensB + ")");
         }
 
         return new AlgorithmResults(a, b, identicalLinesA, identicalLinesB, finalA, finalB);

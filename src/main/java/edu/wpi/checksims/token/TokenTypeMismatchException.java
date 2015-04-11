@@ -19,22 +19,21 @@
  * Copyright (c) 2014-2015 Matthew Heon and Dolan Murvihill
  */
 
-package edu.wpi.checksims.algorithm.commoncode;
+package edu.wpi.checksims.token;
 
-import edu.wpi.checksims.algorithm.InternalAlgorithmError;
-import edu.wpi.checksims.submission.Submission;
-
-import java.util.Set;
+import edu.wpi.checksims.ChecksimsException;
 
 /**
- * A handler for Common Code Removal
+ * Exception thrown when attempting to compare two submissions with different tokenizations
  */
-public interface CommonCodeHandler {
-    /**
-     * Handle common code in given submissions
-     *
-     * @param input Submissions to handle common code within
-     * @return Result of processing submissions for common code
-     */
-    public Set<Submission> handleCommonCode(Set<Submission> input);
+public class TokenTypeMismatchException extends ChecksimsException {
+    private static final long serialVersionUID = 1L;
+
+    public TokenTypeMismatchException(String message) {
+        super(message);
+    }
+
+    public TokenTypeMismatchException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }
