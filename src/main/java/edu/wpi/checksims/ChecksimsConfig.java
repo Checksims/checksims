@@ -39,6 +39,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -123,6 +124,13 @@ public final class ChecksimsConfig {
     public ChecksimsConfig setPreprocessors(List<SubmissionPreprocessor> newPreprocessors) {
         checkNotNull(newPreprocessors);
 
+        // Ensure that preprocessors are unique
+        // Can't use a set, we don't require preprocessors to implement equals() or hashCode() in sane ways
+        Set<String> names = newPreprocessors.stream().map(SubmissionPreprocessor::getName).collect(Collectors.toSet());
+        if(names.size() != newPreprocessors.size()) {
+            throw new IllegalArgumentException("Preprocessors must be unique!");
+        }
+
         ChecksimsConfig newConfig = getCopy();
         newConfig.preprocessors = ImmutableList.copyOf(newPreprocessors);
 
@@ -163,6 +171,13 @@ public final class ChecksimsConfig {
     public ChecksimsConfig setOutputPrinters(List<SimilarityMatrixPrinter> newOutputPrinters) {
         checkNotNull(newOutputPrinters);
         checkArgument(!newOutputPrinters.isEmpty());
+
+        // Ensure all printers are unique
+        // Can't use a set, we don't require output strategies to implement equals() or hashCode() in sane ways
+        Set<String> names = newOutputPrinters.stream().map(SimilarityMatrixPrinter::getName).collect(Collectors.toSet());
+        if(names.size() != newOutputPrinters.size()) {
+            throw new IllegalArgumentException("Output printers must be unique!");
+        }
 
         ChecksimsConfig newConfig = getCopy();
         newConfig.outputPrinters = ImmutableList.copyOf(newOutputPrinters);

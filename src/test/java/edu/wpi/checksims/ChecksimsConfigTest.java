@@ -21,10 +21,13 @@
 
 package edu.wpi.checksims;
 
+import edu.wpi.checksims.algorithm.output.SimilarityMatrixAsCSVPrinter;
+import edu.wpi.checksims.algorithm.preprocessor.LowercasePreprocessor;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 
@@ -59,6 +62,14 @@ public class ChecksimsConfigTest {
 
         ChecksimsConfig config = new ChecksimsConfig();
         config.setPreprocessors(null);
+    }
+
+    @Test
+    public void TestSetPreprocessorsDuplicated() {
+        expectedEx.expect(IllegalArgumentException.class);
+
+        ChecksimsConfig config = new ChecksimsConfig();
+        config.setPreprocessors(Arrays.asList(LowercasePreprocessor.getInstance(), LowercasePreprocessor.getInstance()));
     }
 
     @Test
@@ -99,6 +110,14 @@ public class ChecksimsConfigTest {
 
         ChecksimsConfig config = new ChecksimsConfig();
         config.setOutputPrinters(new LinkedList<>());
+    }
+
+    @Test
+    public void TestSetOutputPrintersDuplicated() {
+        expectedEx.expect(IllegalArgumentException.class);
+
+        ChecksimsConfig config = new ChecksimsConfig();
+        config.setOutputPrinters(Arrays.asList(SimilarityMatrixAsCSVPrinter.getInstance(), SimilarityMatrixAsCSVPrinter.getInstance()));
     }
 
     @Test
