@@ -27,7 +27,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -42,13 +41,11 @@ public final class AlgorithmRunner {
     /**
      * Run a pairwise similarity detection algorithm
      *
-     * TODO consider returning a Set of AlgorithmResults?
-     *
      * @param submissions Pairs to run on
      * @param algorithm Algorithm to use
      * @return Collection of AlgorithmResults, one for each input pair
      */
-    public static Collection<AlgorithmResults> runAlgorithm(Set<Pair<Submission, Submission>> submissions, SimilarityDetector algorithm) {
+    public static Set<AlgorithmResults> runAlgorithm(Set<Pair<Submission, Submission>> submissions, SimilarityDetector algorithm) {
         checkNotNull(submissions);
         checkArgument(submissions.size() > 0);
         checkNotNull(algorithm);
@@ -59,7 +56,7 @@ public final class AlgorithmRunner {
         logs.info("Performing similarity detection on " + submissions.size() + " pairs using algorithm " + algorithm.getName());
 
         // Perform parallel analysis of all submission pairs to generate a results list
-        Collection<AlgorithmResults> results = ParallelAlgorithm.parallelSimilarityDetection(algorithm, submissions);
+        Set<AlgorithmResults> results = ParallelAlgorithm.parallelSimilarityDetection(algorithm, submissions);
 
         long endTime = System.currentTimeMillis();
         long timeElapsed = endTime - startTime;

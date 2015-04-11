@@ -94,14 +94,14 @@ public final class ParallelAlgorithm {
      * @param pairs Pairs of submissions to perform detection on
      * @return Collection of results, one for each pair
      */
-    public static Collection<AlgorithmResults> parallelSimilarityDetection(SimilarityDetector algorithm, Set<Pair<Submission, Submission>> pairs) {
+    public static Set<AlgorithmResults> parallelSimilarityDetection(SimilarityDetector algorithm, Set<Pair<Submission, Submission>> pairs) {
         checkNotNull(algorithm);
         checkNotNull(pairs);
 
         // Map the pairs to ChecksimsWorker instances
         Collection<SimilarityDetectionWorker> workers = pairs.stream().map((pair) -> new SimilarityDetectionWorker(algorithm, pair)).collect(Collectors.toList());
 
-        return executeTasks(workers);
+        return ImmutableSet.copyOf(executeTasks(workers));
     }
 
     public static Set<Submission> parallelSubmissionPreprocessing(SubmissionPreprocessor preprocessor, Set<Submission> submissions) {

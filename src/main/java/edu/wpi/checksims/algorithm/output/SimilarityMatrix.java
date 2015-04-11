@@ -33,7 +33,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -86,7 +85,7 @@ public class SimilarityMatrix {
         Set<Pair<Submission, Submission>> pairs = PairGenerator.generatePairs(submissionsAsSet);
 
         // Get results for all possible pairs of submissions
-        Collection<AlgorithmResults> algorithmResults = AlgorithmRunner.runAlgorithm(pairs, algorithm);
+        Set<AlgorithmResults> algorithmResults = AlgorithmRunner.runAlgorithm(pairs, algorithm);
 
         // First, zero the diagonal of the results array
         for(int i = 0; i < submissionsSorted.size(); i++) {
