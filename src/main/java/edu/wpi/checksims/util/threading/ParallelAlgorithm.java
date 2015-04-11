@@ -25,12 +25,13 @@ import edu.wpi.checksims.algorithm.AlgorithmResults;
 import edu.wpi.checksims.algorithm.SimilarityDetector;
 import edu.wpi.checksims.algorithm.preprocessor.SubmissionPreprocessor;
 import edu.wpi.checksims.submission.Submission;
-import edu.wpi.checksims.util.UnorderedPair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
@@ -92,7 +93,7 @@ public final class ParallelAlgorithm {
      * @param pairs Pairs of submissions to perform detection on
      * @return Collection of results, one for each pair
      */
-    public static Collection<AlgorithmResults> parallelSimilarityDetection(SimilarityDetector algorithm, Collection<UnorderedPair<Submission>> pairs) {
+    public static Collection<AlgorithmResults> parallelSimilarityDetection(SimilarityDetector algorithm, Set<Pair<Submission, Submission>> pairs) {
         checkNotNull(algorithm);
         checkNotNull(pairs);
 

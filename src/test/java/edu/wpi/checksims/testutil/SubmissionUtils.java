@@ -27,7 +27,10 @@ import edu.wpi.checksims.token.TokenType;
 import edu.wpi.checksims.token.tokenizer.FileTokenizer;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
@@ -117,5 +120,13 @@ public class SubmissionUtils {
      */
     public static Submission lineSubmissionFromString(String name, String content) {
         return submissionFromString(name, content, TokenType.LINE);
+    }
+
+    public static <T> Set<T> setFromElements(T... elements) {
+        Set<T> toReturn = new HashSet<>();
+
+        toReturn.addAll(Arrays.asList(elements));
+
+        return toReturn;
     }
 }

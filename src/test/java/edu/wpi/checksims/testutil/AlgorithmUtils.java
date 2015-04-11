@@ -24,6 +24,10 @@ package edu.wpi.checksims.testutil;
 import edu.wpi.checksims.algorithm.AlgorithmResults;
 import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.token.TokenList;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.Collection;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -125,5 +129,27 @@ public class AlgorithmUtils {
 
         assertEquals(expected, results.finalListA);
         assertEquals(expected, results.finalListB);
+    }
+
+    /**
+     * Ensure that every pair in a set of pairs is representing in algorithm results
+     *
+     * @param results Collection of algorithm results to check in
+     * @param pairs Pairs of submissions to search for in the results
+     */
+    public static void checkResultsContainsPairs(Collection<AlgorithmResults> results, Set<Pair<Submission, Submission>> pairs) {
+        assertNotNull(results);
+        assertNotNull(pairs);
+
+        assertEquals(results.size(), pairs.size());
+
+        for(Pair<Submission, Submission> pair : pairs) {
+            long numWithResult = results.stream().filter((result) -> {
+                return (result.a.equals(pair.getLeft()) && result.b.equals(pair.getRight())) ||
+                        (result.a.equals(pair.getRight()) && result.b.equals(pair.getLeft()));
+            }).count();
+
+            assertEquals(1, numWithResult);
+        }
     }
 }

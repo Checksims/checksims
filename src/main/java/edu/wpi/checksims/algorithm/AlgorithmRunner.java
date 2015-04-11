@@ -22,38 +22,44 @@
 package edu.wpi.checksims.algorithm;
 
 import edu.wpi.checksims.submission.Submission;
-import edu.wpi.checksims.util.UnorderedPair;
 import edu.wpi.checksims.util.threading.ParallelAlgorithm;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Run a plagiarism detection algorithm on a list of submissions
+ * Run a pairwise similarity detection algorithm on a number of submission pairs
  */
 public final class AlgorithmRunner {
     private AlgorithmRunner() {}
 
-    public static Collection<AlgorithmResults> runAlgorithm(List<Submission> submissions, SimilarityDetector algorithm) {
+    /**
+     * Run a pairwise similarity detection algorithm
+     *
+     * TODO consider returning a Set of AlgorithmResults?
+     *
+     * @param submissions Pairs to run on
+     * @param algorithm Algorithm to use
+     * @return Collection of AlgorithmResults, one for each input pair
+     */
+    public static Collection<AlgorithmResults> runAlgorithm(Set<Pair<Submission, Submission>> submissions, SimilarityDetector algorithm) {
         checkNotNull(submissions);
-        checkArgument(submissions.size() >= 2);
+        checkArgument(submissions.size() > 0);
         checkNotNull(algorithm);
 
         Logger logs = LoggerFactory.getLogger(AlgorithmRunner.class);
         long startTime = System.currentTimeMillis();
 
-        Set<UnorderedPair<Submission>> allPairs = UnorderedPair.generatePairsFromList(submissions);
-
-        logs.info("Performing similarity detection on " + allPairs.size() + " pairs using algorithm " + algorithm.getName());
+        logs.info("Performing similarity detection on " + submissions.size() + " pairs using algorithm " + algorithm.getName());
 
         // Perform parallel analysis of all submission pairs to generate a results list
-        Collection<AlgorithmResults> results = ParallelAlgorithm.parallelSimilarityDetection(algorithm, allPairs);
+        Collection<AlgorithmResults> results = ParallelAlgorithm.parallelSimilarityDetection(algorithm, submissions);
 
         long endTime = System.currentTimeMillis();
         long timeElapsed = endTime - startTime;

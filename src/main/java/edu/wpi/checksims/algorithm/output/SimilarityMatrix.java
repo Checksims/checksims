@@ -22,17 +22,20 @@
 package edu.wpi.checksims.algorithm.output;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Ordering;
 import edu.wpi.checksims.algorithm.AlgorithmResults;
 import edu.wpi.checksims.algorithm.AlgorithmRunner;
 import edu.wpi.checksims.algorithm.SimilarityDetector;
 import edu.wpi.checksims.submission.Submission;
+import edu.wpi.checksims.util.PairGenerator;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -72,17 +75,20 @@ public class SimilarityMatrix {
         checkArgument(submissions.size() >= 2);
         checkNotNull(algorithm);
 
-        float[][] results = new float[submissions.size()][submissions.size()];
-        List<Submission> submissionsSorted = new LinkedList<>(submissions);
         Logger logs = LoggerFactory.getLogger(SimilarityMatrix.class);
 
+        float[][] results = new float[submissions.size()][submissions.size()];
         logs.debug("Sorting submissions prior to algorithm pass...");
-        Collections.sort(submissionsSorted, (a, b) -> a.getName().compareTo(b.getName()));
+        List<Submission> submissionsSorted = Ordering.from((Submission a, Submission b) -> a.getName().compareTo(b.getName())).immutableSortedCopy(submissions);
+
+        // Generate all possible unordered pairs of submissions
+        Set<Submission> submissionsAsSet = ImmutableSet.copyOf(submissions);
+        Set<Pair<Submission, Submission>> pairs = PairGenerator.generatePairs(submissionsAsSet);
 
         // Get results for all possible pairs of submissions
-        Collection<AlgorithmResults> algorithmResults = AlgorithmRunner.runAlgorithm(submissionsSorted, algorithm);
+        Collection<AlgorithmResults> algorithmResults = AlgorithmRunner.runAlgorithm(pairs, algorithm);
 
-        // First, null the diagonal of the results array
+        // First, zero the diagonal of the results array
         for(int i = 0; i < submissionsSorted.size(); i++) {
             results[i][i] = 0.00f; // Same submission, ignore
         }
