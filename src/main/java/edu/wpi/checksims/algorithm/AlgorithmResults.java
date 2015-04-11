@@ -24,6 +24,7 @@ package edu.wpi.checksims.algorithm;
 import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.token.TokenList;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -42,6 +43,10 @@ public final class AlgorithmResults {
         checkNotNull(b);
         checkNotNull(finalListA);
         checkNotNull(finalListB);
+
+        // Verify that identicalTokens matches the number of invalid tokens in the list
+        checkArgument(finalListA.stream().filter((token) -> !token.isValid()).count() == identicalTokensA);
+        checkArgument(finalListB.stream().filter((token) -> !token.isValid()).count() == identicalTokensB);
 
         this.a = a;
         this.b = b;

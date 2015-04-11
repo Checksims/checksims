@@ -173,6 +173,15 @@ public class LineSimilarityChecker implements SimilarityDetector {
             }
         }
 
+        int invalTokensA = (int)finalA.stream().filter((token) -> !token.isValid()).count();
+        int invalTokensB = (int)finalB.stream().filter((token) -> !token.isValid()).count();
+
+        if(invalTokensA != identicalLinesA) {
+            throw new ChecksimsException("Internal error: number of identical tokens (" + identicalLinesA + ") does not match number of invalid tokens (" + invalTokensA + ")");
+        } else if(invalTokensB != identicalLinesB) {
+            throw new ChecksimsException("Internal error: number of identical tokens (" + identicalLinesB + ") does not match number of invalid tokens (" + invalTokensB + ")");
+        }
+
         return new AlgorithmResults(a, b, identicalLinesA, identicalLinesB, finalA, finalB);
     }
 

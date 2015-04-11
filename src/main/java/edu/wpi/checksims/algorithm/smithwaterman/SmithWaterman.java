@@ -87,7 +87,7 @@ public class SmithWaterman implements SimilarityDetector {
         return new SmithWaterman();
     }
 
-    static AlgorithmResults applySmithWatermanPlagiarismDetection(Submission a, Submission b, SmithWatermanParameters params) {
+    static AlgorithmResults applySmithWatermanPlagiarismDetection(Submission a, Submission b, SmithWatermanParameters params) throws ChecksimsException {
         SmithWatermanResults firstRun = applySmithWaterman(a.getContentAsTokens(), b.getContentAsTokens(), params);
 
         if(firstRun == null || !firstRun.hasMatch()) {
@@ -113,6 +113,15 @@ public class SmithWaterman implements SimilarityDetector {
         // Always add the last overlay. Makes sure that, if the last result is under the threshold,
         // We report it regardless
         totalOverlay += currResults.getMatchLength();
+
+        int invalTokensA = (int)newA.stream().filter((token) -> !token.isValid()).count();
+        int invalTokensB = (int)newB.stream().filter((token) -> !token.isValid()).count();
+
+        if(invalTokensA != totalOverlay) {
+            throw new ChecksimsException("Internal error: number of identical tokens (" + totalOverlay + ") does not match number of invalid tokens (" + invalTokensA + ")");
+        } else if(invalTokensB != totalOverlay) {
+            throw new ChecksimsException("Internal error: number of identical tokens (" + totalOverlay + ") does not match number of invalid tokens (" + invalTokensB + ")");
+        }
 
         return new AlgorithmResults(a, b, totalOverlay, totalOverlay, newA, newB);
     }

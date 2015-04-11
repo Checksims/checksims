@@ -62,7 +62,7 @@ public class SimilarityDetectionWorker implements Callable<AlgorithmResults> {
      * Perform pairwise similarity detection on assignments given when constructed
      *
      * @return Results of pairwise similarity detection
-     * @throws Exception Not used - all exceptions will be RuntimeException or similar
+     * @throws Exception Not used
      */
     @Override
     public AlgorithmResults call() throws Exception {
@@ -74,7 +74,11 @@ public class SimilarityDetectionWorker implements Callable<AlgorithmResults> {
             return algorithm.detectSimilarity(submissions.getLeft(), submissions.getRight());
         } catch (ChecksimsException e) {
             logs.error("Fatal error running " + algorithm.getName() + " on submissions " + submissions.getLeft().getName() + " and " + submissions.getRight().getName());
-            throw new RuntimeException(e);
+            logs.error(e.getMessage());
+            e.printStackTrace();
+            System.exit(-1);
+
+            return null;
         }
     }
 
