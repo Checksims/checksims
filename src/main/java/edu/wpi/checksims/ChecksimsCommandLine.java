@@ -183,7 +183,13 @@ public final class ChecksimsCommandLine {
 
         // Parse number of threads to use
         if(cli.hasOption("j")) {
-            config = config.setNumThreads(Integer.parseInt(cli.getOptionValue("j")));
+            int numThreads = Integer.parseInt(cli.getOptionValue("j"));
+
+            if(numThreads < 1) {
+                throw new ChecksimsException("Thread count must be positive!");
+            }
+
+            config = config.setNumThreads(numThreads);
         }
 
         // Parse preprocessors
@@ -207,6 +213,10 @@ public final class ChecksimsCommandLine {
             for(String s : desiredStrategies) {
                 SimilarityMatrixPrinter p = OutputRegistry.getInstance().getImplementationInstance(s);
                 outputStrategies.add(p);
+            }
+
+            if(outputStrategies.isEmpty()) {
+                throw new ChecksimsException("Error: did not obtain a valid output strategy!");
             }
 
             config = config.setOutputPrinters(outputStrategies);
@@ -286,6 +296,10 @@ public final class ChecksimsCommandLine {
         List<Submission> submissions = new LinkedList<>();
         for(File dir : submissionDirs) {
             submissions.addAll(Submission.submissionListFromDir(dir, glob, tokenizer, recursive));
+        }
+
+        if(submissions.isEmpty()) {
+            throw new ChecksimsException("Did not obtain any submissions to operate on!");
         }
 
         return submissions;

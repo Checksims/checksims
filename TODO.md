@@ -13,6 +13,7 @@ Code Cleanup
 - Remove UnorderedPair, replace with Apache Commons Pair. Add PairGenerationStrategy interface.
 - Rewrite of Smith-Waterman, removing many otherwise-unused utility classes and adding tests
 - Refactor a lot of the data structures used throughout --- List is very overused
+- Refactor SimilarityMatrix (add clarity, handle potentially missing results, etc)
 
 Minor Improvements
 - Archive directory support

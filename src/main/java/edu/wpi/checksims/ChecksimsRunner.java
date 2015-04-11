@@ -118,6 +118,11 @@ public class ChecksimsRunner {
             submissions = ImmutableList.copyOf(PreprocessSubmissions.process(p, submissions));
         }
 
+        if(submissions.size() < 2) {
+            logs.error("Not enough submissions for a pairwise comparison! Nothing to do!");
+            System.exit(0);
+        }
+
         // Apply algorithm to submission
         SimilarityMatrix results = SimilarityMatrix.generate(submissions, config.getAlgorithm());
 

@@ -1,37 +1,54 @@
+/*
+ * CDDL HEADER START
+ *
+ * The contents of this file are subject to the terms of the
+ * Common Development and Distribution License (the "License").
+ * You may not use this file except in compliance with the License.
+ *
+ * See LICENSE.txt included in this distribution for the specific
+ * language governing permissions and limitations under the License.
+ *
+ * When distributing Covered Code, include this CDDL HEADER in each
+ * file and include the License file at LICENSE.txt.
+ * If applicable, add the following below this CDDL HEADER, with the
+ * fields enclosed by brackets "[]" replaced with your own identifying
+ * information: Portions Copyright [yyyy] [name of copyright owner]
+ *
+ * CDDL HEADER END
+ *
+ * Copyright (c) 2014-2015 Matthew Heon and Dolan Murvihill
+ */
+
 package edu.wpi.checksims.algorithm.commoncode;
 
-import edu.wpi.checksims.submission.ConcreteSubmission;
 import edu.wpi.checksims.submission.Submission;
-import edu.wpi.checksims.token.TokenType;
-import edu.wpi.checksims.token.tokenizer.FileTokenizer;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import static org.junit.Assert.*;
+import static edu.wpi.checksims.testutil.SubmissionUtils.charSubmissionFromString;
+import static edu.wpi.checksims.testutil.SubmissionUtils.checkSubmissionCollections;
 
 /**
  * Tests for the Common Code passthrough handler
  */
 public class CommonCodePassthroughHandlerTest {
-    private static CommonCodeHandler passthrough;
-    private static Collection<Submission> empty;
-    private static Collection<Submission> oneSubmission;
-    private static Collection<Submission> twoSubmissions;
-    private static Collection<Submission> threeSubmissions;
+    private CommonCodeHandler passthrough;
+    private Collection<Submission> empty;
+    private Collection<Submission> oneSubmission;
+    private Collection<Submission> twoSubmissions;
+    private Collection<Submission> threeSubmissions;
 
-    @BeforeClass
-    public static void setUp() {
+    @Before
+    public void setUp() {
         passthrough = CommonCodePassthroughHandler.getInstance();
 
-        FileTokenizer tokenizer = FileTokenizer.getTokenizer(TokenType.CHARACTER);
-
-        Submission a = new ConcreteSubmission("A", "A", tokenizer.splitFile("A"));
-        Submission b = new ConcreteSubmission("B", "B", tokenizer.splitFile("B"));
-        Submission c = new ConcreteSubmission("C", "C", tokenizer.splitFile("C"));
+        Submission a = charSubmissionFromString("A", "A");
+        Submission b = charSubmissionFromString("B", "B");
+        Submission c = charSubmissionFromString("C", "C");
 
         empty = new LinkedList<>();
 
@@ -46,37 +63,27 @@ public class CommonCodePassthroughHandlerTest {
     public void TestCommonCodePassthroughHandlerEmpty() {
         Collection<Submission> result = passthrough.handleCommonCode(empty);
 
-        assertNotNull(result);
-        assertTrue(result.isEmpty());
+        checkSubmissionCollections(result, empty);
     }
 
     @Test
     public void TestCommonCodePassthroughSingleSubmission() {
         Collection<Submission> result = passthrough.handleCommonCode(oneSubmission);
 
-        assertNotNull(result);
-        assertFalse(result.isEmpty());
-        assertEquals(result.size(), oneSubmission.size());
-        oneSubmission.stream().forEach((submission) -> assertTrue(result.contains(submission)));
+        checkSubmissionCollections(result, oneSubmission);
     }
 
     @Test
     public void TestCommonCodePassthroughTwoSubmissions() {
         Collection<Submission> result = passthrough.handleCommonCode(twoSubmissions);
 
-        assertNotNull(result);
-        assertFalse(result.isEmpty());
-        assertEquals(result.size(), twoSubmissions.size());
-        twoSubmissions.stream().forEach((submission) -> assertTrue(result.contains(submission)));
+        checkSubmissionCollections(result, twoSubmissions);
     }
 
     @Test
     public void TestCommonCodePassthroughThreeSubmissions() {
         Collection<Submission> result = passthrough.handleCommonCode(threeSubmissions);
 
-        assertNotNull(result);
-        assertFalse(result.isEmpty());
-        assertEquals(result.size(), threeSubmissions.size());
-        threeSubmissions.stream().forEach((submission) -> assertTrue(result.contains(submission)));
+        checkSubmissionCollections(result, threeSubmissions);
     }
 }

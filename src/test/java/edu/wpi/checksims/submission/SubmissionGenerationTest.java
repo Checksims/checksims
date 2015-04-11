@@ -1,8 +1,30 @@
+/*
+ * CDDL HEADER START
+ *
+ * The contents of this file are subject to the terms of the
+ * Common Development and Distribution License (the "License").
+ * You may not use this file except in compliance with the License.
+ *
+ * See LICENSE.txt included in this distribution for the specific
+ * language governing permissions and limitations under the License.
+ *
+ * When distributing Covered Code, include this CDDL HEADER in each
+ * file and include the License file at LICENSE.txt.
+ * If applicable, add the following below this CDDL HEADER, with the
+ * fields enclosed by brackets "[]" replaced with your own identifying
+ * information: Portions Copyright [yyyy] [name of copyright owner]
+ *
+ * CDDL HEADER END
+ *
+ * Copyright (c) 2014-2015 Matthew Heon and Dolan Murvihill
+ */
+
 package edu.wpi.checksims.submission;
 
+import edu.wpi.checksims.testutil.SubmissionUtils;
 import edu.wpi.checksims.token.TokenType;
 import edu.wpi.checksims.token.tokenizer.FileTokenizer;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -10,30 +32,37 @@ import org.junit.rules.ExpectedException;
 import java.io.File;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.NotDirectoryException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
+import static edu.wpi.checksims.testutil.SubmissionUtils.checkSubmissionCollections;
+import static edu.wpi.checksims.testutil.SubmissionUtils.lineSubmissionFromString;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Test creation of submissions from files
  */
 public class SubmissionGenerationTest {
-    private static File test1;
-    private static File test2;
-    private static File testEmpty;
-    private static File testEmptyFile;
-    private static File testOneFile;
-    private static File testRecursive;
-    private static File testVariedExtensions;
-    private static FileTokenizer line;
+    private static String basePath;
+    private File test1;
+    private File test2;
+    private File testEmpty;
+    private File testEmptyFile;
+    private File testOneFile;
+    private File testRecursive;
+    private File testVariedExtensions;
+    private FileTokenizer line;
 
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
 
-    @BeforeClass
-    public static void setUp() {
-        final String basePath = SubmissionGenerationTest.class.getResource("").getPath();
+    @Before
+    public void setUp() {
+        basePath = SubmissionGenerationTest.class.getResource("").getPath();
 
         test1 = new File(basePath + "/test1");
         test2 = new File(basePath + "/test2");
@@ -46,39 +75,43 @@ public class SubmissionGenerationTest {
         line = FileTokenizer.getTokenizer(TokenType.LINE);
     }
 
+    public static List<File> namesToFiles(String prefix, List<String> names) {
+        return names.stream().map((name) -> new File(basePath + "/" + prefix + "/" + name)).collect(Collectors.toList());
+    }
+
     @Test
-    public void TestFileListingJustTxt() throws Exception {
-        List<File> filesInOne = Submission.getAllMatchingFiles(test1, "*.txt", false);
-        assertNotNull(filesInOne);
-        assertFalse(filesInOne.isEmpty());
-        assertTrue(filesInOne.size() == 3);
-        List<String> fileNamesOne = filesInOne.stream().map(File::getName).collect(Collectors.toList());
-        assertTrue(fileNamesOne.contains("test.txt"));
-        assertTrue(fileNamesOne.contains("test2.txt"));
-        assertTrue(fileNamesOne.contains("test3.txt"));
+    public void TestFileListingTest1JustTxt() throws Exception {
+        Collection<File> files = Submission.getAllMatchingFiles(test1, "*.txt", false);
 
-        List<File> filesInTwo = Submission.getAllMatchingFiles(test2, "*.txt", false);
-        assertNotNull(filesInTwo);
-        assertFalse(filesInTwo.isEmpty());
-        assertTrue(filesInTwo.size() == 2);
-        List<String> fileNamesTwo = filesInTwo.stream().map(File::getName).collect(Collectors.toList());
-        assertTrue(fileNamesTwo.contains("test.txt"));
-        assertTrue(fileNamesTwo.contains("test2.txt"));
+        SubmissionUtils.checkFileCollections(files, namesToFiles(test1.getName(), Arrays.asList("test.txt", "test2.txt", "test3.txt")));
+    }
 
-        List<File> filesInEmpty = Submission.getAllMatchingFiles(testEmpty, "*.txt", false);
-        assertNotNull(filesInEmpty);
-        assertTrue(filesInEmpty.isEmpty());
+    @Test
+    public void TestFileListingTest2JustTxt() throws Exception {
+        Collection<File> files = Submission.getAllMatchingFiles(test2, "*.txt", false);
 
-        List<File> filesInOneFile = Submission.getAllMatchingFiles(testOneFile, "*.txt", false);
-        assertNotNull(filesInOneFile);
-        assertEquals(filesInOneFile.size(), 1);
-        assertEquals(filesInOneFile.get(0).getName(), "test.txt");
+        SubmissionUtils.checkFileCollections(files, namesToFiles(test2.getName(), Arrays.asList("test.txt", "test2.txt")));
+    }
 
-        List<File> filesInEmptyFile = Submission.getAllMatchingFiles(testEmptyFile, "*.txt", false);
-        assertNotNull(filesInEmptyFile);
-        assertFalse(filesInEmptyFile.isEmpty());
-        assertTrue(filesInEmptyFile.size() == 1);
-        assertEquals(filesInEmptyFile.get(0).getName(), "empty.txt");
+    @Test
+    public void TestFileListingTestEmptyJustTxt() throws Exception {
+        Collection<File> files = Submission.getAllMatchingFiles(testEmpty, "*.txt", false);
+
+        SubmissionUtils.checkFileCollections(files, new LinkedList<>());
+    }
+
+    @Test
+    public void TestFileListingTestOneFileJustTxt() throws Exception {
+        Collection<File> files = Submission.getAllMatchingFiles(testOneFile, "*.txt", false);
+
+        SubmissionUtils.checkFileCollections(files, namesToFiles(testOneFile.getName(), Arrays.asList("test.txt")));
+    }
+
+    @Test
+    public void TestFileListingTestEmptyFileJustTxt() throws Exception {
+        Collection<File> files = Submission.getAllMatchingFiles(testEmptyFile, "*.txt", false);
+
+        SubmissionUtils.checkFileCollections(files, namesToFiles(testEmptyFile.getName(), Arrays.asList("empty.txt")));
     }
 
     @Test(expected = NoSuchFileException.class)
@@ -92,23 +125,24 @@ public class SubmissionGenerationTest {
     }
 
     @Test
-    public void TestGetFilesDifferentBlobs() throws Exception {
-        List<File> filesTxt = Submission.getAllMatchingFiles(testVariedExtensions, "*.txt", false);
-        assertNotNull(filesTxt);
-        assertEquals(filesTxt.size(), 1);
-        assertEquals(filesTxt.get(0).getName(), "test.txt");
+    public void TestFileListingVariedExtensionsTxt() throws Exception {
+        Collection<File> files = Submission.getAllMatchingFiles(testVariedExtensions, "*.txt", false);
 
-        List<File> filesC = Submission.getAllMatchingFiles(testVariedExtensions, "*.c", false);
-        assertNotNull(filesC);
-        assertEquals(filesC.size(), 1);
-        assertEquals(filesC.get(0).getName(), "test.c");
+        SubmissionUtils.checkFileCollections(files, namesToFiles(testVariedExtensions.getName(), Arrays.asList("test.txt")));
+    }
 
-        List<File> filesCH = Submission.getAllMatchingFiles(testVariedExtensions, "*.{c,h}", false);
-        assertNotNull(filesCH);
-        assertEquals(filesCH.size(), 2);
-        List<String> namesCH = filesCH.stream().map(File::getName).collect(Collectors.toList());
-        assertTrue(namesCH.contains("test.c"));
-        assertTrue(namesCH.contains("test.h"));
+    @Test
+    public void TestFileListingVariedExtensionsC() throws Exception {
+        Collection<File> files = Submission.getAllMatchingFiles(testVariedExtensions, "*.c", false);
+
+        SubmissionUtils.checkFileCollections(files, namesToFiles(testVariedExtensions.getName(), Arrays.asList("test.c")));
+    }
+
+    @Test
+    public void TestFileListingVariedExtensionsCAndH() throws Exception {
+        Collection<File> files = Submission.getAllMatchingFiles(testVariedExtensions, "*.{c,h}", false);
+
+        SubmissionUtils.checkFileCollections(files, namesToFiles(testVariedExtensions.getName(), Arrays.asList("test.c", "test.h")));
     }
 
     @Test
@@ -119,18 +153,17 @@ public class SubmissionGenerationTest {
     }
 
     @Test
-    public void TestRecursiveTraversal() throws Exception {
-        List<File> filesNonRecursive = Submission.getAllMatchingFiles(testRecursive, "*.txt", false);
-        assertNotNull(filesNonRecursive);
-        assertEquals(filesNonRecursive.size(), 1);
-        assertEquals(filesNonRecursive.get(0).getName(), "test1.txt");
+    public void TestFileListingNonRecursive() throws Exception {
+        Collection<File> files = Submission.getAllMatchingFiles(testRecursive, "*.txt", false);
 
-        List<File> filesRecursive = Submission.getAllMatchingFiles(testRecursive, "*.txt", true);
-        assertNotNull(filesRecursive);
-        assertEquals(filesRecursive.size(), 2);
-        List<String> namesRecursive = filesRecursive.stream().map(File::getName).collect(Collectors.toList());
-        assertTrue(namesRecursive.contains("test1.txt"));
-        assertTrue(namesRecursive.contains("test2.txt"));
+        SubmissionUtils.checkFileCollections(files, namesToFiles(testRecursive.getName(), Arrays.asList("test1.txt")));
+    }
+
+    @Test
+    public void TestFileListingRecursive() throws Exception {
+        Collection<File> files = Submission.getAllMatchingFiles(testRecursive, "*.txt", true);
+
+        SubmissionUtils.checkFileCollections(files, namesToFiles(testRecursive.getName(), Arrays.asList("test1.txt", "subDir/test2.txt")));
     }
 
     @Test(expected = NoSuchFileException.class)
@@ -151,46 +184,37 @@ public class SubmissionGenerationTest {
     @Test
     public void TestGenerateEmptySubmissionOneFile() throws Exception {
         Submission empty = Submission.submissionFromDir(testEmptyFile, "*.txt", line, false);
+        Submission expected = lineSubmissionFromString(testEmptyFile.getName(), "");
 
         assertNotNull(empty);
-        assertEquals(empty.getName(), "testEmptyFile");
-        assertEquals(empty.getNumTokens(), 0);
-        assertTrue(empty.getContentAsString().isEmpty());
+        assertEquals(expected, empty);
     }
 
     @Test
     public void TestGenerateEmptySubmissionMultiFile() throws Exception {
         Submission emptyMulti = Submission.submissionFromDir(test2, "*.txt", line, false);
+        Submission expected = lineSubmissionFromString(test2.getName(), "");
 
         assertNotNull(emptyMulti);
-        assertEquals(emptyMulti.getName(), "test2");
-        assertEquals(emptyMulti.getNumTokens(), 0);
-        assertTrue(emptyMulti.getContentAsString().isEmpty());
+        assertEquals(expected, emptyMulti);
     }
 
     @Test
     public void TestGenerateSingleFileSubmissionNonEmpty() throws Exception {
         Submission oneFile = Submission.submissionFromDir(testOneFile, "*.txt", line, false);
+        Submission expected = lineSubmissionFromString(testOneFile.getName(), "Hello world.\n");
 
         assertNotNull(oneFile);
-        assertEquals(oneFile.getName(), "testOneFile");
-        assertEquals(oneFile.getNumTokens(), 1);
-        assertEquals(oneFile.getContentAsString(), "Hello world.\n"); // Expect an added newline
-        assertEquals(oneFile.getContentAsTokens(), line.splitFile("Hello world."));
+        assertEquals(expected, oneFile);
     }
 
     @Test
     public void TestGenerateMultiFileSubmissionNonEmpty() throws Exception {
         Submission test = Submission.submissionFromDir(test1, "*.txt", line, false);
+        Submission expected = lineSubmissionFromString(test1.getName(), "Test 1\nTest 2\nTest 3\n");
 
         assertNotNull(test);
-        assertEquals(test.getName(), "test1");
-        assertEquals(test.getNumTokens(), 3);
-        List<String> tokensMapped = test.getContentAsTokens().stream().map((token) -> token.getTokenAsString()).collect(Collectors.toList());
-        assertTrue(tokensMapped.contains("Test 1"));
-        assertTrue(tokensMapped.contains("Test 2"));
-        assertTrue(tokensMapped.contains("Test 3"));
-        assertEquals(test.getContentAsString(), test.getContentAsTokens().join(false));
+        assertEquals(expected, test);
     }
 
     @Test(expected = NoSuchFileException.class)
@@ -205,9 +229,8 @@ public class SubmissionGenerationTest {
 
     @Test
     public void TestGenerateListOfSubmissionFromDir() throws Exception {
-        File baseDir = new File(SubmissionGenerationTest.class.getResource("").getPath());
+        List<Submission> submissionList = Submission.submissionListFromDir(new File(basePath), "*.txt", line, true);
 
-        List<Submission> submissionList = Submission.submissionListFromDir(baseDir, "*.txt", line, true);
         Submission sub1 = Submission.submissionFromDir(test1, "*.txt", line, true);
         Submission sub2 = Submission.submissionFromDir(test2, "*.txt", line, true);
         Submission subEmptyFile = Submission.submissionFromDir(testEmptyFile, "*.txt", line, true);
@@ -215,13 +238,8 @@ public class SubmissionGenerationTest {
         Submission subRecursive = Submission.submissionFromDir(testRecursive, "*.txt", line, true);
         Submission subVariedExtensions = Submission.submissionFromDir(testVariedExtensions, "*.txt", line, true);
 
-        assertNotNull(submissionList);
-        assertEquals(submissionList.size(), 6);
-        assertTrue(submissionList.contains(sub1));
-        assertTrue(submissionList.contains(sub2));
-        assertTrue(submissionList.contains(subEmptyFile));
-        assertTrue(submissionList.contains(subOneFile));
-        assertTrue(submissionList.contains(subRecursive));
-        assertTrue(submissionList.contains(subVariedExtensions));
+        List<Submission> expected = Arrays.asList(sub1, sub2, subEmptyFile, subOneFile, subRecursive, subVariedExtensions);
+
+        checkSubmissionCollections(expected, submissionList);
     }
 }

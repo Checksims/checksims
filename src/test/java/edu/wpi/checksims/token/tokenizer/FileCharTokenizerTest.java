@@ -16,37 +16,32 @@
  *
  * CDDL HEADER END
  *
- * Copyright (c) 2014 Matthew Heon and Dolan Murvihill
+ * Copyright (c) 2014-2015 Matthew Heon and Dolan Murvihill
  */
 
 package edu.wpi.checksims.token.tokenizer;
 
-import edu.wpi.checksims.token.ConcreteToken;
 import edu.wpi.checksims.token.TokenList;
-import edu.wpi.checksims.token.TokenType;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
+import static edu.wpi.checksims.testutil.TokenUtils.makeTokenListCharacter;
 import static org.junit.Assert.*;
 
 /**
  * Tests for the FileCharTokenizer
  */
 public class FileCharTokenizerTest {
-    private static final String empty = "";
-    private static final String oneWord = "hello";
-    private static final String twoWords = "hello world";
-    private static final String withTabs = "with\ttabs\t";
-    private static FileCharTokenizer c;
+    private FileCharTokenizer c;
 
-    @BeforeClass
-    public static void setUp() {
+    @Before
+    public void setUp() {
         c = FileCharTokenizer.getInstance();
     }
 
     @Test
     public void testEmptyReturnsEmpty() {
-        TokenList results = c.splitFile(empty);
+        TokenList results = c.splitFile("");
 
         assertNotNull(results);
         assertTrue(results.isEmpty());
@@ -54,63 +49,37 @@ public class FileCharTokenizerTest {
 
     @Test
     public void testHelloReturnsChars() {
-        TokenList results = c.splitFile(oneWord);
-
-        TokenList expected = new TokenList(TokenType.CHARACTER);
-        expected.add(new ConcreteToken('h', TokenType.CHARACTER));
-        expected.add(new ConcreteToken('e', TokenType.CHARACTER));
-        expected.add(new ConcreteToken('l', TokenType.CHARACTER));
-        expected.add(new ConcreteToken('l', TokenType.CHARACTER));
-        expected.add(new ConcreteToken('o', TokenType.CHARACTER));
+        TokenList results = c.splitFile("hello");
+        TokenList expected = makeTokenListCharacter('h', 'e', 'l', 'l', 'o');
 
         assertNotNull(results);
-        assertFalse(results.isEmpty());
-        assertEquals(results.size(), 5);
-        assertEquals(results, expected);
+        assertEquals(expected, results);
     }
 
     @Test
     public void testHelloWorldReturnsChars() {
-        TokenList results = c.splitFile(twoWords);
-
-        TokenList expected = new TokenList(TokenType.CHARACTER);
-        expected.add(new ConcreteToken('h', TokenType.CHARACTER));
-        expected.add(new ConcreteToken('e', TokenType.CHARACTER));
-        expected.add(new ConcreteToken('l', TokenType.CHARACTER));
-        expected.add(new ConcreteToken('l', TokenType.CHARACTER));
-        expected.add(new ConcreteToken('o', TokenType.CHARACTER));
-        expected.add(new ConcreteToken(' ', TokenType.CHARACTER));
-        expected.add(new ConcreteToken('w', TokenType.CHARACTER));
-        expected.add(new ConcreteToken('o', TokenType.CHARACTER));
-        expected.add(new ConcreteToken('r', TokenType.CHARACTER));
-        expected.add(new ConcreteToken('l', TokenType.CHARACTER));
-        expected.add(new ConcreteToken('d', TokenType.CHARACTER));
+        TokenList results = c.splitFile("hello world");
+        TokenList expected = makeTokenListCharacter('h', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd');
 
         assertNotNull(results);
-        assertFalse(results.isEmpty());
-        assertEquals(results.size(), 11);
         assertEquals(results, expected);
     }
 
     @Test
     public void TestHandlesWhitespaceCorrectly() {
-        TokenList results = c.splitFile(withTabs);
-
-        TokenList expected = new TokenList(TokenType.CHARACTER);
-        expected.add(new ConcreteToken('w', TokenType.CHARACTER));
-        expected.add(new ConcreteToken('i', TokenType.CHARACTER));
-        expected.add(new ConcreteToken('t', TokenType.CHARACTER));
-        expected.add(new ConcreteToken('h', TokenType.CHARACTER));
-        expected.add(new ConcreteToken('\t', TokenType.CHARACTER));
-        expected.add(new ConcreteToken('t', TokenType.CHARACTER));
-        expected.add(new ConcreteToken('a', TokenType.CHARACTER));
-        expected.add(new ConcreteToken('b', TokenType.CHARACTER));
-        expected.add(new ConcreteToken('s', TokenType.CHARACTER));
-        expected.add(new ConcreteToken('\t', TokenType.CHARACTER));
+        TokenList results = c.splitFile("with\ttabs\t");
+        TokenList expected = makeTokenListCharacter('w', 'i', 't', 'h', '\t', 't', 'a', 'b', 's', '\t');
 
         assertNotNull(results);
-        assertFalse(results.isEmpty());
-        assertEquals(results.size(), 10);
+        assertEquals(results, expected);
+    }
+
+    @Test
+    public void TestHandlesNewlinesCorrectly() {
+        TokenList results = c.splitFile("with\nnewlines\n");
+        TokenList expected = makeTokenListCharacter('w', 'i', 't', 'h', '\n', 'n', 'e', 'w', 'l', 'i', 'n', 'e', 's', '\n');
+
+        assertNotNull(results);
         assertEquals(results, expected);
     }
 }

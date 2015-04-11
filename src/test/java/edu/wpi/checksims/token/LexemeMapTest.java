@@ -1,3 +1,24 @@
+/*
+ * CDDL HEADER START
+ *
+ * The contents of this file are subject to the terms of the
+ * Common Development and Distribution License (the "License").
+ * You may not use this file except in compliance with the License.
+ *
+ * See LICENSE.txt included in this distribution for the specific
+ * language governing permissions and limitations under the License.
+ *
+ * When distributing Covered Code, include this CDDL HEADER in each
+ * file and include the License file at LICENSE.txt.
+ * If applicable, add the following below this CDDL HEADER, with the
+ * fields enclosed by brackets "[]" replaced with your own identifying
+ * information: Portions Copyright [yyyy] [name of copyright owner]
+ *
+ * CDDL HEADER END
+ *
+ * Copyright (c) 2014-2015 Matthew Heon and Dolan Murvihill
+ */
+
 package edu.wpi.checksims.token;
 
 import org.junit.Before;
@@ -20,7 +41,7 @@ public class LexemeMapTest {
         Object token = LexemeMap.getTokenForLexeme(lexeme);
 
         assertNotNull(token);
-        assertEquals(token, "hello");
+        assertEquals("hello", token);
     }
 
     @Test
@@ -33,9 +54,9 @@ public class LexemeMapTest {
         assertNotNull(token);
         assertNotNull(token2);
         assertNotNull(token3);
-        assertEquals(token, "hello");
-        assertEquals(token2, token);
-        assertEquals(token3, token2);
+        assertEquals("hello", token);
+        assertEquals("hello", token2);
+        assertEquals("hello", token3);
     }
 
     @Test
@@ -64,8 +85,8 @@ public class LexemeMapTest {
 
         assertNotNull(token1);
         assertNotNull(token2);
-        assertEquals(token1, "hello");
-        assertEquals(token2, "world");
+        assertEquals("hello", token1);
+        assertEquals("world", token2);
     }
 
     @Test
@@ -80,7 +101,7 @@ public class LexemeMapTest {
 
         assertNotNull(token1);
         assertNotNull(token2);
-        assertEquals(token1, "hello");
-        assertEquals(token1, token2);
+        assertEquals("hello", token1);
+        assertEquals("hello", token2);
     }
 }

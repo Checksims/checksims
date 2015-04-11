@@ -16,16 +16,23 @@
  *
  * CDDL HEADER END
  *
- * Copyright (c) 2014 Matthew Heon and Dolan Murvihill
+ * Copyright (c) 2014-2015 Matthew Heon and Dolan Murvihill
  */
 
 package edu.wpi.checksims.algorithm.smithwaterman;
+
+import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 /**
  * Tests for the Smith-Waterman Algorithm plagiarism detector
+ *
+ * TODO add these tests
  */
 public class TestSmithWaterman {
-    // TO DO
+    @Test
+    public void DummyTest() {
+        assertTrue(true);
+    }
 }
