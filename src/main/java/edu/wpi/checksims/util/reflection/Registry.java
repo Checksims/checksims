@@ -42,7 +42,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Parent class for all registry implementations
  */
 public class Registry<T extends NamedInstantiable> {
-    private final List<T> registeredHandlers;
+    private final Collection<T> registeredHandlers;
 
     /**
      * Create a Registry instance for implementations of a given base class in the given package and subpackages
@@ -56,7 +56,7 @@ public class Registry<T extends NamedInstantiable> {
         checkNotNull(initPath);
         checkNotNull(baseClazz);
 
-        List<T> handlers = reflectiveInstantiator(initPath, baseClazz);
+        Collection<T> handlers = reflectiveInstantiator(initPath, baseClazz);
 
         if(handlers.isEmpty()) {
             throw new RuntimeException("Cannot find any valid classes to instantiate in " + initPath);
@@ -77,8 +77,8 @@ public class Registry<T extends NamedInstantiable> {
     /**
      * @return Names of all supported implementations in this registry
      */
-    public Collection<String> getSupportedImplementationNames() {
-        return registeredHandlers.stream().map(NamedInstantiable::getName).collect(Collectors.toList());
+    public Set<String> getSupportedImplementationNames() {
+        return registeredHandlers.stream().map(NamedInstantiable::getName).collect(Collectors.toSet());
     }
 
     /**
@@ -107,14 +107,12 @@ public class Registry<T extends NamedInstantiable> {
      *
      * Please note that reflectiveInstantiator ignores inner classes --- all classes instantiated will be top level
      *
-     * TODO consider returning either collection or Set. Set makes most sense.
-     *
      * @param packageName Package name to instantiate in
      * @param subclassesOf Class to instantiate subclasses of
      * @param <T> Type of the original class, which all subclasses will be as well
      * @return List of instances of classes extending/implementing subclassesOf
      */
-    public static <T> List<T> reflectiveInstantiator(String packageName, Class<T> subclassesOf) {
+    public static <T> Collection<T> reflectiveInstantiator(String packageName, Class<T> subclassesOf) {
         Logger logs = LoggerFactory.getLogger(Registry.class);
 
         List<T> allInstances = new LinkedList<>();

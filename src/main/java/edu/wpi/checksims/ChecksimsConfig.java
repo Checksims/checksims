@@ -74,7 +74,7 @@ public final class ChecksimsConfig {
     }
 
     /**
-     * Base constructor, returns base config
+     * Base constructor, returns default config
      */
     public ChecksimsConfig() {
         this.algorithm = AlgorithmRegistry.getInstance().getDefaultImplementation();
