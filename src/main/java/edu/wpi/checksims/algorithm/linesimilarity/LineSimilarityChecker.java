@@ -91,6 +91,8 @@ public class LineSimilarityChecker implements SimilarityDetector {
      * @param a First submission to check
      * @param b Second submission to check
      * @return Results of the similarity detection
+     * @throws TokenTypeMismatchException Thrown comparing two submissions with different token types
+     * @throws InternalAlgorithmError Thrown on error obtaining a hash algorithm instance
      */
     @Override
     public AlgorithmResults detectSimilarity(Submission a, Submission b) throws TokenTypeMismatchException, InternalAlgorithmError {
