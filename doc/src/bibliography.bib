@@ -17,10 +17,10 @@
   pages={277--286},
   year={2006},
   organization={Australian Computer Society, Inc.},
-  annote={Introduces XPlag, a tool designed to detect instances of code copied
-    from one programming language into another. XPlag functions by comparing
-    the intermediate representation of two programs written in different
-    languages but built by the same compiler suite.}
+  annote={Introduces \italicize{XPlag}, a tool designed to detect instances of
+    code copied from one programming language into another. \textit{XPlag}
+    functions by comparing the intermediate representation of two programs
+    written in different languages but built by the same compiler suite.}
 }
 @inproceedings{baker95,
   title={On finding duplication and near-duplication in large software systems},
@@ -62,9 +62,8 @@
     LLVM intermediate representation bitcode), tree edit distance in the abstract
     syntax tree, graph edit distance in the control flow graphs, and $w$-shingling,
     both in the source and in the IR bitcode. The algorithms are also checked
-    against an unrelated piece of source code (to check for false positives), and
-    their performance was also compared with the performance of MOSS, the state of
-    the art plagiarism detection service provided by Stanford).
+    against an unrelated piece of source code to check for false positives, and
+    their performance was also compared with the performance of MOSS.
     \par
     The author limited the corpus to C programs, but believes the results will be
     similar for any compiler that uses the LLVM toolchain. The corpus is, however,
@@ -317,7 +316,7 @@
 @article{irving04,
   title={Plagiarism and Collusion Detection using the Smith-Waterman Algorithm},
   author={Irving, Robert W.},
-  journal={university of glasgow},
+  journal={University of Glasgow},
   year={2004},
   annote={
     \setlength{\parskip}{1.5ex}
@@ -328,7 +327,7 @@
 @inproceedings{johnson94,
   title={Substring Matching for Clone Detection and Change Tracking},
   author={Johnson, J. Howard},
-  booktitle={software maintenance, 1994. proceedings., international conference on},
+  booktitle={Software Maintenance, 1994. Proceedings, International Conference on},
   pages={120--126},
   year={1994},
   organization={ieee},
@@ -494,7 +493,7 @@
   publisher={springer},
   annote={
     \setlength{\parskip}{1.5ex}
-    a discussion of diff3, a three-way version of the conventional diff algorithm. This
+    A discussion of diff3, a three-way version of the conventional diff algorithm. This
     could be used for plagiarism detection (detect similarities between two files
     that are not shared by a third, given reference code shared by all students).}
 }
@@ -507,7 +506,7 @@
   organization={acm},
   annote={
     \setlength{\parskip}{1.5ex}
-    another paper that doesn't really solve the plagiarism prolem, and instead
+    Another paper that doesn't really solve the plagiarism prolem, and instead
     attempts to find duplicate/dead code. This one is interesting because of its
     categorization metrics, though --- it attempts to classify code as either a
     straight duplicate, close copy, or unclassifiable (some duplicated code, but
