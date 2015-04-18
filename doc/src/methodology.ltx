@@ -248,30 +248,28 @@ algorithm. No false positive testing was performed.
 
 \subsection{MOSS Comparison}
 \label{sec:mosscompare}
-We wanted to learn several things by comparing the output of \textit{Checksims}
+We aimed to learn several things by comparing the output of \textit{Checksims}
 and MOSS on several assignments. By comparing the number of false positives
-produced by both programs, we hoped to determine whether MOSS (and its more
-strict definition of what constitutes academic dishonesty) produces more false
-positives than \textit{Checksims}. Furthermore, we hoped to verify that
-\textit{Checksims} contained few (or no) false negatives.
+produced by both programs, we aimed to determine whether MOSS, with its more
+sensitive definition of what constitutes academic dishonesty, produced an
+inordinate number of false positives compared to \textit{Checksims}.
+Furthermore, we aimed to estimate the false negative rate of
+\textit{Checksims}.
 
-To perform this experiment, we first identified separate groups of assignments
-from our test data that had a few, some, and many similarities according to data
-from the experiment described in Section~\ref{sec:algcompare}. Two of each were
-chosen and given to MOSS to test on --- because MOSS is a free service, and not
-particularly fast, we did not wish to place undue demands on it by asking it to
-process our entire set of test data.
+To perform this experiment, we first identified groups of assignments from
+our test data that had a few, some, and many similarities according to data
+from the previous experiment. Two of each were chosen and checked with MOSS.
 
-The MOSS results for the chosen assignments were then investigated to identify
+The MOSS results for the chosen assignments were examined by hand to identify
 false positives --- similarities identified by MOSS that did not match our
-definition of similarity. The number of false positives (and the original
-number of results) were reported, and the false positives thrown out. The
-\textit{Checksims} results from the previous experiment for both algorithms
-were then run through the same process, with false positives being identified
-and thrown out, and the number of overall matches and false positives being
-recorded. Based on this, the number of false positives in the results of MOSS
-and \textit{Checksims} (both algorithms) can be compared, both in absolute
-terms and as a percentage of results recorded. Finally, the results were
-overlaid to see which matches are missing from either program --- what MOSS
-found but \textit{Checksims} did not, or \textit{Checksims} found but MOSS did
-not.
+definition of academic dishonesty. The number of false positives (and the
+original number of results) were recorded, and the false positives thrown
+out. The \textit{Checksims} results from the previous experiment for both  
+algorithms were then examined by the same process, with false positives being
+identified and thrown out, and the number of overall matches and false
+positives being recorded. The false positive rates of MOSS and
+\textit{Checksims} (both Line Comparison and \textit{Smith-Waterman}) can be
+compared, both in absolute terms and as a percentage of results recorded.
+Finally, the results were overlaid to see which matches are missing from
+either program --- what MOSS found but \textit{Checksims} did not, or
+\textit{Checksims} found but MOSS did not.
