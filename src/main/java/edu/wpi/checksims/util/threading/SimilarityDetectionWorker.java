@@ -64,6 +64,14 @@ public class SimilarityDetectionWorker implements Callable<AlgorithmResults> {
     /**
      * Perform pairwise similarity detection on assignments given when constructed
      *
+     * We don't throw exceptions here, checked or unchecked. The reason for this is our desire to "fail-fast" on
+     * algorithm errors --- instead of waiting for all comparisons to complete, we should immediately exit and inform
+     * the user of the failure.
+     *
+     * After future changes to the Similarity Matrix, it might be desirable to make this configurable behavior, as we'll
+     * be able to tolerate missing entires in the matrix at that point.
+     * TODO investigate this later
+     *
      * @return Results of pairwise similarity detection
      * @throws Exception Not used
      */

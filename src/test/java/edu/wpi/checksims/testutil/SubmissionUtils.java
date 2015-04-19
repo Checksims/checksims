@@ -59,8 +59,8 @@ public class SubmissionUtils {
     /**
      * Check two collections of files for equality
      *
-     * @param toCheck
-     * @param checkAgainst
+     * @param toCheck Actual
+     * @param checkAgainst Expected
      */
     public static void checkFileCollections(Collection<File> toCheck, Collection<File> checkAgainst) {
         assertNotNull(toCheck);
@@ -69,8 +69,8 @@ public class SubmissionUtils {
 
         // We want absolute comparisons
         // So map to absolute file
-        Collection<File> absoluteToCheck = toCheck.stream().map((file) -> file.getAbsoluteFile()).collect(Collectors.toList());
-        Collection<File> absoluteCheckAgainst = checkAgainst.stream().map((file) -> file.getAbsoluteFile()).collect(Collectors.toList());
+        Collection<File> absoluteToCheck = toCheck.stream().map(File::getAbsoluteFile).collect(Collectors.toList());
+        Collection<File> absoluteCheckAgainst = checkAgainst.stream().map(File::getAbsoluteFile).collect(Collectors.toList());
 
         absoluteCheckAgainst.stream().forEach((file) -> assertTrue(absoluteToCheck.contains(file)));
     }
@@ -122,6 +122,14 @@ public class SubmissionUtils {
         return submissionFromString(name, content, TokenType.LINE);
     }
 
+    /**
+     * Create a Set from a group of elements
+     *
+     * @param elements Elements to create set from
+     * @param <T> Type of elements, and thus returned set
+     * @return Set of input elements, following set invariants - all duplicate inputs will be removed
+     */
+    @SafeVarargs
     public static <T> Set<T> setFromElements(T... elements) {
         Set<T> toReturn = new HashSet<>();
 

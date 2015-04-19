@@ -17,6 +17,9 @@ Code Cleanup
 Minor Improvements
 - Archive directory support
 - Add handling for empty submissions (flag to include, default do not include)
+- Token Annotations
+- Leading & Trailing Whitespace Trimming Preprocessor
+- Support for stateful comparison algorithms (Registries for methods returning an instance)
 
 Major new features
 - Comment stripping preprocessors

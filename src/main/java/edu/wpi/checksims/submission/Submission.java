@@ -216,7 +216,7 @@ public interface Submission {
      * @param splitter Tokenizer for files in the submission
      * @return A new submission including a list containing a tokenization list consisting of the appended tokenization lists of every file included
      * @throws IOException Thrown on error reading from file
-     * @throws edu.wpi.checksims.submission.NoMatchingFilesException Thrown if no files are given
+     * @throws NoMatchingFilesException Thrown if no files are given
      */
     public static Submission submissionFromFiles(String name, Set<File> files, Tokenizer splitter) throws IOException, NoMatchingFilesException {
         checkNotNull(name);

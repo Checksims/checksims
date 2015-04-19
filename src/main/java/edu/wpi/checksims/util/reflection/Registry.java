@@ -42,6 +42,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Parent class for all registry implementations
  */
 public class Registry<T extends NamedInstantiable> {
+    // TODO convert this into a map String->T (implementation name to implementation instance)
     private final Collection<T> registeredHandlers;
 
     /**
@@ -124,16 +125,17 @@ public class Registry<T extends NamedInstantiable> {
         Set<Class<? extends T>> subtypes = searchPackage.getSubTypesOf(subclassesOf);
 
         // Iterate through all of the subclasses
-        subtypes.stream().forEach((type) -> {
+        for(Class<? extends T> type : subtypes) {
             logs.debug("Initializing class " + type.getName());
 
             // We don't want to instantiate inner classes
             // So check enclosing class. If it's not null, we've found an inner class.
             if(type.getEnclosingClass() != null) {
                 logs.trace("Not adding anonymous class " + type.getName() + " to registry");
-                return;
+                continue;
             }
 
+            // TODO maybe just throw these exceptions, and let Registry constructor handle?
             try {
                 // Get getInstance method of the class
                 Method getInstance = type.getMethod("getInstance");
@@ -158,7 +160,7 @@ public class Registry<T extends NamedInstantiable> {
             } catch (InvocationTargetException | IllegalAccessException e) {
                 throw new RuntimeException("Error invoking getInstance for class " + type.getName(), e);
             }
-        });
+        }
 
         return allInstances;
     }

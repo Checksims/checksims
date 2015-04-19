@@ -75,12 +75,6 @@ public class CommonCodeLineRemovalHandler implements CommonCodeHandler {
 
         logs.info("Removing common code from " + input.size() + " submissions");
 
-        // TODO consider making this a checked exception
-        if(common.getContentAsString().isEmpty()) {
-            logs.error("Common code is empty, skipping removal! Possible user error?");
-            return input;
-        }
-
         return ParallelAlgorithm.parallelCommonCodeRemoval(lineCompare, common, input);
     }
 

@@ -25,19 +25,24 @@ import edu.wpi.checksims.algorithm.AlgorithmResults;
 import edu.wpi.checksims.algorithm.InternalAlgorithmError;
 import edu.wpi.checksims.algorithm.SimilarityDetector;
 import edu.wpi.checksims.submission.Submission;
+import edu.wpi.checksims.token.TokenList;
 import edu.wpi.checksims.token.TokenType;
 import edu.wpi.checksims.token.TokenTypeMismatchException;
+import org.apache.commons.lang3.tuple.Pair;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Performs the actual Smith-Waterman algorithm
+ * Implementation of the Smith-Waterman algorithm
  */
 public class SmithWaterman implements SimilarityDetector {
     private static SmithWaterman instance;
 
     private SmithWaterman() {}
 
+    /**
+     * @return Singleton instance of the Smith-Waterman algorithm
+     */
     public static SmithWaterman getInstance() {
         if(instance == null) {
             instance = new SmithWaterman();
@@ -63,7 +68,7 @@ public class SmithWaterman implements SimilarityDetector {
     }
 
     /**
-     * Apply a pairwise similarity detection algorithm
+     * Apply the Smith-Waterman algorithm to determine the similarity between two submissions
      *
      * Token list types of A and B must match
      *
@@ -78,6 +83,36 @@ public class SmithWaterman implements SimilarityDetector {
         checkNotNull(a);
         checkNotNull(b);
 
-        return new AlgorithmResults(a, b, 0, 0, a.getContentAsTokens(), b.getContentAsTokens());
+        // Test for token type mismatch
+        if(!a.getTokenType().equals(b.getTokenType())) {
+            throw new TokenTypeMismatchException("Token list type mismatch: submission " + a.getName() + " has type " +
+                    a.getTokenType().toString() + ", while submission " + b.getName() + " has type " + b.getTokenType().toString());
+        }
+
+        // Handle a 0-token submission (no similarity)
+        if(a.getNumTokens() == 0 || b.getNumTokens() == 0) {
+            return new AlgorithmResults(a, b, 0, 0, a.getContentAsTokens(), b.getContentAsTokens());
+        } else if(a.equals(b)) {
+            // Handle identical submissions
+            TokenList aInval = TokenList.cloneTokenList(a.getContentAsTokens());
+            aInval.stream().forEach((token) -> token.setValid(false));
+            return new AlgorithmResults(a, b, a.getNumTokens(), b.getNumTokens(), aInval, aInval);
+        }
+
+        // Alright, easy cases taken care of. Generate an instance to perform the actual algorithm
+        SmithWatermanAlgorithm algorithm = new SmithWatermanAlgorithm(a.getContentAsTokens(), b.getContentAsTokens());
+
+        Pair<TokenList, TokenList> endLists = algorithm.computeSmithWatermanAlignment();
+
+        // Generate matched tokens for each - filter out valid tokens, and count the invalid tokens
+        int matchedTokensFirst = (int)endLists.getLeft().stream().filter((token) -> !token.isValid()).count();
+        int matchedTokensSecond = (int)endLists.getRight().stream().filter((token) -> !token.isValid()).count();
+
+        return new AlgorithmResults(a, b, matchedTokensFirst, matchedTokensSecond, endLists.getLeft(), endLists.getRight());
+    }
+
+    @Override
+    public String toString() {
+        return "Singleton instance of Smith-Waterman Algorithm";
     }
 }
