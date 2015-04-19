@@ -141,7 +141,7 @@ public class Registry<T extends NamedInstantiable> {
                 @SuppressWarnings("unchecked")
                 T instance = (T)getInstance.invoke(null);
 
-                if(!allInstances.containsKey(instance.getName())) {
+                if(!allInstances.containsKey(instance.getName().toLowerCase())) {
                     allInstances.put(instance.getName().toLowerCase(), instance);
                 } else {
                     throw new RuntimeException("Found two instances with duplicated name " + instance.getName());
