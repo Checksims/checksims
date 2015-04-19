@@ -6,24 +6,21 @@ Unit Tests:
 - Integration tests
 - Output strategy tests
 - Similarity Matrix tests
-- Algorithm application tests
 
 Code Cleanup
-- Exception rewrite. More specific exceptions than just ChecksimsException
-- Rewrite of Smith-Waterman, removing many otherwise-unused utility classes and adding tests
-- Refactor a lot of the data structures used throughout --- List is very overused
+- Exception rewrite. Convert many RuntimeExceptions to checked exceptions
 - Refactor SimilarityMatrix (add clarity, handle potentially missing results, etc)
 
 Minor Improvements
 - Archive directory support
 - Add handling for empty submissions (flag to include, default do not include)
-- Token Annotations
 - Leading & Trailing Whitespace Trimming Preprocessor
-- Support for stateful comparison algorithms (Registries for methods returning an instance)
+- Optimizations, bugfixes, and further testing of Smith-Waterman algorithm implementation
 
 Major new features
 - Comment stripping preprocessors
 - Greedy String Tiling algorithm
+- Token Annotations
 
 Major Reworks
 - Framework for non-pairwise comparisons (possible with shared state)
