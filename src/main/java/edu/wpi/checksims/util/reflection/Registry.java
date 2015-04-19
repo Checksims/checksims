@@ -21,8 +21,7 @@
 
 package edu.wpi.checksims.util.reflection;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableMap;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,11 +29,9 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -42,8 +39,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Parent class for all registry implementations
  */
 public class Registry<T extends NamedInstantiable> {
-    // TODO convert this into a map String->T (implementation name to implementation instance)
-    private final Collection<T> registeredHandlers;
+    private final Map<String, T> registeredHandlers;
 
     /**
      * Create a Registry instance for implementations of a given base class in the given package and subpackages
@@ -57,29 +53,21 @@ public class Registry<T extends NamedInstantiable> {
         checkNotNull(initPath);
         checkNotNull(baseClazz);
 
-        Collection<T> handlers = reflectiveInstantiator(initPath, baseClazz);
+        Map<String, T> handlers = reflectiveInstantiator(initPath, baseClazz);
 
         if(handlers.isEmpty()) {
             throw new RuntimeException("Cannot find any valid classes to instantiate in " + initPath);
         }
 
-        // Get a list without duplicates
-        // If it's a different size, then duplicates existed, which is bad
-        // Throw a RuntimeException for that!
-        ImmutableList<String> noDups = ImmutableSet.copyOf(handlers.stream().map((handler) -> handler.getName().toLowerCase()).collect(Collectors.toList())).asList();
-        if(noDups.size() < handlers.size()) {
-            throw new RuntimeException("Some algorithm names were not globally unique!");
-        }
-
         // The final list should never change at runtime
-        registeredHandlers = ImmutableList.copyOf(handlers);
+        registeredHandlers = ImmutableMap.copyOf(handlers);
     }
 
     /**
      * @return Names of all supported implementations in this registry
      */
     public Set<String> getSupportedImplementationNames() {
-        return registeredHandlers.stream().map(NamedInstantiable::getName).collect(Collectors.toSet());
+        return registeredHandlers.keySet();
     }
 
     /**
@@ -90,15 +78,13 @@ public class Registry<T extends NamedInstantiable> {
      * @throws NoSuchImplementationException Thrown if no instance with given name can be found
      */
     public T getImplementationInstance(String name) throws NoSuchImplementationException {
-        List<T> matchingImpls = registeredHandlers.stream().filter((handler) -> handler.getName().equalsIgnoreCase(name)).collect(Collectors.toList());
+        checkNotNull(name);
 
-        if(matchingImpls.size() == 0) {
+        if(!registeredHandlers.containsKey(name.toLowerCase())) {
             throw new NoSuchImplementationException("No implementation available with name " + name);
-        } else if(matchingImpls.size() > 1) {
-            throw new RuntimeException("INTERNAL ERROR: Two implementations found with same name " + name +" !");
         }
 
-        return matchingImpls.get(0);
+        return registeredHandlers.get(name.toLowerCase());
     }
 
     /**
@@ -113,10 +99,10 @@ public class Registry<T extends NamedInstantiable> {
      * @param <T> Type of the original class, which all subclasses will be as well
      * @return List of instances of classes extending/implementing subclassesOf
      */
-    public static <T> Collection<T> reflectiveInstantiator(String packageName, Class<T> subclassesOf) {
+    public static <T extends NamedInstantiable> Map<String, T> reflectiveInstantiator(String packageName, Class<T> subclassesOf) {
         Logger logs = LoggerFactory.getLogger(Registry.class);
 
-        List<T> allInstances = new LinkedList<>();
+        Map<String, T> allInstances = new HashMap<>();
 
         // Ensure no annoying logs
         Reflections.log = null;
@@ -154,7 +140,12 @@ public class Registry<T extends NamedInstantiable> {
                 // Suppress the unchecked cast warning because, while technically unchecked, we verify it works with reflection above
                 @SuppressWarnings("unchecked")
                 T instance = (T)getInstance.invoke(null);
-                allInstances.add(instance);
+
+                if(!allInstances.containsKey(instance.getName())) {
+                    allInstances.put(instance.getName().toLowerCase(), instance);
+                } else {
+                    throw new RuntimeException("Found two instances with duplicated name " + instance.getName());
+                }
             } catch (NoSuchMethodException e) {
                 throw new RuntimeException("Class " + type.getName() + " has no getInstance method!");
             } catch (InvocationTargetException | IllegalAccessException e) {
