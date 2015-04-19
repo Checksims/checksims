@@ -35,10 +35,7 @@ import edu.wpi.checksims.token.TokenType;
 import edu.wpi.checksims.util.output.OutputPrinter;
 import edu.wpi.checksims.util.output.OutputToStdoutPrinter;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -79,8 +76,8 @@ public final class ChecksimsConfig {
     public ChecksimsConfig() {
         this.algorithm = AlgorithmRegistry.getInstance().getDefaultImplementation();
         this.tokenization = this.algorithm.getDefaultTokenType();
-        this.submissions = ImmutableSet.copyOf(new LinkedList<>());
-        this.preprocessors = ImmutableList.copyOf(new LinkedList<>());
+        this.submissions = ImmutableSet.copyOf(new ArrayList<>());
+        this.preprocessors = ImmutableList.copyOf(new ArrayList<>());
         this.commonCodeHandler = CommonCodePassthroughHandler.getInstance();
         this.outputPrinters = ImmutableList.copyOf(Arrays.asList(OutputRegistry.getInstance().getDefaultImplementation()));
         this.outputMethod = OutputToStdoutPrinter.getInstance();

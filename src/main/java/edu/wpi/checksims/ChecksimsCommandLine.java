@@ -44,10 +44,7 @@ import org.slf4j.impl.SimpleLogger;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -197,7 +194,7 @@ public final class ChecksimsCommandLine {
         // Parse preprocessors
         // Ensure no duplicates
         if(cli.hasOption("p")) {
-            List<SubmissionPreprocessor> preprocessors = SetUniqueList.setUniqueList(new LinkedList<>());
+            List<SubmissionPreprocessor> preprocessors = SetUniqueList.setUniqueList(new ArrayList<>());
             String[] splitPreprocessors = cli.getOptionValue("p").split(",");
             for (String s : splitPreprocessors) {
                 SubmissionPreprocessor p = PreprocessorRegistry.getInstance().getImplementationInstance(s);
@@ -209,7 +206,7 @@ public final class ChecksimsCommandLine {
         // Parse output strategies
         // Ensure no duplicates
         if(cli.hasOption("o")) {
-            List<SimilarityMatrixPrinter> outputStrategies = SetUniqueList.setUniqueList(new LinkedList<>());
+            List<SimilarityMatrixPrinter> outputStrategies = SetUniqueList.setUniqueList(new ArrayList<>());
             String[] desiredStrategies = cli.getOptionValue("o").split(",");
 
             for(String s : desiredStrategies) {
@@ -282,7 +279,7 @@ public final class ChecksimsCommandLine {
         checkNotNull(glob);
 
         String[] unusedArgs = cli.getArgs();
-        List<File> submissionDirs = new LinkedList<>();
+        List<File> submissionDirs = new ArrayList<>();
 
         if(unusedArgs.length < 2) {
             throw new ChecksimsException("Expected at least 2 arguments: glob pattern and a submission directory!");

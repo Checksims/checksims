@@ -33,10 +33,7 @@ import org.apache.commons.codec.binary.Hex;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -195,7 +192,7 @@ public class LineSimilarityChecker implements SimilarityDetector {
             String hash = Hex.encodeHexString(hasher.digest(token.getTokenAsString().getBytes()));
 
             if(lineDatabase.get(hash) == null) {
-                lineDatabase.put(hash, new LinkedList<>());
+                lineDatabase.put(hash, new ArrayList<>());
             }
 
             SubmissionLine line = new SubmissionLine(i, submitter);

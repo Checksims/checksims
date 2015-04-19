@@ -30,10 +30,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
@@ -130,7 +127,7 @@ public final class ParallelAlgorithm {
 
         if(tasks.size() == 0) {
             logs.warn("Parallel execution called with no tasks - no work done!");
-            return new LinkedList<>();
+            return new ArrayList<>();
         }
 
         logs.info("Starting work using " + threadCount + " threads.");

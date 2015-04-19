@@ -24,7 +24,7 @@ package edu.wpi.checksims.token;
 import com.google.common.collect.ImmutableList;
 import org.apache.commons.collections4.list.PredicatedList;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -40,7 +40,7 @@ public class TokenList extends PredicatedList<Token> {
     private static final long serialVersionUID = 1L;
 
     public TokenList(TokenType type) {
-        super(new LinkedList<>(), (token) -> token.getType().equals(type));
+        super(new ArrayList<>(), (token) -> token.getType().equals(type));
         
         checkNotNull(type);
 

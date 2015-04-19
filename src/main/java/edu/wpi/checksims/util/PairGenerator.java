@@ -24,10 +24,7 @@ package edu.wpi.checksims.util;
 import edu.wpi.checksims.submission.Submission;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -50,7 +47,7 @@ public final class PairGenerator {
 
         Set<Pair<Submission, Submission>> pairs = new HashSet<>();
 
-        List<Submission> remaining = new LinkedList<>();
+        List<Submission> remaining = new ArrayList<>();
         remaining.addAll(submissions);
 
         while(remaining.size() >= 2) {

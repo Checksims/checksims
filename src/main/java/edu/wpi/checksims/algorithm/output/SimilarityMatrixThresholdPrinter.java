@@ -24,8 +24,8 @@ package edu.wpi.checksims.algorithm.output;
 import edu.wpi.checksims.submission.Submission;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -90,7 +90,7 @@ public class SimilarityMatrixThresholdPrinter implements SimilarityMatrixPrinter
         int matrixSize = matrix.getSubmissions().size();
         List<Submission> submissionList = matrix.getSubmissions();
         DecimalFormat formatter = new DecimalFormat("###.00");
-        List<SimilarityEntry> highestEntries = new LinkedList<>();
+        List<SimilarityEntry> highestEntries = new ArrayList<>();
 
         for(int i = 0; i < matrixSize; i++) {
             for(int j = 0; j < matrixSize; j++) {
