@@ -24,6 +24,7 @@ package edu.wpi.checksims.algorithm.smithwaterman;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Ordering;
 import edu.wpi.checksims.algorithm.InternalAlgorithmError;
+import edu.wpi.checksims.token.Token;
 import edu.wpi.checksims.token.TokenList;
 import edu.wpi.checksims.token.ValidityEnsuringToken;
 import org.apache.commons.lang3.tuple.Pair;
@@ -367,6 +368,8 @@ public class SmithWatermanAlgorithm {
         Map<Integer, Set<Coordinate>> candidates = new HashMap<>();
 
         for(int x = toCompute.getOrigin().getX(); x < toCompute.getMax().getX(); x++) {
+            Token xToken = new ValidityEnsuringToken(xList.get(x - 1));
+
             for(int y = toCompute.getOrigin().getY(); y < toCompute.getMax().getY(); y++) {
                 int prevX = x - 1;
                 int prevY = y - 1;
@@ -375,7 +378,7 @@ public class SmithWatermanAlgorithm {
                 int newM;
 
                 // Token Match - increment S table
-                if(new ValidityEnsuringToken(xList.get(x - 1)).equals(yList.get(y - 1))) {
+                if(xToken.equals(yList.get(y - 1))) {
                     int sPred = s[prevX][prevY];
                     int mPred = m[prevX][prevY];
 
