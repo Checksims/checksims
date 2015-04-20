@@ -21,21 +21,21 @@
 
 package edu.wpi.checksims.algorithm.linesimilarity;
 
-import edu.wpi.checksims.ChecksimsException;
 import edu.wpi.checksims.algorithm.AlgorithmResults;
+import edu.wpi.checksims.algorithm.InternalAlgorithmError;
 import edu.wpi.checksims.algorithm.SimilarityDetector;
 import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.token.Token;
 import edu.wpi.checksims.token.TokenList;
 import edu.wpi.checksims.token.TokenType;
+import edu.wpi.checksims.token.TokenTypeMismatchException;
 import org.apache.commons.codec.binary.Hex;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Implements a line-by-line similarity checker
@@ -88,16 +88,21 @@ public class LineSimilarityChecker implements SimilarityDetector {
      * @param a First submission to check
      * @param b Second submission to check
      * @return Results of the similarity detection
+     * @throws TokenTypeMismatchException Thrown comparing two submissions with different token types
+     * @throws InternalAlgorithmError Thrown on error obtaining a hash algorithm instance
      */
     @Override
-    public AlgorithmResults detectSimilarity(Submission a, Submission b) throws ChecksimsException {
+    public AlgorithmResults detectSimilarity(Submission a, Submission b) throws TokenTypeMismatchException, InternalAlgorithmError {
+        checkNotNull(a);
+        checkNotNull(b);
+
         TokenList linesA = a.getContentAsTokens();
         TokenList linesB = b.getContentAsTokens();
         TokenList finalA = TokenList.cloneTokenList(linesA);
         TokenList finalB = TokenList.cloneTokenList(linesB);
 
         if(!a.getTokenType().equals(b.getTokenType())) {
-            throw new ChecksimsException("Token list type mismatch: submission " + a.getName() + " has type " +
+            throw new TokenTypeMismatchException("Token list type mismatch: submission " + a.getName() + " has type " +
                     linesA.type.toString() + ", while submission " + b.getName() + " has type " + linesB.type.toString());
         } else if(a.equals(b)) {
             finalA.stream().forEach((token) -> token.setValid(false));
@@ -111,7 +116,7 @@ public class LineSimilarityChecker implements SimilarityDetector {
         try {
             hasher = MessageDigest.getInstance("SHA-512");
         } catch (NoSuchAlgorithmException e) {
-            throw new ChecksimsException("Error instantiating SHA-512 hash algorithm: " + e.getMessage());
+            throw new InternalAlgorithmError("Error instantiating SHA-512 hash algorithm: " + e.getMessage());
         }
 
         // Create a line database map
@@ -168,6 +173,15 @@ public class LineSimilarityChecker implements SimilarityDetector {
             }
         }
 
+        int invalTokensA = (int)finalA.stream().filter((token) -> !token.isValid()).count();
+        int invalTokensB = (int)finalB.stream().filter((token) -> !token.isValid()).count();
+
+        if(invalTokensA != identicalLinesA) {
+            throw new InternalAlgorithmError("Internal error: number of identical tokens (" + identicalLinesA + ") does not match number of invalid tokens (" + invalTokensA + ")");
+        } else if(invalTokensB != identicalLinesB) {
+            throw new InternalAlgorithmError("Internal error: number of identical tokens (" + identicalLinesB + ") does not match number of invalid tokens (" + invalTokensB + ")");
+        }
+
         return new AlgorithmResults(a, b, identicalLinesA, identicalLinesB, finalA, finalB);
     }
 
@@ -178,7 +192,7 @@ public class LineSimilarityChecker implements SimilarityDetector {
             String hash = Hex.encodeHexString(hasher.digest(token.getTokenAsString().getBytes()));
 
             if(lineDatabase.get(hash) == null) {
-                lineDatabase.put(hash, new LinkedList<>());
+                lineDatabase.put(hash, new ArrayList<>());
             }
 
             SubmissionLine line = new SubmissionLine(i, submitter);

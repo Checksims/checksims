@@ -20,6 +20,7 @@ though again not without issues.
 
 
 \subsubsection{Student Code}
+\label{sec:studentcode}
 Source code from students in Computer Science classes is an attractive test
 data option at first glance. This most closely matches the intended use case
 for \textit{Checksims} --- the identification of similar code submissions for
@@ -100,8 +101,9 @@ assignments for 9 previous offerings of these courses were obtained, totaling
 to over 357 thousand lines of code \footnote{as computed by David A. Wheeler's
 ``SLOCCount'' program, a free program for computing the number of lines in a
 body of source code}. Six of the nine courses were taught by Professor Lauer,
-the rest by other instructors. TODO average submission size, average students
-per class.
+the rest by other instructors. Between the 9 courses, there were a total of
+43 student assignments, with an average of 73 students per course and 147 lines
+of code per student submission.
 
 
 \subparagraph{Accuracy Without Comments}
@@ -143,7 +145,7 @@ An alternative to manual auditing is to use an existing piece of similarity
 detection software to provide baseline results. However, no existing piece of
 software truly matches the definition of academic dishonesty and unauthorized
 copying used when building \textit{Checksims}, as was described in
-Section~ref{sec:lauerdishonesty}. This could lead to a great number of false
+Section~\ref{sec:lauerdishonesty}. This could lead to a great number of false
 positives (for a less permissive definition) or negatives (for a more
 permissive definition).
 
@@ -160,13 +162,13 @@ Section~\ref{sec:moss}, is a freely available similarity detection service
 intended for identifying academic dishonesty. Based on previous use, our
 advisor believes it uses a more sensitive definition of academic dishonesty
 than that used to construct \textit{Checksims}. Furthermore, MOSS is considered
-\textit{the} benchmark in similarity detection by most researchers. Numerous
-papers on new algorithms in similarity detection compare their results against
-MOSS \cite{belkhouche04, beth14}. By doing the same, we can obtain a measure
-of our output quality compared against the gold standard in academic dishonesty
+\textit{the} benchmark in similarity detection by most researchers. many papers
+on new algorithms in similarity detection compare their results against MOSS
+\cite{belkhouche04, beth14}. By doing the same, we can obtain a measure of our
+output quality compared against the gold standard in academic dishonesty
 detection for source code \cite{beth14}.
 
-It is noteworthy that using MOSS for baseline results will not completely
+It is noteworthy that using MOSS for baseline results do not completely
 eliminate false negatives. If both MOSS and \textit{Checksims} fail to detect
 an unusual similarity, our experiment will fail to record a false negative.
 We believe this event will be uncommon because of the quality and maturity of
@@ -202,7 +204,7 @@ After obtaining a large volume of test data, we executed several experiments
 to provide full-scale functional testing of \textit{Checksims}. Comparisons
 between the two shipped algorithms, \textit{Line Comparison} and
 \textit{Smith-Waterman}, illustrate the benefits and disadvantages of both
-algorithms. Comparisons against MOSS demonstrate a low false-negative
+algorithms. Comparisons against MOSS demonstrate a comparable false-negative
 rate and a benchmark against a proven similarity detection program. Together,
 the experiments provided data to allow us to draw conclusions on whether 
 \textit{Checksims} was ready for its intended job --- deployment for use by
@@ -225,53 +227,50 @@ which will fail to identify lines that differ by even one character. However,
 should mean that it is slower by far than \textit{Line Comparison}.
 
 \textit{Smith-Waterman} is hypothesized to trade speed for accuracy, and 
-\textit{Line Comparison} accuracy for speed; if both hypotheses are correct,
-then each algorithm has a use case and should be included in the final release.
-If, however, one of the algorithms does not provide its claimed advantage,
-there is no reason for its inclusion, and it can be removed from the final
-release.
+\textit{Line Comparison} accuracy for speed; if both hypotheses were correct,
+then each algorithm would have a use case and should be included in the final
+release. If, however, one of the algorithms does not provide its claimed
+advantage, there is no reason for its inclusion, and it can be removed from
+the final release.
 
 To perform this experiment, \textit{Checksims} was run twice on every
 assignment in our test data, once using each algorithm. The default
 tokenization strategy was used for both algorithms. Output was saved to a
 unique file for each assignment, and program runtime saved to another file.
 From these, results were computed. Results with similarities under 70\% were
-immediately discarded, to limit the amount of checks that would have to be
-done. Results over 70\% were reported for both algorithms over all assignments.
-Subsequently, we identified four assignments with a large number of
-similarities, and compared the results for the \textit{Smith-Waterman} and
-\textit{Line Comparison} algorithms --- how many results were shared between
-them, and how many were caught by only one algorithm. No false positive testing
-was performed.
+immediately discarded, to limit the number of manual checks that would have to
+be done. Results over 70\% were reported for both algorithms over all
+assignments. Subsequently, we identified four assignments with a significant
+number of similarities, and compared the results for the
+\textit{Smith-Waterman} and \textit{Line Comparison} algorithms --- how many
+results were shared between them, and how many were caught by only one
+algorithm. No false positive testing was performed.
 
 
 \subsection{MOSS Comparison}
 \label{sec:mosscompare}
-We aimed to glean several things by comparing the output of \textit{Checksims}
+We aimed to learn several things by comparing the output of \textit{Checksims}
 and MOSS on several assignments. By comparing the number of false positives
-produced by both programs, we aimed to determine whether MOSS (and its more
-strict definition of what constitutes academic dishonesty) produced an
-inordinate number of false positives (as compared to \textit{Checksims}).
-Furthermore, we aimed to verify that \textit{Checksims} contained few (or no)
-false negatives.
+produced by both programs, we aimed to determine whether MOSS, with its more
+sensitive definition of what constitutes academic dishonesty, produced an
+inordinate number of false positives compared to \textit{Checksims}.
+Furthermore, we aimed to estimate the false negative rate of
+\textit{Checksims}.
 
-To perform this experiment, we first identified a groups of assignments from
+To perform this experiment, we first identified groups of assignments from
 our test data that had a few, some, and many similarities according to data
-from the previous experiment. Two of each were chosen and given to MOSS to
-perform detection on (given that MOSS is a free service, and
-not particularly fast, we did not wish to place undue demands on it by running
-our entire set of test data through).
+from the previous experiment. Two of each were chosen and checked with MOSS.
 
-The MOSS results for the chosen assignments were then investigated to identify
+The MOSS results for the chosen assignments were examined by hand to identify
 false positives --- similarities identified by MOSS that did not match our
-definition of similarity. The number of false positives (and the original
-number of results) were reported, and the false positives thrown out. The
-\textit{Checksims} results from the previous experiment for both algorithms
-were then run through the same process, with false positives being identified
-and thrown out, and the number of overall matches and false positives being
-recorded. Based on this, the number of false positives in the results of MOSS
-and \textit{Checksims} (both algorithms) can be compared, both in absolute
-terms and as a percentage of results recorded. Finally, the results were
-overlaid to see which matches are missing from either program --- what MOSS
-found but \textit{Checksims} did not, or \textit{Checksims} found but MOSS did
-not.
+definition of academic dishonesty. The number of false positives (and the
+original number of results) were recorded, and the false positives thrown
+out. The \textit{Checksims} results from the previous experiment for both  
+algorithms were then examined by the same process, with false positives being
+identified and thrown out, and the number of overall matches and false
+positives being recorded. The false positive rates of MOSS and
+\textit{Checksims} (both Line Comparison and \textit{Smith-Waterman}) can be
+compared, both in absolute terms and as a percentage of results recorded.
+Finally, the results were overlaid to see which matches are missing from
+either program --- what MOSS found but \textit{Checksims} did not, or
+\textit{Checksims} found but MOSS did not.

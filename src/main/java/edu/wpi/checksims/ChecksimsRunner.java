@@ -21,7 +21,7 @@
 
 package edu.wpi.checksims;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrix;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrixPrinter;
 import edu.wpi.checksims.algorithm.preprocessor.PreprocessSubmissions;
@@ -30,10 +30,14 @@ import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.util.output.OutputPrinter;
 import edu.wpi.checksims.util.threading.ParallelAlgorithm;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Entry point for Checksims
@@ -67,25 +71,37 @@ public class ChecksimsRunner {
     }
 
     /**
+     * @return Current version of Checksims
+     */
+    static String getChecksimsVersion() {
+        InputStream resource = ChecksimsCommandLine.class.getResourceAsStream("version.txt");
+
+        if(resource == null) {
+            return "Error obtaining version number: could not obtain input stream for version.txt";
+        }
+
+        try {
+            return IOUtils.toString(resource);
+        } catch (IOException e) {
+            return "Error obtaining version number: " + e.getMessage();
+        }
+    }
+
+    /**
      * Main public entrypoint to Checksims. Runs similarity detection according to given configuration.
      *
      * @param config Configuration defining how Checksims will be run
      */
     public static void runChecksims(ChecksimsConfig config) {
-        // Check to see that the config is usable and user-specified CLI opts are good
-        try {
-            config.isReady();
-        } catch(ChecksimsException e) {
-            logs.error("Error: invalid run configuration specified!");
-            throw new RuntimeException(e);
-        }
+        checkNotNull(config);
 
         // Set parallelism
         int threads = config.getNumThreads();
         ParallelAlgorithm.setThreadCount(threads);
+        // TODO following line may not be necessary as we no longer use parallel streams?
         System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "" + threads);
 
-        ImmutableList<Submission> submissions = config.getSubmissions();
+        ImmutableSet<Submission> submissions = config.getSubmissions();
 
         logs.info("Got " + submissions.size() + " submissions to test.");
 
@@ -95,11 +111,16 @@ public class ChecksimsRunner {
         }
 
         // Apply the common code handler (which may just be a pass-through operation, if there is no common code)
-        submissions = ImmutableList.copyOf(config.getCommonCodeHandler().handleCommonCode(submissions));
+        submissions = ImmutableSet.copyOf(config.getCommonCodeHandler().handleCommonCode(submissions));
 
         // Apply all preprocessors
         for(SubmissionPreprocessor p : config.getPreprocessors()) {
-            submissions = ImmutableList.copyOf(PreprocessSubmissions.process(p, submissions));
+            submissions = ImmutableSet.copyOf(PreprocessSubmissions.process(p, submissions));
+        }
+
+        if(submissions.size() < 2) {
+            logs.error("Not enough submissions for a pairwise comparison! Nothing to do!");
+            System.exit(0);
         }
 
         // Apply algorithm to submission

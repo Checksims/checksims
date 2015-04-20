@@ -21,8 +21,13 @@
 
 package edu.wpi.checksims.util.output;
 
+import edu.wpi.checksims.algorithm.InternalAlgorithmError;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrix;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrixPrinter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Provide results of Checksims as a string
@@ -52,7 +57,18 @@ public class OutputToStringPrinter implements OutputPrinter {
      */
     @Override
     public void print(SimilarityMatrix toPrint, SimilarityMatrixPrinter printWith) {
-        String output = printWith.printMatrix(toPrint);
+        checkNotNull(toPrint);
+        checkNotNull(printWith);
+
+        Logger logs = LoggerFactory.getLogger(OutputToStringPrinter.class);
+
+        String output;
+        try {
+            output = printWith.printMatrix(toPrint);
+        } catch (InternalAlgorithmError e) {
+            logs.error("Error printing similarity matrix");
+            throw new RuntimeException(e);
+        }
 
         buffer.append(output);
         buffer.append("\n");

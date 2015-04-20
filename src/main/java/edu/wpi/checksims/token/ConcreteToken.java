@@ -21,6 +21,8 @@
 
 package edu.wpi.checksims.token;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Interface for comparable tokens of various types
  */
@@ -34,6 +36,9 @@ public final class ConcreteToken implements Token {
     }
 
     public ConcreteToken(Object token, TokenType type, boolean isValid) {
+        checkNotNull(token);
+        checkNotNull(type);
+
         this.isValid = isValid;
         this.type = type;
         this.lexeme = LexemeMap.getLexemeForToken(token);
@@ -113,6 +118,8 @@ public final class ConcreteToken implements Token {
      * @return New, identical copy of that token
      */
     public static Token cloneToken(Token token) {
+        checkNotNull(token);
+
         return new ConcreteToken(token.getLexeme(), token.getType(), token.isValid());
     }
 }

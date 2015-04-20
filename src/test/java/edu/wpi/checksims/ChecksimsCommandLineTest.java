@@ -1,3 +1,24 @@
+/*
+ * CDDL HEADER START
+ *
+ * The contents of this file are subject to the terms of the
+ * Common Development and Distribution License (the "License").
+ * You may not use this file except in compliance with the License.
+ *
+ * See LICENSE.txt included in this distribution for the specific
+ * language governing permissions and limitations under the License.
+ *
+ * When distributing Covered Code, include this CDDL HEADER in each
+ * file and include the License file at LICENSE.txt.
+ * If applicable, add the following below this CDDL HEADER, with the
+ * fields enclosed by brackets "[]" replaced with your own identifying
+ * information: Portions Copyright [yyyy] [name of copyright owner]
+ *
+ * CDDL HEADER END
+ *
+ * Copyright (c) 2014-2015 Matthew Heon and Dolan Murvihill
+ */
+
 package edu.wpi.checksims;
 
 import edu.wpi.checksims.algorithm.AlgorithmRegistry;
@@ -17,9 +38,7 @@ import org.junit.rules.ExpectedException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Tests for the Checksims command line
@@ -28,38 +47,48 @@ public class ChecksimsCommandLineTest {
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
 
+    public ChecksimsConfig parseToConfig(String[] args) throws Exception {
+        CommandLine cli = ChecksimsCommandLine.parseOpts(args);
+        ChecksimsConfig config = ChecksimsCommandLine.parseBaseFlags(cli);
+
+        assertNotNull(config);
+
+        return config;
+    }
+
     @Test
-    public void TestParseAlgorithm() throws Exception {
-        String[] argsSmithWaterman = new String[] { "-a", "smithwaterman" };
-        String[] argsLineCompare = new String[] { "-a", "linecompare" };
-        String[] argsCaps = new String[] { "-a", "LineCompare" };
-        String[] longForm = new String[] { "--algorithm", "smithwaterman" };
-        String[] noArgs = new String[] {};
+    public void TestParseAlgorithmSmithWaterman() throws Exception {
+        ChecksimsConfig config = parseToConfig(new String[] { "-a", "smithwaterman" });
 
-        CommandLine cli1 = ChecksimsCommandLine.parseOpts(argsSmithWaterman);
-        ChecksimsConfig config1 = ChecksimsCommandLine.parseBaseFlags(cli1);
-        assertNotNull(config1);
-        assertEquals("smithwaterman", config1.getAlgorithm().getName());
+        assertEquals("smithwaterman", config.getAlgorithm().getName());
+    }
 
-        CommandLine cli2 = ChecksimsCommandLine.parseOpts(argsLineCompare);
-        ChecksimsConfig config2 = ChecksimsCommandLine.parseBaseFlags(cli2);
-        assertNotNull(config2);
-        assertEquals("linecompare", config2.getAlgorithm().getName());
+    @Test
+    public void TestParseAlgorithmLineCompare() throws Exception {
+        ChecksimsConfig config = parseToConfig(new String[] { "-a", "linecompare" });
 
-        CommandLine cli3 = ChecksimsCommandLine.parseOpts(argsCaps);
-        ChecksimsConfig config3 = ChecksimsCommandLine.parseBaseFlags(cli3);
-        assertNotNull(config3);
-        assertEquals("linecompare", config3.getAlgorithm().getName());
+        assertEquals("linecompare", config.getAlgorithm().getName());
+    }
 
-        CommandLine cli4 = ChecksimsCommandLine.parseOpts(longForm);
-        ChecksimsConfig config4 = ChecksimsCommandLine.parseBaseFlags(cli4);
-        assertNotNull(config4);
-        assertEquals("smithwaterman", config4.getAlgorithm().getName());
+    @Test
+    public void TestParseAlgorithmWithCaps() throws Exception {
+        ChecksimsConfig config = parseToConfig(new String[] { "-a", "LiNeCOMPARE" });
 
-        CommandLine cli5 = ChecksimsCommandLine.parseOpts(noArgs);
-        ChecksimsConfig config5 = ChecksimsCommandLine.parseBaseFlags(cli5);
-        assertNotNull(config5);
-        assertEquals(AlgorithmRegistry.getInstance().getDefaultImplementationName(), config5.getAlgorithm().getName());
+        assertEquals("linecompare", config.getAlgorithm().getName());
+    }
+
+    @Test
+    public void TestParseAlgorithmLongForm() throws Exception {
+        ChecksimsConfig config = parseToConfig(new String[] { "--algorithm", "smithwaterman" });
+
+        assertEquals("smithwaterman", config.getAlgorithm().getName());
+    }
+
+    @Test
+    public void TestParseAlgorithmDefault() throws Exception {
+        ChecksimsConfig config = parseToConfig(new String[] {});
+
+        assertEquals(AlgorithmRegistry.getInstance().getDefaultImplementationName(), config.getAlgorithm().getName());
     }
 
     @Test(expected = ChecksimsException.class)
@@ -78,43 +107,45 @@ public class ChecksimsCommandLineTest {
     }
 
     @Test
-    public void TestParseTokenization() throws Exception {
-        String[] argsLine = new String[] { "-t", "line" };
-        String[] argsWhitespace = new String[] { "-t", "whitespace" };
-        String[] argsChar = new String[] { "-t", "character" };
-        String[] argsCaps = new String[] { "-t", "ChAraCtEr" };
-        String[] longForm = new String[] { "--token", "character" };
-        String[] noArgs = new String[] {};
+    public void TestParseTokenizationLine() throws Exception {
+        ChecksimsConfig config = parseToConfig(new String[] { "-t", "line" });
 
-        CommandLine cli1 = ChecksimsCommandLine.parseOpts(argsLine);
-        ChecksimsConfig config1 = ChecksimsCommandLine.parseBaseFlags(cli1);
-        assertNotNull(config1);
-        assertEquals(TokenType.LINE, config1.getTokenization());
+        assertEquals(TokenType.LINE, config.getTokenization());
+    }
 
-        CommandLine cli2 = ChecksimsCommandLine.parseOpts(argsWhitespace);
-        ChecksimsConfig config2 = ChecksimsCommandLine.parseBaseFlags(cli2);
-        assertNotNull(config2);
-        assertEquals(TokenType.WHITESPACE, config2.getTokenization());
+    @Test
+    public void TestParseTokenizationWhitespace() throws Exception {
+        ChecksimsConfig config = parseToConfig(new String[] { "-t", "whitespace" });
 
-        CommandLine cli3 = ChecksimsCommandLine.parseOpts(argsChar);
-        ChecksimsConfig config3 = ChecksimsCommandLine.parseBaseFlags(cli3);
-        assertNotNull(config3);
-        assertEquals(TokenType.CHARACTER, config3.getTokenization());
+        assertEquals(TokenType.WHITESPACE, config.getTokenization());
+    }
 
-        CommandLine cli4 = ChecksimsCommandLine.parseOpts(argsCaps);
-        ChecksimsConfig config4 = ChecksimsCommandLine.parseBaseFlags(cli4);
-        assertNotNull(config4);
-        assertEquals(TokenType.CHARACTER, config4.getTokenization());
+    @Test
+    public void TestParseTokenizationCharacter() throws Exception {
+        ChecksimsConfig config = parseToConfig(new String[] { "-t", "character" });
 
-        CommandLine cli5 = ChecksimsCommandLine.parseOpts(longForm);
-        ChecksimsConfig config5 = ChecksimsCommandLine.parseBaseFlags(cli5);
-        assertNotNull(config5);
-        assertEquals(TokenType.CHARACTER, config5.getTokenization());
+        assertEquals(TokenType.CHARACTER, config.getTokenization());
+    }
 
-        CommandLine cli6 = ChecksimsCommandLine.parseOpts(noArgs);
-        ChecksimsConfig config6 = ChecksimsCommandLine.parseBaseFlags(cli6);
-        assertNotNull(config6);
-        assertEquals(AlgorithmRegistry.getInstance().getDefaultImplementation().getDefaultTokenType(), config6.getTokenization());
+    @Test
+    public void TestParseTokenizationCaps() throws Exception {
+        ChecksimsConfig config = parseToConfig(new String[] { "-t", "ChAraCTEr" });
+
+        assertEquals(TokenType.CHARACTER, config.getTokenization());
+    }
+
+    @Test
+    public void TestParseTokenizationLongForm() throws Exception {
+        ChecksimsConfig config = parseToConfig(new String[] { "--token", "character" });
+
+        assertEquals(TokenType.CHARACTER, config.getTokenization());
+    }
+
+    @Test
+    public void TestParseTokenizationDefault() throws Exception {
+        ChecksimsConfig config = parseToConfig(new String[] {});
+
+        assertEquals(AlgorithmRegistry.getInstance().getDefaultImplementation().getDefaultTokenType(), config.getTokenization());
     }
 
     @Test(expected = ChecksimsException.class)
@@ -133,37 +164,37 @@ public class ChecksimsCommandLineTest {
     }
 
     @Test
-    public void TestParseOutputToFile() throws Exception {
-        String[] outputToFile = new String[] { "-f", "filename" };
-        String[] outputToAnotherFile = new String[] { "-f", "anotherfile" };
-        String[] noArgs = new String[] {};
-        String[] verbose = new String[] { "--file", "verbose" };
+    public void TestParseOutputToFileOne() throws Exception {
+        ChecksimsConfig config = parseToConfig(new String[] { "-f", "filename" });
 
-        CommandLine cli1 = ChecksimsCommandLine.parseOpts(outputToFile);
-        ChecksimsConfig config1 = ChecksimsCommandLine.parseBaseFlags(cli1);
-        assertNotNull(config1);
-        assertTrue(config1.getOutputMethod() instanceof OutputAsFilePrinter);
-        OutputAsFilePrinter printer = (OutputAsFilePrinter)config1.getOutputMethod();
+        assertTrue(config.getOutputMethod() instanceof OutputAsFilePrinter);
+        OutputAsFilePrinter printer = (OutputAsFilePrinter)config.getOutputMethod();
         assertEquals("filename", printer.getFile().getName());
+    }
 
-        CommandLine cli2 = ChecksimsCommandLine.parseOpts(outputToAnotherFile);
-        ChecksimsConfig config2 = ChecksimsCommandLine.parseBaseFlags(cli2);
-        assertNotNull(config2);
-        assertTrue(config2.getOutputMethod() instanceof OutputAsFilePrinter);
-        OutputAsFilePrinter printer2 = (OutputAsFilePrinter)config2.getOutputMethod();
-        assertEquals("anotherfile", printer2.getFile().getName());
+    @Test
+    public void TestParseOutputToFileTwo() throws Exception {
+        ChecksimsConfig config = parseToConfig(new String[] { "-f", "anotherfile" });
 
-        CommandLine cli3 = ChecksimsCommandLine.parseOpts(noArgs);
-        ChecksimsConfig config3 = ChecksimsCommandLine.parseBaseFlags(cli3);
-        assertNotNull(config3);
-        assertTrue(config3.getOutputMethod() instanceof OutputToStdoutPrinter);
+        assertTrue(config.getOutputMethod() instanceof OutputAsFilePrinter);
+        OutputAsFilePrinter printer = (OutputAsFilePrinter)config.getOutputMethod();
+        assertEquals("anotherfile", printer.getFile().getName());
+    }
 
-        CommandLine cli4 = ChecksimsCommandLine.parseOpts(verbose);
-        ChecksimsConfig config4 = ChecksimsCommandLine.parseBaseFlags(cli4);
-        assertNotNull(config4);
-        assertTrue(config4.getOutputMethod() instanceof OutputAsFilePrinter);
-        OutputAsFilePrinter printer4 = (OutputAsFilePrinter)config4.getOutputMethod();
-        assertEquals("verbose", printer4.getFile().getName());
+    @Test
+    public void TestParseOutputToStdout() throws Exception {
+        ChecksimsConfig config = parseToConfig(new String[] {});
+
+        assertTrue(config.getOutputMethod() instanceof OutputToStdoutPrinter);
+    }
+
+    @Test
+    public void TestParseOutputToFileLongForm() throws Exception {
+        ChecksimsConfig config = parseToConfig(new String[] { "--file", "verbose" });
+
+        assertTrue(config.getOutputMethod() instanceof OutputAsFilePrinter);
+        OutputAsFilePrinter printer = (OutputAsFilePrinter)config.getOutputMethod();
+        assertEquals("verbose", printer.getFile().getName());
     }
 
     @Test(expected = MissingArgumentException.class)
@@ -174,43 +205,45 @@ public class ChecksimsCommandLineTest {
     }
 
     @Test
-    public void TestParseNumThreads() throws Exception {
-        String[] one = new String[] { "-j", "1" };
-        String[] two = new String[] { "-j", "2" };
-        String[] zero = new String[] { "-j", "0" };
-        String[] twoDigit = new String[] { "-j", "16" };
-        String[] fullArg = new String[] { "--jobs", "4" };
-        String[] noArgs = new String[] {};
+    public void TestParseNumThreadsOne() throws Exception {
+        ChecksimsConfig config = parseToConfig(new String[] { "-j", "1" });
 
-        CommandLine cli1 = ChecksimsCommandLine.parseOpts(one);
-        ChecksimsConfig config1 = ChecksimsCommandLine.parseBaseFlags(cli1);
-        assertNotNull(config1);
-        assertEquals(1, config1.getNumThreads());
+        assertEquals(1, config.getNumThreads());
+    }
 
-        CommandLine cli2 = ChecksimsCommandLine.parseOpts(two);
-        ChecksimsConfig config2 = ChecksimsCommandLine.parseBaseFlags(cli2);
-        assertNotNull(config2);
-        assertEquals(2, config2.getNumThreads());
+    @Test
+    public void TestParseNumThreadsTwo() throws Exception {
+        ChecksimsConfig config = parseToConfig(new String[] { "-j", "2" });
 
-        CommandLine cli3 = ChecksimsCommandLine.parseOpts(zero);
-        ChecksimsConfig config3 = ChecksimsCommandLine.parseBaseFlags(cli3);
-        assertNotNull(config3);
-        assertEquals(0, config3.getNumThreads());
+        assertEquals(2, config.getNumThreads());
+    }
 
-        CommandLine cli4 = ChecksimsCommandLine.parseOpts(twoDigit);
-        ChecksimsConfig config4 = ChecksimsCommandLine.parseBaseFlags(cli4);
-        assertNotNull(config4);
-        assertEquals(16, config4.getNumThreads());
+    @Test
+    public void TestParseNumThreadsEight() throws Exception {
+        ChecksimsConfig config = parseToConfig(new String[] { "-j", "8" });
 
-        CommandLine cli5 = ChecksimsCommandLine.parseOpts(fullArg);
-        ChecksimsConfig config5 = ChecksimsCommandLine.parseBaseFlags(cli5);
-        assertNotNull(config5);
-        assertEquals(4, config5.getNumThreads());
+        assertEquals(8, config.getNumThreads());
+    }
 
-        CommandLine cli6 = ChecksimsCommandLine.parseOpts(noArgs);
-        ChecksimsConfig config6 = ChecksimsCommandLine.parseBaseFlags(cli6);
-        assertNotNull(config6);
-        assertEquals(ParallelAlgorithm.getThreadCount(), config6.getNumThreads());
+    @Test
+    public void TestParseNumThreadsSixteen() throws Exception {
+        ChecksimsConfig config = parseToConfig(new String[] { "-j", "16" });
+
+        assertEquals(16, config.getNumThreads());
+    }
+
+    @Test
+    public void TestParseNumThreadsVerbose() throws Exception {
+        ChecksimsConfig config = parseToConfig(new String[] { "--jobs", "4" });
+
+        assertEquals(4, config.getNumThreads());
+    }
+
+    @Test
+    public void TestParseNumThreadsDefault() throws Exception {
+        ChecksimsConfig config = parseToConfig(new String[] {});
+
+        assertEquals(ParallelAlgorithm.getThreadCount(), config.getNumThreads());
     }
 
     @Test
@@ -233,6 +266,22 @@ public class ChecksimsCommandLineTest {
         ChecksimsCommandLine.parseBaseFlags(cli);
     }
 
+    @Test(expected = ChecksimsException.class)
+    public void TestParseNumThreadsZero() throws Exception {
+        String[] invalidNumber = new String[] { "-j", "0" };
+
+        CommandLine cli = ChecksimsCommandLine.parseOpts(invalidNumber);
+        ChecksimsCommandLine.parseBaseFlags(cli);
+    }
+
+    @Test(expected = ChecksimsException.class)
+    public void TestParseNumThreadsNegative() throws Exception {
+        String[] invalidNumber = new String[] { "-j", "-2" };
+
+        CommandLine cli = ChecksimsCommandLine.parseOpts(invalidNumber);
+        ChecksimsCommandLine.parseBaseFlags(cli);
+    }
+
     @Test(expected = MissingArgumentException.class)
     public void TestJobsMissingArg() throws Exception {
         String[] invalid = new String[] { "-j" };
@@ -241,50 +290,52 @@ public class ChecksimsCommandLineTest {
     }
 
     @Test
-    public void TestParsePreprocessors() throws Exception {
-        String[] onePreprocessor = new String[] { "-p", "lowercase" };
-        String[] duplicatedPreprocessor = new String[] { "-p", "lowercase,lowercase" };
-        String[] caps = new String[] { "-p", "lOwErcASE" };
-        String[] verbose = new String[] { "--preprocess", "lowercase" };
-        String[] empty = new String[] {};
-        String[] twoPreprocessors = new String[] { "-p", "lowercase,deduplicate" };
+    public void TestParsePreprocessorsOnePreprocessor() throws Exception {
+        ChecksimsConfig config = parseToConfig(new String[] { "-p", "lowercase" });
 
-        CommandLine cli1 = ChecksimsCommandLine.parseOpts(onePreprocessor);
-        ChecksimsConfig config1 = ChecksimsCommandLine.parseBaseFlags(cli1);
-        assertNotNull(config1);
-        assertEquals(config1.getPreprocessors().size(), 1);
-        assertEquals("lowercase", config1.getPreprocessors().get(0).getName());
+        assertEquals(1, config.getPreprocessors().size());
+        assertEquals("lowercase", config.getPreprocessors().get(0).getName());
+    }
 
-        CommandLine cli2 = ChecksimsCommandLine.parseOpts(duplicatedPreprocessor);
-        ChecksimsConfig config2 = ChecksimsCommandLine.parseBaseFlags(cli2);
-        assertNotNull(config2);
-        assertEquals(config2.getPreprocessors().size(), 1);
-        assertEquals("lowercase", config2.getPreprocessors().get(0).getName());
+    @Test
+    public void TestParsePreprocessorsDuplicatedPreprocessor() throws Exception {
+        ChecksimsConfig config = parseToConfig(new String[] { "-p", "lowercase,lowercase" });
 
-        CommandLine cli3 = ChecksimsCommandLine.parseOpts(caps);
-        ChecksimsConfig config3 = ChecksimsCommandLine.parseBaseFlags(cli3);
-        assertNotNull(config3);
-        assertEquals(config3.getPreprocessors().size(), 1);
-        assertEquals("lowercase", config3.getPreprocessors().get(0).getName());
+        assertEquals(1, config.getPreprocessors().size());
+        assertEquals("lowercase", config.getPreprocessors().get(0).getName());
+    }
 
-        CommandLine cli4 = ChecksimsCommandLine.parseOpts(verbose);
-        ChecksimsConfig config4 = ChecksimsCommandLine.parseBaseFlags(cli4);
-        assertNotNull(config4);
-        assertEquals(config4.getPreprocessors().size(), 1);
-        assertEquals("lowercase", config4.getPreprocessors().get(0).getName());
+    @Test
+    public void TestParsePreprocessorsTwoPreprocessors() throws Exception {
+        ChecksimsConfig config = parseToConfig(new String[] { "-p", "lowercase,deduplicate" });
 
-        CommandLine cli5 = ChecksimsCommandLine.parseOpts(empty);
-        ChecksimsConfig config5 = ChecksimsCommandLine.parseBaseFlags(cli5);
-        assertNotNull(config5);
-        assertTrue(config5.getPreprocessors().isEmpty());
-
-        CommandLine cli6 = ChecksimsCommandLine.parseOpts(twoPreprocessors);
-        ChecksimsConfig config6 = ChecksimsCommandLine.parseBaseFlags(cli6);
-        assertNotNull(config6);
-        assertEquals(2, config6.getPreprocessors().size());
-        List<String> names = config6.getPreprocessors().stream().map(SubmissionPreprocessor::getName).collect(Collectors.toList());
+        assertEquals(2, config.getPreprocessors().size());
+        List<String> names = config.getPreprocessors().stream().map(SubmissionPreprocessor::getName).collect(Collectors.toList());
         assertTrue(names.contains("lowercase"));
         assertTrue(names.contains("deduplicate"));
+    }
+
+    @Test
+    public void TestParsePreprocessorsCaps() throws Exception {
+        ChecksimsConfig config = parseToConfig(new String[] { "-p", "LoWERcasE" });
+
+        assertEquals(1, config.getPreprocessors().size());
+        assertEquals("lowercase", config.getPreprocessors().get(0).getName());
+    }
+
+    @Test
+    public void TestParsePreprocessorsLongForm() throws Exception {
+        ChecksimsConfig config = parseToConfig(new String[] { "--preprocess", "lowercase" });
+
+        assertEquals(1, config.getPreprocessors().size());
+        assertEquals("lowercase", config.getPreprocessors().get(0).getName());
+    }
+
+    @Test
+    public void TestParsePreprocessorsDefault() throws Exception {
+        ChecksimsConfig config = parseToConfig(new String[] {});
+
+        assertTrue(config.getPreprocessors().isEmpty());
     }
 
     @Test(expected = ChecksimsException.class)
@@ -312,68 +363,81 @@ public class ChecksimsCommandLineTest {
     }
 
     @Test
-    public void TestParseOutputStrategies() throws Exception {
-        String[] oneStrategy1 = new String[] { "-o", "csv" };
-        String[] oneStrategy2 = new String[] { "-o", "html" };
-        String[] twoStrategies = new String[] { "-o", "html,csv" };
-        String[] threeStrategies = new String[] { "-o", "threshold,csv,html" };
-        String[] duplicatedStrategies = new String[] { "-o", "html,html" };
-        String[] caps = new String[] { "-o", "HTMl" };
-        String[] verbose = new String[] { "--output", "csv" };
-        String[] empty = new String[] {};
+    public void TestParseOutputStrategyCSV() throws Exception {
+        ChecksimsConfig config = parseToConfig(new String[] { "-o", "csv" });
 
-        CommandLine cli1 = ChecksimsCommandLine.parseOpts(oneStrategy1);
-        ChecksimsConfig config1 = ChecksimsCommandLine.parseBaseFlags(cli1);
-        assertNotNull(config1);
-        assertEquals(config1.getOutputPrinters().size(), 1);
-        assertEquals(config1.getOutputPrinters().get(0).getName(), "csv");
+        assertEquals(1, config.getOutputPrinters().size());
+        assertEquals("csv", config.getOutputPrinters().get(0).getName());
+    }
 
-        CommandLine cli2 = ChecksimsCommandLine.parseOpts(oneStrategy2);
-        ChecksimsConfig config2 = ChecksimsCommandLine.parseBaseFlags(cli2);
-        assertNotNull(config2);
-        assertEquals(config2.getOutputPrinters().size(), 1);
-        assertEquals(config2.getOutputPrinters().get(0).getName(), "html");
+    @Test
+    public void TestParseOutputStrategyHTML() throws Exception {
+        ChecksimsConfig config = parseToConfig(new String[] { "-o", "html" });
 
-        CommandLine cli3 = ChecksimsCommandLine.parseOpts(twoStrategies);
-        ChecksimsConfig config3 = ChecksimsCommandLine.parseBaseFlags(cli3);
-        assertNotNull(config3);
-        assertEquals(config3.getOutputPrinters().size(), 2);
-        List<String> names = config3.getOutputPrinters().stream().map(SimilarityMatrixPrinter::getName).collect(Collectors.toList());
-        assertTrue(names.contains("html"));
+        assertEquals(1, config.getOutputPrinters().size());
+        assertEquals("html", config.getOutputPrinters().get(0).getName());
+    }
+
+
+    @Test
+    public void TestParseOutputStrategyThreshold() throws Exception {
+        ChecksimsConfig config = parseToConfig(new String[] { "-o", "threshold" });
+
+        assertEquals(1, config.getOutputPrinters().size());
+        assertEquals("threshold", config.getOutputPrinters().get(0).getName());
+    }
+
+    @Test
+    public void TestParseOutputStrategyDuplicated() throws Exception {
+        ChecksimsConfig config = parseToConfig(new String[] { "-o", "threshold,threshold" });
+
+        assertEquals(1, config.getOutputPrinters().size());
+        assertEquals("threshold", config.getOutputPrinters().get(0).getName());
+    }
+
+    @Test
+    public void TestParseOutputStrategyTwoStrategies() throws Exception {
+        ChecksimsConfig config = parseToConfig(new String[] { "-o", "csv,html" });
+
+        assertEquals(2, config.getOutputPrinters().size());
+        List<String> names = config.getOutputPrinters().stream().map(SimilarityMatrixPrinter::getName).collect(Collectors.toList());
         assertTrue(names.contains("csv"));
+        assertTrue(names.contains("html"));
+    }
 
-        CommandLine cli4 = ChecksimsCommandLine.parseOpts(threeStrategies);
-        ChecksimsConfig config4 = ChecksimsCommandLine.parseBaseFlags(cli4);
-        assertNotNull(config4);
-        assertEquals(config4.getOutputPrinters().size(), 3);
-        List<String> names2 = config4.getOutputPrinters().stream().map(SimilarityMatrixPrinter::getName).collect(Collectors.toList());
-        assertTrue(names2.contains("html"));
-        assertTrue(names2.contains("csv"));
-        assertTrue(names2.contains("threshold"));
+    @Test
+    public void TestParseOutputStrategyThreeStrategies() throws Exception {
+        ChecksimsConfig config = parseToConfig(new String[] { "-o", "csv,html,threshold" });
 
-        CommandLine cli5 = ChecksimsCommandLine.parseOpts(duplicatedStrategies);
-        ChecksimsConfig config5 = ChecksimsCommandLine.parseBaseFlags(cli5);
-        assertNotNull(config5);
-        assertEquals(config5.getOutputPrinters().size(), 1);
-        assertEquals(config5.getOutputPrinters().get(0).getName(), "html");
+        assertEquals(3, config.getOutputPrinters().size());
+        List<String> names = config.getOutputPrinters().stream().map(SimilarityMatrixPrinter::getName).collect(Collectors.toList());
+        assertTrue(names.contains("csv"));
+        assertTrue(names.contains("html"));
+        assertTrue(names.contains("threshold"));
+    }
 
-        CommandLine cli6 = ChecksimsCommandLine.parseOpts(caps);
-        ChecksimsConfig config6 = ChecksimsCommandLine.parseBaseFlags(cli6);
-        assertNotNull(config6);
-        assertEquals(config6.getOutputPrinters().size(), 1);
-        assertEquals(config6.getOutputPrinters().get(0).getName(), "html");
+    @Test
+    public void TestParseOutputStrategyCaps() throws Exception {
+        ChecksimsConfig config = parseToConfig(new String[] { "-o", "HTML" });
 
-        CommandLine cli7 = ChecksimsCommandLine.parseOpts(verbose);
-        ChecksimsConfig config7 = ChecksimsCommandLine.parseBaseFlags(cli7);
-        assertNotNull(config7);
-        assertEquals(config7.getOutputPrinters().size(), 1);
-        assertEquals(config7.getOutputPrinters().get(0).getName(), "csv");
+        assertEquals(1, config.getOutputPrinters().size());
+        assertEquals("html", config.getOutputPrinters().get(0).getName());
+    }
 
-        CommandLine cli8 = ChecksimsCommandLine.parseOpts(empty);
-        ChecksimsConfig config8 = ChecksimsCommandLine.parseBaseFlags(cli8);
-        assertNotNull(config8);
-        assertEquals(config8.getOutputPrinters().size(), 1);
-        assertEquals(config8.getOutputPrinters().get(0).getName(), OutputRegistry.getInstance().getDefaultImplementationName());
+    @Test
+    public void TestParseOutputStrategyVerbose() throws Exception {
+        ChecksimsConfig config = parseToConfig(new String[] { "--output", "threshold" });
+
+        assertEquals(1, config.getOutputPrinters().size());
+        assertEquals("threshold", config.getOutputPrinters().get(0).getName());
+    }
+
+    @Test
+    public void TestParseOutputStrategyDefault() throws Exception {
+        ChecksimsConfig config = parseToConfig(new String[] {});
+
+        assertEquals(1, config.getOutputPrinters().size());
+        assertEquals(OutputRegistry.getInstance().getDefaultImplementationName(), config.getOutputPrinters().get(0).getName());
     }
 
     @Test(expected = ChecksimsException.class)

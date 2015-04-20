@@ -1,9 +1,9 @@
 \section{Results}
 \label{sec:results}
 The experiments described in Section~\ref{sec:methods} were performed on the
-anonymized student data we obtained as test data. This section summarizes their
-results, and attempts to draw conclusions about the state of \textit{Checksims}
-and its algorithms from them.
+anonymized student data described in Section~\ref{sec:studentcode}. This
+section summarizes their results, and attempts to draw conclusions about the
+state of \textit{Checksims} and its algorithms from them.
 
 \subsection{Algorithm Comparison}
 Our algorithm comparison tests, described in Section~\ref{sec:algcompare},
@@ -25,22 +25,23 @@ is clear that \textit{Smith-Waterman} is a far more sensitive algorithm than
 save 100\% similarity (which both algorithms should be able to detect easily).
 This sensitivity is not necessarily an indicator of accuracy, however; it is
 possible that all of the results reported by \textit{Smith-Waterman} are simply
-false positives. Given the obvious limitations of the \textit{Line Comparison}
-algorithm (detailed in Section~\ref{sec:linecompare}), we do not believe this
-to be the case. A large number of the additional results found by
+false positives.
+
+Because of the obvious limitations of the \textit{Line Comparison} algorithm 
+detailed in Section~\ref{sec:linecompare}), we do not believe this to be the
+case. A large number of the additional results found by
 \textit{Smith-Waterman} are almost certainly real instances of unauthorized
-copying (or, at the least, cases which should have been brought to the
+copying (or, at the least, cases that should have been brought to the
 attention of course staff for manual review). This matches our hypothesis that
 \textit{Smith-Waterman} is the more accurate of the two algorithms (though,
 again, we cannot prove this with only these results).
 
-It is noteworthy that we removed common code from all assignments in our test
-data which we knew to contain it. In several cases, we were unable to obtain
-the common code from the instructors who gave the assignment. For these cases,
-we identified one student who had 100\% similarity to all others. On further
-examination, these students typically had submitted no code save the common
-starter code. Consequently, we were able to use their submissions as common
-code for these assignments.
+All known occurrences of common code were removed from our test data. In
+several cases, we were unable to obtain the common code from the instructors
+who gave the assignment. In each of these cases, we identified one student who
+had 10\% similarity to all others. On further examination, such students
+typically had submitted no code save the common starter code. Consequently, we
+were able to use their submissions as common code for these assignments.
 
 \begin{figure}
 \centering
@@ -54,37 +55,38 @@ code for these assignments.
 As Figure~\ref{fig:algocompare} shows, the \textit{Smith-Waterman} algorithm
 identified 17 cases of 100\% similarity, and a further 35 over 90\%. As was
 mentioned in Section~\ref{sec:anon}, all our test data is taken from actual
-courses --- previous offering of low-level Computer Science classes. Given
-this, we can assume that the results in Figure~\ref{fig:algocompare} represent
-a large number of cases of academic dishonesty, though we cannot say how many
-of the reported results are actually cases of academic dishonesty. We can,
-however, draw reasonable inferences.
+courses --- previous offerings of sophomore-level Computer Science classes.
+Given this, we can assume that the results in Figure~\ref{fig:algocompare}
+represent a large number of cases of academic dishonesty, though we cannot say
+how many of the reported results are actually cases of academic dishonesty. We
+can, however, draw reasonable inferences.
 
 The 100\% results are almost certainly cases of academic dishonesty. The notion
-that two students could have typed in 100\% identical code separately is
-absurd. We investigated several of these pairs, and all we found were what we
+that two students could have typed in 100\% identical code independently is
+completely implausible. We investigated several of these pairs, and all we
+found were what we
 consider to be academic dishonesty. Results from the 90\% to 99\% range are
 also nearly-certain cases of academic dishonesty. We reviewed 6 of these pairs
 of assignments, and found that all of them match our definition of academic
 dishonesty.
 
-The 70\% to 89\% range, however, contains a number of similarities which may
+The 70\% to 89\% range, however, contains a number of similarities that may
 not be caused by academic dishonesty. In some cases, students implemented the
 same algorithm in very similar ways. Given that there are not many ways to
 write a simple algorithm (for example, Bubblesort), especially if typical loop
 counter conventions (\texttt{i} for outermost loop, \texttt{j} for next
 innermost, etc) are followed. Six of the nine courses we obtained code from
 were offerings of CS2301, an intro-level course targeted at non-Computer
-Science majors. Most assignments for CS2301 will be very simple, requiring only
+Science majors. Most assignments for CS2301 are very simple, requiring only
 trivial algorithms (without much variation in algorithm choice or
 implementation). Furthermore, Professor Lauer permits the copying of algorithms
 out of the textbook, so students may end up with completely identical versions
 of simple functions (like binary tree insertion). Given this, many similarities
 in the 70\% to 89\% range may have produced their code independently, but using
-very similar algorithms and pseudocode --- perfectly acceptable, according to
+very similar algorithms and pseudocode --- acceptable behavior, according to
 Professor Lauer.
 
-The potential difference between the two assignments which form our test data
+The potential difference between the two assignments that form our test data
 is emphasized by the graph in Figure~\ref{fig:classcompare}. Almost all
 similarities identified are from CS2301, despite it only containing
 approximately 70\% of our test code. Given this, the smaller similarities seen
@@ -92,11 +94,11 @@ may well be due to the reasons identified in the previous paragraph.
 
 Even discounting a large number of the similarities present as potentially not
 cases of academic dishonesty, our results do paint a concerning picture of
-undetected past incidences of academic dishonesty within CS2301. Many of these
-courses were taught by Professor Lauer, and he can confirm that almost none of
-the near-certain cases we identified (90\% and higher) were caught. We hope
-that the deployment of \textit{Checksims} may be able to reduce these numbers
-as word of its use spreads.
+undetected past incidences of academic dishonesty within CS2301.
+Professor Lauer has confermed that to his knowledge, almost none of the near
+certain cases we identified (90\% and higher) were caught. We hope that the
+deployment of \textit{Checksims} may be able to reduce these numbers as word of
+its use spreads.
 
 \begin{figure}
 \centering
@@ -156,10 +158,10 @@ assignments three and five, where a majority of results were detected by
 \textit{Line Comparison} and not by \textit{Smith-Waterman}. Manual review of
 these results indicates that most of these results are cases of one student
 submitting very little to no code (typically in the dozens of lines, with many
-being trivially simple - for example, \} or \texttt{return;}). Many of these
+being trivially simple --- for example, \} or \texttt{return;}). Many of these
 lines are also contained in larger assignments, so the trivial assignment
 appears to be very similar to larger assignments to \textit{Line Comparison}
-(the larger assignments typically display inverse similarities which are very
+(the larger assignments typically display inverse similarities that are very
 small --- 5 to 20\% being common). \textit{Smith-Waterman} has awareness of the
 ordering of tokens within a document, and consequently will ignore trivial
 sequences like \texttt{\{ return; \}} if they are not present in the submission
@@ -177,15 +179,16 @@ accuracy of the \textit{Smith-Waterman} algorithm.
 
 
 \subsection{MOSS Comparison}
-We identified six submissions from our overall dataset to run through MOSS
-using the methodology explained in Section~\ref{sec:mosscompare}. These
-submissions were run through MOSS, and the results were compared to those
-obtained using \textit{Checksims} with the Smith-Waterman algorithm. 
+We identified six assignments, containing over 120 individual student
+submissions, from our overall dataset to run through MOSS using the
+methodology explained in Section~\ref{sec:mosscompare}. These submissions were
+run through MOSS, and the results were compared to those obtained using
+\textit{Checksims} using the Smith-Waterman algorithm. 
 
-For the purposes of this comparison, we must define significant results in both
-\textit{Checksims} and MOSS. In \textit{Checksims} and throughout this paper,
-we have generally defined this as any result with a similarity percentage of
-over 70\%. MOSS, however, does not have such a definition, and instead presents
+For the purposes of this comparison, we must clarify our definition of
+``significant results.'' In \textit{Checksims} and throughout this paper, we
+have generally defined this as any result with a similarity percentage of over
+70\%. MOSS, however, does not have such a definition, and instead presents
 results ordered by number of similar tokens, with nothing to signify which
 results are worthy of being inspected and which are not. For each comparison,
 we were able to identify a point in the results where results after had many
@@ -194,14 +197,14 @@ significant results in MOSS, with any results coming before being considered
 significant. We acknowledge that this is not an optimal method of selecting
 significant results, but could not find a better solution. Given the ease of
 selecting relevant results in \textit{Checksims}, we suggest that the overall
-usability of our results may be better than MOSS, though no further research
-was done on this.
+usability of our results are better than MOSS, are no further research was
+performed to validate our suspicion.
 
-Overall, we found that every significant similarity identified by MOSS was
-also identified by \textit{Checksims}. The reverse, however, was not true.
+\textbf{Overall, we found that every significant similarity identified by MOSS
+was also identified by \textit{Checksims}.} The reverse, however, was not true.
 Several small submissions (of 75 lines and under) were identified as being
 very similar to other submissions by \textit{Checksims}, but were not found
-similar by MOSS. We found 8 such submissions, and visually examined each to
+similar by MOSS. We found eight such submissions, and visually examined each to
 make a final determination of which piece of similarity detection software was
 correct. We sided with \textit{Checksims} in all cases, as the assignments were
 very similar on visual examination. This may indicate a weakness of MOSS with
@@ -230,20 +233,20 @@ Our comparison also does not test one of the potential strengths of MOSS over
 perform much more powerful normalizations than \textit{Checksims} is capable of
 at present. These normalizations are described in
 Section~\ref{sec:syntaxaware}, and should allow MOSS to defeat deliberate
-attempts to obfuscate similar code which would otherwise go unnoticed.
+attempts to obfuscate similar code that would otherwise go unnoticed.
 Comparing data including such submissions might highlight the advantages of
 MOSS over \textit{Checksims}, but we could not find any submissions in our
-dataset which showed significant effort to obfuscate similarities. Because of
-this, our comparisons are more favorable to \textit{Checksims} than the real
-world may be. It is possible that the prevalence of deliberately obfuscated
-similarities may rise if knowledge that a similarity detection system is in use
-becomes widespread, which would make the performance of \textit{Checksims} in
-such cases more important, and we would like to perform further experiments in
-this direction.
+dataset that contained any significant attempt to obfuscate similarities.
+Because of this, our comparisons are more favorable to \textit{Checksims} than
+the real world may be. It is possible that the prevalence of deliberately
+obfuscated similarities may rise if knowledge that a similarity detection
+system is in use becomes widespread, which would make the performance of 
+\textit{Checksims} in such cases more important, and we would like to perform
+further experiments in this direction.
 
 
 \section{Real-World Usage}
-During development, \textit{Checksims} was used in real-world situations on two
+During this project, \textit{Checksims} was used in real-world situations on two
 occasions. Course staff (including one of the authors) made use of development
 versions of the program to attempt to identify academic dishonesty in
 student submissions in ongoing courses. Though results from these real-world
@@ -275,4 +278,3 @@ students with extremely similar submissions. The grading
 system for that assignment was highly automated and involved very little human
 interaction. Without \textit{Checksims}, It is unlikely that the similarity
 would have been detected.
-

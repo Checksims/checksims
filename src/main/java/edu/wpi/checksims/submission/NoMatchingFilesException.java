@@ -23,8 +23,6 @@ package edu.wpi.checksims.submission;
 
 import edu.wpi.checksims.ChecksimsException;
 
-import java.io.IOException;
-
 /**
  * Thrown when creating a submission if no files are found that match
  */

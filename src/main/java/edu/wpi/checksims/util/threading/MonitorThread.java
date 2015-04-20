@@ -26,6 +26,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Monitor thread for parallel execution jobs
  */
@@ -38,6 +40,8 @@ class MonitorThread implements Runnable {
     private static Logger logs = LoggerFactory.getLogger(MonitorThread.class);
 
     MonitorThread(ThreadPoolExecutor toMonitor) {
+        checkNotNull(toMonitor);
+
         this.toMonitor = toMonitor;
         doRun = true;
         currentComplete = 0;

@@ -2,11 +2,7 @@ BUILD_ROOT=$(shell pwd)
 LATEX=latexmk
 LATEXMK_VERSION=$(latexmk -v | grep "Version" | sed s/^.*Version\ \\\(.*\\\).*$/\\1/g)
 LATEX_ROOT=$(BUILD_ROOT)/doc
-ifeq (LATEXMK_VERSION,4.40)
 LATEX_DIST=$(LATEX_ROOT)/dist
-else
-LATEX_DIST=../dist
-endif
 LATEX_SRC=$(LATEX_ROOT)/src
 LATEX_BUILD=$(LATEX_ROOT)/build
 LATEX_BUILD_ARGS=-bibtex -pdf -outdir=$(LATEX_DIST) -cd

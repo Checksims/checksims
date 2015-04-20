@@ -1,13 +1,34 @@
+/*
+ * CDDL HEADER START
+ *
+ * The contents of this file are subject to the terms of the
+ * Common Development and Distribution License (the "License").
+ * You may not use this file except in compliance with the License.
+ *
+ * See LICENSE.txt included in this distribution for the specific
+ * language governing permissions and limitations under the License.
+ *
+ * When distributing Covered Code, include this CDDL HEADER in each
+ * file and include the License file at LICENSE.txt.
+ * If applicable, add the following below this CDDL HEADER, with the
+ * fields enclosed by brackets "[]" replaced with your own identifying
+ * information: Portions Copyright [yyyy] [name of copyright owner]
+ *
+ * CDDL HEADER END
+ *
+ * Copyright (c) 2014-2015 Matthew Heon and Dolan Murvihill
+ */
+
 package edu.wpi.checksims.algorithm;
 
 import edu.wpi.checksims.ChecksimsException;
 import edu.wpi.checksims.algorithm.linesimilarity.LineSimilarityChecker;
 import edu.wpi.checksims.algorithm.smithwaterman.SmithWaterman;
+import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Collection;
-
-import static org.junit.Assert.*;
+import static edu.wpi.checksims.testutil.RegistryUtils.checkRegistryContainsImpl;
+import static edu.wpi.checksims.testutil.RegistryUtils.checkRegistryDefault;
 
 /**
  * Tests for the Algorithm Registry
@@ -16,42 +37,32 @@ import static org.junit.Assert.*;
  * We're just hoping it scans the right things during that once
  */
 public class AlgorithmRegistryTest {
+    private AlgorithmRegistry instance;
+
+    @Before
+    public void setUp() {
+        instance = AlgorithmRegistry.getInstance();
+    }
+
     @Test
     public void TestIncludesLineCompare() throws ChecksimsException {
-        Collection<String> algorithms = AlgorithmRegistry.getInstance().getSupportedImplementationNames();
         String lineCompareName = LineSimilarityChecker.getInstance().getName();
 
-        assertNotNull(algorithms);
-        assertTrue(algorithms.contains(lineCompareName));
-
-        // This should not throw an exception
-        SimilarityDetector lineCompare = AlgorithmRegistry.getInstance().getImplementationInstance(lineCompareName);
-        assertEquals(lineCompare.getName(), lineCompareName);
+        checkRegistryContainsImpl(lineCompareName, instance);
     }
 
     @Test
     public void TestIncludeSmithWaterman() throws ChecksimsException {
-        Collection<String> algorithms = AlgorithmRegistry.getInstance().getSupportedImplementationNames();
         String smithWatermanName = SmithWaterman.getInstance().getName();
 
-        assertNotNull(algorithms);
-        assertTrue(algorithms.contains(smithWatermanName));
-
-        // This should not throw an exception
-        SimilarityDetector smithWaterman = AlgorithmRegistry.getInstance().getImplementationInstance(smithWatermanName);
-        assertEquals(smithWaterman.getName(), smithWatermanName);
+        checkRegistryContainsImpl(smithWatermanName, instance);
     }
 
     @Test
     public void TestDefaultAlgorithmIsLineCompare() {
-        SimilarityDetector algorithm = AlgorithmRegistry.getInstance().getDefaultImplementation();
-        String algorithmName = AlgorithmRegistry.getInstance().getDefaultImplementationName();
         String lineCompareName = LineSimilarityChecker.getInstance().getName();
 
-        assertNotNull(algorithm);
-        assertNotNull(algorithmName);
-        assertEquals(algorithm.getName(), algorithmName);
-        assertEquals(algorithmName, lineCompareName);
+        checkRegistryDefault(lineCompareName, instance);
     }
 
     @Test(expected = ChecksimsException.class)

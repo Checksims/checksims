@@ -16,7 +16,7 @@
  *
  * CDDL HEADER END
  *
- * Copyright (c) 2014 Matthew Heon and Dolan Murvihill
+ * Copyright (c) 2014-2015 Matthew Heon and Dolan Murvihill
  */
 
 package edu.wpi.checksims.token;
@@ -26,6 +26,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import static edu.wpi.checksims.testutil.TokenUtils.*;
 import static org.junit.Assert.*;
 
 /**
@@ -47,46 +48,24 @@ public class TokenListTest {
 
     @Before
     public void setUp() {
-        ConcreteToken a = new ConcreteToken('a', TokenType.CHARACTER);
-        ConcreteToken b = new ConcreteToken('b', TokenType.CHARACTER);
-        ConcreteToken c = new ConcreteToken('c', TokenType.CHARACTER);
-        ConcreteToken w = new ConcreteToken("whitespace", TokenType.WHITESPACE);
-        ConcreteToken x = new ConcreteToken("space", TokenType.WHITESPACE);
-        ConcreteToken l = new ConcreteToken("line line line", TokenType.LINE);
-        ConcreteToken m = new ConcreteToken("another line", TokenType.LINE);
-        ConcreteToken inval = new ConcreteToken('i', TokenType.CHARACTER, false);
+        Token a = makeCharToken('a');
+        Token b = makeCharToken('b');
+        Token c = makeCharToken('c');
+        Token w = makeWhitespaceToken("whitespace");
+        Token x = makeWhitespaceToken("space");
+        Token l = makeLineToken("line line line");
+        Token m = makeLineToken("another line");
+        Token inval = new ConcreteToken('i', TokenType.CHARACTER, false);
 
         emptyCharacter = new TokenList(TokenType.CHARACTER);
-
-        oneElementCharacter = new TokenList(TokenType.CHARACTER);
-        oneElementCharacter.add(a);
-
-        oneElementWhitespace = new TokenList(TokenType.WHITESPACE);
-        oneElementWhitespace.add(w);
-
-        twoElementsWhitespace = new TokenList(TokenType.WHITESPACE);
-        twoElementsWhitespace.add(w);
-        twoElementsWhitespace.add(x);
-
-        oneElementLine = new TokenList(TokenType.LINE);
-        oneElementLine.add(l);
-
-        twoElementsLine = new TokenList(TokenType.LINE);
-        twoElementsLine.add(l);
-        twoElementsLine.add(m);
-
-        twoElementsCharacter = new TokenList(TokenType.CHARACTER);
-        twoElementsCharacter.add(a);
-        twoElementsCharacter.add(b);
-
-        threeElementsCharacter = new TokenList(TokenType.CHARACTER);
-        threeElementsCharacter.add(a);
-        threeElementsCharacter.add(b);
-        threeElementsCharacter.add(c);
-
-        twoElementsOneInvalidCharacter = new TokenList(TokenType.CHARACTER);
-        twoElementsOneInvalidCharacter.add(a);
-        twoElementsOneInvalidCharacter.add(inval);
+        oneElementWhitespace = makeTokenListWhitespace(w);
+        twoElementsWhitespace = makeTokenListWhitespace(w, x);
+        oneElementLine = makeTokenListLine(l);
+        twoElementsLine = makeTokenListLine(l, m);
+        oneElementCharacter = makeTokenListCharacter(a);
+        twoElementsCharacter = makeTokenListCharacter(a, b);
+        threeElementsCharacter = makeTokenListCharacter(a, b, c);
+        twoElementsOneInvalidCharacter = makeTokenListCharacter(a, inval);
     }
 
     @Test
@@ -121,47 +100,47 @@ public class TokenListTest {
         TokenList cloned = TokenList.cloneTokenList(emptyCharacter);
 
         assertNotNull(cloned);
-        assertTrue(cloned.isEmpty());
-        assertEquals(cloned.type, emptyCharacter.type);
-        assertEquals(cloned, emptyCharacter);
+        assertEquals(emptyCharacter, cloned);
     }
 
     @Test
-    public void TestCloneOneElement() {
-        TokenList clonedChar = TokenList.cloneTokenList(oneElementCharacter);
-        TokenList clonedWhitespace = TokenList.cloneTokenList(oneElementWhitespace);
-        TokenList clonedLine = TokenList.cloneTokenList(oneElementLine);
+    public void TestCloneOneElementCharacter() {
+        TokenList cloned = TokenList.cloneTokenList(oneElementCharacter);
 
-        assertNotNull(clonedChar);
-        assertFalse(clonedChar.isEmpty());
-        assertEquals(clonedChar.type, TokenType.CHARACTER);
-        assertEquals(clonedChar, oneElementCharacter);
-
-        assertNotNull(clonedWhitespace);
-        assertFalse(clonedWhitespace.isEmpty());
-        assertEquals(clonedWhitespace.type, TokenType.WHITESPACE);
-        assertEquals(clonedWhitespace, oneElementWhitespace);
-
-        assertNotNull(clonedLine);
-        assertFalse(clonedLine.isEmpty());
-        assertEquals(clonedLine.type, TokenType.LINE);
-        assertEquals(clonedLine, oneElementLine);
+        assertNotNull(cloned);
+        assertEquals(oneElementCharacter, cloned);
     }
 
     @Test
-    public void TestCloneOrderTwoAndThreeElements() {
-        TokenList clonedTwoElt = TokenList.cloneTokenList(twoElementsCharacter);
-        TokenList clonedThreeElt = TokenList.cloneTokenList(threeElementsCharacter);
+    public void TestCloneOneElementWhitespace() {
+        TokenList cloned = TokenList.cloneTokenList(oneElementWhitespace);
 
-        assertNotNull(clonedTwoElt);
-        assertFalse(clonedTwoElt.isEmpty());
-        assertEquals(clonedTwoElt.size(), 2);
-        assertEquals(clonedTwoElt, twoElementsCharacter);
+        assertNotNull(cloned);
+        assertEquals(oneElementWhitespace, cloned);
+    }
 
-        assertNotNull(clonedThreeElt);
-        assertFalse(clonedThreeElt.isEmpty());
-        assertEquals(clonedThreeElt.size(), 3);
-        assertEquals(clonedThreeElt, threeElementsCharacter);
+    @Test
+    public void TestCloneOneElementLine() {
+        TokenList cloned = TokenList.cloneTokenList(oneElementLine);
+
+        assertNotNull(cloned);
+        assertEquals(oneElementLine, cloned);
+    }
+
+    @Test
+    public void TestCloneTwoElements() {
+        TokenList cloned = TokenList.cloneTokenList(twoElementsCharacter);
+
+        assertNotNull(cloned);
+        assertEquals(twoElementsCharacter, cloned);
+    }
+
+    @Test
+    public void TestCloneThreeElements() {
+        TokenList cloned = TokenList.cloneTokenList(threeElementsCharacter);
+
+        assertNotNull(cloned);
+        assertEquals(threeElementsCharacter, cloned);
     }
 
     @Test
@@ -169,14 +148,7 @@ public class TokenListTest {
         TokenList clonedInvalid = TokenList.cloneTokenList(twoElementsOneInvalidCharacter);
 
         assertNotNull(clonedInvalid);
-        assertFalse(clonedInvalid.isEmpty());
-        assertEquals(clonedInvalid.size(), 2);
-        assertFalse(clonedInvalid.get(1).isValid());
-
-        // Can't verify the entire lists are equal, given that Token equals() is false if one tokenization is invalid
-        assertEquals(clonedInvalid.get(0), twoElementsOneInvalidCharacter.get(0));
-        assertEquals(clonedInvalid.get(1).getType(), twoElementsOneInvalidCharacter.get(1).getType());
-        assertEquals(clonedInvalid.get(1).getToken(), twoElementsOneInvalidCharacter.get(1).getToken());
+        assertEquals(twoElementsOneInvalidCharacter, clonedInvalid);
     }
 
     @Test
@@ -184,13 +156,11 @@ public class TokenListTest {
         TokenList clone = TokenList.cloneTokenList(oneElementCharacter);
 
         assertNotNull(clone);
-        assertFalse(clone.isEmpty());
-        assertEquals(clone.size(), 1);
-        assertEquals(clone, oneElementCharacter);
+        assertEquals(oneElementCharacter, clone);
 
         clone.get(0).setValid(!clone.get(0).isValid());
 
-        assertFalse(clone.equals(oneElementCharacter));
+        assertNotEquals(oneElementCharacter, clone);
     }
 
     @Test
@@ -198,8 +168,7 @@ public class TokenListTest {
         TokenList immutableClone = TokenList.immutableCopy(emptyCharacter);
 
         assertNotNull(immutableClone);
-        assertTrue(immutableClone.isEmpty());
-        assertEquals(immutableClone.type, emptyCharacter.type);
+        assertEquals(emptyCharacter, immutableClone);
     }
 
     @Test
@@ -207,10 +176,7 @@ public class TokenListTest {
         TokenList immutableClone = TokenList.immutableCopy(oneElementCharacter);
 
         assertNotNull(immutableClone);
-        assertFalse(immutableClone.isEmpty());
-        assertEquals(immutableClone.type, oneElementCharacter.type);
-        assertEquals(immutableClone.size(), oneElementCharacter.size());
-        assertEquals(immutableClone, oneElementCharacter);
+        assertEquals(oneElementCharacter, immutableClone);
     }
 
     @Test
@@ -218,10 +184,7 @@ public class TokenListTest {
         TokenList immutableClone = TokenList.immutableCopy(threeElementsCharacter);
 
         assertNotNull(immutableClone);
-        assertFalse(immutableClone.isEmpty());
-        assertEquals(immutableClone.type, threeElementsCharacter.type);
-        assertEquals(immutableClone.size(), threeElementsCharacter.size());
-        assertEquals(immutableClone, threeElementsCharacter);
+        assertEquals(threeElementsCharacter, immutableClone);
     }
 
     @Test
@@ -229,11 +192,7 @@ public class TokenListTest {
         TokenList immutableClone = TokenList.immutableCopy(twoElementsOneInvalidCharacter);
 
         assertNotNull(immutableClone);
-        assertFalse(immutableClone.isEmpty());
-        assertEquals(immutableClone.type, twoElementsOneInvalidCharacter.type);
-        assertEquals(immutableClone.size(), twoElementsOneInvalidCharacter.size());
-        assertFalse(immutableClone.get(1).isValid());
-        assertEquals(immutableClone, twoElementsOneInvalidCharacter);
+        assertEquals(twoElementsOneInvalidCharacter, immutableClone);
     }
 
     @Test
@@ -258,23 +217,23 @@ public class TokenListTest {
         String joined = oneElementCharacter.join(false);
 
         assertNotNull(joined);
-        assertFalse(joined.isEmpty());
-        assertEquals(joined, "a");
+        assertEquals("a", joined);
     }
 
     @Test
-    public void TestJoinMultiElementCharacter() {
-        String joinedTwo = twoElementsCharacter.join(false);
+    public void TestJoinTwoElementCharacter() {
+        String joined = twoElementsCharacter.join(false);
 
-        assertNotNull(joinedTwo);
-        assertFalse(joinedTwo.isEmpty());
-        assertEquals(joinedTwo, "ab");
+        assertNotNull(joined);
+        assertEquals("ab", joined);
+    }
 
-        String joinedThree = threeElementsCharacter.join(false);
+    @Test
+    public void TestJoinThreeElementCharacter() {
+        String joined = threeElementsCharacter.join(false);
 
-        assertNotNull(joinedThree);
-        assertFalse(joinedThree.isEmpty());
-        assertEquals(joinedThree, "abc");
+        assertNotNull(joined);
+        assertEquals("abc", joined);
     }
 
     @Test
@@ -290,8 +249,7 @@ public class TokenListTest {
         String joined = twoElementsOneInvalidCharacter.join(true);
 
         assertNotNull(joined);
-        assertFalse(joined.isEmpty());
-        assertEquals(joined, "a");
+        assertEquals("a", joined);
     }
 
     @Test
@@ -300,8 +258,8 @@ public class TokenListTest {
         String joinedNoIgnore = twoElementsOneInvalidCharacter.join(true);
 
         assertNotEquals(joinedIgnore, joinedNoIgnore);
-        assertEquals(joinedIgnore, "ai");
-        assertEquals(joinedNoIgnore, "a");
+        assertEquals("ai", joinedIgnore);
+        assertEquals("a", joinedNoIgnore);
     }
 
     @Test
@@ -309,8 +267,7 @@ public class TokenListTest {
         String joined = oneElementWhitespace.join(false);
 
         assertNotNull(joined);
-        assertFalse(joined.isEmpty());
-        assertEquals(joined, "whitespace");
+        assertEquals("whitespace", joined);
     }
 
     @Test
@@ -318,8 +275,7 @@ public class TokenListTest {
         String joined = twoElementsWhitespace.join(false);
 
         assertNotNull(joined);
-        assertFalse(joined.isEmpty());
-        assertEquals(joined, "whitespace space");
+        assertEquals("whitespace space", joined);
     }
 
     @Test
@@ -327,8 +283,7 @@ public class TokenListTest {
         String joined = oneElementLine.join(false);
 
         assertNotNull(joined);
-        assertFalse(joined.isEmpty());
-        assertEquals(joined, "line line line\n");
+        assertEquals("line line line\n", joined);
     }
 
     @Test
@@ -336,7 +291,6 @@ public class TokenListTest {
         String joined = twoElementsLine.join(false);
 
         assertNotNull(joined);
-        assertFalse(joined.isEmpty());
-        assertEquals(joined, "line line line\nanother line\n");
+        assertEquals("line line line\nanother line\n", joined);
     }
 }

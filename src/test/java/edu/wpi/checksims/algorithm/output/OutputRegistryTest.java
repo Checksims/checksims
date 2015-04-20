@@ -1,64 +1,70 @@
+/*
+ * CDDL HEADER START
+ *
+ * The contents of this file are subject to the terms of the
+ * Common Development and Distribution License (the "License").
+ * You may not use this file except in compliance with the License.
+ *
+ * See LICENSE.txt included in this distribution for the specific
+ * language governing permissions and limitations under the License.
+ *
+ * When distributing Covered Code, include this CDDL HEADER in each
+ * file and include the License file at LICENSE.txt.
+ * If applicable, add the following below this CDDL HEADER, with the
+ * fields enclosed by brackets "[]" replaced with your own identifying
+ * information: Portions Copyright [yyyy] [name of copyright owner]
+ *
+ * CDDL HEADER END
+ *
+ * Copyright (c) 2014-2015 Matthew Heon and Dolan Murvihill
+ */
+
 package edu.wpi.checksims.algorithm.output;
 
 import edu.wpi.checksims.ChecksimsException;
+import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Collection;
-
-import static org.junit.Assert.*;
+import static edu.wpi.checksims.testutil.RegistryUtils.checkRegistryContainsImpl;
+import static edu.wpi.checksims.testutil.RegistryUtils.checkRegistryDefault;
 
 /**
  * Tests for the output registry
  */
 public class OutputRegistryTest {
+    private OutputRegistry instance;
+
+    @Before
+    public void setUp() {
+        instance = OutputRegistry.getInstance();
+    }
+
     @Test
     public void TestOutputRegistryContainsThreshold() throws ChecksimsException {
         String thresholdName = SimilarityMatrixThresholdPrinter.getInstance().getName();
-        Collection<String> supportedPrinters = OutputRegistry.getInstance().getSupportedImplementationNames();
 
-        assertNotNull(supportedPrinters);
-        assertTrue(supportedPrinters.contains(thresholdName));
-
-        // This should not throw an exception
-        SimilarityMatrixPrinter strategy = OutputRegistry.getInstance().getImplementationInstance(thresholdName);
-        assertEquals(strategy.getName(), thresholdName);
+        checkRegistryContainsImpl(thresholdName, instance);
     }
 
     @Test
     public void TestOutputRegistryContainsCSV() throws ChecksimsException {
         String csvName = SimilarityMatrixAsCSVPrinter.getInstance().getName();
-        Collection<String> supportedPrinters = OutputRegistry.getInstance().getSupportedImplementationNames();
 
-        assertNotNull(supportedPrinters);
-        assertTrue(supportedPrinters.contains(csvName));
-
-        // This should not throw an exception
-        SimilarityMatrixPrinter strategy = OutputRegistry.getInstance().getImplementationInstance(csvName);
-        assertEquals(strategy.getName(), csvName);
+        checkRegistryContainsImpl(csvName, instance);
     }
 
     @Test
     public void TestOutputRegistryContainsHTML() throws ChecksimsException {
         String htmlName = SimilarityMatrixAsHTMLPrinter.getInstance().getName();
-        Collection<String> supportedPrinters = OutputRegistry.getInstance().getSupportedImplementationNames();
 
-        assertNotNull(supportedPrinters);
-        assertTrue(supportedPrinters.contains(htmlName));
-
-        // This should not throw an exception
-        SimilarityMatrixPrinter strategy = OutputRegistry.getInstance().getImplementationInstance(htmlName);
-        assertEquals(strategy.getName(), htmlName);
+        checkRegistryContainsImpl(htmlName, instance);
     }
 
     @Test
     public void TestDefaultStrategyIsThreshold() {
         String thresholdName = SimilarityMatrixThresholdPrinter.getInstance().getName();
-        String defaultName = OutputRegistry.getInstance().getDefaultImplementationName();
-        SimilarityMatrixPrinter defaultPrinter = OutputRegistry.getInstance().getDefaultImplementation();
 
-        assertNotNull(defaultPrinter);
-        assertEquals(thresholdName, defaultName);
-        assertEquals(thresholdName, defaultPrinter.getName());
+        checkRegistryDefault(thresholdName, instance);
     }
 
     @Test(expected = ChecksimsException.class)

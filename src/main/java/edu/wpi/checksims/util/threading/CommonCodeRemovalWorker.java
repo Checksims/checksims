@@ -28,12 +28,14 @@ import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.submission.ValidityIgnoringSubmission;
 import edu.wpi.checksims.token.TokenList;
 import edu.wpi.checksims.token.TokenType;
-import edu.wpi.checksims.token.tokenizer.FileTokenizer;
+import edu.wpi.checksims.token.tokenizer.Tokenizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
 import java.util.concurrent.Callable;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Basic unit of thread execution for Common Code Removal
@@ -45,7 +47,18 @@ public class CommonCodeRemovalWorker implements Callable<Submission> {
 
     private static Logger logs = LoggerFactory.getLogger(CommonCodeRemovalWorker.class);
 
+    /**
+     * Create a Callable worker to perform common code removal on a single submission
+     *
+     * @param algorithm Algorithm to use to detect common code
+     * @param common Common code to remove
+     * @param removeFrom Submission to remove code from
+     */
     public CommonCodeRemovalWorker(SimilarityDetector algorithm, Submission common, Submission removeFrom) {
+        checkNotNull(algorithm);
+        checkNotNull(common);
+        checkNotNull(removeFrom);
+
         this.algorithm = algorithm;
         this.common = common;
         this.removeFrom = removeFrom;
@@ -62,7 +75,7 @@ public class CommonCodeRemovalWorker implements Callable<Submission> {
         logs.debug("Performing common code removal on submission " + removeFrom.getName());
 
         TokenType type = algorithm.getDefaultTokenType();
-        FileTokenizer tokenizer = FileTokenizer.getTokenizer(type);
+        Tokenizer tokenizer = Tokenizer.getTokenizer(type);
 
         // Re-tokenize input and common code using given token type
         TokenList redoneIn = tokenizer.splitFile(removeFrom.getContentAsString());
@@ -97,7 +110,7 @@ public class CommonCodeRemovalWorker implements Callable<Submission> {
 
         // Retokenize the new body with the original tokenization
         TokenType oldType = removeFrom.getTokenType();
-        FileTokenizer oldTokenizer = FileTokenizer.getTokenizer(oldType);
+        Tokenizer oldTokenizer = Tokenizer.getTokenizer(oldType);
         TokenList finalListGoodTokenization = oldTokenizer.splitFile(newBody);
 
         DecimalFormat d = new DecimalFormat("###.00");

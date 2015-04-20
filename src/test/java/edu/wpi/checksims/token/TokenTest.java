@@ -16,12 +16,13 @@
  *
  * CDDL HEADER END
  *
- * Copyright (c) 2014 Matthew Heon and Dolan Murvihill
+ * Copyright (c) 2014-2015 Matthew Heon and Dolan Murvihill
  */
 
 package edu.wpi.checksims.token;
 
-import org.junit.BeforeClass;
+import edu.wpi.checksims.testutil.TokenUtils;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -31,28 +32,31 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * Basic tests on Tokens
+ *
+ * TODO tests on Whitespace and Line tokens
+ * TODO add tests for Clone
  */
 public class TokenTest {
-    private static Token aValid;
-    private static Token aInvalid;
-    private static Token bValid;
-    private static Token bInvalid;
-    private static Token aValidTwo;
-    private static Token aValidityIgnoring;
-    private static Token aValidityEnsuring;
-    private static Token aValidityEnsuringValid;
-    private static Token aImmutable;
+    private Token aValid;
+    private Token aInvalid;
+    private Token bValid;
+    private Token bInvalid;
+    private Token aValidTwo;
+    private Token aValidityIgnoring;
+    private Token aValidityEnsuring;
+    private Token aValidityEnsuringValid;
+    private Token aImmutable;
 
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
 
-    @BeforeClass
-    public static void setUp() {
-        aValid = new ConcreteToken('a', TokenType.CHARACTER, true);
+    @Before
+    public void setUp() {
+        aValid = TokenUtils.makeCharToken('a');
         aInvalid = new ConcreteToken('a', TokenType.CHARACTER, false);
-        bValid = new ConcreteToken('b', TokenType.CHARACTER, true);
+        bValid = TokenUtils.makeCharToken('b');
         bInvalid = new ConcreteToken('b', TokenType.CHARACTER, false);
-        aValidTwo = new ConcreteToken('a', TokenType.CHARACTER, true);
+        aValidTwo = TokenUtils.makeCharToken('a');
         aValidityIgnoring = new ValidityIgnoringToken(aInvalid);
         aValidityEnsuring = new ValidityEnsuringToken(aInvalid);
         aValidityEnsuringValid = new ValidityEnsuringToken(aValid);

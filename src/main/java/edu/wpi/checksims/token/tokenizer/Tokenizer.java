@@ -27,19 +27,19 @@ import edu.wpi.checksims.token.TokenType;
 /**
  * Interface to read in a file and return it as a list of tokens of a certain type
  */
-public interface FileTokenizer {
+public interface Tokenizer {
     public TokenList splitFile(String string);
 
     public TokenType getType();
 
-    public static FileTokenizer getTokenizer(TokenType type) {
+    public static Tokenizer getTokenizer(TokenType type) {
         switch(type) {
             case CHARACTER:
-                return FileCharTokenizer.getInstance();
+                return CharTokenizer.getInstance();
             case LINE:
-                return FileLineTokenizer.getInstance();
+                return LineTokenizer.getInstance();
             case WHITESPACE:
-                return FileWhitespaceTokenizer.getInstance();
+                return WhitespaceTokenizer.getInstance();
             default:
                 // TODO handle more gracefully
                 throw new RuntimeException("Unhandled tokenization requested!");

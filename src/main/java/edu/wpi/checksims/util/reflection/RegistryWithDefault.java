@@ -21,7 +21,7 @@
 
 package edu.wpi.checksims.util.reflection;
 
-import edu.wpi.checksims.ChecksimsException;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Extension of a Registry with the ability to retrieve a default value
@@ -37,14 +37,12 @@ public class RegistryWithDefault<T extends NamedInstantiable> extends Registry<T
      * @param baseClazz Base class or interface which all implementations in the registry extend or implement
      * @param defaultImplementation Name of default implementation for this registry
      */
-    public RegistryWithDefault(String initPath, Class<T> baseClazz, String defaultImplementation) {
+    public RegistryWithDefault(String initPath, Class<T> baseClazz, String defaultImplementation) throws NoSuchImplementationException {
         super(initPath, baseClazz);
 
-        try {
-            instanceOfDefault = super.getImplementationInstance(defaultImplementation);
-        } catch(ChecksimsException e) {
-            throw new RuntimeException("Requested default implementation is not available", e);
-        }
+        checkNotNull(defaultImplementation);
+
+        instanceOfDefault = super.getImplementationInstance(defaultImplementation);
 
         this.defaultImplementation = defaultImplementation;
     }

@@ -21,12 +21,15 @@
 
 package edu.wpi.checksims.util.threading;
 
+import edu.wpi.checksims.algorithm.InternalAlgorithmError;
 import edu.wpi.checksims.algorithm.preprocessor.SubmissionPreprocessor;
 import edu.wpi.checksims.submission.Submission;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Callable;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Worker for parallel preprocessor application
@@ -35,7 +38,16 @@ public class PreprocessorWorker implements Callable<Submission> {
     private final Submission preprocess;
     private final SubmissionPreprocessor preprocessor;
 
+    /**
+     * Create a Callable worker to preprocess a single submission
+     *
+     * @param toPreprocess Submission to preprocess
+     * @param preprocessor Preprocessor to apply
+     */
     public PreprocessorWorker(Submission toPreprocess, SubmissionPreprocessor preprocessor) {
+        checkNotNull(toPreprocess);
+        checkNotNull(preprocessor);
+
         this.preprocess = toPreprocess;
         this.preprocessor = preprocessor;
     }
@@ -50,9 +62,18 @@ public class PreprocessorWorker implements Callable<Submission> {
     public Submission call() throws Exception {
         Logger logs = LoggerFactory.getLogger(PreprocessorWorker.class);
 
-        logs.trace("Preprocessing submission " + preprocess.getName() + " with preprocessor " + preprocess.getName());
+        logs.trace("Preprocessing submission " + preprocess.getName() + " with preprocessor " + preprocessor.getName());
 
-        return preprocessor.process(preprocess);
+        try {
+            return preprocessor.process(preprocess);
+        } catch(InternalAlgorithmError e) {
+            logs.error("Error preprocessing submission " + preprocess.getName());
+            logs.error(e.getMessage());
+            e.printStackTrace();
+            System.exit(-1);
+
+            return null;
+        }
     }
 
     @Override

@@ -24,44 +24,44 @@ package edu.wpi.checksims.token.tokenizer;
 import edu.wpi.checksims.token.ConcreteToken;
 import edu.wpi.checksims.token.TokenList;
 import edu.wpi.checksims.token.TokenType;
-import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.Arrays;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
- * Split a file into a list of character tokens.
+ * Split a file into tokens based on spaces
  */
-public class FileCharTokenizer implements FileTokenizer {
-    private static FileCharTokenizer instance;
+public class WhitespaceTokenizer implements Tokenizer {
+    private static WhitespaceTokenizer instance;
 
-    private FileCharTokenizer() {}
+    private WhitespaceTokenizer() {}
 
-    public static FileCharTokenizer getInstance() {
+    public static WhitespaceTokenizer getInstance() {
         if(instance == null) {
-            instance = new FileCharTokenizer();
+            instance = new WhitespaceTokenizer();
         }
 
         return instance;
     }
 
     /**
-     * Split a string into character tokens
+     * Split a string into whitespace-delineated tokens
      *
-     * @param string String to split
-     * @return Input string, with a single token representing each character
+     * @param string Input string
+     * @return List of WHITESPACE tokens representing the input submission
      */
     @Override
     public TokenList splitFile(String string) {
+        checkNotNull(string);
+
         TokenList toReturn = new TokenList(this.getType());
 
-        if(string == null) {
-            return toReturn;
-        }
+        String[] split = string.split("\\s+");
 
-        char[] chars = string.toCharArray();
-
-        Arrays.stream(ArrayUtils.toObject(chars))
-                .map((character) -> new ConcreteToken(character, TokenType.CHARACTER))
+        Arrays.stream(split)
+                .filter((str) -> !str.isEmpty())
+                .map((str) -> new ConcreteToken(str, TokenType.WHITESPACE))
                 .forEachOrdered(toReturn::add);
 
         return toReturn;
@@ -69,11 +69,11 @@ public class FileCharTokenizer implements FileTokenizer {
 
     @Override
     public TokenType getType() {
-        return TokenType.CHARACTER;
+        return TokenType.WHITESPACE;
     }
 
     @Override
     public String toString() {
-        return "Singleton instance of FileCharSplitter";
+        return "Singleton instance of FileSpaceSplitter";
     }
 }

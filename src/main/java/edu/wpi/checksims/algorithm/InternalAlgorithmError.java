@@ -16,16 +16,24 @@
  *
  * CDDL HEADER END
  *
- * Copyright (c) 2014 Matthew Heon and Dolan Murvihill
+ * Copyright (c) 2014-2015 Matthew Heon and Dolan Murvihill
  */
 
-package edu.wpi.checksims.algorithm.smithwaterman;
+package edu.wpi.checksims.algorithm;
 
-import static org.junit.Assert.*;
+import edu.wpi.checksims.ChecksimsException;
 
 /**
- * Tests for the Smith-Waterman Algorithm plagiarism detector
+ * Exception thrown on internal algorithm error
  */
-public class TestSmithWaterman {
-    // TO DO
+public class InternalAlgorithmError extends ChecksimsException {
+    private static final long serialVersionUID = 1L;
+
+    public InternalAlgorithmError(String message) {
+        super(message);
+    }
+
+    public InternalAlgorithmError(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

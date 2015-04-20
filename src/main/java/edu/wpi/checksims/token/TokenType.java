@@ -27,6 +27,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Supported tokenization types
  */
@@ -47,6 +50,9 @@ public enum TokenType {
     }
 
     public static TokenType fromString(String input) throws ChecksimsException {
+        checkNotNull(input);
+        checkArgument(!input.isEmpty());
+
         String lowerInput = input.toLowerCase();
 
         TokenType[] types = TokenType.class.getEnumConstants();

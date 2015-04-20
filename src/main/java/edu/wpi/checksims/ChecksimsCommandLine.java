@@ -32,42 +32,27 @@ import edu.wpi.checksims.algorithm.preprocessor.SubmissionPreprocessor;
 import edu.wpi.checksims.submission.EmptySubmissionException;
 import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.token.TokenType;
-import edu.wpi.checksims.token.tokenizer.FileTokenizer;
+import edu.wpi.checksims.token.tokenizer.Tokenizer;
 import edu.wpi.checksims.util.output.OutputAsFilePrinter;
 import edu.wpi.checksims.util.output.OutputPrinter;
 import org.apache.commons.cli.*;
 import org.apache.commons.collections4.list.SetUniqueList;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.impl.SimpleLogger;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Parses Checksims' command-line options
  */
 public final class ChecksimsCommandLine {
     private static Logger logs;
-
-    static String getChecksimsVersion() {
-        InputStream resource = ChecksimsCommandLine.class.getResourceAsStream("version.txt");
-
-        if(resource == null) {
-            return "Error obtaining version number: could not obtain input stream for version.txt";
-        }
-
-        try {
-            return IOUtils.toString(resource);
-        } catch (IOException e) {
-            return "Error obtaining version number: " + e.getMessage();
-        }
-    }
 
     static Logger startLogger(int level) {
         if(level == 1) {
@@ -123,6 +108,8 @@ public final class ChecksimsCommandLine {
 
     // Parse a given set of CLI arguments
     static CommandLine parseOpts(String[] args) throws ParseException {
+        checkNotNull(args);
+
         Parser parser = new GnuParser();
 
         // Parse the CLI args
@@ -150,7 +137,7 @@ public final class ChecksimsCommandLine {
         PreprocessorRegistry.getInstance().getSupportedImplementationNames().stream().forEach((name) -> System.err.print(name + ", "));
         System.err.println();
 
-        System.err.println("\nChecksims Version " + getChecksimsVersion() + "\n\n");
+        System.err.println("\nChecksims Version " + ChecksimsRunner.getChecksimsVersion() + "\n\n");
 
         System.exit(0);
     }
@@ -163,6 +150,8 @@ public final class ChecksimsCommandLine {
      * @throws ChecksimsException Thrown on invalid user input or internal error
      */
     static ChecksimsConfig parseBaseFlags(CommandLine cli) throws ChecksimsException {
+        checkNotNull(cli);
+
         // If we don't have a logger, set one up
         if(logs == null) {
             logs = LoggerFactory.getLogger(ChecksimsCommandLine.class);
@@ -193,13 +182,19 @@ public final class ChecksimsCommandLine {
 
         // Parse number of threads to use
         if(cli.hasOption("j")) {
-            config = config.setNumThreads(Integer.parseInt(cli.getOptionValue("j")));
+            int numThreads = Integer.parseInt(cli.getOptionValue("j"));
+
+            if(numThreads < 1) {
+                throw new ChecksimsException("Thread count must be positive!");
+            }
+
+            config = config.setNumThreads(numThreads);
         }
 
         // Parse preprocessors
         // Ensure no duplicates
         if(cli.hasOption("p")) {
-            List<SubmissionPreprocessor> preprocessors = SetUniqueList.setUniqueList(new LinkedList<>());
+            List<SubmissionPreprocessor> preprocessors = SetUniqueList.setUniqueList(new ArrayList<>());
             String[] splitPreprocessors = cli.getOptionValue("p").split(",");
             for (String s : splitPreprocessors) {
                 SubmissionPreprocessor p = PreprocessorRegistry.getInstance().getImplementationInstance(s);
@@ -211,12 +206,16 @@ public final class ChecksimsCommandLine {
         // Parse output strategies
         // Ensure no duplicates
         if(cli.hasOption("o")) {
-            List<SimilarityMatrixPrinter> outputStrategies = SetUniqueList.setUniqueList(new LinkedList<>());
+            List<SimilarityMatrixPrinter> outputStrategies = SetUniqueList.setUniqueList(new ArrayList<>());
             String[] desiredStrategies = cli.getOptionValue("o").split(",");
 
             for(String s : desiredStrategies) {
                 SimilarityMatrixPrinter p = OutputRegistry.getInstance().getImplementationInstance(s);
                 outputStrategies.add(p);
+            }
+
+            if(outputStrategies.isEmpty()) {
+                throw new ChecksimsException("Error: did not obtain a valid output strategy!");
             }
 
             config = config.setOutputPrinters(outputStrategies);
@@ -240,7 +239,10 @@ public final class ChecksimsCommandLine {
      * @throws ChecksimsException Thrown if no files matching the glob pattern are found in the common code directory
      * @throws IOException Thrown on error creating common code submission
      */
-    static CommonCodeHandler parseCommonCodeSetting(CommandLine cli, String glob, FileTokenizer tokenizer, boolean recursive) throws ChecksimsException, IOException {
+    static CommonCodeHandler parseCommonCodeSetting(CommandLine cli, String glob, Tokenizer tokenizer, boolean recursive) throws ChecksimsException, IOException {
+        checkNotNull(cli);
+        checkNotNull(glob);
+
         // Parse common code detection
         boolean removeCommonCode = cli.hasOption("c");
         if(removeCommonCode) {
@@ -272,9 +274,16 @@ public final class ChecksimsCommandLine {
      * @return Collection of submissions which will be used to run Checksims
      * @throws IOException Thrown on issue reading files or traversing directories to build submissions
      */
-    static List<Submission> getSubmissions(CommandLine cli, String glob, FileTokenizer tokenizer, boolean recursive) throws IOException {
+    static Set<Submission> getSubmissions(CommandLine cli, String glob, Tokenizer tokenizer, boolean recursive) throws IOException, ChecksimsException {
+        checkNotNull(cli);
+        checkNotNull(glob);
+
         String[] unusedArgs = cli.getArgs();
-        List<File> submissionDirs = new LinkedList<>();
+        List<File> submissionDirs = new ArrayList<>();
+
+        if(unusedArgs.length < 2) {
+            throw new ChecksimsException("Expected at least 2 arguments: glob pattern and a submission directory!");
+        }
 
         // The first element in args should be the glob matcher, so start at index 1
         for(int i = 1; i < unusedArgs.length; i++) {
@@ -283,9 +292,13 @@ public final class ChecksimsCommandLine {
         }
 
         // Generate submissions to work on
-        List<Submission> submissions = new LinkedList<>();
+        Set<Submission> submissions = new HashSet<>();
         for(File dir : submissionDirs) {
             submissions.addAll(Submission.submissionListFromDir(dir, glob, tokenizer, recursive));
+        }
+
+        if(submissions.isEmpty()) {
+            throw new ChecksimsException("Did not obtain any submissions to operate on!");
         }
 
         return submissions;
@@ -304,6 +317,8 @@ public final class ChecksimsCommandLine {
      * @throws IOException Thrown on error building a submission from files
      */
     static ChecksimsConfig parseCLI(String[] args) throws ParseException, ChecksimsException, IOException {
+        checkNotNull(args);
+
         CommandLine cli = parseOpts(args);
 
         // Print CLI Help
@@ -313,7 +328,7 @@ public final class ChecksimsCommandLine {
 
         // Print version
         if(cli.hasOption("version")) {
-            System.err.println("Checksims version " + getChecksimsVersion());
+            System.err.println("Checksims version " + ChecksimsRunner.getChecksimsVersion());
             System.exit(0);
         }
 
@@ -348,14 +363,14 @@ public final class ChecksimsCommandLine {
         ChecksimsConfig config = parseBaseFlags(cli);
 
         // Set up a tokenizer to use
-        FileTokenizer tokenizer = FileTokenizer.getTokenizer(config.getTokenization());
+        Tokenizer tokenizer = Tokenizer.getTokenizer(config.getTokenization());
 
         // Next, parse common code settings
         CommonCodeHandler handler = parseCommonCodeSetting(cli, glob, tokenizer, recursive);
         config = config.setCommonCodeHandler(handler);
 
         // Next, build submissions
-        List<Submission> submissions = getSubmissions(cli, glob, tokenizer, recursive);
+        Set<Submission> submissions = getSubmissions(cli, glob, tokenizer, recursive);
         config = config.setSubmissions(submissions);
 
         logs.trace("CLI parsing complete!");

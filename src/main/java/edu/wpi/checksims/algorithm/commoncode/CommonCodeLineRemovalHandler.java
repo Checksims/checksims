@@ -21,16 +21,18 @@
 
 package edu.wpi.checksims.algorithm.commoncode;
 
-import edu.wpi.checksims.ChecksimsException;
 import edu.wpi.checksims.algorithm.AlgorithmRegistry;
 import edu.wpi.checksims.algorithm.SimilarityDetector;
 import edu.wpi.checksims.submission.EmptySubmissionException;
 import edu.wpi.checksims.submission.Submission;
+import edu.wpi.checksims.util.reflection.NoSuchImplementationException;
 import edu.wpi.checksims.util.threading.ParallelAlgorithm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
+import java.util.Set;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Remove common code from input submissions using the LineSimilarityChecker algorithm
@@ -45,6 +47,8 @@ public class CommonCodeLineRemovalHandler implements CommonCodeHandler {
      * @param common Common code to remove
      */
     public CommonCodeLineRemovalHandler(Submission common) throws EmptySubmissionException {
+        checkNotNull(common);
+
         if(common.getContentAsString().isEmpty()) {
             throw new EmptySubmissionException("Common code submission is empty, cowardly refusing to remove!");
         }
@@ -52,7 +56,7 @@ public class CommonCodeLineRemovalHandler implements CommonCodeHandler {
         this.common = common;
         try {
             this.lineCompare = AlgorithmRegistry.getInstance().getImplementationInstance("linecompare");
-        } catch(ChecksimsException e) {
+        } catch(NoSuchImplementationException e) {
             throw new RuntimeException("Could not obtain instance of LineCompare!", e);
         }
     }
@@ -64,16 +68,12 @@ public class CommonCodeLineRemovalHandler implements CommonCodeHandler {
      * @return Input submissions with lines contained in the common code removed
      */
     @Override
-    public Collection<Submission> handleCommonCode(Collection<Submission> input) {
+    public Set<Submission> handleCommonCode(Set<Submission> input) {
+        checkNotNull(input);
+
         Logger logs = LoggerFactory.getLogger(CommonCodeLineRemovalHandler.class);
 
         logs.info("Removing common code from " + input.size() + " submissions");
-
-        // TODO consider making this a checked exception
-        if(common.getContentAsString().isEmpty()) {
-            logs.error("Common code is empty, skipping removal! Possible user error?");
-            return input;
-        }
 
         return ParallelAlgorithm.parallelCommonCodeRemoval(lineCompare, common, input);
     }

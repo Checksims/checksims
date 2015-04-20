@@ -21,6 +21,7 @@
 
 package edu.wpi.checksims.algorithm.preprocessor;
 
+import edu.wpi.checksims.algorithm.InternalAlgorithmError;
 import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.util.reflection.NamedInstantiable;
 
@@ -36,6 +37,7 @@ public interface SubmissionPreprocessor extends NamedInstantiable {
      *
      * @param submission Submission to transform
      * @return Result of transforming the input submission's contents
+     * @throws InternalAlgorithmError Thrown on internal error preprocessing submission
      */
-    public Submission process(Submission submission);
+    public Submission process(Submission submission) throws InternalAlgorithmError;
 }

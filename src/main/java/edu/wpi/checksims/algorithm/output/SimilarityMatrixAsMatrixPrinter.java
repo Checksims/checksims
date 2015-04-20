@@ -23,6 +23,8 @@ package edu.wpi.checksims.algorithm.output;
 
 import java.text.DecimalFormat;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Output a similarity matrix as a matrix
  */
@@ -46,6 +48,8 @@ public class SimilarityMatrixAsMatrixPrinter implements SimilarityMatrixPrinter 
 
     @Override
     public String printMatrix(SimilarityMatrix matrix) {
+        checkNotNull(matrix);
+
         StringBuilder b = new StringBuilder();
 
         float[][] results = matrix.getResults();
