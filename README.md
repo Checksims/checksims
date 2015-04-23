@@ -1,19 +1,30 @@
-checksims
+Checksims
 =========
 
-software similarity detection service
+Checksims provides software similarity detection designed to detect
+academic dishonesty in undegraduate-level programming courses.
 
-A proper readme is coming soon. In the meantime, we have a nice User's Guide in
-the Latex docs (also under construction).
 
-The demo will compute and print a matrix of similarity between the files.
+Building the Code
+-----------------
 
-Known Dependencies for building the docs:
+Checksims is a Maven project, so all standard Maven commands can be used.
+
+If you are unfamiliar with Maven, the following will build the latest version of
+the project:
+
+`mvn compile package`
+
+
+Documentation
+-------------
+
+Documentation can be built with `make docs`
+
+Known Dependencies for building documentation:
  - make
  - texmk
  - pdflatex
  - biblatex
  - biber
-
-Currently no binary distribution is available. We may change that some day.
 
