@@ -52,12 +52,19 @@ public final class ParallelAlgorithm {
      * @param threads Number of threads to be used for execution
      */
     public static void setThreadCount(int threads) {
-        checkArgument(threads > 0);
+        checkArgument(threads > 0, "Attempted to set number of threads to " + threads + ", but must be positive integer!");
 
         threadCount = threads;
         executor.shutdown();
         // Set up the executor again with the new thread count
         executor = new ThreadPoolExecutor(threadCount, threadCount, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<>(), new ThreadPoolExecutor.AbortPolicy());
+    }
+
+    /**
+     * Shut down the executor, preventing any more jobs from being processed
+     */
+    public static void shutdownExecutor() {
+        executor.shutdown();
     }
 
     /**
@@ -130,6 +137,10 @@ public final class ParallelAlgorithm {
             return new ArrayList<>();
         }
 
+        if(executor.isShutdown()) {
+            throw new RuntimeException("Attempted to call executeTasks while executor was shut down!");
+        }
+
         logs.info("Starting work using " + threadCount + " threads.");
 
         // Invoke the executor on all the worker instances
@@ -144,19 +155,26 @@ public final class ParallelAlgorithm {
             // Stop the monitor
             monitor.shutDown();
 
-            // All tasks should now be done, let's build a results list from the futures
-            return results.stream().map((future) -> {
+            // Unpack the futures
+            ArrayList<T> unpackInto = new ArrayList<>();
+
+            for(Future<T> future : results) {
                 try {
-                    return future.get();
-                } catch (InterruptedException|ExecutionException e) {
-                    logs.error("Error unpacking future!");
-                    throw new RuntimeException(e);
+                    unpackInto.add(future.get());
+                } catch(ExecutionException e) {
+                    executor.shutdownNow();
+                    logs.error("Fatal error in executed job!");
+                    throw new RuntimeException("Error while executing worker for future", e.getCause());
                 }
-            }).collect(Collectors.toList());
+            }
+
+            return unpackInto;
         } catch (InterruptedException e) {
+            executor.shutdownNow();
             logs.error("Execution of Checksims was interrupted!");
             throw new RuntimeException(e);
         } catch (RejectedExecutionException e) {
+            executor.shutdownNow();
             logs.error("Could not schedule execution of all comparisons --- possibly too few resources available?");
             throw new RuntimeException(e);
         }

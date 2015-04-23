@@ -69,6 +69,7 @@ public final class OutputToStdoutPrinter implements OutputPrinter {
             throw new RuntimeException(e);
         }
 
+        System.out.println("\n");
         System.out.println(output);
     }
 

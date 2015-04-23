@@ -51,7 +51,7 @@ public enum TokenType {
 
     public static TokenType fromString(String input) throws ChecksimsException {
         checkNotNull(input);
-        checkArgument(!input.isEmpty());
+        checkArgument(!input.isEmpty(), "Empty string is not a valid token type!");
 
         String lowerInput = input.toLowerCase();
 

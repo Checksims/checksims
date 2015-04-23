@@ -40,8 +40,10 @@ public final class ArraySubset {
     public ArraySubset(Coordinate origin, Coordinate max) {
         checkNotNull(origin);
         checkNotNull(max);
-        checkArgument(origin.getX() < max.getX());
-        checkArgument(origin.getY() < max.getY());
+        checkArgument(origin.getX() < max.getX(), "Error creating array subset - maximum X of " + max.getX() +
+                " not greater than origin X of " + origin.getX());
+        checkArgument(origin.getY() < max.getY(), "Error creating array subset - maximum Y of " + max.getY() +
+                " not greater than origin Y of " + origin.getY());
 
         this.origin = origin;
         this.max = max;

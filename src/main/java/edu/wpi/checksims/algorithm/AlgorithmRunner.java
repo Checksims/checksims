@@ -47,7 +47,7 @@ public final class AlgorithmRunner {
      */
     public static Set<AlgorithmResults> runAlgorithm(Set<Pair<Submission, Submission>> submissions, SimilarityDetector algorithm) {
         checkNotNull(submissions);
-        checkArgument(submissions.size() > 0);
+        checkArgument(submissions.size() > 0, "Must provide at least one pair of submissions to run on!");
         checkNotNull(algorithm);
 
         Logger logs = LoggerFactory.getLogger(AlgorithmRunner.class);
