@@ -270,7 +270,31 @@
   organization={Citeseer},
   annote={
     \setlength{\parskip}{1.5ex}
-    TODO}
+    Clough defines text reuse as ``the activity whereby pre-existing written
+    material is reused during the creation of a new text, either intentionally
+    or unintentionally.
+    The paper is mostly focused on detecting the reuse of natural language
+    text. It begins with a lengthy discussion of the forms and causes of
+    plagiarism, touching on its use by dishonest students, ghost writers, and
+    journalists working with stories from news agencies like the Associated
+    Press. It follows with a discussion of prevailing methods of manual
+    plagiarism detection, and ends with a list of four problems that Clough
+    feels are most important:
+    \begin{enumerate}
+    \item Identify suspicious inconsistencies
+    \item Find likely sources of inconsistent text
+    \item Identify collusion between texts
+    \item Identify unauthorized copying from a source text
+    \end{enumerate}
+    Clough divides plagiarism obfuscations into Joy and Luck's \cite{joy1999}
+    two classes --- lexical changes, which do not require serious knowledge of
+    the programming language being copied, and structural changes, which
+    require that the obfuscator be able to write a program that parses.
+
+    Clough proposes a dichotomy of plagiarism detection approaches:
+    attribute-counting systems (comparing aggregate data such as number of
+    tokens), and systems that compare the program structure.
+  }
 }
 @article{cosma06,
   title={Source-code plagiarism: A UK academic perspective},
@@ -321,7 +345,7 @@
   annote={
     \setlength{\parskip}{1.5ex}
     A similarity detection algorithm for plaintexts intended for plagiarism
-    detection. According to conclusion, very accurate, but slow --- perhaps too slow
+    detection. Very accurate, but slow --- perhaps too slow
     for anything but very small batches of files.}
 }
 @inproceedings{johnson94,
@@ -695,8 +719,8 @@
     Describes the Smith-Waterman algorithm for comparing genetic sequences.
     This algorithm produces an optimal global overlay between two strings drawn
     from any alphabet. This original paper is very focused on genetics research
-    but the algorithm itself is a crucial part of Irving's paper on similarity
-    detection.
+    but the algorithm itself is a crucial part of Irving's paper
+    \cite{irving04}on similarity detection.
   }
 }
 @article{whale1990identification,
