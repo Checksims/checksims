@@ -1,8 +1,9 @@
 Checksims
 =========
 
-Checksims provides software similarity detection designed to detect
-academic dishonesty in undegraduate-level programming courses.
+Checksims is a modular, cross-platform framework for software similarity
+detection designed to be used for academic dishonesty detection in undergraduate
+level software development classes.
 
 
 Building the Code
@@ -28,3 +29,8 @@ Known Dependencies for building documentation:
  - biblatex
  - biber
 
+
+Contributing
+------------
+
+TO DO
