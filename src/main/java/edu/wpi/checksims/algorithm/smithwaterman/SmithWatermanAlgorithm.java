@@ -64,8 +64,8 @@ public class SmithWatermanAlgorithm {
     public SmithWatermanAlgorithm(TokenList a, TokenList b) {
         checkNotNull(a);
         checkNotNull(b);
-        checkArgument(!a.isEmpty());
-        checkArgument(!b.isEmpty());
+        checkArgument(!a.isEmpty(), "Cowardly refusing to perform alignment with empty token list A");
+        checkArgument(!b.isEmpty(), "Cowardly refusing to perform alignment with empty token list B");
 
         xList = TokenList.cloneTokenList(a);
         yList = TokenList.cloneTokenList(b);
@@ -182,6 +182,11 @@ public class SmithWatermanAlgorithm {
             // Get match origin
             Coordinate currOrigin = getFirstMatchCoordinate(coords);
 
+            if(currMax.equals(currOrigin)) {
+                throw new InternalAlgorithmError("Maximum and Origin point to same point - " + currMax + " and " +
+                        currOrigin + ". Size of match coordinates set is " + coords.size());
+            }
+
             // Filter postdominated results
             candidates = filterPostdominated(currOrigin, currMax);
 
@@ -215,8 +220,8 @@ public class SmithWatermanAlgorithm {
     Set<ArraySubset> generateSubsets(Coordinate origin, Coordinate max) {
         checkNotNull(origin);
         checkNotNull(max);
-        checkArgument(wholeArray.contains(origin));
-        checkArgument(wholeArray.contains(max));
+        checkArgument(wholeArray.contains(origin), "Origin of requested area out of bounds: " + origin + " not within " + wholeArray);
+        checkArgument(wholeArray.contains(max), "Max of requested area out of bounds: " + max + " not within " + wholeArray);
 
         Set<ArraySubset> toRecompute = new HashSet<>();
 
@@ -269,8 +274,8 @@ public class SmithWatermanAlgorithm {
     void zeroMatch(Coordinate origin, Coordinate max) {
         checkNotNull(origin);
         checkNotNull(max);
-        checkArgument(wholeArray.contains(origin));
-        checkArgument(wholeArray.contains(max));
+        checkArgument(wholeArray.contains(origin), "Origin of requested area out of bounds: " + origin + " not within " + wholeArray);
+        checkArgument(wholeArray.contains(max), "Max of requested area out of bounds: " + max + " not within " + wholeArray);
 
         int xLower = origin.getX();
         int xUpper = max.getX();
@@ -304,8 +309,8 @@ public class SmithWatermanAlgorithm {
     Map<Integer, Set<Coordinate>> filterPostdominated(Coordinate origin, Coordinate max) {
         checkNotNull(origin);
         checkNotNull(max);
-        checkArgument(wholeArray.contains(origin));
-        checkArgument(wholeArray.contains(max));
+        checkArgument(wholeArray.contains(origin), "Origin of requested area out of bounds: " + origin + " not within " + wholeArray);
+        checkArgument(wholeArray.contains(max), "Max of requested area out of bounds: " + max + " not within " + wholeArray);
 
         if(candidates.isEmpty()) {
             return candidates;
@@ -327,8 +332,8 @@ public class SmithWatermanAlgorithm {
                 // Unclear how this candidate got added, but it's no longer valid
                 // This shouldn't happen, so log it as well
                 // TODO investigate why this is happening
-                if(s[coord.getX()][coord.getY()] == 0) {
-                    logs.trace("Potential algorithm error - match with 0 coordinate identified at " + coord.toString());
+                if(s[coord.getX()][coord.getY()] < threshold) {
+                    logs.trace("Potential algorithm error - filtered match lower than threshold at " + coord);
                     continue;
                 }
 
@@ -362,8 +367,8 @@ public class SmithWatermanAlgorithm {
      */
     Map<Integer, Set<Coordinate>> computeArraySubset(ArraySubset toCompute) {
         checkNotNull(toCompute);
-        checkArgument(wholeArray.contains(toCompute.getOrigin()));
-        checkArgument(wholeArray.contains(toCompute.getMax()));
+        checkArgument(wholeArray.contains(toCompute.getOrigin()), "Origin of subset out of bounds: " + toCompute.getOrigin() + " not within " + wholeArray);
+        checkArgument(wholeArray.contains(toCompute.getMax()), "Maximum of subset out of bounds: " + toCompute.getMax() + " not within " + wholeArray);
 
         Map<Integer, Set<Coordinate>> candidates = new HashMap<>();
 
@@ -378,7 +383,7 @@ public class SmithWatermanAlgorithm {
                 int newM;
 
                 // Token Match - increment S table
-                if(xToken.equals(yList.get(y - 1))) {
+                if(xToken.isValid() && xToken.equals(yList.get(y - 1))) {
                     int sPred = s[prevX][prevY];
                     int mPred = m[prevX][prevY];
 
@@ -464,7 +469,7 @@ public class SmithWatermanAlgorithm {
      */
     static Coordinate getFirstMatchCoordinate(Set<Coordinate> coordinates) {
         checkNotNull(coordinates);
-        checkArgument(!coordinates.isEmpty());
+        checkArgument(!coordinates.isEmpty(), "Cannot get first match coordinate as match set is empty!");
 
         if(coordinates.size() == 1) {
             return Iterables.get(coordinates, 0);
@@ -512,8 +517,8 @@ public class SmithWatermanAlgorithm {
      */
     Set<Coordinate> getMatchCoordinates(Coordinate matchCoord) {
         checkNotNull(matchCoord);
-        checkArgument(wholeArray.contains(matchCoord));
-        checkArgument(s[matchCoord.getX()][matchCoord.getY()] != 0);
+        checkArgument(wholeArray.contains(matchCoord), "Requested match coordinate is out of bounds: " + matchCoord + " not within " + wholeArray);
+        checkArgument(s[matchCoord.getX()][matchCoord.getY()] != 0, "Requested match coordinate " + matchCoord + " points to 0 in S array!");
 
         Set<Coordinate> matchCoordinates = new HashSet<>();
 

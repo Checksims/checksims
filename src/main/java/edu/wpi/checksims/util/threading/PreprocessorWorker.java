@@ -21,7 +21,6 @@
 
 package edu.wpi.checksims.util.threading;
 
-import edu.wpi.checksims.algorithm.InternalAlgorithmError;
 import edu.wpi.checksims.algorithm.preprocessor.SubmissionPreprocessor;
 import edu.wpi.checksims.submission.Submission;
 import org.slf4j.Logger;
@@ -56,7 +55,7 @@ public class PreprocessorWorker implements Callable<Submission> {
      * Preprocesses given submission using given preprocessor
      *
      * @return Result of preprocessing
-     * @throws Exception Never thrown, but required by interface
+     * @throws Exception Internal Algorithm Exception may be thrown if an error occurs while preprocessing
      */
     @Override
     public Submission call() throws Exception {
@@ -64,16 +63,7 @@ public class PreprocessorWorker implements Callable<Submission> {
 
         logs.trace("Preprocessing submission " + preprocess.getName() + " with preprocessor " + preprocessor.getName());
 
-        try {
-            return preprocessor.process(preprocess);
-        } catch(InternalAlgorithmError e) {
-            logs.error("Error preprocessing submission " + preprocess.getName());
-            logs.error(e.getMessage());
-            e.printStackTrace();
-            System.exit(-1);
-
-            return null;
-        }
+        return preprocessor.process(preprocess);
     }
 
     @Override

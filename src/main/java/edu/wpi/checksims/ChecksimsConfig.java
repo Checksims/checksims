@@ -140,7 +140,7 @@ public final class ChecksimsConfig {
      */
     public ChecksimsConfig setSubmissions(Set<Submission> newSubmissions) {
         checkNotNull(newSubmissions);
-        checkArgument(!newSubmissions.isEmpty());
+        checkArgument(!newSubmissions.isEmpty(), "Must provide at least one valid submission to run on!");
 
         ChecksimsConfig newConfig = getCopy();
         newConfig.submissions = ImmutableSet.copyOf(newSubmissions);
@@ -167,7 +167,7 @@ public final class ChecksimsConfig {
      */
     public ChecksimsConfig setOutputPrinters(List<SimilarityMatrixPrinter> newOutputPrinters) {
         checkNotNull(newOutputPrinters);
-        checkArgument(!newOutputPrinters.isEmpty());
+        checkArgument(!newOutputPrinters.isEmpty(), "Must provide at least one valid output printer!");
 
         // Ensure all printers are unique
         // Can't use a set, we don't require output strategies to implement equals() or hashCode() in sane ways
@@ -200,7 +200,7 @@ public final class ChecksimsConfig {
      * @return Copy of configuration with new number of threads set
      */
     public ChecksimsConfig setNumThreads(int numThreads) {
-        checkArgument(numThreads > 0);
+        checkArgument(numThreads > 0, "Attempted to set number of threads to " + numThreads + " - must be positive integer!");
 
         ChecksimsConfig newConfig = getCopy();
         newConfig.numThreads = numThreads;

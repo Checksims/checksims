@@ -126,6 +126,9 @@ public class ChecksimsRunner {
         // Apply algorithm to submission
         SimilarityMatrix results = SimilarityMatrix.generate(submissions, config.getAlgorithm());
 
+        // All parallel jobs are done, shut down the parallel executor
+        ParallelAlgorithm.shutdownExecutor();
+
         // Output using all output printers
         OutputPrinter printer = config.getOutputMethod();
         for(SimilarityMatrixPrinter p : config.getOutputPrinters()) {

@@ -87,7 +87,7 @@ public interface Submission {
     public static Set<Submission> submissionListFromDir(File directory, String glob, Tokenizer splitter, boolean recursive) throws IOException {
         checkNotNull(directory);
         checkNotNull(glob);
-        checkArgument(!glob.isEmpty());
+        checkArgument(!glob.isEmpty(), "Glob pattern cannot be empty!");
         checkNotNull(splitter);
 
         Set<Submission> submissions = new HashSet<>();
@@ -131,7 +131,7 @@ public interface Submission {
     public static Submission submissionFromDir(File directory, String glob, Tokenizer splitter, boolean recursive) throws IOException, NoMatchingFilesException {
         checkNotNull(directory);
         checkNotNull(glob);
-        checkArgument(!glob.isEmpty());
+        checkArgument(!glob.isEmpty(), "Glob pattern cannot be empty!");
         checkNotNull(splitter);
 
         if(!directory.exists()) {
@@ -157,7 +157,7 @@ public interface Submission {
     static Set<File> getAllMatchingFiles(File directory, String glob, boolean recursive) throws NoSuchFileException, NotDirectoryException {
         checkNotNull(directory);
         checkNotNull(glob);
-        checkArgument(!glob.isEmpty());
+        checkArgument(!glob.isEmpty(), "Glob pattern cannot be empty");
 
         Set<File> allFiles = new HashSet<>();
         Logger logs = LoggerFactory.getLogger(Submission.class);
@@ -192,7 +192,7 @@ public interface Submission {
     static File[] getMatchingFilesFromDir(File directory, String glob) throws NoSuchFileException, NotDirectoryException {
         checkNotNull(directory);
         checkNotNull(glob);
-        checkArgument(!glob.isEmpty());
+        checkArgument(!glob.isEmpty(), "Glob pattern cannot be empty");
 
         PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:" + glob);
 
@@ -220,7 +220,7 @@ public interface Submission {
      */
     public static Submission submissionFromFiles(String name, Set<File> files, Tokenizer splitter) throws IOException, NoMatchingFilesException {
         checkNotNull(name);
-        checkArgument(!name.isEmpty());
+        checkArgument(!name.isEmpty(), "Submission name cannot be empty");
         checkNotNull(files);
         checkNotNull(splitter);
 
