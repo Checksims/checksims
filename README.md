@@ -5,6 +5,9 @@ Checksims is a modular, cross-platform framework for software similarity
 detection designed to be used for academic dishonesty detection in undergraduate
 level software development classes.
 
+To learn more, it is highly recommended to read the User's Guide and Developer's
+Guide, which can be built with the instructions in the Documentation section.
+
 
 Building the Code
 -----------------
