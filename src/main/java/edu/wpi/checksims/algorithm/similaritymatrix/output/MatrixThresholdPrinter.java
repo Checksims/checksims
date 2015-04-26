@@ -57,10 +57,10 @@ public class MatrixThresholdPrinter implements MatrixPrinter {
     }
 
     /**
-     * Print a Similarity Matrix to string
+     * Print significant results in a similarity matrix
      *
      * @param matrix Matrix to print
-     * @return String representation of matrix
+     * @return Results in matrix over threshold
      * @throws InternalAlgorithmError Thrown on internal error processing matrix
      */
     @Override

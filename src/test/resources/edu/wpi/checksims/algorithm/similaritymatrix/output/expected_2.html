@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Similarity Detection Results</title>
+
+    <style type="text/css">
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        td, th {
+            text-align: center;
+            padding: 15px;
+        }
+
+        td.error {
+            background-color: #99CCFF;
+        }
+
+        td.same {
+            background-color: #003333;
+        }
+
+        td.lvl0 {
+            background-color: #FFFFCC;
+        }
+
+        td.lvl1 {
+            background-color: #FFFF99;
+        }
+
+        td.lvl2 {
+            background-color: #FFFF66;
+        }
+
+        td.lvl3 {
+            background-color: #FFFF33;
+        }
+
+        td.lvl4 {
+            background-color: #FFFF00;
+        }
+
+        td.lvl5 {
+            background-color: #FFCC33;
+        }
+
+        td.lvl6 {
+            background-color: #FFCC00;
+        }
+
+        td.lvl7 {
+            background-color: #FF9900;
+        }
+
+        td.lvl8 {
+            background-color: #FF6600;
+        }
+
+        td.lvl9 {
+            background-color: #FF3300;
+        }
+    </style>
+</head>
+
+<body>
+<table>
+<tr>
+<!-- Empty first cell, as this is an axis -->
+<th></th>
+<!-- Names of each student, one per axis -->
+<th>ABCD</th>
+<th>ABCDE</th>
+</tr>
+<!-- Remainer of the table is formatted as follows: -->
+<!-- One header cell, containing name of a submission -->
+<!-- A number of normal cells, with ID corresponding to intensity, containing a float -->
+
+<tr>
+<th>ABCD</th>
+<td class="same"></td>
+<td class=lvl9>1.00</td>
+</tr>
+<tr>
+<th>ABCDE</th>
+<td class=lvl8>.80</td>
+<td class="same"></td>
+</tr>
+</table>
+</body>
+</html>
