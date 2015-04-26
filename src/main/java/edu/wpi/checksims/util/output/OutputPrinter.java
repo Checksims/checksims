@@ -21,8 +21,8 @@
 
 package edu.wpi.checksims.util.output;
 
-import edu.wpi.checksims.algorithm.output.SimilarityMatrix;
-import edu.wpi.checksims.algorithm.output.SimilarityMatrixPrinter;
+import edu.wpi.checksims.algorithm.similaritymatrix.SimilarityMatrix;
+import edu.wpi.checksims.algorithm.similaritymatrix.output.MatrixPrinter;
 
 /**
  * Print the output of a Checksims computation
@@ -34,5 +34,5 @@ public interface OutputPrinter {
      * @param toPrint Output matrix to print
      * @param printWith Strategy to use when printing
      */
-    void print(SimilarityMatrix toPrint, SimilarityMatrixPrinter printWith);
+    void print(SimilarityMatrix toPrint, MatrixPrinter printWith);
 }
