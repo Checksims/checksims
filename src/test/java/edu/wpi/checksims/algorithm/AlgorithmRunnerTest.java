@@ -62,7 +62,7 @@ public class AlgorithmRunnerTest {
 
             @Override
             public AlgorithmResults detectSimilarity(Submission a, Submission b) {
-                return new AlgorithmResults(a, b, 0, 0, a.getContentAsTokens(), b.getContentAsTokens());
+                return new AlgorithmResults(a, b, a.getContentAsTokens(), b.getContentAsTokens());
             }
 
             @Override

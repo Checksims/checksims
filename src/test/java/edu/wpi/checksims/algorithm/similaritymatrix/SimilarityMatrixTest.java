@@ -72,13 +72,13 @@ public class SimilarityMatrixTest {
         TokenList aInval = TokenList.cloneTokenList(a.getContentAsTokens());
         aInval.get(0).setValid(false);
 
-        aToA = new AlgorithmResults(a, a, 1, 1, aInval, aInval);
+        aToA = new AlgorithmResults(a, a, aInval, aInval);
 
-        aToB = new AlgorithmResults(a, b, 0, 0, a.getContentAsTokens(), b.getContentAsTokens());
-        aToC = new AlgorithmResults(a, c, 0, 0, a.getContentAsTokens(), c.getContentAsTokens());
-        cToA = new AlgorithmResults(c, a, 0, 0, c.getContentAsTokens(), a.getContentAsTokens());
-        bToC = new AlgorithmResults(b, c, 0, 0, b.getContentAsTokens(), c.getContentAsTokens());
-        cToD = new AlgorithmResults(c, d, 0, 0, c.getContentAsTokens(), d.getContentAsTokens());
+        aToB = new AlgorithmResults(a, b, a.getContentAsTokens(), b.getContentAsTokens());
+        aToC = new AlgorithmResults(a, c, a.getContentAsTokens(), c.getContentAsTokens());
+        cToA = new AlgorithmResults(c, a, c.getContentAsTokens(), a.getContentAsTokens());
+        bToC = new AlgorithmResults(b, c, b.getContentAsTokens(), c.getContentAsTokens());
+        cToD = new AlgorithmResults(c, d, c.getContentAsTokens(), d.getContentAsTokens());
 
         MatrixEntry[][] matrix2 = new MatrixEntry[2][2];
         matrix2[0][0] = new MatrixEntry(a, a, 1);

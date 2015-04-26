@@ -14,7 +14,6 @@ Project Administration
 Code Cleanup
 ------------
 - Exception rewrite. Convert many RuntimeExceptions to checked exceptions
-- Clean up AlgorithmResults (still very messy, poorly documented)
 
 Minor Improvements
 ------------------

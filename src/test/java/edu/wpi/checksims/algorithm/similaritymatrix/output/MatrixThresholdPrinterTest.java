@@ -58,7 +58,7 @@ public class MatrixThresholdPrinterTest {
 
         instance = MatrixThresholdPrinter.getInstance();
 
-        AlgorithmResults abcdToXyz = new AlgorithmResults(abcd, xyz, 0, 0, abcd.getContentAsTokens(), xyz.getContentAsTokens());
+        AlgorithmResults abcdToXyz = new AlgorithmResults(abcd, xyz, abcd.getContentAsTokens(), xyz.getContentAsTokens());
 
         noSignificant = SimilarityMatrix.generateMatrix(setFromElements(abcd, xyz), singleton(abcdToXyz));
 
@@ -69,7 +69,7 @@ public class MatrixThresholdPrinterTest {
             abcdeInval.get(i).setValid(false);
         }
 
-        AlgorithmResults abcdToAbcde = new AlgorithmResults(abcd, abcde, 4, 4, abcdInval, abcdeInval);
+        AlgorithmResults abcdToAbcde = new AlgorithmResults(abcd, abcde, abcdInval, abcdeInval);
 
         oneSignificant = SimilarityMatrix.generateMatrix(setFromElements(abcd, abcde), singleton(abcdToAbcde));
 
@@ -78,7 +78,7 @@ public class MatrixThresholdPrinterTest {
         TokenList aInval = TokenList.cloneTokenList(a.getContentAsTokens());
         aInval.get(0).setValid(false);
 
-        AlgorithmResults abcdToA = new AlgorithmResults(abcd, a, 1, 1, abcdInval2, aInval);
+        AlgorithmResults abcdToA = new AlgorithmResults(abcd, a, abcdInval2, aInval);
 
         oneHalfSignificant = SimilarityMatrix.generateMatrix(setFromElements(abcd, a), singleton(abcdToA));
 
@@ -95,16 +95,16 @@ public class MatrixThresholdPrinterTest {
             fghijkInval.get(i).setValid(false);
         }
 
-        AlgorithmResults efghToF = new AlgorithmResults(efgh, fghijk, 3, 3, efghInval1, fghijkInval);
+        AlgorithmResults efghToF = new AlgorithmResults(efgh, fghijk, efghInval1, fghijkInval);
 
         TokenList efghInval2 = TokenList.cloneTokenList(efgh.getContentAsTokens());
         efghInval2.get(0).setValid(false);
         TokenList eInval = TokenList.cloneTokenList(e.getContentAsTokens());
         eInval.get(0).setValid(false);
 
-        AlgorithmResults efghToE = new AlgorithmResults(efgh, e, 1, 1, efghInval2, eInval);
+        AlgorithmResults efghToE = new AlgorithmResults(efgh, e, efghInval2, eInval);
 
-        AlgorithmResults fToE = new AlgorithmResults(fghijk, e, 0, 0, fghijk.getContentAsTokens(), e.getContentAsTokens());
+        AlgorithmResults fToE = new AlgorithmResults(fghijk, e, fghijk.getContentAsTokens(), e.getContentAsTokens());
 
         twoSignificant = SimilarityMatrix.generateMatrix(setFromElements(efgh, fghijk), singleton(e), setFromElements(efghToF, efghToE, fToE));
     }

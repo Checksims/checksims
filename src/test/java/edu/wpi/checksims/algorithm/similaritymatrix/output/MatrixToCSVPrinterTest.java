@@ -61,7 +61,7 @@ public class MatrixToCSVPrinterTest {
             abcdefghInval.get(i).setValid(false);
         }
 
-        AlgorithmResults abcdToAbcdefgh = new AlgorithmResults(abcd, abcdefgh, 4, 4, abcdInval, abcdefghInval);
+        AlgorithmResults abcdToAbcdefgh = new AlgorithmResults(abcd, abcdefgh, abcdInval, abcdefghInval);
 
         twoByTwo = SimilarityMatrix.generateMatrix(setFromElements(abcd, abcdefgh), singleton(abcdToAbcdefgh));
 
@@ -78,9 +78,9 @@ public class MatrixToCSVPrinterTest {
             xyzInval.get(i).setValid(false);
         }
 
-        AlgorithmResults abxyToXyz = new AlgorithmResults(abxy, xyz, 2, 2, abxyInval, xyzInval);
-        AlgorithmResults abxyToWww = new AlgorithmResults(abxy, www, 0, 0, abxy.getContentAsTokens(), www.getContentAsTokens());
-        AlgorithmResults xyzToWww = new AlgorithmResults(xyz, www, 0, 0, xyz.getContentAsTokens(), www.getContentAsTokens());
+        AlgorithmResults abxyToXyz = new AlgorithmResults(abxy, xyz, abxyInval, xyzInval);
+        AlgorithmResults abxyToWww = new AlgorithmResults(abxy, www, abxy.getContentAsTokens(), www.getContentAsTokens());
+        AlgorithmResults xyzToWww = new AlgorithmResults(xyz, www, xyz.getContentAsTokens(), www.getContentAsTokens());
 
         twoByThree = SimilarityMatrix.generateMatrix(setFromElements(abxy, xyz), setFromElements(www), setFromElements(abxyToXyz, abxyToWww, xyzToWww));
     }
