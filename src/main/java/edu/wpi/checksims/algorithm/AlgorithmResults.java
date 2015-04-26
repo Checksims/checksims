@@ -29,6 +29,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Results for a pairwise comparison algorithm
+ *
+ * TODO cleanup of this class
  */
 public final class AlgorithmResults {
     public final Submission a;
@@ -61,8 +63,6 @@ public final class AlgorithmResults {
         this.finalListA = TokenList.immutableCopy(finalListA);
         this.finalListB = TokenList.immutableCopy(finalListB);
     }
-
-    // TODO may be desirable to ensure that identicalTokensA and identicalTokensB are never over the number of tokens in the submission?
 
     public float percentMatchedA() {
         if(a.getNumTokens() == 0) {

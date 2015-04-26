@@ -46,7 +46,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * Also contains factory methods for submissions
  */
-public interface Submission {
+public interface Submission extends Comparable<Submission> {
     /**
      * @return List of tokens forming the body of this submission
      */
@@ -84,7 +84,7 @@ public interface Submission {
      * @return Set of submissions including all unique nonempty submissions in the given directory
      * @throws java.io.IOException Thrown on error interacting with file or filesystem
      */
-    public static Set<Submission> submissionListFromDir(File directory, String glob, Tokenizer splitter, boolean recursive) throws IOException {
+    static Set<Submission> submissionListFromDir(File directory, String glob, Tokenizer splitter, boolean recursive) throws IOException {
         checkNotNull(directory);
         checkNotNull(glob);
         checkArgument(!glob.isEmpty(), "Glob pattern cannot be empty!");
@@ -128,7 +128,7 @@ public interface Submission {
      * @return Single submission from all files matching the glob in given directory
      * @throws IOException Thrown on error interacting with file
      */
-    public static Submission submissionFromDir(File directory, String glob, Tokenizer splitter, boolean recursive) throws IOException, NoMatchingFilesException {
+    static Submission submissionFromDir(File directory, String glob, Tokenizer splitter, boolean recursive) throws IOException, NoMatchingFilesException {
         checkNotNull(directory);
         checkNotNull(glob);
         checkArgument(!glob.isEmpty(), "Glob pattern cannot be empty!");
@@ -218,7 +218,7 @@ public interface Submission {
      * @throws IOException Thrown on error reading from file
      * @throws NoMatchingFilesException Thrown if no files are given
      */
-    public static Submission submissionFromFiles(String name, Set<File> files, Tokenizer splitter) throws IOException, NoMatchingFilesException {
+    static Submission submissionFromFiles(String name, Set<File> files, Tokenizer splitter) throws IOException, NoMatchingFilesException {
         checkNotNull(name);
         checkArgument(!name.isEmpty(), "Submission name cannot be empty");
         checkNotNull(files);

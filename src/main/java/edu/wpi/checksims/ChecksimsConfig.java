@@ -115,7 +115,7 @@ public final class ChecksimsConfig {
     }
 
     /**
-     * @param newPreprocessors New list of preprocessors to apply
+     * @param newPreprocessors New list of preprocessors to apply. Can be empty.
      * @return Copy of configuration with new preprocessor list
      */
     public ChecksimsConfig setPreprocessors(List<SubmissionPreprocessor> newPreprocessors) {
@@ -135,7 +135,7 @@ public final class ChecksimsConfig {
     }
 
     /**
-     * @param newSubmissions New list of submissions to work on
+     * @param newSubmissions New list of submissions to work on. Must contain at least 1 submission.
      * @return Copy of configuration with new submissions list
      */
     public ChecksimsConfig setSubmissions(Set<Submission> newSubmissions) {
@@ -162,7 +162,7 @@ public final class ChecksimsConfig {
     }
 
     /**
-     * @param newOutputPrinters List of output strategies to use
+     * @param newOutputPrinters List of output strategies to use. Cannot be empty.
      * @return Copy of configuration with new list of output strategies
      */
     public ChecksimsConfig setOutputPrinters(List<SimilarityMatrixPrinter> newOutputPrinters) {
@@ -196,7 +196,7 @@ public final class ChecksimsConfig {
     }
 
     /**
-     * @param numThreads Number of threads to be used for parallel operations
+     * @param numThreads Number of threads to be used for parallel operations. Must be greater than 0.
      * @return Copy of configuration with new number of threads set
      */
     public ChecksimsConfig setNumThreads(int numThreads) {
