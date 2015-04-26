@@ -39,7 +39,7 @@ public final class ConcreteSubmission implements Submission {
 
     public ConcreteSubmission(String name, String content, TokenList tokens) {
         checkNotNull(name);
-        checkArgument(!name.isEmpty());
+        checkArgument(!name.isEmpty(), "Submission name cannot be empty");
         checkNotNull(content);
         checkNotNull(tokens);
 

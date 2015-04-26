@@ -25,6 +25,8 @@ import edu.wpi.checksims.algorithm.InternalAlgorithmError;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrix;
 import edu.wpi.checksims.algorithm.output.SimilarityMatrixPrinter;
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,6 +39,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class OutputAsFilePrinter implements OutputPrinter {
     private final File baseName;
+
+    private static Logger logs = LoggerFactory.getLogger(OutputAsFilePrinter.class);
 
     /**
      * @param baseName Base name of the file to output to. The name of the similarity matrix printer used will be appended to form final filename.
@@ -64,6 +68,8 @@ public class OutputAsFilePrinter implements OutputPrinter {
         checkNotNull(printWith);
 
         File outputTo = new File(baseName.getAbsolutePath() + "." + printWith.getName());
+
+        logs.info("Writing " + printWith.getName() + " output to file " + outputTo.getName());
 
         try {
             FileUtils.writeStringToFile(outputTo, printWith.printMatrix(toPrint), StandardCharsets.UTF_8);

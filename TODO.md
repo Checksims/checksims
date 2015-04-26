@@ -1,11 +1,15 @@
 Checksims To-Do
 ===============
 
-Unit Tests:
+Unit Tests
 - Additional CLI parsing tests
 - Integration tests
 - Output strategy tests
 - Similarity Matrix tests
+
+Project Administration
+- Clean up README
+- Generate User's Guide in usable web format - Markdown or HTML
 
 Code Cleanup
 - Exception rewrite. Convert many RuntimeExceptions to checked exceptions

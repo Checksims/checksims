@@ -71,7 +71,7 @@ public class SimilarityMatrix {
      */
     public static SimilarityMatrix generate(Set<Submission> submissions, SimilarityDetector algorithm) {
         checkNotNull(submissions);
-        checkArgument(submissions.size() >= 2);
+        checkArgument(submissions.size() >= 2, "Must provide at least two submissions to run on");
         checkNotNull(algorithm);
 
         Logger logs = LoggerFactory.getLogger(SimilarityMatrix.class);

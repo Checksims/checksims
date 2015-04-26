@@ -38,15 +38,21 @@ public final class AlgorithmResults {
     public final TokenList finalListA;
     public final TokenList finalListB;
 
+    // TODO consider refactoring to remove identicalTokensA and identicalTokensB - just compute at runtime?
     public AlgorithmResults(Submission a, Submission b, int identicalTokensA, int identicalTokensB, TokenList finalListA, TokenList finalListB) {
         checkNotNull(a);
         checkNotNull(b);
         checkNotNull(finalListA);
         checkNotNull(finalListB);
 
+        int invalACount = (int)finalListA.stream().filter((token) -> !token.isValid()).count();
+        int invalBCount = (int)finalListB.stream().filter((token) -> !token.isValid()).count();
+
         // Verify that identicalTokens matches the number of invalid tokens in the list
-        checkArgument(finalListA.stream().filter((token) -> !token.isValid()).count() == identicalTokensA);
-        checkArgument(finalListB.stream().filter((token) -> !token.isValid()).count() == identicalTokensB);
+        checkArgument(invalACount == identicalTokensA, "Insane AlgorithmResults detected - " + invalACount +
+                " invalid tokens found, but " + identicalTokensA + " reported for submission " + a.getName());
+        checkArgument(invalBCount == identicalTokensB, "Insane AlgorithmResults detected - " + invalBCount +
+                " invalid tokens found, but " + identicalTokensB + " reported for submission " + b.getName());
 
         this.a = a;
         this.b = b;

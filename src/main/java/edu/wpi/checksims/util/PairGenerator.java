@@ -43,7 +43,7 @@ public final class PairGenerator {
      */
     public static Set<Pair<Submission, Submission>> generatePairs(Set<Submission> submissions) {
         checkNotNull(submissions);
-        checkArgument(submissions.size() >= 2);
+        checkArgument(submissions.size() >= 2, "Cannot generate pairs with less than 2 submissions!");
 
         Set<Pair<Submission, Submission>> pairs = new HashSet<>();
 
