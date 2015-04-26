@@ -39,6 +39,8 @@ public final class AlgorithmResults {
     public final int identicalTokensB;
     public final TokenList finalListA;
     public final TokenList finalListB;
+    private final double percentMatchedA;
+    private final double percentMatchedB;
 
     // TODO consider refactoring to remove identicalTokensA and identicalTokensB - just compute at runtime?
     public AlgorithmResults(Submission a, Submission b, int identicalTokensA, int identicalTokensB, TokenList finalListA, TokenList finalListB) {
@@ -62,22 +64,26 @@ public final class AlgorithmResults {
         this.identicalTokensB = identicalTokensB;
         this.finalListA = TokenList.immutableCopy(finalListA);
         this.finalListB = TokenList.immutableCopy(finalListB);
-    }
 
-    public float percentMatchedA() {
         if(a.getNumTokens() == 0) {
-            return 0.0f;
+            percentMatchedA = 0.0;
+        } else {
+            percentMatchedA = ((double)identicalTokensA) / (double)a.getNumTokens();
         }
 
-        return ((float)identicalTokensA) / a.getNumTokens();
+        if(b.getNumTokens() == 0) {
+            percentMatchedB = 0.0;
+        } else {
+            percentMatchedB = ((double)identicalTokensB) / (double)b.getNumTokens();
+        }
     }
 
-    public float percentMatchedB() {
-        if(a.getNumTokens() == 0) {
-            return 0.0f;
-        }
+    public double percentMatchedA() {
+        return percentMatchedA;
+    }
 
-        return ((float)identicalTokensB) / b.getNumTokens();
+    public double percentMatchedB() {
+        return percentMatchedB;
     }
 
     @Override

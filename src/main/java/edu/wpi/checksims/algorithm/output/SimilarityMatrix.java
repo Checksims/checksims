@@ -103,8 +103,8 @@ public class SimilarityMatrix {
                 throw new RuntimeException("Could not find index of submission " + result.b.getName());
             }
 
-            results[indexFirst][indexSecond] = result.percentMatchedA();
-            results[indexSecond][indexFirst] = result.percentMatchedB();
+            results[indexFirst][indexSecond] = (float)result.percentMatchedA();
+            results[indexSecond][indexFirst] = (float)result.percentMatchedB();
         });
 
         logs.info("Done performing similarity detection");

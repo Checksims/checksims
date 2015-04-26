@@ -99,14 +99,14 @@ public class MatrixToCSVPrinterTest {
 
     @Test
     public void TestPrinterOnTwoByTwo() throws Exception {
-        String expected = "NULL,ABCD,ABCDEFGH\nABCD,1.00,1.00\nABCDEFGH,0.50,1.00\n";
+        String expected = "NULL,\"ABCD\",\"ABCDEFGH\"\n\"ABCD\",1.00,1.00\n\"ABCDEFGH\",0.50,1.00\n";
 
         assertEquals(expected, instance.printMatrix(twoByTwo));
     }
 
     @Test
     public void TestPrinterOnThreeByTwo() throws Exception {
-        String expected = "NULL,ABXY,XYZ,WWW\nABXY,1.00,0.50,0.00\nXYZ,0.67,1.00,0.00\n";
+        String expected = "NULL,\"ABXY\",\"XYZ\",\"WWW\"\n\"ABXY\",1.00,0.50,0.00\n\"XYZ\",0.67,1.00,0.00\n";
 
         assertEquals(expected, instance.printMatrix(twoByThree));
     }

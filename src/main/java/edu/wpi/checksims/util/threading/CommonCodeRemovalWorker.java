@@ -91,7 +91,7 @@ public class CommonCodeRemovalWorker implements Callable<Submission> {
         // The results contains two TokenLists, representing the final state of the submissions after similarity detection
         // All common code should be marked invalid for the input submission's final list
         TokenList listWithCommonInvalid;
-        float percentMatched;
+        double percentMatched;
         int identTokens;
         if(new ValidityIgnoringSubmission(results.a).equals(computeIn)) {
             listWithCommonInvalid = results.finalListA;

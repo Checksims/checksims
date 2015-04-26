@@ -67,7 +67,9 @@ public class MatrixToCSVPrinter implements MatrixPrinter {
         // First row: NULL, then all the Y submissions, comma-separated
         builder.append("NULL,");
         for(int y = 0; y < arrayBounds.getRight(); y++) {
+            builder.append("\"");
             builder.append(matrix.getYSubmission(y).getName());
+            builder.append("\"");
             if(y != (arrayBounds.getRight() - 1)) {
                 builder.append(",");
             } else {
@@ -78,8 +80,9 @@ public class MatrixToCSVPrinter implements MatrixPrinter {
         // Remaining rows: X label, then all Y results in order
         for(int x = 0; x < arrayBounds.getLeft(); x++) {
             // First, append name of the X submission
+            builder.append("\"");
             builder.append(matrix.getXSubmission(x).getName());
-            builder.append(",");
+            builder.append("\",");
 
             // Next, append all the matrix values, formatted as given
             for(int y = 0; y < arrayBounds.getRight(); y++) {
