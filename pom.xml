@@ -127,6 +127,33 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>2.15</version>
+                <executions>
+                    <execution>
+                        <id>checkstyle</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <failOnViolation>true</failOnViolation>
+                            <checkstyleRules>
+                                <module name="checker">
+                                    <module name="TreeWalker">
+                                        <!-- Enforce 120 max line length, as opposed to 80 -->
+                                        <module name="LineLength">
+                                            <property name="max" value="120"/>
+                                        </module>
+                                    </module>
+                                </module>
+                            </checkstyleRules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
         <resources>
             <resource>
