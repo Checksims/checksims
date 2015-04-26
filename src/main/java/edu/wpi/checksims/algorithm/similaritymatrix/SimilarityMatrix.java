@@ -267,19 +267,21 @@ public final class SimilarityMatrix {
         checkArgument(!inputSubmissions.isEmpty(), "Must provide at least 1 submission to build matrix from");
         checkArgument(!results.isEmpty(), "Must provide at least 1 AlgorithmResults to build matrix from!");
 
-        // TODO consider ensuring that no submissions are shared between archiveSubmissions and inputSubmissions
+        Set<Submission> setOfBoth = new HashSet<>();
+        setOfBoth.addAll(inputSubmissions);
+        setOfBoth.addAll(archiveSubmissions);
+
+        checkArgument(setOfBoth.size() == (archiveSubmissions.size() + inputSubmissions.size()), "Some submissions were found in both archive and input submissions!");
 
         // If there are no archive submissions, just generate using the other function
         if(archiveSubmissions.isEmpty()) {
             return generateMatrix(inputSubmissions, results);
         }
 
-        Set<Submission> ySubmissionsUnsorted = new HashSet<>();
-        ySubmissionsUnsorted.addAll(inputSubmissions);
-        ySubmissionsUnsorted.addAll(archiveSubmissions);
-
         List<Submission> xSubmissions = Ordering.natural().immutableSortedCopy(inputSubmissions);
-        List<Submission> ySubmissions = Ordering.natural().immutableSortedCopy(ySubmissionsUnsorted);
+        List<Submission> ySubmissions = new ArrayList<>();
+        ySubmissions.addAll(Ordering.natural().immutableSortedCopy(inputSubmissions));
+        ySubmissions.addAll(Ordering.natural().immutableSortedCopy(archiveSubmissions));
 
         MatrixEntry[][] matrix = new MatrixEntry[xSubmissions.size()][ySubmissions.size()];
 

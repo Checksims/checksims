@@ -42,6 +42,7 @@ import static org.junit.Assert.assertEquals;
 public class MatrixToCSVPrinterTest {
     private MatrixToCSVPrinter instance;
     private SimilarityMatrix twoByTwo;
+    private SimilarityMatrix twoByThree;
 
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
@@ -63,6 +64,25 @@ public class MatrixToCSVPrinterTest {
         AlgorithmResults abcdToAbcdefgh = new AlgorithmResults(abcd, abcdefgh, 4, 4, abcdInval, abcdefghInval);
 
         twoByTwo = SimilarityMatrix.generateMatrix(setFromElements(abcd, abcdefgh), singleton(abcdToAbcdefgh));
+
+        Submission abxy = charSubmissionFromString("ABXY", "ABXY");
+        Submission xyz = charSubmissionFromString("XYZ", "XYZ");
+        Submission www = charSubmissionFromString("WWW", "WWW");
+
+        TokenList abxyInval = TokenList.cloneTokenList(abxy.getContentAsTokens());
+        for(int i = 2; i < 4; i++) {
+            abxyInval.get(i).setValid(false);
+        }
+        TokenList xyzInval = TokenList.cloneTokenList(xyz.getContentAsTokens());
+        for(int i = 0; i < 2; i++) {
+            xyzInval.get(i).setValid(false);
+        }
+
+        AlgorithmResults abxyToXyz = new AlgorithmResults(abxy, xyz, 2, 2, abxyInval, xyzInval);
+        AlgorithmResults abxyToWww = new AlgorithmResults(abxy, www, 0, 0, abxy.getContentAsTokens(), www.getContentAsTokens());
+        AlgorithmResults xyzToWww = new AlgorithmResults(xyz, www, 0, 0, xyz.getContentAsTokens(), www.getContentAsTokens());
+
+        twoByThree = SimilarityMatrix.generateMatrix(setFromElements(abxy, xyz), setFromElements(www), setFromElements(abxyToXyz, abxyToWww, xyzToWww));
     }
 
     @Test
@@ -82,5 +102,12 @@ public class MatrixToCSVPrinterTest {
         String expected = "NULL,ABCD,ABCDEFGH\nABCD,1.00,1.00\nABCDEFGH,0.50,1.00\n";
 
         assertEquals(expected, instance.printMatrix(twoByTwo));
+    }
+
+    @Test
+    public void TestPrinterOnThreeByTwo() throws Exception {
+        String expected = "NULL,ABXY,XYZ,WWW\nABXY,1.00,0.50,0.00\nXYZ,0.67,1.00,0.00\n";
+
+        assertEquals(expected, instance.printMatrix(twoByThree));
     }
 }
