@@ -31,53 +31,67 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Results for a pairwise comparison algorithm
  */
 public final class AlgorithmResults {
+    // TODO consider making these private and adding getters
     public final Submission a;
     public final Submission b;
     public final int identicalTokensA;
     public final int identicalTokensB;
     public final TokenList finalListA;
     public final TokenList finalListB;
+    private final double percentMatchedA;
+    private final double percentMatchedB;
 
-    // TODO consider refactoring to remove identicalTokensA and identicalTokensB - just compute at runtime?
-    public AlgorithmResults(Submission a, Submission b, int identicalTokensA, int identicalTokensB, TokenList finalListA, TokenList finalListB) {
+    /**
+     * Construct results for a pairwise similarity detection algorith,
+     *
+     * @param a First submission compared
+     * @param b Second submission compared
+     * @param finalListA Token list from submission A, with matched tokens set invalid
+     * @param finalListB Token list from submission B, with matched tokens set invalid
+     */
+    public AlgorithmResults(Submission a, Submission b, TokenList finalListA, TokenList finalListB) {
         checkNotNull(a);
         checkNotNull(b);
         checkNotNull(finalListA);
         checkNotNull(finalListB);
-
-        int invalACount = (int)finalListA.stream().filter((token) -> !token.isValid()).count();
-        int invalBCount = (int)finalListB.stream().filter((token) -> !token.isValid()).count();
-
-        // Verify that identicalTokens matches the number of invalid tokens in the list
-        checkArgument(invalACount == identicalTokensA, "Insane AlgorithmResults detected - " + invalACount +
-                " invalid tokens found, but " + identicalTokensA + " reported for submission " + a.getName());
-        checkArgument(invalBCount == identicalTokensB, "Insane AlgorithmResults detected - " + invalBCount +
-                " invalid tokens found, but " + identicalTokensB + " reported for submission " + b.getName());
+        checkArgument(a.getNumTokens() == finalListA.size(), "Token size mismatch when creating algorithm results for submission \""
+                + a.getName() + "\" --- expected " + a.getNumTokens() + ", got " + finalListA.size());
+        checkArgument(b.getNumTokens() == finalListB.size(), "Token size mismatch when creating algorithm results for submission \""
+                + b.getName() + "\" --- expected " + b.getNumTokens() + ", got " + finalListB.size());
 
         this.a = a;
         this.b = b;
-        this.identicalTokensA = identicalTokensA;
-        this.identicalTokensB = identicalTokensB;
         this.finalListA = TokenList.immutableCopy(finalListA);
         this.finalListB = TokenList.immutableCopy(finalListB);
-    }
 
-    // TODO may be desirable to ensure that identicalTokensA and identicalTokensB are never over the number of tokens in the submission?
+        this.identicalTokensA = (int)finalListA.stream().filter((token) -> !token.isValid()).count();
+        this.identicalTokensB = (int)finalListB.stream().filter((token) -> !token.isValid()).count();
 
-    public float percentMatchedA() {
         if(a.getNumTokens() == 0) {
-            return 0.0f;
+            percentMatchedA = 0.0;
+        } else {
+            percentMatchedA = ((double)identicalTokensA) / (double)a.getNumTokens();
         }
 
-        return ((float)identicalTokensA) / a.getNumTokens();
+        if(b.getNumTokens() == 0) {
+            percentMatchedB = 0.0;
+        } else {
+            percentMatchedB = ((double)identicalTokensB) / (double)b.getNumTokens();
+        }
     }
 
-    public float percentMatchedB() {
-        if(a.getNumTokens() == 0) {
-            return 0.0f;
-        }
+    /**
+     * @return Percentage similarity of submission A to submission B. Represented as a fraction - from 0.0 to 1.0 inclusive
+     */
+    public double percentMatchedA() {
+        return percentMatchedA;
+    }
 
-        return ((float)identicalTokensB) / b.getNumTokens();
+    /**
+     * @return Percentage similarity of submission B to submission A. Represented as a fraction - from 0.0 to 1.0 inclusive
+     */
+    public double percentMatchedB() {
+        return percentMatchedB;
     }
 
     @Override

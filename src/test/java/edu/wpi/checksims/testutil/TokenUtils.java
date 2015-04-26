@@ -26,6 +26,8 @@ import edu.wpi.checksims.token.Token;
 import edu.wpi.checksims.token.TokenList;
 import edu.wpi.checksims.token.TokenType;
 
+import java.util.Collections;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -41,9 +43,7 @@ public class TokenUtils {
     public static TokenList makeTokenListCharacter(Token... token) {
         TokenList tokens = new TokenList(TokenType.CHARACTER);
 
-        for(Token t : token) {
-            tokens.add(t);
-        }
+        Collections.addAll(tokens, token);
 
         return tokens;
     }
@@ -69,9 +69,7 @@ public class TokenUtils {
     public static TokenList makeTokenListWhitespace(Token... token) {
         TokenList tokens = new TokenList(TokenType.WHITESPACE);
 
-        for(Token t : token) {
-            tokens.add(t);
-        }
+        Collections.addAll(tokens, token);
 
         return tokens;
     }
@@ -97,9 +95,7 @@ public class TokenUtils {
     public static TokenList makeTokenListLine(Token... token) {
         TokenList tokens = new TokenList(TokenType.LINE);
 
-        for(Token t : token) {
-            tokens.add(t);
-        }
+        Collections.addAll(tokens, token);
 
         return tokens;
     }

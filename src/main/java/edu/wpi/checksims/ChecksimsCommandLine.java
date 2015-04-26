@@ -25,10 +25,10 @@ import edu.wpi.checksims.algorithm.AlgorithmRegistry;
 import edu.wpi.checksims.algorithm.commoncode.CommonCodeHandler;
 import edu.wpi.checksims.algorithm.commoncode.CommonCodeLineRemovalHandler;
 import edu.wpi.checksims.algorithm.commoncode.CommonCodePassthroughHandler;
-import edu.wpi.checksims.algorithm.output.OutputRegistry;
-import edu.wpi.checksims.algorithm.output.SimilarityMatrixPrinter;
 import edu.wpi.checksims.algorithm.preprocessor.PreprocessorRegistry;
 import edu.wpi.checksims.algorithm.preprocessor.SubmissionPreprocessor;
+import edu.wpi.checksims.algorithm.similaritymatrix.output.MatrixPrinter;
+import edu.wpi.checksims.algorithm.similaritymatrix.output.MatrixPrinterRegistry;
 import edu.wpi.checksims.submission.EmptySubmissionException;
 import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.token.TokenType;
@@ -130,8 +130,8 @@ public final class ChecksimsCommandLine {
         System.err.println("\nDefault algorithm is " + AlgorithmRegistry.getInstance().getDefaultImplementationName());
 
         System.err.println("\nSupported Output Strategies:");
-        OutputRegistry.getInstance().getSupportedImplementationNames().stream().forEach((name) -> System.err.print(name + ", "));
-        System.err.println("\nDefault strategy is " + OutputRegistry.getInstance().getDefaultImplementationName());
+        MatrixPrinterRegistry.getInstance().getSupportedImplementationNames().stream().forEach((name) -> System.err.print(name + ", "));
+        System.err.println("\nDefault strategy is " + MatrixPrinterRegistry.getInstance().getDefaultImplementationName());
 
         System.err.println("\nAvailable Preprocessors:");
         PreprocessorRegistry.getInstance().getSupportedImplementationNames().stream().forEach((name) -> System.err.print(name + ", "));
@@ -206,19 +206,20 @@ public final class ChecksimsCommandLine {
         // Parse output strategies
         // Ensure no duplicates
         if(cli.hasOption("o")) {
-            List<SimilarityMatrixPrinter> outputStrategies = SetUniqueList.setUniqueList(new ArrayList<>());
             String[] desiredStrategies = cli.getOptionValue("o").split(",");
+            Set<String> deduplicatedStrategies = new HashSet<>(Arrays.asList(desiredStrategies));
 
-            for(String s : desiredStrategies) {
-                SimilarityMatrixPrinter p = OutputRegistry.getInstance().getImplementationInstance(s);
-                outputStrategies.add(p);
-            }
-
-            if(outputStrategies.isEmpty()) {
+            if(deduplicatedStrategies.isEmpty()) {
                 throw new ChecksimsException("Error: did not obtain a valid output strategy!");
             }
 
-            config = config.setOutputPrinters(outputStrategies);
+            // Convert to MatrixPrinters
+            List<MatrixPrinter> printers = new ArrayList<>();
+            for(String name : deduplicatedStrategies) {
+                printers.add(MatrixPrinterRegistry.getInstance().getImplementationInstance(name));
+            }
+
+            config = config.setOutputPrinters(printers);
         }
 
         return config;

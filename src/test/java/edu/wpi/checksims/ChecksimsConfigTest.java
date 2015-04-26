@@ -21,8 +21,8 @@
 
 package edu.wpi.checksims;
 
-import edu.wpi.checksims.algorithm.output.SimilarityMatrixAsCSVPrinter;
 import edu.wpi.checksims.algorithm.preprocessor.LowercasePreprocessor;
+import edu.wpi.checksims.algorithm.similaritymatrix.output.MatrixToCSVPrinter;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -117,7 +117,7 @@ public class ChecksimsConfigTest {
         expectedEx.expect(IllegalArgumentException.class);
 
         ChecksimsConfig config = new ChecksimsConfig();
-        config.setOutputPrinters(Arrays.asList(SimilarityMatrixAsCSVPrinter.getInstance(), SimilarityMatrixAsCSVPrinter.getInstance()));
+        config.setOutputPrinters(Arrays.asList(MatrixToCSVPrinter.getInstance(), MatrixToCSVPrinter.getInstance()));
     }
 
     @Test

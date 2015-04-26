@@ -19,21 +19,22 @@
  * Copyright (c) 2014-2015 Matthew Heon and Dolan Murvihill
  */
 
-package edu.wpi.checksims.algorithm.output;
+package edu.wpi.checksims.algorithm.similaritymatrix.output;
 
 import edu.wpi.checksims.algorithm.InternalAlgorithmError;
+import edu.wpi.checksims.algorithm.similaritymatrix.SimilarityMatrix;
 import edu.wpi.checksims.util.reflection.NamedInstantiable;
 
 /**
- * Interface for various approaches for outputting a similarity matrix as a string
+ * Output a Similarity Matrix in human-readable or machine-readable format
  */
-public interface SimilarityMatrixPrinter extends NamedInstantiable {
+public interface MatrixPrinter extends NamedInstantiable {
     /**
-     * Print the given SimilarityMatrix in a defined format
+     * Print a Similarity Matrix to string
      *
      * @param matrix Matrix to print
-     * @return Some implementation-defined output representing the matrix
+     * @return String representation of matrix
+     * @throws InternalAlgorithmError Thrown on internal error processing matrix
      */
-    public String printMatrix(SimilarityMatrix matrix) throws InternalAlgorithmError;
+    String printMatrix(SimilarityMatrix matrix) throws InternalAlgorithmError;
 }
-

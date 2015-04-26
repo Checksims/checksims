@@ -91,12 +91,12 @@ public class SmithWaterman implements SimilarityDetector {
 
         // Handle a 0-token submission (no similarity)
         if(a.getNumTokens() == 0 || b.getNumTokens() == 0) {
-            return new AlgorithmResults(a, b, 0, 0, a.getContentAsTokens(), b.getContentAsTokens());
+            return new AlgorithmResults(a, b, a.getContentAsTokens(), b.getContentAsTokens());
         } else if(a.equals(b)) {
             // Handle identical submissions
             TokenList aInval = TokenList.cloneTokenList(a.getContentAsTokens());
             aInval.stream().forEach((token) -> token.setValid(false));
-            return new AlgorithmResults(a, b, a.getNumTokens(), b.getNumTokens(), aInval, aInval);
+            return new AlgorithmResults(a, b, aInval, aInval);
         }
 
         // Alright, easy cases taken care of. Generate an instance to perform the actual algorithm
@@ -104,11 +104,7 @@ public class SmithWaterman implements SimilarityDetector {
 
         Pair<TokenList, TokenList> endLists = algorithm.computeSmithWatermanAlignment();
 
-        // Generate matched tokens for each - filter out valid tokens, and count the invalid tokens
-        int matchedTokensFirst = (int)endLists.getLeft().stream().filter((token) -> !token.isValid()).count();
-        int matchedTokensSecond = (int)endLists.getRight().stream().filter((token) -> !token.isValid()).count();
-
-        return new AlgorithmResults(a, b, matchedTokensFirst, matchedTokensSecond, endLists.getLeft(), endLists.getRight());
+        return new AlgorithmResults(a, b, endLists.getLeft(), endLists.getRight());
     }
 
     @Override
