@@ -33,6 +33,10 @@ public final class ValidityEnsuringToken extends AbstractTokenDecorator {
 
     @Override
     public boolean equals(Object other) {
+        if(!this.isValid()) {
+            return false;
+        }
+
         if(!(other instanceof Token)) {
             return false;
         }

@@ -21,9 +21,9 @@
 
 package edu.wpi.checksims.algorithm;
 
-import edu.wpi.checksims.ChecksimsException;
 import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.token.TokenType;
+import edu.wpi.checksims.token.TokenTypeMismatchException;
 import edu.wpi.checksims.util.reflection.NamedInstantiable;
 
 /**
@@ -49,7 +49,8 @@ public interface SimilarityDetector extends NamedInstantiable {
      * @param a First submission to apply to
      * @param b Second submission to apply to
      * @return Similarity results of comparing submissions A and B
-     * @throws edu.wpi.checksims.ChecksimsException Thrown on algorithm error or mismatched tokenization list types
+     * @throws TokenTypeMismatchException Thrown on comparing two submissions with different token types
+     * @throws InternalAlgorithmError Thrown on error detecting similarities
      */
-    public AlgorithmResults detectSimilarity(Submission a, Submission b) throws ChecksimsException;
+    public AlgorithmResults detectSimilarity(Submission a, Submission b) throws TokenTypeMismatchException, InternalAlgorithmError;
 }

@@ -27,41 +27,42 @@ import edu.wpi.checksims.token.TokenType;
 
 import java.util.Arrays;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
- * Split a file into tokens based on spaces
+ * Splits a file on a line-by-line basis
  */
-public class FileWhitespaceTokenizer implements FileTokenizer {
-    private static FileWhitespaceTokenizer instance;
+public class LineTokenizer implements Tokenizer {
+    private static LineTokenizer instance;
 
-    private FileWhitespaceTokenizer() {}
+    private LineTokenizer() {}
 
-    public static FileWhitespaceTokenizer getInstance() {
+    public static LineTokenizer getInstance() {
         if(instance == null) {
-            instance = new FileWhitespaceTokenizer();
+            instance = new LineTokenizer();
         }
 
         return instance;
     }
 
     /**
-     * Split a string into whitespace-delineated tokens
+     * Split string into newline-delineated tokens
      *
-     * @param string Input string
-     * @return List of WHITESPACE tokens representing the input submission
+     * @param string String to split
+     * @return List of LINE tokens representing the input string
      */
     @Override
     public TokenList splitFile(String string) {
+        checkNotNull(string);
+
         TokenList toReturn = new TokenList(this.getType());
 
-        if(string == null) {
+        if(string.isEmpty()) {
             return toReturn;
         }
 
-        String[] split = string.split("\\s+");
-
-        Arrays.stream(split)
-                .filter((str) -> !str.isEmpty())
-                .map((str) -> new ConcreteToken(str, TokenType.WHITESPACE))
+        Arrays.stream(string.split("\n"))
+                .map((str) -> new ConcreteToken(str, TokenType.LINE))
                 .forEachOrdered(toReturn::add);
 
         return toReturn;
@@ -69,11 +70,11 @@ public class FileWhitespaceTokenizer implements FileTokenizer {
 
     @Override
     public TokenType getType() {
-        return TokenType.WHITESPACE;
+        return TokenType.LINE;
     }
 
     @Override
     public String toString() {
-        return "Singleton instance of FileSpaceSplitter";
+        return "Singleton FileLineSplitter instance";
     }
 }

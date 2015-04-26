@@ -22,6 +22,7 @@
 package edu.wpi.checksims;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import edu.wpi.checksims.algorithm.AlgorithmRegistry;
 import edu.wpi.checksims.algorithm.SimilarityDetector;
 import edu.wpi.checksims.algorithm.commoncode.CommonCodeHandler;
@@ -34,9 +35,11 @@ import edu.wpi.checksims.token.TokenType;
 import edu.wpi.checksims.util.output.OutputPrinter;
 import edu.wpi.checksims.util.output.OutputToStdoutPrinter;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Per-run configuration of Checksims
@@ -45,14 +48,14 @@ public final class ChecksimsConfig {
     private SimilarityDetector algorithm;
     private TokenType tokenization;
     private ImmutableList<SubmissionPreprocessor> preprocessors;
-    private ImmutableList<Submission> submissions;
+    private ImmutableSet<Submission> submissions;
     private CommonCodeHandler commonCodeHandler;
     private ImmutableList<SimilarityMatrixPrinter> outputPrinters;
     private OutputPrinter outputMethod;
     private int numThreads;
 
     private ChecksimsConfig(SimilarityDetector algorithm, TokenType tokenization, List<SubmissionPreprocessor> preprocessors,
-                            List<Submission> submissions, CommonCodeHandler commonCodeHandler, List<SimilarityMatrixPrinter> outputPrinters,
+                            Set<Submission> submissions, CommonCodeHandler commonCodeHandler, List<SimilarityMatrixPrinter> outputPrinters,
                             OutputPrinter outputMethod, int numThreads) {
         this.algorithm = algorithm;
         this.tokenization = tokenization;
@@ -60,7 +63,7 @@ public final class ChecksimsConfig {
 
         this.preprocessors = ImmutableList.copyOf(preprocessors);
 
-        this.submissions = ImmutableList.copyOf(submissions);
+        this.submissions = ImmutableSet.copyOf(submissions);
 
         this.outputPrinters = ImmutableList.copyOf(outputPrinters);
         this.outputMethod = outputMethod;
@@ -68,34 +71,17 @@ public final class ChecksimsConfig {
     }
 
     /**
-     * Base constructor, returns base config
+     * Base constructor, returns default config
      */
     public ChecksimsConfig() {
         this.algorithm = AlgorithmRegistry.getInstance().getDefaultImplementation();
         this.tokenization = this.algorithm.getDefaultTokenType();
-        this.submissions = ImmutableList.copyOf(new LinkedList<>());
-        this.preprocessors = ImmutableList.copyOf(new LinkedList<>());
+        this.submissions = ImmutableSet.copyOf(new ArrayList<>());
+        this.preprocessors = ImmutableList.copyOf(new ArrayList<>());
         this.commonCodeHandler = CommonCodePassthroughHandler.getInstance();
         this.outputPrinters = ImmutableList.copyOf(Arrays.asList(OutputRegistry.getInstance().getDefaultImplementation()));
         this.outputMethod = OutputToStdoutPrinter.getInstance();
         this.numThreads = Runtime.getRuntime().availableProcessors();
-    }
-
-    /**
-     * Check is this config is ready to be used
-     */
-    public void isReady() throws ChecksimsException {
-        if(submissions.isEmpty()) {
-            throw new ChecksimsException("No submissions provided - cannot run Checksims!");
-        }
-
-        if(outputPrinters.isEmpty()) {
-            throw new ChecksimsException("No output printers provided - cannot run Checksims!");
-        }
-
-        if(numThreads <= 0) {
-            throw new ChecksimsException("Number of threads specified as " + numThreads + ", must be greater than 0!");
-        }
     }
 
     private ChecksimsConfig getCopy() {
@@ -107,9 +93,7 @@ public final class ChecksimsConfig {
      * @return Copy of configuration with new detection algorithm
      */
     public ChecksimsConfig setAlgorithm(SimilarityDetector newAlgorithm) {
-        if(newAlgorithm == null) {
-            throw new RuntimeException("Attempt to set Algorithm to null!");
-        }
+        checkNotNull(newAlgorithm);
 
         ChecksimsConfig newConfig = getCopy();
         newConfig.algorithm = newAlgorithm;
@@ -122,9 +106,7 @@ public final class ChecksimsConfig {
      * @return Copy of configuration with new tokenization algorithm
      */
     public ChecksimsConfig setTokenization(TokenType newTokenization) {
-        if(newTokenization == null) {
-            throw new RuntimeException("Attempt to set Tokenization to null!");
-        }
+        checkNotNull(newTokenization);
 
         ChecksimsConfig newConfig = getCopy();
         newConfig.tokenization = newTokenization;
@@ -137,8 +119,13 @@ public final class ChecksimsConfig {
      * @return Copy of configuration with new preprocessor list
      */
     public ChecksimsConfig setPreprocessors(List<SubmissionPreprocessor> newPreprocessors) {
-        if(newPreprocessors == null) {
-            throw new RuntimeException("Attempt to set Preprocessors to null!");
+        checkNotNull(newPreprocessors);
+
+        // Ensure that preprocessors are unique
+        // Can't use a set, we don't require preprocessors to implement equals() or hashCode() in sane ways
+        Set<String> names = newPreprocessors.stream().map(SubmissionPreprocessor::getName).collect(Collectors.toSet());
+        if(names.size() != newPreprocessors.size()) {
+            throw new IllegalArgumentException("Preprocessors must be unique!");
         }
 
         ChecksimsConfig newConfig = getCopy();
@@ -151,13 +138,12 @@ public final class ChecksimsConfig {
      * @param newSubmissions New list of submissions to work on
      * @return Copy of configuration with new submissions list
      */
-    public ChecksimsConfig setSubmissions(List<Submission> newSubmissions) {
-        if(newSubmissions == null) {
-            throw new RuntimeException("Attempt to set Submissions to null!");
-        }
+    public ChecksimsConfig setSubmissions(Set<Submission> newSubmissions) {
+        checkNotNull(newSubmissions);
+        checkArgument(!newSubmissions.isEmpty(), "Must provide at least one valid submission to run on!");
 
         ChecksimsConfig newConfig = getCopy();
-        newConfig.submissions = ImmutableList.copyOf(newSubmissions);
+        newConfig.submissions = ImmutableSet.copyOf(newSubmissions);
 
         return newConfig;
     }
@@ -167,9 +153,7 @@ public final class ChecksimsConfig {
      * @return Copy of configuration with new common code handler
      */
     public ChecksimsConfig setCommonCodeHandler(CommonCodeHandler newHandler) {
-        if(newHandler == null) {
-            throw new RuntimeException("Attempt to set Common Code Handler to null!");
-        }
+        checkNotNull(newHandler);
 
         ChecksimsConfig newConfig = getCopy();
         newConfig.commonCodeHandler = newHandler;
@@ -182,8 +166,14 @@ public final class ChecksimsConfig {
      * @return Copy of configuration with new list of output strategies
      */
     public ChecksimsConfig setOutputPrinters(List<SimilarityMatrixPrinter> newOutputPrinters) {
-        if(newOutputPrinters == null) {
-            throw new RuntimeException("Attempt to set Output Printers to null!");
+        checkNotNull(newOutputPrinters);
+        checkArgument(!newOutputPrinters.isEmpty(), "Must provide at least one valid output printer!");
+
+        // Ensure all printers are unique
+        // Can't use a set, we don't require output strategies to implement equals() or hashCode() in sane ways
+        Set<String> names = newOutputPrinters.stream().map(SimilarityMatrixPrinter::getName).collect(Collectors.toSet());
+        if(names.size() != newOutputPrinters.size()) {
+            throw new IllegalArgumentException("Output printers must be unique!");
         }
 
         ChecksimsConfig newConfig = getCopy();
@@ -197,9 +187,7 @@ public final class ChecksimsConfig {
      * @return Copy of configuration with new output method
      */
     public ChecksimsConfig setOutputMethod(OutputPrinter newOutputMethod) {
-        if(newOutputMethod == null) {
-            throw new RuntimeException("Attempt to set Output Method to null!");
-        }
+        checkNotNull(newOutputMethod);
 
         ChecksimsConfig newConfig = getCopy();
         newConfig.outputMethod = newOutputMethod;
@@ -212,6 +200,8 @@ public final class ChecksimsConfig {
      * @return Copy of configuration with new number of threads set
      */
     public ChecksimsConfig setNumThreads(int numThreads) {
+        checkArgument(numThreads > 0, "Attempted to set number of threads to " + numThreads + " - must be positive integer!");
+
         ChecksimsConfig newConfig = getCopy();
         newConfig.numThreads = numThreads;
 
@@ -242,7 +232,7 @@ public final class ChecksimsConfig {
     /**
      * @return List of submissions to run on
      */
-    public ImmutableList<Submission> getSubmissions() {
+    public ImmutableSet<Submission> getSubmissions() {
         return submissions;
     }
 

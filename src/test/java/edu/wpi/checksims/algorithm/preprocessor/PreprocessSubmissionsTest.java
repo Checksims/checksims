@@ -16,53 +16,43 @@
  *
  * CDDL HEADER END
  *
- * Copyright (c) 2014 Matthew Heon and Dolan Murvihill
+ * Copyright (c) 2014-2015 Matthew Heon and Dolan Murvihill
  */
 
 package edu.wpi.checksims.algorithm.preprocessor;
 
 import edu.wpi.checksims.submission.ConcreteSubmission;
 import edu.wpi.checksims.submission.Submission;
-import edu.wpi.checksims.token.ConcreteToken;
-import edu.wpi.checksims.token.TokenList;
-import edu.wpi.checksims.token.TokenType;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
+import static edu.wpi.checksims.testutil.SubmissionUtils.checkSubmissionCollections;
+import static edu.wpi.checksims.testutil.SubmissionUtils.lineSubmissionFromString;
+import static edu.wpi.checksims.testutil.SubmissionUtils.setFromElements;
 import static org.junit.Assert.*;
 
 /**
  * Tests for PreprocessSubmissions class
  */
-public class TestPreprocessSubmissions {
-    private static List<Submission> empty;
-    private static List<Submission> oneSubmission;
-    private static List<Submission> twoSubmissions;
-    private static SubmissionPreprocessor identity;
-    private static SubmissionPreprocessor renamer;
+public class PreprocessSubmissionsTest {
+    private Submission a;
+    private Submission b;
+    private Set<Submission> empty;
+    private Set<Submission> oneSubmission;
+    private Set<Submission> twoSubmissions;
+    private SubmissionPreprocessor identity;
+    private SubmissionPreprocessor renamer;
 
-    @BeforeClass
-    public static void setUp() {
-        TokenList tokensA = new TokenList(TokenType.LINE);
-        tokensA.add(new ConcreteToken("Submission A", TokenType.LINE));
-        Submission a = new ConcreteSubmission("A", "", tokensA);
+    @Before
+    public void setUp() {
+        a = lineSubmissionFromString("Submission A", "A");
+        b = lineSubmissionFromString("Submission B", "B");
 
-        TokenList tokensB = new TokenList(TokenType.LINE);
-        tokensB.add(new ConcreteToken("Submission B", TokenType.LINE));
-        Submission b = new ConcreteSubmission("B", "", tokensB);
-
-        empty = new LinkedList<>();
-
-        oneSubmission = new LinkedList<>();
-        oneSubmission.add(a);
-
-        twoSubmissions = new LinkedList<>();
-        twoSubmissions.add(a);
-        twoSubmissions.add(b);
+        empty = new HashSet<>();
+        oneSubmission = setFromElements(a);
+        twoSubmissions = setFromElements(a, b);
 
         identity = new SubmissionPreprocessor() {
             @Override
@@ -102,19 +92,15 @@ public class TestPreprocessSubmissions {
         Collection<Submission> results = PreprocessSubmissions.process(identity, oneSubmission);
 
         assertNotNull(results);
-        assertEquals(results.size(), 1);
         assertEquals(results, oneSubmission);
-        assertTrue(results.contains(oneSubmission.get(0)));
     }
 
     @Test
     public void testOneSubmissionRename() {
         Collection<Submission> results = PreprocessSubmissions.process(renamer, oneSubmission);
-
-        Submission expected = new ConcreteSubmission("renamed " + oneSubmission.get(0).getName(), oneSubmission.get(0).getContentAsString(), oneSubmission.get(0).getContentAsTokens());
+        Submission expected = lineSubmissionFromString("renamed " + a.getName(), a.getContentAsString());
 
         assertNotNull(results);
-        assertEquals(results.size(), 1);
         assertTrue(results.contains(expected));
     }
 
@@ -122,23 +108,16 @@ public class TestPreprocessSubmissions {
     public void testTwoSubmissionIdentity() {
         Collection<Submission> results = PreprocessSubmissions.process(identity, twoSubmissions);
 
-        assertNotNull(results);
-        assertEquals(results.size(), 2);
-        assertTrue(results.contains(twoSubmissions.get(0)));
-        assertTrue(results.contains(twoSubmissions.get(1)));
+        checkSubmissionCollections(twoSubmissions, results);
     }
 
     @Test
     public void testTwoSubmissionRename() {
         Collection<Submission> results = PreprocessSubmissions.process(renamer, twoSubmissions);
+        Submission expectedA = lineSubmissionFromString("renamed " + a.getName(), a.getContentAsString());
+        Submission expectedB = lineSubmissionFromString("renamed " + b.getName(), b.getContentAsString());
+        List<Submission> expected = Arrays.asList(expectedA, expectedB);
 
-        List<Submission> expected = new LinkedList<>();
-        expected.add(new ConcreteSubmission("renamed " + twoSubmissions.get(0).getName(), twoSubmissions.get(0).getContentAsString(), twoSubmissions.get(0).getContentAsTokens()));
-        expected.add(new ConcreteSubmission("renamed " + twoSubmissions.get(1).getName(), twoSubmissions.get(1).getContentAsString(), twoSubmissions.get(1).getContentAsTokens()));
-
-        assertNotNull(results);
-        assertEquals(results.size(), 2);
-        assertTrue(results.contains(expected.get(0)));
-        assertTrue(results.contains(expected.get(1)));
+        checkSubmissionCollections(expected, results);
     }
 }

@@ -24,41 +24,44 @@ package edu.wpi.checksims.token.tokenizer;
 import edu.wpi.checksims.token.ConcreteToken;
 import edu.wpi.checksims.token.TokenList;
 import edu.wpi.checksims.token.TokenType;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.Arrays;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
- * Splits a file on a line-by-line basis
+ * Split a file into a list of character tokens.
  */
-public class FileLineTokenizer implements FileTokenizer {
-    private static FileLineTokenizer instance;
+public class CharTokenizer implements Tokenizer {
+    private static CharTokenizer instance;
 
-    private FileLineTokenizer() {}
+    private CharTokenizer() {}
 
-    public static FileLineTokenizer getInstance() {
+    public static CharTokenizer getInstance() {
         if(instance == null) {
-            instance = new FileLineTokenizer();
+            instance = new CharTokenizer();
         }
 
         return instance;
     }
 
     /**
-     * Split string into newline-delineated tokens
+     * Split a string into character tokens
      *
      * @param string String to split
-     * @return List of LINE tokens representing the input string
+     * @return Input string, with a single token representing each character
      */
     @Override
     public TokenList splitFile(String string) {
+        checkNotNull(string);
+
         TokenList toReturn = new TokenList(this.getType());
 
-        if(string == null || string.isEmpty()) {
-            return toReturn;
-        }
+        char[] chars = string.toCharArray();
 
-        Arrays.stream(string.split("\n"))
-                .map((str) -> new ConcreteToken(str, TokenType.LINE))
+        Arrays.stream(ArrayUtils.toObject(chars))
+                .map((character) -> new ConcreteToken(character, TokenType.CHARACTER))
                 .forEachOrdered(toReturn::add);
 
         return toReturn;
@@ -66,11 +69,11 @@ public class FileLineTokenizer implements FileTokenizer {
 
     @Override
     public TokenType getType() {
-        return TokenType.LINE;
+        return TokenType.CHARACTER;
     }
 
     @Override
     public String toString() {
-        return "Singleton FileLineSplitter instance";
+        return "Singleton instance of FileCharSplitter";
     }
 }

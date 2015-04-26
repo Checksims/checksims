@@ -24,6 +24,9 @@ package edu.wpi.checksims.submission;
 import edu.wpi.checksims.token.TokenList;
 import edu.wpi.checksims.token.TokenType;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Concrete implementation of the Submission interface.
  *
@@ -35,6 +38,11 @@ public final class ConcreteSubmission implements Submission {
     private final String name;
 
     public ConcreteSubmission(String name, String content, TokenList tokens) {
+        checkNotNull(name);
+        checkArgument(!name.isEmpty(), "Submission name cannot be empty");
+        checkNotNull(content);
+        checkNotNull(tokens);
+
         this.name = name;
         this.content = content;
         this.tokenList = TokenList.immutableCopy(tokens);

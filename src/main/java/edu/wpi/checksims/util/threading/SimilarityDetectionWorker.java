@@ -21,15 +21,16 @@
 
 package edu.wpi.checksims.util.threading;
 
-import edu.wpi.checksims.ChecksimsException;
 import edu.wpi.checksims.algorithm.AlgorithmResults;
 import edu.wpi.checksims.algorithm.SimilarityDetector;
 import edu.wpi.checksims.submission.Submission;
-import edu.wpi.checksims.util.UnorderedPair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Callable;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Basic unit of thread execution for similarity detection.
@@ -38,7 +39,7 @@ import java.util.concurrent.Callable;
  */
 public class SimilarityDetectionWorker implements Callable<AlgorithmResults> {
     private final SimilarityDetector algorithm;
-    private final UnorderedPair<Submission> submissions;
+    private final Pair<Submission, Submission> submissions;
 
     private static Logger logs = LoggerFactory.getLogger(SimilarityDetectionWorker.class);
 
@@ -48,7 +49,12 @@ public class SimilarityDetectionWorker implements Callable<AlgorithmResults> {
      * @param algorithm Algorithm to use
      * @param submissions Assignments to compare
      */
-    public SimilarityDetectionWorker(SimilarityDetector algorithm, UnorderedPair<Submission> submissions) {
+    public SimilarityDetectionWorker(SimilarityDetector algorithm, Pair<Submission, Submission> submissions) {
+        checkNotNull(algorithm);
+        checkNotNull(submissions);
+        checkNotNull(submissions.getLeft());
+        checkNotNull(submissions.getRight());
+
         this.algorithm = algorithm;
         this.submissions = submissions;
     }
@@ -56,25 +62,28 @@ public class SimilarityDetectionWorker implements Callable<AlgorithmResults> {
     /**
      * Perform pairwise similarity detection on assignments given when constructed
      *
+     * We don't throw exceptions here, checked or unchecked. The reason for this is our desire to "fail-fast" on
+     * algorithm errors --- instead of waiting for all comparisons to complete, we should immediately exit and inform
+     * the user of the failure.
+     *
+     * After future changes to the Similarity Matrix, it might be desirable to make this configurable behavior, as we'll
+     * be able to tolerate missing entires in the matrix at that point.
+     * TODO investigate this later
+     *
      * @return Results of pairwise similarity detection
-     * @throws Exception Not used - all exceptions will be RuntimeException or similar
+     * @throws Exception Any exception thrown while executing the algorithm
      */
     @Override
     public AlgorithmResults call() throws Exception {
-        logs.debug("Running " + algorithm.getName() + " on submissions " + submissions.first.getName() +
-                "(" + submissions.first.getNumTokens() + " tokens) and " + submissions.second.getName() + " (" +
-                submissions.second.getNumTokens() + " tokens)");
+        logs.debug("Running " + algorithm.getName() + " on submissions " + submissions.getLeft().getName() +
+                "(" + submissions.getLeft().getNumTokens() + " tokens) and " + submissions.getRight().getName() + " (" +
+                submissions.getRight().getNumTokens() + " tokens)");
 
-        try {
-            return algorithm.detectSimilarity(submissions.first, submissions.second);
-        } catch (ChecksimsException e) {
-            logs.error("Fatal error running " + algorithm.getName() + " on submissions " + submissions.first.getName() + " and " + submissions.second.getName());
-            throw new RuntimeException(e);
-        }
+        return algorithm.detectSimilarity(submissions.getLeft(), submissions.getRight());
     }
 
     @Override
     public String toString() {
-        return "Similarity detection worker for submissions \"" + submissions.first.getName() + "\" and \"" + submissions.second.getName() + "\"";
+        return "Similarity detection worker for submissions \"" + submissions.getLeft().getName() + "\" and \"" + submissions.getRight().getName() + "\"";
     }
 }

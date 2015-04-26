@@ -28,6 +28,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Callable;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Worker for parallel preprocessor application
  */
@@ -35,7 +37,16 @@ public class PreprocessorWorker implements Callable<Submission> {
     private final Submission preprocess;
     private final SubmissionPreprocessor preprocessor;
 
+    /**
+     * Create a Callable worker to preprocess a single submission
+     *
+     * @param toPreprocess Submission to preprocess
+     * @param preprocessor Preprocessor to apply
+     */
     public PreprocessorWorker(Submission toPreprocess, SubmissionPreprocessor preprocessor) {
+        checkNotNull(toPreprocess);
+        checkNotNull(preprocessor);
+
         this.preprocess = toPreprocess;
         this.preprocessor = preprocessor;
     }
@@ -44,13 +55,13 @@ public class PreprocessorWorker implements Callable<Submission> {
      * Preprocesses given submission using given preprocessor
      *
      * @return Result of preprocessing
-     * @throws Exception Never thrown, but required by interface
+     * @throws Exception Internal Algorithm Exception may be thrown if an error occurs while preprocessing
      */
     @Override
     public Submission call() throws Exception {
         Logger logs = LoggerFactory.getLogger(PreprocessorWorker.class);
 
-        logs.trace("Preprocessing submission " + preprocess.getName() + " with preprocessor " + preprocess.getName());
+        logs.trace("Preprocessing submission " + preprocess.getName() + " with preprocessor " + preprocessor.getName());
 
         return preprocessor.process(preprocess);
     }

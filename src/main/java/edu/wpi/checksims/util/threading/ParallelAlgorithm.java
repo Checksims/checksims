@@ -21,18 +21,21 @@
 
 package edu.wpi.checksims.util.threading;
 
+import com.google.common.collect.ImmutableSet;
 import edu.wpi.checksims.algorithm.AlgorithmResults;
 import edu.wpi.checksims.algorithm.SimilarityDetector;
 import edu.wpi.checksims.algorithm.preprocessor.SubmissionPreprocessor;
 import edu.wpi.checksims.submission.Submission;
-import edu.wpi.checksims.util.UnorderedPair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Apply a given algorithm to a given set of data in parallel
@@ -43,16 +46,25 @@ public final class ParallelAlgorithm {
     private static Logger logs = LoggerFactory.getLogger(ParallelAlgorithm.class);
 
     private static int threadCount = Runtime.getRuntime().availableProcessors();
-    private static ThreadPoolExecutor executor = new ThreadPoolExecutor(threadCount, threadCount, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<>(), new ThreadPoolExecutor.AbortPolicy());;
+    private static ThreadPoolExecutor executor = new ThreadPoolExecutor(threadCount, threadCount, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<>(), new ThreadPoolExecutor.AbortPolicy());
 
     /**
      * @param threads Number of threads to be used for execution
      */
     public static void setThreadCount(int threads) {
+        checkArgument(threads > 0, "Attempted to set number of threads to " + threads + ", but must be positive integer!");
+
         threadCount = threads;
         executor.shutdown();
         // Set up the executor again with the new thread count
         executor = new ThreadPoolExecutor(threadCount, threadCount, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<>(), new ThreadPoolExecutor.AbortPolicy());
+    }
+
+    /**
+     * Shut down the executor, preventing any more jobs from being processed
+     */
+    public static void shutdownExecutor() {
+        executor.shutdown();
     }
 
     /**
@@ -70,10 +82,14 @@ public final class ParallelAlgorithm {
      * @param submissions Submissions to remove from
      * @return Submissions with common code removed
      */
-    public static Collection<Submission> parallelCommonCodeRemoval(SimilarityDetector algorithm, Submission common, Collection<Submission> submissions) {
+    public static Set<Submission> parallelCommonCodeRemoval(SimilarityDetector algorithm, Submission common, Set<Submission> submissions) {
+        checkNotNull(algorithm);
+        checkNotNull(common);
+        checkNotNull(submissions);
+
         Collection<CommonCodeRemovalWorker> workers = submissions.stream().map((submission) -> new CommonCodeRemovalWorker(algorithm, common, submission)).collect(Collectors.toList());
 
-        return executeTasks(workers);
+        return ImmutableSet.copyOf(executeTasks(workers));
     }
 
     /**
@@ -83,18 +99,24 @@ public final class ParallelAlgorithm {
      * @param pairs Pairs of submissions to perform detection on
      * @return Collection of results, one for each pair
      */
-    public static Collection<AlgorithmResults> parallelSimilarityDetection(SimilarityDetector algorithm, Collection<UnorderedPair<Submission>> pairs) {
+    public static Set<AlgorithmResults> parallelSimilarityDetection(SimilarityDetector algorithm, Set<Pair<Submission, Submission>> pairs) {
+        checkNotNull(algorithm);
+        checkNotNull(pairs);
+
         // Map the pairs to ChecksimsWorker instances
         Collection<SimilarityDetectionWorker> workers = pairs.stream().map((pair) -> new SimilarityDetectionWorker(algorithm, pair)).collect(Collectors.toList());
 
-        return executeTasks(workers);
+        return ImmutableSet.copyOf(executeTasks(workers));
     }
 
-    public static Collection<Submission> parallelSubmissionPreprocessing(SubmissionPreprocessor preprocessor, Collection<Submission> submissions) {
+    public static Set<Submission> parallelSubmissionPreprocessing(SubmissionPreprocessor preprocessor, Set<Submission> submissions) {
+        checkNotNull(preprocessor);
+        checkNotNull(submissions);
+
         // Map the submissions to PreprocessorWorker instances
         Collection<PreprocessorWorker> workers = submissions.stream().map((submission) -> new PreprocessorWorker(submission, preprocessor)).collect(Collectors.toList());
 
-        return executeTasks(workers);
+        return ImmutableSet.copyOf(executeTasks(workers));
     }
 
     /**
@@ -108,6 +130,17 @@ public final class ParallelAlgorithm {
      * @return Collection of Ts
      */
     private static <T, T2 extends Callable<T>> Collection<T> executeTasks(Collection<T2> tasks) {
+        checkNotNull(tasks);
+
+        if(tasks.size() == 0) {
+            logs.warn("Parallel execution called with no tasks - no work done!");
+            return new ArrayList<>();
+        }
+
+        if(executor.isShutdown()) {
+            throw new RuntimeException("Attempted to call executeTasks while executor was shut down!");
+        }
+
         logs.info("Starting work using " + threadCount + " threads.");
 
         // Invoke the executor on all the worker instances
@@ -122,19 +155,26 @@ public final class ParallelAlgorithm {
             // Stop the monitor
             monitor.shutDown();
 
-            // All tasks should now be done, let's build a results list from the futures
-            return results.stream().map((future) -> {
+            // Unpack the futures
+            ArrayList<T> unpackInto = new ArrayList<>();
+
+            for(Future<T> future : results) {
                 try {
-                    return future.get();
-                } catch (InterruptedException|ExecutionException e) {
-                    logs.error("Error unpacking future!");
-                    throw new RuntimeException(e);
+                    unpackInto.add(future.get());
+                } catch(ExecutionException e) {
+                    executor.shutdownNow();
+                    logs.error("Fatal error in executed job!");
+                    throw new RuntimeException("Error while executing worker for future", e.getCause());
                 }
-            }).collect(Collectors.toList());
+            }
+
+            return unpackInto;
         } catch (InterruptedException e) {
+            executor.shutdownNow();
             logs.error("Execution of Checksims was interrupted!");
             throw new RuntimeException(e);
         } catch (RejectedExecutionException e) {
+            executor.shutdownNow();
             logs.error("Could not schedule execution of all comparisons --- possibly too few resources available?");
             throw new RuntimeException(e);
         }

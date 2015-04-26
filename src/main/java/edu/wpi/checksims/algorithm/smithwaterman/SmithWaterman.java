@@ -21,179 +21,98 @@
 
 package edu.wpi.checksims.algorithm.smithwaterman;
 
-import edu.wpi.checksims.ChecksimsException;
 import edu.wpi.checksims.algorithm.AlgorithmResults;
+import edu.wpi.checksims.algorithm.InternalAlgorithmError;
 import edu.wpi.checksims.algorithm.SimilarityDetector;
 import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.token.TokenList;
 import edu.wpi.checksims.token.TokenType;
-import edu.wpi.checksims.token.ValidityEnsuringToken;
-import edu.wpi.checksims.util.TwoDimArrayCoord;
-import edu.wpi.checksims.util.TwoDimIntArray;
+import edu.wpi.checksims.token.TokenTypeMismatchException;
+import org.apache.commons.lang3.tuple.Pair;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Performs the actual Smith-Waterman algorithm
+ * Implementation of the Smith-Waterman algorithm
  */
 public class SmithWaterman implements SimilarityDetector {
-    private final SmithWatermanParameters params;
+    private static SmithWaterman instance;
 
-    public SmithWaterman(SmithWatermanParameters params) {
-        this.params = params;
+    private SmithWaterman() {}
+
+    /**
+     * @return Singleton instance of the Smith-Waterman algorithm
+     */
+    public static SmithWaterman getInstance() {
+        if(instance == null) {
+            instance = new SmithWaterman();
+        }
+
+        return instance;
     }
 
-    public SmithWaterman() {
-        this.params = SmithWatermanParameters.getDefaultParams();
-    }
-
+    /**
+     * @return Name of this implementation
+     */
     @Override
     public String getName() {
         return "smithwaterman";
     }
 
+    /**
+     * @return Default token type to be used for this similarity detector
+     */
     @Override
     public TokenType getDefaultTokenType() {
         return TokenType.WHITESPACE;
     }
 
     /**
-     * Detect plagiarism in a submission using the Smith-Waterman Algorithm
+     * Apply the Smith-Waterman algorithm to determine the similarity between two submissions
      *
-     * @param a First submission to check
-     * @param b Second submission to check
-     * @return AlgorithmResults indicating number of matched tokens
+     * Token list types of A and B must match
+     *
+     * @param a First submission to apply to
+     * @param b Second submission to apply to
+     * @return Similarity results of comparing submissions A and B
+     * @throws TokenTypeMismatchException Thrown on comparing submissions with mismatched token types
+     * @throws InternalAlgorithmError Thrown on internal error
      */
     @Override
-    public AlgorithmResults detectSimilarity(Submission a, Submission b) throws ChecksimsException {
+    public AlgorithmResults detectSimilarity(Submission a, Submission b) throws TokenTypeMismatchException, InternalAlgorithmError {
+        checkNotNull(a);
+        checkNotNull(b);
+
+        // Test for token type mismatch
         if(!a.getTokenType().equals(b.getTokenType())) {
-            throw new ChecksimsException("Token list type mismatch: submission " + a.getName() + " has type " +
-                    a.getContentAsTokens().type.toString() + ", while submission " + b.getName() + " has type " +
-                    b.getContentAsTokens().type.toString());
+            throw new TokenTypeMismatchException("Token list type mismatch: submission " + a.getName() + " has type " +
+                    a.getTokenType().toString() + ", while submission " + b.getName() + " has type " + b.getTokenType().toString());
         }
 
-        return applySmithWatermanPlagiarismDetection(a, b, this.params);
-    }
-
-    /**
-     * Required by the PlagiarismDetector interface
-     *
-     * @return Default instance of the Smith-Waterman algorithm
-     */
-    public static SmithWaterman getInstance() {
-        return new SmithWaterman();
-    }
-
-    static AlgorithmResults applySmithWatermanPlagiarismDetection(Submission a, Submission b, SmithWatermanParameters params) {
-        SmithWatermanResults firstRun = applySmithWaterman(a.getContentAsTokens(), b.getContentAsTokens(), params);
-
-        if(firstRun == null || !firstRun.hasMatch()) {
-            // No similarities found on first run, no need to loop
+        // Handle a 0-token submission (no similarity)
+        if(a.getNumTokens() == 0 || b.getNumTokens() == 0) {
             return new AlgorithmResults(a, b, 0, 0, a.getContentAsTokens(), b.getContentAsTokens());
+        } else if(a.equals(b)) {
+            // Handle identical submissions
+            TokenList aInval = TokenList.cloneTokenList(a.getContentAsTokens());
+            aInval.stream().forEach((token) -> token.setValid(false));
+            return new AlgorithmResults(a, b, a.getNumTokens(), b.getNumTokens(), aInval, aInval);
         }
 
-        // Represents the total portions of the tokenization lists matched by the Smith-Waterman algorithm
-        int totalOverlay = 0;
-        SmithWatermanResults currResults = firstRun;
-        TokenList newA = currResults.setMatchInvalidA();
-        TokenList newB = currResults.setMatchInvalidB();
+        // Alright, easy cases taken care of. Generate an instance to perform the actual algorithm
+        SmithWatermanAlgorithm algorithm = new SmithWatermanAlgorithm(a.getContentAsTokens(), b.getContentAsTokens());
 
-        while(currResults.getMatchLength() >= params.matchSizeThreshold) {
-            totalOverlay += currResults.getMatchLength();
+        Pair<TokenList, TokenList> endLists = algorithm.computeSmithWatermanAlignment();
 
-            newA = currResults.setMatchInvalidA();
-            newB = currResults.setMatchInvalidB();
+        // Generate matched tokens for each - filter out valid tokens, and count the invalid tokens
+        int matchedTokensFirst = (int)endLists.getLeft().stream().filter((token) -> !token.isValid()).count();
+        int matchedTokensSecond = (int)endLists.getRight().stream().filter((token) -> !token.isValid()).count();
 
-            currResults = applySmithWaterman(newA, newB, params);
-        }
-
-        // Always add the last overlay. Makes sure that, if the last result is under the threshold,
-        // We report it regardless
-        totalOverlay += currResults.getMatchLength();
-
-        return new AlgorithmResults(a, b, totalOverlay, totalOverlay, newA, newB);
+        return new AlgorithmResults(a, b, matchedTokensFirst, matchedTokensSecond, endLists.getLeft(), endLists.getRight());
     }
 
-    static SmithWatermanResults applySmithWaterman(TokenList a, TokenList b, SmithWatermanParameters params) {
-        if(a.isEmpty() || b.isEmpty()) {
-            // If one of the lists is empty, there can be no matches
-            return null;
-        }
-
-        // We add 1 to each for an extra, all-0s row/column
-        int width = a.size() + 1;
-        int height = b.size() + 1;
-
-        // Create M[] and S[] arrays
-        TwoDimIntArray s = new TwoDimIntArray(width, height);
-        TwoDimIntArray m = new TwoDimIntArray(width, height);
-
-        // Iterate through and fill arrays
-        smithWatermanComputeArraySubset(1, width, 1, height, a, b, params, s, m);
-
-        return new SmithWatermanResults(s, a, b);
-    }
-
-    static void smithWatermanComputeArraySubset(int startWidth, int endWidth, int startHeight, int endHeight,
-                                                TokenList a, TokenList b, SmithWatermanParameters params, TwoDimIntArray s, TwoDimIntArray m) {
-        for(int i = startWidth; i < endWidth; i++) {
-            for(int j = startHeight; j < endHeight; j++) {
-                TwoDimArrayCoord curr = new TwoDimArrayCoord(i, j);
-                TwoDimArrayCoord predecessor = new TwoDimArrayCoord(i - 1, j - 1);
-
-                int newS;
-                int newM;
-
-                // Generate a prospective value for S[i,j] and M[i,j]
-                // The outermost if generates S[i,j]
-                // Based off this, we then generate M[i,j]
-                if(new ValidityEnsuringToken(a.get(curr.x - 1)).equals(b.get(curr.y - 1))) {
-                    // If the two characters match, we increment S[i-1,j-1] by 1 to get the new S[i,j]
-                    int sPredecessor = s.getValue(predecessor);
-                    int mPredecessor = m.getValue(predecessor);
-
-                    newS = sPredecessor + params.h;
-
-                    // Generate M table value from S table value
-                    if(sPredecessor > mPredecessor) {
-                        newM = sPredecessor;
-                    } else {
-                        newM = mPredecessor;
-                    }
-                } else {
-                    // Get the max of our predecessors, and subtract D
-                    // TODO D and R are distinct quantities, should respect this, even if we usually fix them as 1
-                    int sPredMax = s.getMaxOfPredecessors(curr);
-
-                    newS = sPredMax - params.d;
-
-                    if(newS < 0) {
-                        newS = 0;
-                    }
-
-                    // Generate M table value from S table value
-                    if(newS == 0) {
-                        newM = 0;
-                    } else {
-                        int mPredMax = m.getMaxOfPredecessors(curr);
-
-                        if(sPredMax > mPredMax) {
-                            newM = sPredMax;
-                        } else {
-                            newM = mPredMax;
-                        }
-                    }
-                }
-
-                // Get newM - newS and check against our threshold
-                if(newM - newS >= params.overlapThreshold) {
-                    // M table dominates S table, probably overlap - zero out S[i,j] and M[i,j]
-                    newS = 0;
-                    newM = 0;
-                }
-
-                // Set S[i,j] and M[i,j]
-                s.setValue(newS, curr);
-                m.setValue(newM, curr);
-            }
-        }
+    @Override
+    public String toString() {
+        return "Singleton instance of Smith-Waterman Algorithm";
     }
 }

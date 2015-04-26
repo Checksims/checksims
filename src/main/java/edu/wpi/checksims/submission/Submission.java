@@ -21,20 +21,25 @@
 
 package edu.wpi.checksims.submission;
 
+import com.google.common.collect.Ordering;
 import edu.wpi.checksims.token.TokenList;
 import edu.wpi.checksims.token.TokenType;
-import edu.wpi.checksims.token.tokenizer.FileTokenizer;
-import edu.wpi.checksims.util.file.FileReader;
-import org.apache.commons.collections4.list.SetUniqueList;
+import edu.wpi.checksims.token.tokenizer.Tokenizer;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.Collections;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Interface for Submissions
@@ -79,8 +84,13 @@ public interface Submission {
      * @return Set of submissions including all unique nonempty submissions in the given directory
      * @throws java.io.IOException Thrown on error interacting with file or filesystem
      */
-    public static List<Submission> submissionListFromDir(File directory, String glob, FileTokenizer splitter, boolean recursive) throws IOException {
-        List<Submission> submissions = SetUniqueList.setUniqueList(new LinkedList<>());
+    public static Set<Submission> submissionListFromDir(File directory, String glob, Tokenizer splitter, boolean recursive) throws IOException {
+        checkNotNull(directory);
+        checkNotNull(glob);
+        checkArgument(!glob.isEmpty(), "Glob pattern cannot be empty!");
+        checkNotNull(splitter);
+
+        Set<Submission> submissions = new HashSet<>();
         Logger local = LoggerFactory.getLogger(Submission.class);
 
         if(!directory.exists()) {
@@ -118,7 +128,12 @@ public interface Submission {
      * @return Single submission from all files matching the glob in given directory
      * @throws IOException Thrown on error interacting with file
      */
-    public static Submission submissionFromDir(File directory, String glob, FileTokenizer splitter, boolean recursive) throws IOException, NoMatchingFilesException {
+    public static Submission submissionFromDir(File directory, String glob, Tokenizer splitter, boolean recursive) throws IOException, NoMatchingFilesException {
+        checkNotNull(directory);
+        checkNotNull(glob);
+        checkArgument(!glob.isEmpty(), "Glob pattern cannot be empty!");
+        checkNotNull(splitter);
+
         if(!directory.exists()) {
             throw new NoSuchFileException("Does not exist: " + directory.getAbsolutePath());
         } else if(!directory.isDirectory()) {
@@ -127,7 +142,7 @@ public interface Submission {
 
         // TODO consider verbose logging of which files we're adding to the submission?
 
-        List<File> files = getAllMatchingFiles(directory, glob, recursive);
+        Set<File> files = getAllMatchingFiles(directory, glob, recursive);
 
         return submissionFromFiles(directory.getName(), files, splitter);
     }
@@ -139,13 +154,13 @@ public interface Submission {
      * @param glob Match pattern used to identify files to include
      * @return List of all matching files in this directory and subdirectories
      */
-    static List<File> getAllMatchingFiles(File directory, String glob, boolean recursive) throws NoSuchFileException, NotDirectoryException {
-        List<File> allFiles = new LinkedList<>();
-        Logger logs = LoggerFactory.getLogger(Submission.class);
+    static Set<File> getAllMatchingFiles(File directory, String glob, boolean recursive) throws NoSuchFileException, NotDirectoryException {
+        checkNotNull(directory);
+        checkNotNull(glob);
+        checkArgument(!glob.isEmpty(), "Glob pattern cannot be empty");
 
-        if(directory == null) {
-            throw new RuntimeException("Null pointer passed as file to getAllMatchingFiles()!");
-        }
+        Set<File> allFiles = new HashSet<>();
+        Logger logs = LoggerFactory.getLogger(Submission.class);
 
         if(recursive) {
             logs.trace("Recursively traversing directory " + directory.getName());
@@ -175,11 +190,11 @@ public interface Submission {
      * @return Array of files which match in this single directory
      */
     static File[] getMatchingFilesFromDir(File directory, String glob) throws NoSuchFileException, NotDirectoryException {
-        PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:" + glob);
+        checkNotNull(directory);
+        checkNotNull(glob);
+        checkArgument(!glob.isEmpty(), "Glob pattern cannot be empty");
 
-        if(directory == null) {
-            throw new RuntimeException("Null file passed to getMatchingFilesFromDir!");
-        }
+        PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:" + glob);
 
         if(!directory.exists()) {
             throw new NoSuchFileException("Does not exist: " + directory.getAbsolutePath());
@@ -193,27 +208,38 @@ public interface Submission {
     /**
      * Turn a list of files and a name into a Submission
      *
+     * The contents of a submission are built deterministically by reading in files in alphabetical order and appending
+     * their contents.
+     *
      * @param name Name of the new submission
      * @param files List of files to include in submission
      * @param splitter Tokenizer for files in the submission
      * @return A new submission including a list containing a tokenization list consisting of the appended tokenization lists of every file included
      * @throws IOException Thrown on error reading from file
-     * @throws edu.wpi.checksims.submission.NoMatchingFilesException Thrown if no files are given
+     * @throws NoMatchingFilesException Thrown if no files are given
      */
-    public static Submission submissionFromFiles(String name, List<File> files, FileTokenizer splitter) throws IOException, NoMatchingFilesException {
+    public static Submission submissionFromFiles(String name, Set<File> files, Tokenizer splitter) throws IOException, NoMatchingFilesException {
+        checkNotNull(name);
+        checkArgument(!name.isEmpty(), "Submission name cannot be empty");
+        checkNotNull(files);
+        checkNotNull(splitter);
+
         Logger logs = LoggerFactory.getLogger(Submission.class);
 
         if(files.size() == 0) {
             throw new NoMatchingFilesException("No matching files found, cannot create submission!");
         }
 
+        // To ensure submission generation is deterministic, sort files by name, and read them in that order
+        List<File> orderedFiles = Ordering.from((File file1, File file2) -> file1.getName().compareTo(file2.getName())).immutableSortedCopy(files);
+
         TokenList tokenList = new TokenList(splitter.getType());
 
         StringBuilder fileContent = new StringBuilder();
 
         // Could do this with a .stream().forEach(...) but we'd have to handle the IOException inside
-        for(File f : files) {
-            String content = FileReader.readFile(f);
+        for(File f : orderedFiles) {
+            String content = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
 
             fileContent.append(content);
 

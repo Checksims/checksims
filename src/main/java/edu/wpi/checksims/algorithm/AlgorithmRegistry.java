@@ -22,6 +22,7 @@
 package edu.wpi.checksims.algorithm;
 
 import edu.wpi.checksims.algorithm.linesimilarity.LineSimilarityChecker;
+import edu.wpi.checksims.util.reflection.NoSuchImplementationException;
 import edu.wpi.checksims.util.reflection.RegistryWithDefault;
 
 /**
@@ -30,13 +31,17 @@ import edu.wpi.checksims.util.reflection.RegistryWithDefault;
 public final class AlgorithmRegistry extends RegistryWithDefault<SimilarityDetector> {
     private static AlgorithmRegistry instance;
 
-    private AlgorithmRegistry() {
+    private AlgorithmRegistry() throws NoSuchImplementationException {
         super("edu.wpi.checksims.algorithm", SimilarityDetector.class, LineSimilarityChecker.getInstance().getName());
     }
 
     public static AlgorithmRegistry getInstance() {
         if(instance == null) {
-            instance = new AlgorithmRegistry();
+            try {
+                instance = new AlgorithmRegistry();
+            } catch(NoSuchImplementationException e) {
+                throw new RuntimeException("Cannot instantiate AlgorithmRegistry", e);
+            }
         }
 
         return instance;

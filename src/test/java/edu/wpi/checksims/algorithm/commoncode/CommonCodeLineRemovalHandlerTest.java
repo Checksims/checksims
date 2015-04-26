@@ -1,40 +1,52 @@
+/*
+ * CDDL HEADER START
+ *
+ * The contents of this file are subject to the terms of the
+ * Common Development and Distribution License (the "License").
+ * You may not use this file except in compliance with the License.
+ *
+ * See LICENSE.txt included in this distribution for the specific
+ * language governing permissions and limitations under the License.
+ *
+ * When distributing Covered Code, include this CDDL HEADER in each
+ * file and include the License file at LICENSE.txt.
+ * If applicable, add the following below this CDDL HEADER, with the
+ * fields enclosed by brackets "[]" replaced with your own identifying
+ * information: Portions Copyright [yyyy] [name of copyright owner]
+ *
+ * CDDL HEADER END
+ *
+ * Copyright (c) 2014-2015 Matthew Heon and Dolan Murvihill
+ */
+
 package edu.wpi.checksims.algorithm.commoncode;
 
-import com.google.common.collect.Iterables;
-import edu.wpi.checksims.submission.ConcreteSubmission;
 import edu.wpi.checksims.submission.EmptySubmissionException;
 import edu.wpi.checksims.submission.Submission;
-import edu.wpi.checksims.token.TokenList;
-import edu.wpi.checksims.token.TokenType;
-import edu.wpi.checksims.token.tokenizer.FileTokenizer;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static edu.wpi.checksims.testutil.SubmissionUtils.*;
 
 /**
  * Tests for the Common Code Line Removal Handler
  */
 public class CommonCodeLineRemovalHandlerTest {
-    private static Submission empty;
-    private static Submission abc;
-    private static Submission abcde;
-    private static Submission def;
-    private static FileTokenizer tokenizer;
+    private Submission empty;
+    private Submission abc;
+    private Submission abcde;
+    private Submission def;
 
     @Before
     public void setUp() throws Exception {
-        tokenizer = FileTokenizer.getTokenizer(TokenType.CHARACTER);
-
-        empty = new ConcreteSubmission("Empty", "", new TokenList(TokenType.CHARACTER));
-        abc = new ConcreteSubmission("ABC", "A\nB\nC\n", tokenizer.splitFile("A\nB\nC\n"));
-        abcde = new ConcreteSubmission("ABCDE", "A\nB\nC\nD\nE\n", tokenizer.splitFile("A\nB\nC\nD\nE\n"));
-        def = new ConcreteSubmission("DEF", "D\nE\nF\n", tokenizer.splitFile("D\nE\nF\n"));
+        empty = charSubmissionFromString("Empty", "");
+        abc = charSubmissionFromString("ABC", "A\nB\nC\n");
+        abcde = charSubmissionFromString("ABCDE", "A\nB\nC\nD\nE\n");
+        def = charSubmissionFromString("DEF", "D\nE\nF\n");
     }
 
     @Test(expected = EmptySubmissionException.class)
@@ -45,99 +57,67 @@ public class CommonCodeLineRemovalHandlerTest {
     @Test
     public void TestRemoveCommonCodeFromEmpty() throws Exception {
         CommonCodeLineRemovalHandler handler = new CommonCodeLineRemovalHandler(abc);
-        Collection<Submission> removeFrom = Arrays.asList(empty);
+        Set<Submission> removeFrom = setFromElements(empty);
 
         Collection<Submission> result = handler.handleCommonCode(removeFrom);
 
-        assertNotNull(result);
-        assertEquals(result.size(), 1);
-        Submission processed = Iterables.get(result, 0);
-        assertEquals(processed.getName(), empty.getName());
-        assertEquals(processed.getContentAsString(), empty.getContentAsString());
-        assertEquals(processed.getContentAsTokens(), empty.getContentAsTokens());
-        assertEquals(processed, empty);
+        checkSubmissionCollections(result, removeFrom);
     }
 
     @Test
     public void TestRemoveIdenticalCommonCodeReturnsEmpty() throws Exception {
         CommonCodeLineRemovalHandler handler = new CommonCodeLineRemovalHandler(abc);
-        Collection<Submission> removeFrom = Arrays.asList(abc);
-        Submission expected = new ConcreteSubmission(abc.getName(), empty.getContentAsString(), empty.getContentAsTokens());
+        Set<Submission> removeFrom = setFromElements(abc);
+        Submission expected = charSubmissionFromString(abc.getName(), empty.getContentAsString());
 
         Collection<Submission> results = handler.handleCommonCode(removeFrom);
 
-        assertNotNull(results);
-        assertEquals(results.size(), 1);
-        Submission processed = Iterables.get(results, 0);
-        assertEquals(processed.getName(), expected.getName());
-        assertEquals(processed.getContentAsString(), expected.getContentAsString());
-        assertEquals(processed.getContentAsTokens(), expected.getContentAsTokens());
-        assertEquals(processed, expected);
+        checkSubmissionCollections(results, Arrays.asList(expected));
     }
 
     @Test
     public void TestRemoveCommonCodeNoOverlapReturnsIdentical() throws Exception {
         CommonCodeLineRemovalHandler handler = new CommonCodeLineRemovalHandler(def);
-        Collection<Submission> removeFrom = Arrays.asList(abc);
+        Set<Submission> removeFrom = setFromElements(abc);
 
         Collection<Submission> results = handler.handleCommonCode(removeFrom);
 
-        assertNotNull(results);
-        assertEquals(results.size(), 1);
-        Submission processed = Iterables.get(results, 0);
-        assertEquals(processed.getName(), abc.getName());
-        assertEquals(processed.getContentAsString(), abc.getContentAsString());
-        assertEquals(processed.getContentAsTokens(), abc.getContentAsTokens());
-        assertEquals(processed, abc);
+        checkSubmissionCollections(results, removeFrom);
     }
 
     @Test
     public void TestRemoveCommonCodePartialOverlap() throws Exception {
         CommonCodeLineRemovalHandler handler = new CommonCodeLineRemovalHandler(abc);
-        Collection<Submission> removeFrom = Arrays.asList(abcde);
-        Submission expected = new ConcreteSubmission(abcde.getName(), "D\nE\n", tokenizer.splitFile("D\nE\n"));
+        Set<Submission> removeFrom = setFromElements(abcde);
+        Submission expected = charSubmissionFromString(abcde.getName(), "D\nE\n");
 
         Collection<Submission> results = handler.handleCommonCode(removeFrom);
 
-        assertNotNull(results);
-        assertEquals(results.size(), 1);
-        Submission processed = Iterables.get(results, 0);
-        assertEquals(processed.getName(), expected.getName());
-        assertEquals(processed.getContentAsString(), expected.getContentAsString());
-        assertEquals(processed.getContentAsTokens(), expected.getContentAsTokens());
-        assertEquals(processed, expected);
+        checkSubmissionCollections(results, Arrays.asList(expected));
     }
 
     @Test
     public void TestRemoveCommonCodeSubsetOfCommon() throws Exception {
         CommonCodeLineRemovalHandler handler = new CommonCodeLineRemovalHandler(abcde);
-        Collection<Submission> removeFrom = Arrays.asList(abc);
-        Submission expected = new ConcreteSubmission(abc.getName(), empty.getContentAsString(), empty.getContentAsTokens());
+        Set<Submission> removeFrom = setFromElements(abc);
+        Submission expected = charSubmissionFromString(abc.getName(), empty.getContentAsString());
 
         Collection<Submission> results = handler.handleCommonCode(removeFrom);
 
-        assertNotNull(results);
-        assertEquals(results.size(), 1);
-        Submission processed = Iterables.get(results, 0);
-        assertEquals(processed.getName(), expected.getName());
-        assertEquals(processed.getContentAsString(), expected.getContentAsString());
-        assertEquals(processed.getContentAsTokens(), expected.getContentAsTokens());
-        assertEquals(processed, expected);
+        checkSubmissionCollections(results, Arrays.asList(expected));
     }
 
     @Test
     public void TestRemoveCommonCodeMultipleSubmissions() throws Exception {
         CommonCodeLineRemovalHandler handler = new CommonCodeLineRemovalHandler(abc);
-        Collection<Submission> removeFrom = Arrays.asList(abc, abcde, def);
-        Submission expected1 = new ConcreteSubmission(abc.getName(), empty.getContentAsString(), empty.getContentAsTokens());
-        Submission expected2 = new ConcreteSubmission(abcde.getName(), "D\nE\n", tokenizer.splitFile("D\nE\n"));
+        Set<Submission> removeFrom = setFromElements(abc, abcde, def);
+        Submission expected1 = charSubmissionFromString(abc.getName(), empty.getContentAsString());
+        Submission expected2 = charSubmissionFromString(abcde.getName(), "D\nE\n");
         Submission expected3 = def;
+        Collection<Submission> expected = Arrays.asList(expected1, expected2, expected3);
 
         Collection<Submission> results = handler.handleCommonCode(removeFrom);
-        assertNotNull(results);
-        assertEquals(results.size(), 3);
-        assertTrue(results.contains(expected1));
-        assertTrue(results.contains(expected2));
-        assertTrue(results.contains(expected3));
+
+        checkSubmissionCollections(results, expected);
     }
 }

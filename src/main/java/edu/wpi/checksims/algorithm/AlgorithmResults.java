@@ -24,6 +24,9 @@ package edu.wpi.checksims.algorithm;
 import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.token.TokenList;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Results for a pairwise comparison algorithm
  */
@@ -35,7 +38,22 @@ public final class AlgorithmResults {
     public final TokenList finalListA;
     public final TokenList finalListB;
 
+    // TODO consider refactoring to remove identicalTokensA and identicalTokensB - just compute at runtime?
     public AlgorithmResults(Submission a, Submission b, int identicalTokensA, int identicalTokensB, TokenList finalListA, TokenList finalListB) {
+        checkNotNull(a);
+        checkNotNull(b);
+        checkNotNull(finalListA);
+        checkNotNull(finalListB);
+
+        int invalACount = (int)finalListA.stream().filter((token) -> !token.isValid()).count();
+        int invalBCount = (int)finalListB.stream().filter((token) -> !token.isValid()).count();
+
+        // Verify that identicalTokens matches the number of invalid tokens in the list
+        checkArgument(invalACount == identicalTokensA, "Insane AlgorithmResults detected - " + invalACount +
+                " invalid tokens found, but " + identicalTokensA + " reported for submission " + a.getName());
+        checkArgument(invalBCount == identicalTokensB, "Insane AlgorithmResults detected - " + invalBCount +
+                " invalid tokens found, but " + identicalTokensB + " reported for submission " + b.getName());
+
         this.a = a;
         this.b = b;
         this.identicalTokensA = identicalTokensA;
@@ -65,5 +83,23 @@ public final class AlgorithmResults {
     @Override
     public String toString() {
         return "Similarity results for submissions named " + a.getName() + " and " + b.getName();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if(!(other instanceof AlgorithmResults)) {
+            return false;
+        }
+
+        AlgorithmResults otherResults = (AlgorithmResults)other;
+
+        return this.a.equals(otherResults.a) && this.b.equals(otherResults.b) && this.finalListA.equals(otherResults.finalListA)
+                && this.finalListB.equals(otherResults.finalListB) && this.identicalTokensA == otherResults.identicalTokensA
+                && this.identicalTokensB == otherResults.identicalTokensB;
+    }
+
+    @Override
+    public int hashCode() {
+        return a.hashCode() ^ b.hashCode();
     }
 }

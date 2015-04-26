@@ -23,12 +23,10 @@ package edu.wpi.checksims.algorithm.preprocessor;
 
 import edu.wpi.checksims.submission.ConcreteSubmission;
 import edu.wpi.checksims.submission.Submission;
-import edu.wpi.checksims.token.Token;
 import edu.wpi.checksims.token.TokenList;
-import edu.wpi.checksims.token.tokenizer.FileTokenizer;
+import edu.wpi.checksims.token.tokenizer.Tokenizer;
 
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Lowercases tokens to prevent case from interfering with comparisons
@@ -53,7 +51,9 @@ public class LowercasePreprocessor implements SubmissionPreprocessor {
 
     @Override
     public Submission process(Submission submission) {
-        FileTokenizer tokenizer = FileTokenizer.getTokenizer(submission.getTokenType());
+        checkNotNull(submission);
+
+        Tokenizer tokenizer = Tokenizer.getTokenizer(submission.getTokenType());
 
         // Lowercase the content of the submission, then retokenize
         String contentLower = submission.getContentAsString().toLowerCase();

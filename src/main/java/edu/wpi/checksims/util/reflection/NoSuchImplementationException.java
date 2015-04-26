@@ -19,18 +19,21 @@
  * Copyright (c) 2014-2015 Matthew Heon and Dolan Murvihill
  */
 
-package edu.wpi.checksims.util;
+package edu.wpi.checksims.util.reflection;
+
+import edu.wpi.checksims.ChecksimsException;
 
 /**
- * Represents a direction to an adjacent cell in a two-dimensional array
+ * Exception thrown when no matching implementation is available in a registry
  */
-public enum Direction {
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT,
-    UPLEFT,
-    UPRIGHT,
-    DOWNLEFT,
-    DOWNRIGHT,
+public class NoSuchImplementationException extends ChecksimsException {
+    private static final long serialVersionUID = 1L;
+
+    public NoSuchImplementationException(String message) {
+        super(message);
+    }
+
+    public NoSuchImplementationException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

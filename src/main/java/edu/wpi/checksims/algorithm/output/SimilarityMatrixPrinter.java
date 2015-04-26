@@ -21,6 +21,7 @@
 
 package edu.wpi.checksims.algorithm.output;
 
+import edu.wpi.checksims.algorithm.InternalAlgorithmError;
 import edu.wpi.checksims.util.reflection.NamedInstantiable;
 
 /**
@@ -33,6 +34,6 @@ public interface SimilarityMatrixPrinter extends NamedInstantiable {
      * @param matrix Matrix to print
      * @return Some implementation-defined output representing the matrix
      */
-    public String printMatrix(SimilarityMatrix matrix);
+    public String printMatrix(SimilarityMatrix matrix) throws InternalAlgorithmError;
 }
 
