@@ -5,8 +5,6 @@ Unit Tests
 ----------
 - Additional CLI parsing tests
 - Integration tests
-- Output strategy tests
-- Similarity Matrix tests
 
 Project Administration
 ----------------------
@@ -16,14 +14,13 @@ Project Administration
 Code Cleanup
 ------------
 - Exception rewrite. Convert many RuntimeExceptions to checked exceptions
-- Refactor SimilarityMatrix (add clarity, handle potentially missing results, etc)
 - Clean up AlgorithmResults (still very messy, poorly documented)
 
 Minor Improvements
 ------------------
 - Archive directory support
 - Add handling for empty submissions (flag to include, default do not include)
-- Leading & Trailing Whitespace Trimming Preprocessor
+- Leading and Trailing Whitespace Trimming Preprocessor
 - Optimizations, bugfixes, and further testing of Smith-Waterman algorithm implementation
 
 Major new features
