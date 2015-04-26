@@ -28,11 +28,11 @@ import edu.wpi.checksims.token.TokenType;
  * Interface to read in a file and return it as a list of tokens of a certain type
  */
 public interface Tokenizer {
-    public TokenList splitFile(String string);
+    TokenList splitFile(String string);
 
-    public TokenType getType();
+    TokenType getType();
 
-    public static Tokenizer getTokenizer(TokenType type) {
+    static Tokenizer getTokenizer(TokenType type) {
         switch(type) {
             case CHARACTER:
                 return CharTokenizer.getInstance();

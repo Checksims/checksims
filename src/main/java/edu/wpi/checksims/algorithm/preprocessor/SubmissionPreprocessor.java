@@ -39,5 +39,5 @@ public interface SubmissionPreprocessor extends NamedInstantiable {
      * @return Result of transforming the input submission's contents
      * @throws InternalAlgorithmError Thrown on internal error preprocessing submission
      */
-    public Submission process(Submission submission) throws InternalAlgorithmError;
+    Submission process(Submission submission) throws InternalAlgorithmError;
 }

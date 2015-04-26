@@ -108,4 +108,13 @@ public class MatrixEntryTest {
 
         assertNotEquals(test1, test2);
     }
+
+    @Test
+    public void TestGetTotalTokens() {
+        MatrixEntry test1 = new MatrixEntry(a, b, 0);
+        MatrixEntry test2 = new MatrixEntry(ab, a, 1);
+
+        assertEquals(1, test1.getTotalTokens());
+        assertEquals(2, test2.getTotalTokens());
+    }
 }

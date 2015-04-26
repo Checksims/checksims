@@ -40,6 +40,7 @@ import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Collections.*;
 
 /**
  * Per-run configuration of Checksims
@@ -79,7 +80,7 @@ public final class ChecksimsConfig {
         this.submissions = ImmutableSet.copyOf(new ArrayList<>());
         this.preprocessors = ImmutableList.copyOf(new ArrayList<>());
         this.commonCodeHandler = CommonCodePassthroughHandler.getInstance();
-        this.outputPrinters = ImmutableList.copyOf(Arrays.asList(OutputRegistry.getInstance().getDefaultImplementation()));
+        this.outputPrinters = ImmutableList.copyOf(singletonList(OutputRegistry.getInstance().getDefaultImplementation()));
         this.outputMethod = OutputToStdoutPrinter.getInstance();
         this.numThreads = Runtime.getRuntime().availableProcessors();
     }

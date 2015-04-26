@@ -21,7 +21,6 @@
 
 package edu.wpi.checksims.algorithm.commoncode;
 
-import edu.wpi.checksims.algorithm.InternalAlgorithmError;
 import edu.wpi.checksims.submission.Submission;
 
 import java.util.Set;
@@ -36,5 +35,5 @@ public interface CommonCodeHandler {
      * @param input Submissions to handle common code within
      * @return Result of processing submissions for common code
      */
-    public Set<Submission> handleCommonCode(Set<Submission> input);
+    Set<Submission> handleCommonCode(Set<Submission> input);
 }

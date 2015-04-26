@@ -41,6 +41,7 @@ import static edu.wpi.checksims.testutil.SubmissionUtils.setFromElements;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 /**
  * Tests for similarity matrix
@@ -49,7 +50,6 @@ public class SimilarityMatrixTest {
     private Submission a;
     private Submission b;
     private Submission c;
-    private Submission d;
     private AlgorithmResults aToA;
     private AlgorithmResults aToB;
     private AlgorithmResults aToC;
@@ -67,7 +67,7 @@ public class SimilarityMatrixTest {
         a = charSubmissionFromString("A", "A");
         b = charSubmissionFromString("B", "B");
         c = charSubmissionFromString("C", "C");
-        d = charSubmissionFromString("D", "D");
+        Submission d = charSubmissionFromString("D", "D");
 
         TokenList aInval = TokenList.cloneTokenList(a.getContentAsTokens());
         aInval.get(0).setValid(false);
@@ -289,6 +289,11 @@ public class SimilarityMatrixTest {
     @Test
     public void TestBasicEquality() {
         assertEquals(baseMatrixTwoSubmission, baseMatrixTwoSubmission);
+    }
+
+    @Test
+    public void TestBasicInequality() {
+        assertNotEquals(baseMatrixTwoSubmission, archiveMatrixTwoSubmissionOneArchive);
     }
 
     @Test

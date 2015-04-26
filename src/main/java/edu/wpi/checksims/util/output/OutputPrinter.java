@@ -34,5 +34,5 @@ public interface OutputPrinter {
      * @param toPrint Output matrix to print
      * @param printWith Strategy to use when printing
      */
-    public void print(SimilarityMatrix toPrint, SimilarityMatrixPrinter printWith);
+    void print(SimilarityMatrix toPrint, SimilarityMatrixPrinter printWith);
 }

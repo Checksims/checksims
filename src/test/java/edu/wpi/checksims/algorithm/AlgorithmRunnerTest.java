@@ -36,6 +36,7 @@ import java.util.Set;
 
 import static edu.wpi.checksims.testutil.SubmissionUtils.charSubmissionFromString;
 import static edu.wpi.checksims.testutil.SubmissionUtils.setFromElements;
+import static java.util.Collections.singleton;
 
 /**
  * Tests for the AlgorithmRunner class
@@ -87,7 +88,7 @@ public class AlgorithmRunnerTest {
     public void TestRunAlgorithmNullAlgorithm() {
         expectedEx.expect(NullPointerException.class);
 
-        AlgorithmRunner.runAlgorithm(setFromElements(Pair.of(a, b)), null);
+        AlgorithmRunner.runAlgorithm(singleton(Pair.of(a, b)), null);
     }
 
     @Test
@@ -99,7 +100,7 @@ public class AlgorithmRunnerTest {
 
     @Test
     public void TestRunAlgorithmSinglePair() {
-        Set<Pair<Submission, Submission>> submissions = setFromElements(Pair.of(a, b));
+        Set<Pair<Submission, Submission>> submissions = singleton(Pair.of(a, b));
         Collection<AlgorithmResults> results = AlgorithmRunner.runAlgorithm(submissions, detectNothing);
 
         AlgorithmUtils.checkResultsContainsPairs(results, submissions);

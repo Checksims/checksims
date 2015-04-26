@@ -30,6 +30,7 @@ import java.util.*;
 import static edu.wpi.checksims.testutil.SubmissionUtils.charSubmissionFromString;
 import static edu.wpi.checksims.testutil.SubmissionUtils.checkSubmissionCollections;
 import static edu.wpi.checksims.testutil.SubmissionUtils.setFromElements;
+import static java.util.Collections.*;
 
 /**
  * Tests for the Common Code passthrough handler
@@ -51,7 +52,7 @@ public class CommonCodePassthroughHandlerTest {
 
         empty = new HashSet<>();
 
-        oneSubmission = setFromElements(a);
+        oneSubmission = singleton(a);
 
         twoSubmissions = setFromElements(a, b);
 
