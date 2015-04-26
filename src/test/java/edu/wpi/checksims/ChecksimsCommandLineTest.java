@@ -22,9 +22,9 @@
 package edu.wpi.checksims;
 
 import edu.wpi.checksims.algorithm.AlgorithmRegistry;
-import edu.wpi.checksims.algorithm.output.OutputRegistry;
 import edu.wpi.checksims.algorithm.preprocessor.SubmissionPreprocessor;
 import edu.wpi.checksims.algorithm.similaritymatrix.output.MatrixPrinter;
+import edu.wpi.checksims.algorithm.similaritymatrix.output.MatrixPrinterRegistry;
 import edu.wpi.checksims.token.TokenType;
 import edu.wpi.checksims.util.output.OutputAsFilePrinter;
 import edu.wpi.checksims.util.output.OutputToStdoutPrinter;
@@ -437,7 +437,7 @@ public class ChecksimsCommandLineTest {
         ChecksimsConfig config = parseToConfig(new String[] {});
 
         assertEquals(1, config.getOutputPrinters().size());
-        assertEquals(OutputRegistry.getInstance().getDefaultImplementationName(), config.getOutputPrinters().get(0).getName());
+        assertEquals(MatrixPrinterRegistry.getInstance().getDefaultImplementationName(), config.getOutputPrinters().get(0).getName());
     }
 
     @Test(expected = ChecksimsException.class)
