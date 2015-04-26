@@ -21,7 +21,6 @@
 
 package edu.wpi.checksims.submission;
 
-import edu.wpi.checksims.testutil.SubmissionUtils;
 import edu.wpi.checksims.token.TokenType;
 import edu.wpi.checksims.token.tokenizer.Tokenizer;
 import org.junit.Before;
@@ -36,9 +35,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static edu.wpi.checksims.testutil.SubmissionUtils.*;
-import static edu.wpi.checksims.testutil.SubmissionUtils.checkSubmissionCollections;
-import static edu.wpi.checksims.testutil.SubmissionUtils.lineSubmissionFromString;
-import static java.util.Collections.*;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
