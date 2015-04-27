@@ -175,6 +175,7 @@
                                         <!-- Enforce annotation style -->
                                         <module name="AnnotationUseStyle"/>
 
+                                        <!-- Enforce Java array style (String[] x not String x[]) -->
                                         <module name="ArrayTypeStyle"/>
 
                                         <!-- Ensure that if we define equals(T) we also define equals(Object) -->
@@ -214,6 +215,38 @@
 
                                         <!-- Enforce no fallthrough in case statements -->
                                         <module name="FallThrough"/>
+
+                                        <!-- Enforce whitespace around keywords and binary operators -->
+                                        <!-- Notable exclusions are for() if() catch() and while() -->
+                                        <module name="WhitespaceAround">
+                                            <property name="tokens" value="ASSIGN, BAND, BAND_ASSIGN, BOR,
+				                                BOR_ASSIGN, BSR, BSR_ASSIGN, BXOR, BXOR_ASSIGN, COLON, DIV, DIV_ASSIGN,
+				                                EQUAL, GE, GT, LAND, LE, LITERAL_DO, LITERAL_ELSE, LITERAL_FINALLY,
+				                                LITERAL_RETURN, LITERAL_SYNCHRONIZED, LITERAL_TRY, LOR, LT, MINUS,
+				                                MINUS_ASSIGN, MOD, MOD_ASSIGN, NOT_EQUAL, PLUS, PLUS_ASSIGN, QUESTION,
+				                                SL, SL_ASSIGN, SR_ASSIGN, STAR, STAR_ASSIGN"/>
+                                        </module>
+
+                                        <!-- Enforce whitespace after commas and semicolons -->
+                                        <module name="WhitespaceAfter">
+                                            <property name="tokens" value="COMMA, SEMI"/>
+                                        </module>
+
+                                        <!-- Enforce no whitespace after certain tokens -->
+                                        <module name="NoWhitespaceAfter">
+                                            <!-- Checks that there is no whitespace after various unary operators.
+                                                Linebreaks are allowed. -->
+                                            <property name="tokens" value="BNOT, DEC, DOT, INC, LNOT, UNARY_MINUS, UNARY_PLUS"/>
+                                        </module>
+
+                                        <!-- Check that there is no whitespace before various unary operators (newlines are allowed) -->
+                                        <module name="NoWhitespaceBefore">
+                                            <property name="tokens" value="SEMI, DOT, POST_DEC, POST_INC"/>
+                                            <property name="allowLineBreaks" value="true"/>
+                                        </module>
+
+                                        <!-- Ensure no whitespace padding after ( and before ). Newlines allowed. -->
+                                        <module name="ParenPad"/>
                                     </module>
                                 </module>
                             </checkstyleRules>

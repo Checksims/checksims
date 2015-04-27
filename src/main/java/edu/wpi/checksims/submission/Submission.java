@@ -194,7 +194,7 @@ public interface Submission extends Comparable<Submission> {
      * @return Array of files which match in this single directory
      */
     static File[] getMatchingFilesFromDir(File directory, String glob)
-            throws NoSuchFileException,NotDirectoryException {
+            throws NoSuchFileException, NotDirectoryException {
         checkNotNull(directory);
         checkNotNull(glob);
         checkArgument(!glob.isEmpty(), "Glob pattern cannot be empty");

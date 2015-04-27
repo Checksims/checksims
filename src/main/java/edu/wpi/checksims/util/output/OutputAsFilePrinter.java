@@ -75,7 +75,7 @@ public class OutputAsFilePrinter implements OutputPrinter {
 
         try {
             FileUtils.writeStringToFile(outputTo, printWith.printMatrix(toPrint), StandardCharsets.UTF_8);
-        } catch(IOException|InternalAlgorithmError e) {
+        } catch(IOException | InternalAlgorithmError e) {
             throw new RuntimeException("Could not write output to file", e);
         }
     }
