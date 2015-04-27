@@ -33,6 +33,7 @@ public final class ValidityEnsuringToken extends AbstractTokenDecorator {
 
     @Override
     public boolean equals(Object other) {
+        // Ensure that comparison against invalid tokens is Very Fast by making this the first condition
         if(!this.isValid()) {
             return false;
         }
@@ -43,6 +44,6 @@ public final class ValidityEnsuringToken extends AbstractTokenDecorator {
 
         Token otherToken = (Token)other;
 
-        return otherToken.getType().equals(this.getType()) && otherToken.getLexeme() == this.getLexeme() && otherToken.isValid() && this.isValid();
+        return otherToken.getType().equals(this.getType()) && otherToken.getLexeme() == this.getLexeme() && otherToken.isValid();
     }
 }

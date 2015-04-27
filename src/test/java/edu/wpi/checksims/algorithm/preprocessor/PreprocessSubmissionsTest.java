@@ -31,6 +31,7 @@ import java.util.*;
 import static edu.wpi.checksims.testutil.SubmissionUtils.checkSubmissionCollections;
 import static edu.wpi.checksims.testutil.SubmissionUtils.lineSubmissionFromString;
 import static edu.wpi.checksims.testutil.SubmissionUtils.setFromElements;
+import static java.util.Collections.*;
 import static org.junit.Assert.*;
 
 /**
@@ -51,7 +52,7 @@ public class PreprocessSubmissionsTest {
         b = lineSubmissionFromString("Submission B", "B");
 
         empty = new HashSet<>();
-        oneSubmission = setFromElements(a);
+        oneSubmission = singleton(a);
         twoSubmissions = setFromElements(a, b);
 
         identity = new SubmissionPreprocessor() {
@@ -100,8 +101,7 @@ public class PreprocessSubmissionsTest {
         Collection<Submission> results = PreprocessSubmissions.process(renamer, oneSubmission);
         Submission expected = lineSubmissionFromString("renamed " + a.getName(), a.getContentAsString());
 
-        assertNotNull(results);
-        assertTrue(results.contains(expected));
+        checkSubmissionCollections(singleton(expected), results);
     }
 
     @Test

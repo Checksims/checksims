@@ -22,20 +22,26 @@
 package edu.wpi.checksims;
 
 import com.google.common.collect.ImmutableSet;
-import edu.wpi.checksims.algorithm.output.SimilarityMatrix;
-import edu.wpi.checksims.algorithm.output.SimilarityMatrixPrinter;
+import edu.wpi.checksims.algorithm.AlgorithmResults;
+import edu.wpi.checksims.algorithm.AlgorithmRunner;
+import edu.wpi.checksims.algorithm.InternalAlgorithmError;
+import edu.wpi.checksims.algorithm.similaritymatrix.SimilarityMatrix;
 import edu.wpi.checksims.algorithm.preprocessor.PreprocessSubmissions;
 import edu.wpi.checksims.algorithm.preprocessor.SubmissionPreprocessor;
+import edu.wpi.checksims.algorithm.similaritymatrix.output.MatrixPrinter;
 import edu.wpi.checksims.submission.Submission;
+import edu.wpi.checksims.util.PairGenerator;
 import edu.wpi.checksims.util.output.OutputPrinter;
 import edu.wpi.checksims.util.threading.ParallelAlgorithm;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -124,17 +130,26 @@ public class ChecksimsRunner {
         }
 
         // Apply algorithm to submission
-        SimilarityMatrix results = SimilarityMatrix.generate(submissions, config.getAlgorithm());
+        Set<Pair<Submission, Submission>> allPairs = PairGenerator.generatePairs(submissions);
+        Set<AlgorithmResults> results = AlgorithmRunner.runAlgorithm(allPairs, config.getAlgorithm());
+        try {
+            SimilarityMatrix resultsMatrix = SimilarityMatrix.generateMatrix(submissions, results);
 
-        // All parallel jobs are done, shut down the parallel executor
-        ParallelAlgorithm.shutdownExecutor();
+            // All parallel jobs are done, shut down the parallel executor
+            ParallelAlgorithm.shutdownExecutor();
 
-        // Output using all output printers
-        OutputPrinter printer = config.getOutputMethod();
-        for(SimilarityMatrixPrinter p : config.getOutputPrinters()) {
-            logs.info("Generating " + p.getName() + " output");
+            // Output using all output printers
+            OutputPrinter printer = config.getOutputMethod();
+            for(MatrixPrinter p : config.getOutputPrinters()) {
+                logs.info("Generating " + p.getName() + " output");
 
-            printer.print(results, p);
+                printer.print(resultsMatrix, p);
+            }
+        } catch(InternalAlgorithmError e) {
+            logs.error("Error generating Similarity Matrix!");
+            logs.error(e.getMessage());
+            e.printStackTrace();
+            System.exit(-1);
         }
     }
 }

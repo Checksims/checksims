@@ -39,7 +39,7 @@ public interface SimilarityDetector extends NamedInstantiable {
     /**
      * @return Default token type to be used for this similarity detector
      */
-    public TokenType getDefaultTokenType();
+    TokenType getDefaultTokenType();
 
     /**
      * Apply a pairwise similarity detection algorithm
@@ -52,5 +52,5 @@ public interface SimilarityDetector extends NamedInstantiable {
      * @throws TokenTypeMismatchException Thrown on comparing two submissions with different token types
      * @throws InternalAlgorithmError Thrown on error detecting similarities
      */
-    public AlgorithmResults detectSimilarity(Submission a, Submission b) throws TokenTypeMismatchException, InternalAlgorithmError;
+    AlgorithmResults detectSimilarity(Submission a, Submission b) throws TokenTypeMismatchException, InternalAlgorithmError;
 }

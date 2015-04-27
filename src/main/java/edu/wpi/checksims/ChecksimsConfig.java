@@ -27,19 +27,22 @@ import edu.wpi.checksims.algorithm.AlgorithmRegistry;
 import edu.wpi.checksims.algorithm.SimilarityDetector;
 import edu.wpi.checksims.algorithm.commoncode.CommonCodeHandler;
 import edu.wpi.checksims.algorithm.commoncode.CommonCodePassthroughHandler;
-import edu.wpi.checksims.algorithm.output.OutputRegistry;
-import edu.wpi.checksims.algorithm.output.SimilarityMatrixPrinter;
 import edu.wpi.checksims.algorithm.preprocessor.SubmissionPreprocessor;
+import edu.wpi.checksims.algorithm.similaritymatrix.output.MatrixPrinter;
+import edu.wpi.checksims.algorithm.similaritymatrix.output.MatrixPrinterRegistry;
 import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.token.TokenType;
 import edu.wpi.checksims.util.output.OutputPrinter;
 import edu.wpi.checksims.util.output.OutputToStdoutPrinter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Collections.singletonList;
 
 /**
  * Per-run configuration of Checksims
@@ -50,12 +53,12 @@ public final class ChecksimsConfig {
     private ImmutableList<SubmissionPreprocessor> preprocessors;
     private ImmutableSet<Submission> submissions;
     private CommonCodeHandler commonCodeHandler;
-    private ImmutableList<SimilarityMatrixPrinter> outputPrinters;
+    private ImmutableList<MatrixPrinter> outputPrinters;
     private OutputPrinter outputMethod;
     private int numThreads;
 
     private ChecksimsConfig(SimilarityDetector algorithm, TokenType tokenization, List<SubmissionPreprocessor> preprocessors,
-                            Set<Submission> submissions, CommonCodeHandler commonCodeHandler, List<SimilarityMatrixPrinter> outputPrinters,
+                            Set<Submission> submissions, CommonCodeHandler commonCodeHandler, List<MatrixPrinter> outputPrinters,
                             OutputPrinter outputMethod, int numThreads) {
         this.algorithm = algorithm;
         this.tokenization = tokenization;
@@ -79,7 +82,7 @@ public final class ChecksimsConfig {
         this.submissions = ImmutableSet.copyOf(new ArrayList<>());
         this.preprocessors = ImmutableList.copyOf(new ArrayList<>());
         this.commonCodeHandler = CommonCodePassthroughHandler.getInstance();
-        this.outputPrinters = ImmutableList.copyOf(Arrays.asList(OutputRegistry.getInstance().getDefaultImplementation()));
+        this.outputPrinters = ImmutableList.copyOf(singletonList(MatrixPrinterRegistry.getInstance().getDefaultImplementation()));
         this.outputMethod = OutputToStdoutPrinter.getInstance();
         this.numThreads = Runtime.getRuntime().availableProcessors();
     }
@@ -115,7 +118,7 @@ public final class ChecksimsConfig {
     }
 
     /**
-     * @param newPreprocessors New list of preprocessors to apply
+     * @param newPreprocessors New list of preprocessors to apply. Can be empty.
      * @return Copy of configuration with new preprocessor list
      */
     public ChecksimsConfig setPreprocessors(List<SubmissionPreprocessor> newPreprocessors) {
@@ -135,7 +138,7 @@ public final class ChecksimsConfig {
     }
 
     /**
-     * @param newSubmissions New list of submissions to work on
+     * @param newSubmissions New list of submissions to work on. Must contain at least 1 submission.
      * @return Copy of configuration with new submissions list
      */
     public ChecksimsConfig setSubmissions(Set<Submission> newSubmissions) {
@@ -162,16 +165,16 @@ public final class ChecksimsConfig {
     }
 
     /**
-     * @param newOutputPrinters List of output strategies to use
+     * @param newOutputPrinters List of output strategies to use. Cannot be empty.
      * @return Copy of configuration with new list of output strategies
      */
-    public ChecksimsConfig setOutputPrinters(List<SimilarityMatrixPrinter> newOutputPrinters) {
+    public ChecksimsConfig setOutputPrinters(List<MatrixPrinter> newOutputPrinters) {
         checkNotNull(newOutputPrinters);
         checkArgument(!newOutputPrinters.isEmpty(), "Must provide at least one valid output printer!");
 
         // Ensure all printers are unique
         // Can't use a set, we don't require output strategies to implement equals() or hashCode() in sane ways
-        Set<String> names = newOutputPrinters.stream().map(SimilarityMatrixPrinter::getName).collect(Collectors.toSet());
+        Set<String> names = newOutputPrinters.stream().map(MatrixPrinter::getName).collect(Collectors.toSet());
         if(names.size() != newOutputPrinters.size()) {
             throw new IllegalArgumentException("Output printers must be unique!");
         }
@@ -196,7 +199,7 @@ public final class ChecksimsConfig {
     }
 
     /**
-     * @param numThreads Number of threads to be used for parallel operations
+     * @param numThreads Number of threads to be used for parallel operations. Must be greater than 0.
      * @return Copy of configuration with new number of threads set
      */
     public ChecksimsConfig setNumThreads(int numThreads) {
@@ -246,7 +249,7 @@ public final class ChecksimsConfig {
     /**
      * @return List of output methods requested
      */
-    public ImmutableList<SimilarityMatrixPrinter> getOutputPrinters() {
+    public ImmutableList<MatrixPrinter> getOutputPrinters() {
         return outputPrinters;
     }
 

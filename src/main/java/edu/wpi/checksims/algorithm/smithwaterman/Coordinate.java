@@ -79,6 +79,9 @@ public final class Coordinate extends Pair<Integer, Integer> {
      */
     @Override
     public Integer getRight() {
+        // IntelliJ seems to think that getRight() shouldn't actually be the Y coordinate
+        // This makes it happy
+        //noinspection SuspiciousNameCombination
         return y;
     }
 

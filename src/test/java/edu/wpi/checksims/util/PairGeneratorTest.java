@@ -33,6 +33,7 @@ import java.util.Set;
 
 import static edu.wpi.checksims.testutil.SubmissionUtils.charSubmissionFromString;
 import static edu.wpi.checksims.testutil.SubmissionUtils.setFromElements;
+import static java.util.Collections.singleton;
 import static org.junit.Assert.*;
 
 /**
@@ -82,14 +83,14 @@ public class PairGeneratorTest {
     public void TestGenerateFromOneElementSetThrowsException() {
         expectedEx.expect(IllegalArgumentException.class);
 
-        Set<Submission> submissions = setFromElements(a);
+        Set<Submission> submissions = singleton(a);
         PairGenerator.generatePairs(submissions);
     }
 
     @Test
     public void TestGenerateFromTwoElementSet() {
         Set<Submission> submissions = setFromElements(a, b);
-        Set<Pair<Submission, Submission>> expected = setFromElements(Pair.of(a, b));
+        Set<Pair<Submission, Submission>> expected = singleton(Pair.of(a, b));
         Set<Pair<Submission, Submission>> results = PairGenerator.generatePairs(submissions);
 
         checkPairsAreInSet(results, expected);

@@ -19,30 +19,30 @@
  * Copyright (c) 2014-2015 Matthew Heon and Dolan Murvihill
  */
 
-package edu.wpi.checksims.algorithm.output;
+package edu.wpi.checksims.algorithm.similaritymatrix.output;
 
 import edu.wpi.checksims.util.reflection.NoSuchImplementationException;
 import edu.wpi.checksims.util.reflection.RegistryWithDefault;
 
 /**
- * Registry for valid output strategies
+ * Registry for Matrix Printers
  */
-public final class OutputRegistry extends RegistryWithDefault<SimilarityMatrixPrinter> {
-    private static OutputRegistry instance;
+public class MatrixPrinterRegistry extends RegistryWithDefault<MatrixPrinter> {
+    private static MatrixPrinterRegistry instance;
 
-    private OutputRegistry() throws NoSuchImplementationException {
-        super("edu.wpi.checksims.algorithm.output", SimilarityMatrixPrinter.class, SimilarityMatrixThresholdPrinter.getInstance().getName());
+    private MatrixPrinterRegistry() throws NoSuchImplementationException {
+        super("edu.wpi.checksims.algorithm.similaritymatrix.output", MatrixPrinter.class, MatrixThresholdPrinter.getInstance().getName());
     }
 
     /**
-     * @return Sole instance of the OutputRegistry singleton
+     * @return Singleton instance of MatrixPrinterRegistry
      */
-    public static OutputRegistry getInstance() {
+    public static MatrixPrinterRegistry getInstance() {
         if(instance == null) {
             try {
-                instance = new OutputRegistry();
+                instance = new MatrixPrinterRegistry();
             } catch(NoSuchImplementationException e) {
-                throw new RuntimeException("Error instantiating OutputRegistry", e);
+                throw new RuntimeException(e);
             }
         }
 
@@ -51,6 +51,6 @@ public final class OutputRegistry extends RegistryWithDefault<SimilarityMatrixPr
 
     @Override
     public String toString() {
-        return "Singleton instance of OutputRegistry";
+        return "Singleton instance of MatrixPrinterRegistry";
     }
 }

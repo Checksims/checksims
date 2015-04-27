@@ -19,21 +19,21 @@
  * Copyright (c) 2014-2015 Matthew Heon and Dolan Murvihill
  */
 
-package edu.wpi.checksims.algorithm.commoncode;
+package edu.wpi.checksims.submission;
 
-import edu.wpi.checksims.submission.Submission;
-
-import java.util.Set;
+import edu.wpi.checksims.ChecksimsException;
 
 /**
- * A handler for Common Code Removal
+ * Exception thrown when no the requested submission cannot be found
  */
-public interface CommonCodeHandler {
-    /**
-     * Handle common code in given submissions
-     *
-     * @param input Submissions to handle common code within
-     * @return Result of processing submissions for common code
-     */
-    Set<Submission> handleCommonCode(Set<Submission> input);
+public class NoSuchSubmissionException extends ChecksimsException {
+    private static final long serialVersionUID = 1L;
+
+    public NoSuchSubmissionException(String message) {
+        super(message);
+    }
+
+    public NoSuchSubmissionException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

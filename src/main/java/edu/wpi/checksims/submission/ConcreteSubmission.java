@@ -37,6 +37,16 @@ public final class ConcreteSubmission implements Submission {
     private final String content;
     private final String name;
 
+    /**
+     * Construct a new Concrete Submission with given name and contents
+     *
+     * Token content should be the result of tokenizing the string content of the submission with some tokenizer. This
+     * invariant is maintained throughout the project, but not enforced.
+     *
+     * @param name Name of new submission
+     * @param content Content of submission, as string
+     * @param tokens Content of submission, as token
+     */
     public ConcreteSubmission(String name, String content, TokenList tokens) {
         checkNotNull(name);
         checkArgument(!name.isEmpty(), "Submission name cannot be empty");
@@ -92,5 +102,20 @@ public final class ConcreteSubmission implements Submission {
     @Override
     public int hashCode() {
         return name.hashCode();
+    }
+
+    /**
+     * Compare two Submissions, using natural ordering by name
+     *
+     * Note that the natural ordering of ConcreteSubmission is inconsistent with equality. Ordering is based solely on
+     * the name of a submission; two submissions with the same name, but different contents, will have compareTo()
+     * return 0, but equals() return false
+     *
+     * @param other Submission to compare to
+     * @return Integer indicating relative ordering of the submissions
+     */
+    @Override
+    public int compareTo(Submission other) {
+        return this.name.compareTo(other.getName());
     }
 }

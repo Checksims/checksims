@@ -22,8 +22,8 @@
 package edu.wpi.checksims.util.output;
 
 import edu.wpi.checksims.algorithm.InternalAlgorithmError;
-import edu.wpi.checksims.algorithm.output.SimilarityMatrix;
-import edu.wpi.checksims.algorithm.output.SimilarityMatrixPrinter;
+import edu.wpi.checksims.algorithm.similaritymatrix.SimilarityMatrix;
+import edu.wpi.checksims.algorithm.similaritymatrix.output.MatrixPrinter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,7 +56,7 @@ public class OutputToStringPrinter implements OutputPrinter {
      * @param printWith Strategy to use when printing
      */
     @Override
-    public void print(SimilarityMatrix toPrint, SimilarityMatrixPrinter printWith) {
+    public void print(SimilarityMatrix toPrint, MatrixPrinter printWith) {
         checkNotNull(toPrint);
         checkNotNull(printWith);
 
