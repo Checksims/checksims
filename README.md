@@ -36,4 +36,8 @@ Known Dependencies for building documentation:
 Contributing
 ------------
 
+Please verify all tests pass and style guidelines are followed with:
+
+`mvn verify`
+
 TO DO
