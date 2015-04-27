@@ -41,4 +41,9 @@ public final class ValidityIgnoringToken extends AbstractTokenDecorator {
 
         return otherToken.getType().equals(this.getType()) && otherToken.getLexeme() == this.getLexeme();
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

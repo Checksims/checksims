@@ -385,7 +385,7 @@ public class SmithWatermanAlgorithm {
         checkArgument(wholeArray.contains(toCompute.getMax()), "Maximum of subset out of bounds: "
                 + toCompute.getMax() + " not within " + wholeArray);
 
-        Map<Integer, Set<Coordinate>> candidates = new HashMap<>();
+        Map<Integer, Set<Coordinate>> newCandidates = new HashMap<>();
 
         for(int x = toCompute.getOrigin().getX(); x < toCompute.getMax().getX(); x++) {
             Token xToken = new ValidityEnsuringToken(xList.get(x - 1));
@@ -458,8 +458,8 @@ public class SmithWatermanAlgorithm {
                 // Check if we our result is significant
                 if(newS >= threshold && newS > newM) {
                     // It's significant, add it to our results
-                    if(candidates.containsKey(newS)) {
-                        Set<Coordinate> valuesForKey = candidates.get(newS);
+                    if(newCandidates.containsKey(newS)) {
+                        Set<Coordinate> valuesForKey = newCandidates.get(newS);
 
                         valuesForKey.add(Coordinate.of(x, y));
                     } else {
@@ -467,13 +467,13 @@ public class SmithWatermanAlgorithm {
 
                         valuesForKey.add(Coordinate.of(x, y));
 
-                        candidates.put(newS, valuesForKey);
+                        newCandidates.put(newS, valuesForKey);
                     }
                 }
             }
         }
 
-        return candidates;
+        return newCandidates;
     }
 
     /**

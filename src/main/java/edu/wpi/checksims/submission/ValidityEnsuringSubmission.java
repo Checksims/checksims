@@ -62,4 +62,9 @@ public final class ValidityEnsuringSubmission extends AbstractSubmissionDecorato
 
         return thisList.equals(otherList);
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

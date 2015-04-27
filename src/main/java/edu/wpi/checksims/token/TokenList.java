@@ -111,6 +111,8 @@ public class TokenList extends PredicatedList<Token> {
     /**
      * Perform a deep copy of a TokenList.
      *
+     * TODO add a copy constructor as well
+     *
      * @param cloneFrom List to deep copy
      * @return Cloned copy of the tokenization list
      */

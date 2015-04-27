@@ -27,7 +27,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Interface for comparable tokens of various types.
  */
 public final class ConcreteToken implements Token {
-    private boolean isValid;
+    private boolean valid;
     private final int lexeme;
     private final TokenType type;
 
@@ -46,19 +46,19 @@ public final class ConcreteToken implements Token {
      *
      * @param token Object the token represents
      * @param type Type of token
-     * @param isValid Whether the token is valid
+     * @param valid Whether the token is valid
      */
-    public ConcreteToken(Object token, TokenType type, boolean isValid) {
+    public ConcreteToken(Object token, TokenType type, boolean valid) {
         checkNotNull(token);
         checkNotNull(type);
 
-        this.isValid = isValid;
+        this.valid = valid;
         this.type = type;
         this.lexeme = LexemeMap.getLexemeForToken(token);
     }
 
-    private ConcreteToken(int lexeme, TokenType type, boolean isValid) {
-        this.isValid = isValid;
+    private ConcreteToken(int lexeme, TokenType type, boolean valid) {
+        this.valid = valid;
         this.type = type;
         this.lexeme = lexeme;
     }
@@ -88,7 +88,7 @@ public final class ConcreteToken implements Token {
      */
     @Override
     public boolean isValid() {
-        return isValid;
+        return valid;
     }
 
     /**
@@ -96,7 +96,7 @@ public final class ConcreteToken implements Token {
      */
     @Override
     public void setValid(boolean isValid) {
-        this.isValid = isValid;
+        this.valid = isValid;
     }
 
     /**
@@ -113,7 +113,7 @@ public final class ConcreteToken implements Token {
 
         return otherToken.getType().equals(this.type)
                 && otherToken.getLexeme() == this.lexeme
-                && otherToken.isValid() == this.isValid;
+                && otherToken.isValid() == this.valid;
     }
 
     @Override
@@ -128,6 +128,8 @@ public final class ConcreteToken implements Token {
 
     /**
      * Perform a deep-copy of a token, returning a new, identical instance.
+     *
+     * TODO add copy constructor as well
      *
      * @param token Token to copy
      * @return New, identical copy of that token

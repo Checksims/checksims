@@ -202,15 +202,15 @@ public final class ChecksimsConfig {
     }
 
     /**
-     * @param numThreads Number of threads to be used for parallel operations. Must be greater than 0.
+     * @param newNumThreads Number of threads to be used for parallel operations. Must be greater than 0.
      * @return Copy of configuration with new number of threads set
      */
-    public ChecksimsConfig setNumThreads(int numThreads) {
-        checkArgument(numThreads > 0, "Attempted to set number of threads to " + numThreads
+    public ChecksimsConfig setNumThreads(int newNumThreads) {
+        checkArgument(newNumThreads > 0, "Attempted to set number of threads to " + newNumThreads
                 + " - must be positive integer!");
 
         ChecksimsConfig newConfig = getCopy();
-        newConfig.numThreads = numThreads;
+        newConfig.numThreads = newNumThreads;
 
         return newConfig;
     }

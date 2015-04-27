@@ -147,6 +147,7 @@
                                         <property name="lineSeparator" value="lf"/>
                                     </module>
 
+                                    <!-- All AST related checks -->
                                     <module name="TreeWalker">
                                         <!-- Ensure no redundant or unused import statements -->
                                         <module name="RedundantImport"/>
@@ -155,10 +156,64 @@
                                         <!-- Enforce Javadoc formatting -->
                                         <module name="JavadocStyle"/>
 
+                                        <!-- Enforce positioning of left curly brace -->
+                                        <module name="LeftCurly"/>
+
+                                        <!-- Enforce positioning of right curly brace on some statement types -->
+                                        <module name="RightCurly">
+                                            <property name="option" value="same"/>
+                                        </module>
+
+                                        <!-- Enforce braces around if, else, for, while, do, etc -->
+                                        <module name="NeedBraces"/>
+
                                         <!-- Enforce 120 max line length, as opposed to 80 -->
                                         <module name="LineLength">
                                             <property name="max" value="120"/>
                                         </module>
+
+                                        <!-- Enforce annotation style -->
+                                        <module name="AnnotationUseStyle"/>
+
+                                        <module name="ArrayTypeStyle"/>
+
+                                        <!-- Ensure that if we define equals(T) we also define equals(Object) -->
+                                        <module name="CovariantEquals"/>
+
+                                        <!-- Enforce overriding hashCode if equals is overridden -->
+                                        <module name="EqualsHashCode"/>
+
+                                        <!-- Enforce not shadowing local variables or parameters -->
+                                        <!-- Allowed in constructors and setters -->
+                                        <module name="HiddenField">
+                                            <property name="ignoreConstructorParameter" value="true"/>
+                                            <property name="ignoreSetter" value="true"/>
+                                        </module>
+
+                                        <!-- Enforce no empty statements -->
+                                        <module name="EmptyStatement"/>
+
+                                        <!-- Enforce not modifying for loop control vars outside of the for()... statement -->
+                                        <module name="ModifiedControlVariable"/>
+
+                                        <!-- Enforce simplification of boolean expressions and returns -->
+                                        <module name="SimplifyBooleanExpression"/>
+                                        <module name="SimplifyBooleanReturn"/>
+
+                                        <!-- Check for accidental uses of == with strings -->
+                                        <module name="StringLiteralEquality"/>
+
+                                        <!-- Enforce no inner assignments -->
+                                        <module name="InnerAssignment"/>
+
+                                        <!-- Enforce package declaration - you need to declare one -->
+                                        <module name="PackageDeclaration"/>
+
+                                        <!-- Enforce modifier order -->
+                                        <module name="ModifierOrder"/>
+
+                                        <!-- Enforce no fallthrough in case statements -->
+                                        <module name="FallThrough"/>
                                     </module>
                                 </module>
                             </checkstyleRules>

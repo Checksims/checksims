@@ -48,4 +48,9 @@ public final class ValidityEnsuringToken extends AbstractTokenDecorator {
                 && otherToken.getLexeme() == this.getLexeme()
                 && otherToken.isValid();
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }
