@@ -84,10 +84,12 @@ public final class ChecksimsCommandLine {
         Option preprocess = new Option("p", "preprocess", true, "preprocessors to apply");
         Option jobs = new Option("j", "jobs", true, "number of threads to use");
         Option verbose = new Option("v", "verbose", false, "specify verbose output");
-        Option doubleVerbose = new Option("vv", "veryverbose", false, "specify very verbose output. supercedes -v if both specified.");
+        Option doubleVerbose = new Option("vv", "veryverbose", false,
+                "specify very verbose output. supercedes -v if both specified.");
         Option help = new Option("h", "help", false, "show usage information");
         Option common = new Option("c", "common", true, "remove common code contained in given directory");
-        Option recursive = new Option("r", "recursive", false, "recursively traverse subdirectories to generate submissions");
+        Option recursive = new Option("r", "recursive", false,
+                "recursively traverse subdirectories to generate submissions");
         Option version = new Option("version", false, "print version of Checksims");
 
         opts.addOption(alg);
@@ -123,18 +125,23 @@ public final class ChecksimsCommandLine {
         HelpFormatter f = new HelpFormatter();
         PrintWriter systemErr = new PrintWriter(System.err, true);
 
-        f.printHelp(systemErr, 80, "checksims [args] glob directory [directory2 ...]", "checksims: check similarity of student submissions", getOpts(), 2, 4, "");
+        f.printHelp(systemErr, 80, "checksims [args] glob directory [directory2 ...]",
+                "checksims: check similarity of student submissions", getOpts(), 2, 4, "");
 
         System.err.println("\nSupported Similarity Detection Algorithms:");
-        AlgorithmRegistry.getInstance().getSupportedImplementationNames().stream().forEach((name) -> System.err.print(name + ", "));
+        AlgorithmRegistry.getInstance().getSupportedImplementationNames().stream().
+                forEach((name) -> System.err.print(name + ", "));
         System.err.println("\nDefault algorithm is " + AlgorithmRegistry.getInstance().getDefaultImplementationName());
 
         System.err.println("\nSupported Output Strategies:");
-        MatrixPrinterRegistry.getInstance().getSupportedImplementationNames().stream().forEach((name) -> System.err.print(name + ", "));
-        System.err.println("\nDefault strategy is " + MatrixPrinterRegistry.getInstance().getDefaultImplementationName());
+        MatrixPrinterRegistry.getInstance().getSupportedImplementationNames().stream().
+                forEach((name) -> System.err.print(name + ", "));
+        System.err.println("\nDefault strategy is "
+                + MatrixPrinterRegistry.getInstance().getDefaultImplementationName());
 
         System.err.println("\nAvailable Preprocessors:");
-        PreprocessorRegistry.getInstance().getSupportedImplementationNames().stream().forEach((name) -> System.err.print(name + ", "));
+        PreprocessorRegistry.getInstance().getSupportedImplementationNames().stream().
+                forEach((name) -> System.err.print(name + ", "));
         System.err.println();
 
         System.err.println("\nChecksims Version " + ChecksimsRunner.getChecksimsVersion() + "\n\n");
@@ -162,7 +169,8 @@ public final class ChecksimsCommandLine {
 
         // Parse plagiarism detection algorithm
         if(cli.hasOption("a")) {
-            config = config.setAlgorithm(AlgorithmRegistry.getInstance().getImplementationInstance(cli.getOptionValue("a")));
+            config = config.setAlgorithm(
+                    AlgorithmRegistry.getInstance().getImplementationInstance(cli.getOptionValue("a")));
             config = config.setTokenization(config.getAlgorithm().getDefaultTokenType());
         }
 
@@ -240,7 +248,8 @@ public final class ChecksimsCommandLine {
      * @throws ChecksimsException Thrown if no files matching the glob pattern are found in the common code directory
      * @throws IOException Thrown on error creating common code submission
      */
-    static CommonCodeHandler parseCommonCodeSetting(CommandLine cli, String glob, Tokenizer tokenizer, boolean recursive) throws ChecksimsException, IOException {
+    static CommonCodeHandler parseCommonCodeSetting(CommandLine cli, String glob, Tokenizer tokenizer,
+                                                    boolean recursive) throws ChecksimsException, IOException {
         checkNotNull(cli);
         checkNotNull(glob);
 
@@ -275,7 +284,8 @@ public final class ChecksimsCommandLine {
      * @return Collection of submissions which will be used to run Checksims
      * @throws IOException Thrown on issue reading files or traversing directories to build submissions
      */
-    static Set<Submission> getSubmissions(CommandLine cli, String glob, Tokenizer tokenizer, boolean recursive) throws IOException, ChecksimsException {
+    static Set<Submission> getSubmissions(CommandLine cli, String glob, Tokenizer tokenizer, boolean recursive)
+            throws IOException, ChecksimsException {
         checkNotNull(cli);
         checkNotNull(glob);
 

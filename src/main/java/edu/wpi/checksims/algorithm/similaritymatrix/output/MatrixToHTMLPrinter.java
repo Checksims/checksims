@@ -39,6 +39,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class MatrixToHTMLPrinter implements MatrixPrinter {
     private static MatrixToHTMLPrinter instance;
 
+    private static final String templateLocation = "/edu/wpi/checksims/algorithm/similaritymatrix/output/htmlOutput.vm";
+
     private MatrixToHTMLPrinter() {}
 
     /**
@@ -66,7 +68,7 @@ public class MatrixToHTMLPrinter implements MatrixPrinter {
         checkNotNull(matrix);
 
         DecimalFormat f = new DecimalFormat("###.00");
-        InputStream stream = this.getClass().getResourceAsStream("/edu/wpi/checksims/algorithm/similaritymatrix/output/htmlOutput.vm");
+        InputStream stream = this.getClass().getResourceAsStream(templateLocation);
 
         if(stream == null) {
             throw new InternalAlgorithmError("Could not resolve resource for HTML output template!");

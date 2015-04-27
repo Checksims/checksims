@@ -54,10 +54,12 @@ public final class AlgorithmResults {
         checkNotNull(b);
         checkNotNull(finalListA);
         checkNotNull(finalListB);
-        checkArgument(a.getNumTokens() == finalListA.size(), "Token size mismatch when creating algorithm results for submission \""
-                + a.getName() + "\" --- expected " + a.getNumTokens() + ", got " + finalListA.size());
-        checkArgument(b.getNumTokens() == finalListB.size(), "Token size mismatch when creating algorithm results for submission \""
-                + b.getName() + "\" --- expected " + b.getNumTokens() + ", got " + finalListB.size());
+        checkArgument(a.getNumTokens() == finalListA.size(),
+                "Token size mismatch when creating algorithm results for submission \"" + a.getName()
+                        + "\" --- expected " + a.getNumTokens() + ", got " + finalListA.size());
+        checkArgument(b.getNumTokens() == finalListB.size(),
+                "Token size mismatch when creating algorithm results for submission \"" + b.getName()
+                        + "\" --- expected " + b.getNumTokens() + ", got " + finalListB.size());
 
         this.a = a;
         this.b = b;
@@ -81,14 +83,14 @@ public final class AlgorithmResults {
     }
 
     /**
-     * @return Percentage similarity of submission A to submission B. Represented as a fraction - from 0.0 to 1.0 inclusive
+     * @return Percentage similarity of submission A to submission B. Represented as a double from 0.0 to 1.0 inclusive
      */
     public double percentMatchedA() {
         return percentMatchedA;
     }
 
     /**
-     * @return Percentage similarity of submission B to submission A. Represented as a fraction - from 0.0 to 1.0 inclusive
+     * @return Percentage similarity of submission B to submission A. Represented as a double from 0.0 to 1.0 inclusive
      */
     public double percentMatchedB() {
         return percentMatchedB;
@@ -107,8 +109,11 @@ public final class AlgorithmResults {
 
         AlgorithmResults otherResults = (AlgorithmResults)other;
 
-        return this.a.equals(otherResults.a) && this.b.equals(otherResults.b) && this.finalListA.equals(otherResults.finalListA)
-                && this.finalListB.equals(otherResults.finalListB) && this.identicalTokensA == otherResults.identicalTokensA
+        return this.a.equals(otherResults.a)
+                && this.b.equals(otherResults.b)
+                && this.finalListA.equals(otherResults.finalListA)
+                && this.finalListB.equals(otherResults.finalListB)
+                && this.identicalTokensA == otherResults.identicalTokensA
                 && this.identicalTokensB == otherResults.identicalTokensB;
     }
 

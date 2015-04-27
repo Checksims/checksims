@@ -58,7 +58,9 @@ public enum TokenType {
         TokenType[] types = TokenType.class.getEnumConstants();
 
         // Filter to find anything with a matching name
-        List<TokenType> matching = Arrays.stream(types).filter((type) -> type.name.equals(lowerInput)).collect(Collectors.toList());
+        List<TokenType> matching = Arrays.stream(types)
+                .filter((type) -> type.name.equals(lowerInput))
+                .collect(Collectors.toList());
 
         // If we find nothing, throw an exception
         if(matching.size() == 0) {

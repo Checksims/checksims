@@ -130,7 +130,7 @@ public class TokenList extends PredicatedList<Token> {
 
         TokenList otherList = (TokenList)other;
 
-        // The super.equals() call here is technically bad practice because we can't *guarantee* it's a PredicatedList<Token>
+        // The super.equals() call here is bad practice because we can't *guarantee* it's a PredicatedList<Token>
         // However, the instanceof TokenList should ensure that invariant is met
         return otherList.type.equals(this.type) && super.equals(otherList);
     }

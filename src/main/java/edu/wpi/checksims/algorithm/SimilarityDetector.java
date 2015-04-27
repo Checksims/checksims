@@ -52,5 +52,6 @@ public interface SimilarityDetector extends NamedInstantiable {
      * @throws TokenTypeMismatchException Thrown on comparing two submissions with different token types
      * @throws InternalAlgorithmError Thrown on error detecting similarities
      */
-    AlgorithmResults detectSimilarity(Submission a, Submission b) throws TokenTypeMismatchException, InternalAlgorithmError;
+    AlgorithmResults detectSimilarity(Submission a, Submission b)
+            throws TokenTypeMismatchException, InternalAlgorithmError;
 }

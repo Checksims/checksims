@@ -96,7 +96,10 @@ public final class ConcreteSubmission implements Submission {
 
         Submission otherSubmission = (Submission)other;
 
-        return otherSubmission.getName().equals(this.name) && otherSubmission.getNumTokens() == this.getNumTokens() && otherSubmission.getContentAsTokens().equals(this.tokenList) && otherSubmission.getContentAsString().equals(this.content);
+        return otherSubmission.getName().equals(this.name)
+                && otherSubmission.getNumTokens() == this.getNumTokens()
+                && otherSubmission.getContentAsTokens().equals(this.tokenList)
+                && otherSubmission.getContentAsString().equals(this.content);
     }
 
     @Override

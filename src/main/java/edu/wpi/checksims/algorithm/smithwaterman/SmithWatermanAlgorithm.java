@@ -45,7 +45,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class SmithWatermanAlgorithm {
     private final TokenList xList;
     private final TokenList yList;
-    private final ArraySubset wholeArray; // TODO should have one of these that is 1 before end of the array - prevent out of bounds
+    private final ArraySubset wholeArray; // TODO need one 1 before end of array to prevent out of bounds
     private final int[][] s;
     private final int[][] m;
     private Map<Integer, Set<Coordinate>> candidates;
@@ -223,8 +223,10 @@ public class SmithWatermanAlgorithm {
     Set<ArraySubset> generateSubsets(Coordinate origin, Coordinate max) {
         checkNotNull(origin);
         checkNotNull(max);
-        checkArgument(wholeArray.contains(origin), "Origin of requested area out of bounds: " + origin + " not within " + wholeArray);
-        checkArgument(wholeArray.contains(max), "Max of requested area out of bounds: " + max + " not within " + wholeArray);
+        checkArgument(wholeArray.contains(origin), "Origin of requested area out of bounds: " + origin
+                + " not within " + wholeArray);
+        checkArgument(wholeArray.contains(max), "Max of requested area out of bounds: " + max
+                + " not within " + wholeArray);
 
         Set<ArraySubset> toRecompute = new HashSet<>();
 
@@ -251,7 +253,8 @@ public class SmithWatermanAlgorithm {
         // Fourth: Below and to the right
         // Check if it exists
         if(max.getX() < (wholeArray.getMax().getX() - 1) && max.getY() < (wholeArray.getMax().getY() - 1)) {
-            toRecompute.add(ArraySubset.of(max.getX(), max.getY(), wholeArray.getMax().getX() - 1, wholeArray.getMax().getY() - 1));
+            toRecompute.add(ArraySubset.of(max.getX(), max.getY(), wholeArray.getMax().getX() - 1,
+                    wholeArray.getMax().getY() - 1));
         }
 
         // If none of the subsets were added, we matched the entire array
@@ -277,8 +280,10 @@ public class SmithWatermanAlgorithm {
     void zeroMatch(Coordinate origin, Coordinate max) {
         checkNotNull(origin);
         checkNotNull(max);
-        checkArgument(wholeArray.contains(origin), "Origin of requested area out of bounds: " + origin + " not within " + wholeArray);
-        checkArgument(wholeArray.contains(max), "Max of requested area out of bounds: " + max + " not within " + wholeArray);
+        checkArgument(wholeArray.contains(origin), "Origin of requested area out of bounds: " + origin
+                + " not within " + wholeArray);
+        checkArgument(wholeArray.contains(max), "Max of requested area out of bounds: " + max
+                + " not within " + wholeArray);
 
         int xLower = origin.getX();
         int xUpper = max.getX();
@@ -307,13 +312,15 @@ public class SmithWatermanAlgorithm {
      * Filter postdominated results of a match
      *
      * @param max Endpoint of match
-     * @return Filtered version of candidate results set, with all results postdominated by max (possibly including match) removed
+     * @return Filtered version of candidate results set, with all results postdominated by match removed
      */
     Map<Integer, Set<Coordinate>> filterPostdominated(Coordinate origin, Coordinate max) {
         checkNotNull(origin);
         checkNotNull(max);
-        checkArgument(wholeArray.contains(origin), "Origin of requested area out of bounds: " + origin + " not within " + wholeArray);
-        checkArgument(wholeArray.contains(max), "Max of requested area out of bounds: " + max + " not within " + wholeArray);
+        checkArgument(wholeArray.contains(origin), "Origin of requested area out of bounds: " + origin + " not within "
+                + wholeArray);
+        checkArgument(wholeArray.contains(max), "Max of requested area out of bounds: " + max + " not within "
+                + wholeArray);
 
         if(candidates.isEmpty()) {
             return candidates;
@@ -346,7 +353,10 @@ public class SmithWatermanAlgorithm {
                 // If the origin is NOT the same as the given origin, it's a candidate
                 if(!originOfCandidate.equals(origin)) {
                     // Also need to check if the origin and max are not within the rectangles identified
-                    if(xInval.contains(coord) || yInval.contains(coord) || xInval.contains(max) || yInval.contains(max)) {
+                    if(xInval.contains(coord)
+                            || yInval.contains(coord)
+                            || xInval.contains(max)
+                            || yInval.contains(max)) {
                         newSet.add(coord);
                     }
                 }
@@ -370,8 +380,10 @@ public class SmithWatermanAlgorithm {
      */
     Map<Integer, Set<Coordinate>> computeArraySubset(ArraySubset toCompute) {
         checkNotNull(toCompute);
-        checkArgument(wholeArray.contains(toCompute.getOrigin()), "Origin of subset out of bounds: " + toCompute.getOrigin() + " not within " + wholeArray);
-        checkArgument(wholeArray.contains(toCompute.getMax()), "Maximum of subset out of bounds: " + toCompute.getMax() + " not within " + wholeArray);
+        checkArgument(wholeArray.contains(toCompute.getOrigin()), "Origin of subset out of bounds: "
+                + toCompute.getOrigin() + " not within " + wholeArray);
+        checkArgument(wholeArray.contains(toCompute.getMax()), "Maximum of subset out of bounds: "
+                + toCompute.getMax() + " not within " + wholeArray);
 
         Map<Integer, Set<Coordinate>> candidates = new HashMap<>();
 
@@ -520,8 +532,10 @@ public class SmithWatermanAlgorithm {
      */
     Set<Coordinate> getMatchCoordinates(Coordinate matchCoord) {
         checkNotNull(matchCoord);
-        checkArgument(wholeArray.contains(matchCoord), "Requested match coordinate is out of bounds: " + matchCoord + " not within " + wholeArray);
-        checkArgument(s[matchCoord.getX()][matchCoord.getY()] != 0, "Requested match coordinate " + matchCoord + " points to 0 in S array!");
+        checkArgument(wholeArray.contains(matchCoord), "Requested match coordinate is out of bounds: "
+                + matchCoord + " not within " + wholeArray);
+        checkArgument(s[matchCoord.getX()][matchCoord.getY()] != 0, "Requested match coordinate "
+                + matchCoord + " points to 0 in S array!");
 
         Set<Coordinate> matchCoordinates = new HashSet<>();
 

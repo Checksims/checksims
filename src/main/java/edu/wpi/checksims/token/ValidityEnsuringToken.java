@@ -44,6 +44,8 @@ public final class ValidityEnsuringToken extends AbstractTokenDecorator {
 
         Token otherToken = (Token)other;
 
-        return otherToken.getType().equals(this.getType()) && otherToken.getLexeme() == this.getLexeme() && otherToken.isValid();
+        return otherToken.getType().equals(this.getType())
+                && otherToken.getLexeme() == this.getLexeme()
+                && otherToken.isValid();
     }
 }

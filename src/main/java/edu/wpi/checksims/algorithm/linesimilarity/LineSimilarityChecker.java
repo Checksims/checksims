@@ -92,7 +92,8 @@ public class LineSimilarityChecker implements SimilarityDetector {
      * @throws InternalAlgorithmError Thrown on error obtaining a hash algorithm instance
      */
     @Override
-    public AlgorithmResults detectSimilarity(Submission a, Submission b) throws TokenTypeMismatchException, InternalAlgorithmError {
+    public AlgorithmResults detectSimilarity(Submission a, Submission b)
+            throws TokenTypeMismatchException, InternalAlgorithmError {
         checkNotNull(a);
         checkNotNull(b);
 
@@ -103,7 +104,8 @@ public class LineSimilarityChecker implements SimilarityDetector {
 
         if(!a.getTokenType().equals(b.getTokenType())) {
             throw new TokenTypeMismatchException("Token list type mismatch: submission " + a.getName() + " has type " +
-                    linesA.type.toString() + ", while submission " + b.getName() + " has type " + linesB.type.toString());
+                    linesA.type.toString() + ", while submission " + b.getName() + " has type "
+                    + linesB.type.toString());
         } else if(a.equals(b)) {
             finalA.stream().forEach((token) -> token.setValid(false));
             finalB.stream().forEach((token) -> token.setValid(false));
@@ -177,15 +179,18 @@ public class LineSimilarityChecker implements SimilarityDetector {
         int invalTokensB = (int)finalB.stream().filter((token) -> !token.isValid()).count();
 
         if(invalTokensA != identicalLinesA) {
-            throw new InternalAlgorithmError("Internal error: number of identical tokens (" + identicalLinesA + ") does not match number of invalid tokens (" + invalTokensA + ")");
+            throw new InternalAlgorithmError("Internal error: number of identical tokens (" + identicalLinesA
+                    + ") does not match number of invalid tokens (" + invalTokensA + ")");
         } else if(invalTokensB != identicalLinesB) {
-            throw new InternalAlgorithmError("Internal error: number of identical tokens (" + identicalLinesB + ") does not match number of invalid tokens (" + invalTokensB + ")");
+            throw new InternalAlgorithmError("Internal error: number of identical tokens (" + identicalLinesB
+                    + ") does not match number of invalid tokens (" + invalTokensB + ")");
         }
 
         return new AlgorithmResults(a, b, finalA, finalB);
     }
 
-    void addLinesToMap(TokenList lines, Map<String, List<SubmissionLine>> lineDatabase, Submission submitter, MessageDigest hasher) {
+    void addLinesToMap(TokenList lines, Map<String, List<SubmissionLine>> lineDatabase, Submission submitter,
+                       MessageDigest hasher) {
         for(int i = 0; i < lines.size(); i++) {
             Token token = lines.get(i);
 

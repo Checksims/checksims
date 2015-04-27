@@ -31,7 +31,8 @@ public class MatrixPrinterRegistry extends RegistryWithDefault<MatrixPrinter> {
     private static MatrixPrinterRegistry instance;
 
     private MatrixPrinterRegistry() throws NoSuchImplementationException {
-        super("edu.wpi.checksims.algorithm.similaritymatrix.output", MatrixPrinter.class, MatrixThresholdPrinter.getInstance().getName());
+        super("edu.wpi.checksims.algorithm.similaritymatrix.output", MatrixPrinter.class,
+                MatrixThresholdPrinter.getInstance().getName());
     }
 
     /**

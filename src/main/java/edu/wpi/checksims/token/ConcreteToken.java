@@ -98,7 +98,9 @@ public final class ConcreteToken implements Token {
 
         Token otherToken = (Token)other;
 
-        return otherToken.getType().equals(this.type) && otherToken.getLexeme() == this.lexeme && otherToken.isValid() == this.isValid;
+        return otherToken.getType().equals(this.type)
+                && otherToken.getLexeme() == this.lexeme
+                && otherToken.isValid() == this.isValid;
     }
 
     @Override

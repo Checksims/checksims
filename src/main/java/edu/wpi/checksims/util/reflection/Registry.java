@@ -99,7 +99,8 @@ public class Registry<T extends NamedInstantiable> {
      * @param <T> Type of the original class, which all subclasses will be as well
      * @return List of instances of classes extending/implementing subclassesOf
      */
-    public static <T extends NamedInstantiable> Map<String, T> reflectiveInstantiator(String packageName, Class<T> subclassesOf) {
+    public static <T extends NamedInstantiable> Map<String, T> reflectiveInstantiator(String packageName,
+                                                                                      Class<T> subclassesOf) {
         Logger logs = LoggerFactory.getLogger(Registry.class);
 
         Map<String, T> allInstances = new HashMap<>();
@@ -133,11 +134,12 @@ public class Registry<T extends NamedInstantiable> {
 
                 // Ensure that getInstance returns a T
                 if(!subclassesOf.isAssignableFrom(getInstance.getReturnType())) {
-                    throw new RuntimeException("getInstance method for class " + type.getName() + " does not return a " + subclassesOf.getName());
+                    throw new RuntimeException("getInstance method for class " + type.getName() + " does not return a "
+                            + subclassesOf.getName());
                 }
 
                 // Invoke the method to get an instance
-                // Suppress the unchecked cast warning because, while technically unchecked, we verify it works with reflection above
+                // Suppress the unchecked cast warning because we verify it works with reflection above
                 @SuppressWarnings("unchecked")
                 T instance = (T)getInstance.invoke(null);
 

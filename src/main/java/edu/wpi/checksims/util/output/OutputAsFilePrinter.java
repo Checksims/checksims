@@ -43,7 +43,9 @@ public class OutputAsFilePrinter implements OutputPrinter {
     private static Logger logs = LoggerFactory.getLogger(OutputAsFilePrinter.class);
 
     /**
-     * @param baseName Base name of the file to output to. The name of the similarity matrix printer used will be appended to form final filename.
+     * The name of the matrix printer used will be appended to form the final filename where output is written
+     *
+     * @param baseName Base name of the file to output to.
      */
     public OutputAsFilePrinter(File baseName) {
         this.baseName = baseName;

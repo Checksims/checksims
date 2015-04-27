@@ -88,7 +88,7 @@ public class CommonCodeRemovalWorker implements Callable<Submission> {
         // Use the new submissions to compute this
         AlgorithmResults results = algorithm.detectSimilarity(computeIn, computeCommon);
 
-        // The results contains two TokenLists, representing the final state of the submissions after similarity detection
+        // The results contains two TokenLists, representing the final state of the submissions after detection
         // All common code should be marked invalid for the input submission's final list
         TokenList listWithCommonInvalid;
         double percentMatched;
@@ -114,7 +114,8 @@ public class CommonCodeRemovalWorker implements Callable<Submission> {
         TokenList finalListGoodTokenization = oldTokenizer.splitFile(newBody);
 
         DecimalFormat d = new DecimalFormat("###.00");
-        logs.trace("Submission " + removeFrom.getName() + " contained " + d.format(100 * percentMatched) + "% common code");
+        logs.trace("Submission " + removeFrom.getName() + " contained " + d.format(100 * percentMatched)
+                + "% common code");
         logs.trace("Removed " + identTokens + " common tokens (of " + removeFrom.getNumTokens() + " total)");
 
         return new ConcreteSubmission(removeFrom.getName(), newBody, finalListGoodTokenization);

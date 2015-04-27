@@ -84,6 +84,7 @@ public class SimilarityDetectionWorker implements Callable<AlgorithmResults> {
 
     @Override
     public String toString() {
-        return "Similarity detection worker for submissions \"" + submissions.getLeft().getName() + "\" and \"" + submissions.getRight().getName() + "\"";
+        return "Similarity detection worker for submissions \"" + submissions.getLeft().getName() + "\" and \""
+                + submissions.getRight().getName() + "\"";
     }
 }

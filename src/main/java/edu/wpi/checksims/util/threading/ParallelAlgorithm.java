@@ -46,18 +46,21 @@ public final class ParallelAlgorithm {
     private static Logger logs = LoggerFactory.getLogger(ParallelAlgorithm.class);
 
     private static int threadCount = Runtime.getRuntime().availableProcessors();
-    private static ThreadPoolExecutor executor = new ThreadPoolExecutor(threadCount, threadCount, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<>(), new ThreadPoolExecutor.AbortPolicy());
+    private static ThreadPoolExecutor executor = new ThreadPoolExecutor(threadCount, threadCount, 1, TimeUnit.SECONDS,
+            new LinkedBlockingQueue<>(), new ThreadPoolExecutor.AbortPolicy());
 
     /**
      * @param threads Number of threads to be used for execution
      */
     public static void setThreadCount(int threads) {
-        checkArgument(threads > 0, "Attempted to set number of threads to " + threads + ", but must be positive integer!");
+        checkArgument(threads > 0, "Attempted to set number of threads to " + threads
+                + ", but must be positive integer!");
 
         threadCount = threads;
         executor.shutdown();
         // Set up the executor again with the new thread count
-        executor = new ThreadPoolExecutor(threadCount, threadCount, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<>(), new ThreadPoolExecutor.AbortPolicy());
+        executor = new ThreadPoolExecutor(threadCount, threadCount, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<>(),
+                new ThreadPoolExecutor.AbortPolicy());
     }
 
     /**
@@ -82,12 +85,15 @@ public final class ParallelAlgorithm {
      * @param submissions Submissions to remove from
      * @return Submissions with common code removed
      */
-    public static Set<Submission> parallelCommonCodeRemoval(SimilarityDetector algorithm, Submission common, Set<Submission> submissions) {
+    public static Set<Submission> parallelCommonCodeRemoval(SimilarityDetector algorithm, Submission common,
+                                                            Set<Submission> submissions) {
         checkNotNull(algorithm);
         checkNotNull(common);
         checkNotNull(submissions);
 
-        Collection<CommonCodeRemovalWorker> workers = submissions.stream().map((submission) -> new CommonCodeRemovalWorker(algorithm, common, submission)).collect(Collectors.toList());
+        Collection<CommonCodeRemovalWorker> workers = submissions.stream()
+                .map((submission) -> new CommonCodeRemovalWorker(algorithm, common, submission))
+                .collect(Collectors.toList());
 
         return ImmutableSet.copyOf(executeTasks(workers));
     }
@@ -99,22 +105,28 @@ public final class ParallelAlgorithm {
      * @param pairs Pairs of submissions to perform detection on
      * @return Collection of results, one for each pair
      */
-    public static Set<AlgorithmResults> parallelSimilarityDetection(SimilarityDetector algorithm, Set<Pair<Submission, Submission>> pairs) {
+    public static Set<AlgorithmResults> parallelSimilarityDetection(SimilarityDetector algorithm, Set<Pair<Submission,
+            Submission>> pairs) {
         checkNotNull(algorithm);
         checkNotNull(pairs);
 
         // Map the pairs to ChecksimsWorker instances
-        Collection<SimilarityDetectionWorker> workers = pairs.stream().map((pair) -> new SimilarityDetectionWorker(algorithm, pair)).collect(Collectors.toList());
+        Collection<SimilarityDetectionWorker> workers = pairs.stream()
+                .map((pair) -> new SimilarityDetectionWorker(algorithm, pair))
+                .collect(Collectors.toList());
 
         return ImmutableSet.copyOf(executeTasks(workers));
     }
 
-    public static Set<Submission> parallelSubmissionPreprocessing(SubmissionPreprocessor preprocessor, Set<Submission> submissions) {
+    public static Set<Submission> parallelSubmissionPreprocessing(SubmissionPreprocessor preprocessor,
+                                                                  Set<Submission> submissions) {
         checkNotNull(preprocessor);
         checkNotNull(submissions);
 
         // Map the submissions to PreprocessorWorker instances
-        Collection<PreprocessorWorker> workers = submissions.stream().map((submission) -> new PreprocessorWorker(submission, preprocessor)).collect(Collectors.toList());
+        Collection<PreprocessorWorker> workers = submissions.stream()
+                .map((submission) -> new PreprocessorWorker(submission, preprocessor))
+                .collect(Collectors.toList());
 
         return ImmutableSet.copyOf(executeTasks(workers));
     }
