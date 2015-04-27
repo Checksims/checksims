@@ -38,7 +38,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Apply a given algorithm to a given set of data in parallel
+ * Apply a given algorithm to a given set of data in parallel.
  */
 public final class ParallelAlgorithm {
     private ParallelAlgorithm() {}
@@ -64,7 +64,7 @@ public final class ParallelAlgorithm {
     }
 
     /**
-     * Shut down the executor, preventing any more jobs from being processed
+     * Shut down the executor, preventing any more jobs from being processed.
      */
     public static void shutdownExecutor() {
         executor.shutdown();
@@ -78,7 +78,7 @@ public final class ParallelAlgorithm {
     }
 
     /**
-     * Remove common code in parallel
+     * Remove common code in parallel.
      *
      * @param algorithm Algorithm to use for common code removal
      * @param common Common code to remove
@@ -99,7 +99,7 @@ public final class ParallelAlgorithm {
     }
 
     /**
-     * Detect similarities in parallel
+     * Detect similarities in parallel.
      *
      * @param algorithm Algorithm to use for similarity detection
      * @param pairs Pairs of submissions to perform detection on
@@ -132,7 +132,7 @@ public final class ParallelAlgorithm {
     }
 
     /**
-     * Internal backend: Execute given tasks on a new thread pool
+     * Internal backend: Execute given tasks on a new thread pool.
      *
      * Expects Callable tasks, with non-void returns. If the need for void returning functions emerges, might need
      * another version of this?

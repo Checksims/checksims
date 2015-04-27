@@ -45,7 +45,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.Collections.singletonList;
 
 /**
- * Per-run configuration of Checksims
+ * Per-run configuration of Checksims.
  */
 public final class ChecksimsConfig {
     private SimilarityDetector algorithm;
@@ -75,7 +75,7 @@ public final class ChecksimsConfig {
     }
 
     /**
-     * Base constructor, returns default config
+     * Base constructor, returns default config.
      */
     public ChecksimsConfig() {
         this.algorithm = AlgorithmRegistry.getInstance().getDefaultImplementation();

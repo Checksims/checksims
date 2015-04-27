@@ -36,13 +36,13 @@ import java.util.Set;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Parent class for all registry implementations
+ * Parent class for all registry implementations.
  */
 public class Registry<T extends NamedInstantiable> {
     private final Map<String, T> registeredHandlers;
 
     /**
-     * Create a Registry instance for implementations of a given base class in the given package and subpackages
+     * Create a Registry instance for implementations of a given base class in the given package and subpackages.
      *
      * Please note that inner classes *WILL NOT BE REGISTERED* - only top-level classes will be included in a registry!
      *
@@ -71,7 +71,7 @@ public class Registry<T extends NamedInstantiable> {
     }
 
     /**
-     * Get an instance of an implementation with given name
+     * Get an instance of an implementation with given name.
      *
      * @param name Name to search for
      * @return Instance of implementation with given name
@@ -88,7 +88,7 @@ public class Registry<T extends NamedInstantiable> {
     }
 
     /**
-     * Instantiate all subclasses of a class in a given package
+     * Instantiate all subclasses of a class in a given package.
      *
      * All subclasses MUST implement a static, no arguments getInstance method
      *

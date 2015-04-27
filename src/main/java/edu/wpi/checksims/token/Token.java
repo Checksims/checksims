@@ -22,7 +22,7 @@
 package edu.wpi.checksims.token;
 
 /**
- * Interface for Tokens, to enable decorators
+ * Interface for Tokens, to enable decorators.
  */
 public interface Token {
     /**
@@ -59,7 +59,7 @@ public interface Token {
      * @param token Token to clone
      * @return Clone of token
      */
-    public static Token cloneToken(Token token) {
+    static Token cloneToken(Token token) {
         return ConcreteToken.cloneToken(token);
     }
 }

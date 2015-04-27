@@ -30,13 +30,16 @@ import java.util.Arrays;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Split a file into tokens based on spaces
+ * Split a file into tokens based on spaces.
  */
 public class WhitespaceTokenizer implements Tokenizer {
     private static WhitespaceTokenizer instance;
 
     private WhitespaceTokenizer() {}
 
+    /**
+     * @return Singleton instance of WhitespaceTokenizer
+     */
     public static WhitespaceTokenizer getInstance() {
         if(instance == null) {
             instance = new WhitespaceTokenizer();
@@ -46,7 +49,7 @@ public class WhitespaceTokenizer implements Tokenizer {
     }
 
     /**
-     * Split a string into whitespace-delineated tokens
+     * Split a string into whitespace-delineated tokens.
      *
      * @param string Input string
      * @return List of WHITESPACE tokens representing the input submission

@@ -142,7 +142,19 @@
                             <failOnViolation>true</failOnViolation>
                             <checkstyleRules>
                                 <module name="checker">
+                                    <!-- Ensure newline at EOF -->
+                                    <module name="NewlineAtEndOfFile">
+                                        <property name="lineSeparator" value="lf"/>
+                                    </module>
+
                                     <module name="TreeWalker">
+                                        <!-- Ensure no redundant or unused import statements -->
+                                        <module name="RedundantImport"/>
+                                        <module name="UnusedImports"/>
+
+                                        <!-- Enforce Javadoc formatting -->
+                                        <module name="JavadocStyle"/>
+
                                         <!-- Enforce 120 max line length, as opposed to 80 -->
                                         <module name="LineLength">
                                             <property name="max" value="120"/>

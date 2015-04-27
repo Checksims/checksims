@@ -34,7 +34,7 @@ import java.text.DecimalFormat;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Print a Similarity Matrix to HTML
+ * Print a Similarity Matrix to HTML.
  */
 public class MatrixToHTMLPrinter implements MatrixPrinter {
     private static MatrixToHTMLPrinter instance;
@@ -55,7 +55,7 @@ public class MatrixToHTMLPrinter implements MatrixPrinter {
     }
 
     /**
-     * Print a Similarity Matrix as a color-coded HTML page
+     * Print a Similarity Matrix as a color-coded HTML page.
      *
      * Uses Velocity templating
      *

@@ -35,7 +35,7 @@ import java.nio.charset.StandardCharsets;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Output results to a file
+ * Output results to a file.
  */
 public class OutputAsFilePrinter implements OutputPrinter {
     private final File baseName;
@@ -43,7 +43,7 @@ public class OutputAsFilePrinter implements OutputPrinter {
     private static Logger logs = LoggerFactory.getLogger(OutputAsFilePrinter.class);
 
     /**
-     * The name of the matrix printer used will be appended to form the final filename where output is written
+     * The name of the matrix printer used will be appended to form the final filename where output is written.
      *
      * @param baseName Base name of the file to output to.
      */
@@ -59,7 +59,7 @@ public class OutputAsFilePrinter implements OutputPrinter {
     }
 
     /**
-     * Print given similarity matrix to file
+     * Print given similarity matrix to file.
      *
      * @param toPrint Matrix to print
      * @param printWith Output strategy to use

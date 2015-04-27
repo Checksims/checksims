@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Print all results over a certain threshold
+ * Print all results over a certain threshold.
  */
 public class MatrixThresholdPrinter implements MatrixPrinter {
     private static MatrixThresholdPrinter instance;
@@ -57,7 +57,7 @@ public class MatrixThresholdPrinter implements MatrixPrinter {
     }
 
     /**
-     * Print significant results in a similarity matrix
+     * Print significant results in a similarity matrix.
      *
      * @param matrix Matrix to print
      * @return Results in matrix over threshold

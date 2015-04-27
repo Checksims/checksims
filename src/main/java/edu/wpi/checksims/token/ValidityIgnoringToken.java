@@ -22,7 +22,7 @@
 package edu.wpi.checksims.token;
 
 /**
- * Token which ignores validity when comparing
+ * Token which ignores validity when comparing.
  *
  * Decorates other tokens to override their equals() method
  */

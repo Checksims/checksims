@@ -25,13 +25,19 @@ import edu.wpi.checksims.token.TokenList;
 import edu.wpi.checksims.token.TokenType;
 
 /**
- * Interface to read in a file and return it as a list of tokens of a certain type
+ * Interface to read in a file and return it as a list of tokens of a certain type.
  */
 public interface Tokenizer {
     TokenList splitFile(String string);
 
     TokenType getType();
 
+    /**
+     * Get a Tokenizer for given token type.
+     *
+     * @param type Type of token
+     * @return Tokenizer for given type of token
+     */
     static Tokenizer getTokenizer(TokenType type) {
         switch(type) {
             case CHARACTER:

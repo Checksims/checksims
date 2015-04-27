@@ -30,7 +30,7 @@ import java.text.DecimalFormat;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Print a Similarity Matrix as machine-readable CSV
+ * Print a Similarity Matrix as machine-readable CSV.
  */
 public class MatrixToCSVPrinter implements MatrixPrinter {
     private static MatrixToCSVPrinter instance;
@@ -49,7 +49,7 @@ public class MatrixToCSVPrinter implements MatrixPrinter {
     }
 
     /**
-     * Print a Similarity Matrix in CSV format
+     * Print a Similarity Matrix in CSV format.
      *
      * @param matrix Matrix to print
      * @return CSV representation of matrix

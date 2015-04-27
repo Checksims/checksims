@@ -38,6 +38,9 @@ public class CharTokenizer implements Tokenizer {
 
     private CharTokenizer() {}
 
+    /**
+     * @return Singleton instance of CharTokenizer
+     */
     public static CharTokenizer getInstance() {
         if(instance == null) {
             instance = new CharTokenizer();
@@ -47,7 +50,7 @@ public class CharTokenizer implements Tokenizer {
     }
 
     /**
-     * Split a string into character tokens
+     * Split a string into character tokens.
      *
      * @param string String to split
      * @return Input string, with a single token representing each character

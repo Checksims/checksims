@@ -24,14 +24,14 @@ package edu.wpi.checksims.util.reflection;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Extension of a Registry with the ability to retrieve a default value
+ * Extension of a Registry with the ability to retrieve a default value.
  */
 public class RegistryWithDefault<T extends NamedInstantiable> extends Registry<T> {
     private final String defaultImplementation;
     private final T instanceOfDefault;
 
     /**
-     * Create a Registry instance for implementations of a given base class in the given package and subpackages
+     * Create a Registry instance for implementations of a given base class in the given package and subpackages.
      *
      * @param initPath Package to (recursively) search for implementations
      * @param baseClazz Base class or interface which all implementations in the registry extend or implement

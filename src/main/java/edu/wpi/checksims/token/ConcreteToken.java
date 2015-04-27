@@ -24,17 +24,30 @@ package edu.wpi.checksims.token;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Interface for comparable tokens of various types
+ * Interface for comparable tokens of various types.
  */
 public final class ConcreteToken implements Token {
     private boolean isValid;
     private final int lexeme;
     private final TokenType type;
 
+    /**
+     * Construct a valid token with given type.
+     *
+     * @param token Object the token represents
+     * @param type Type of token
+     */
     public ConcreteToken(Object token, TokenType type) {
         this(token, type, true);
     }
 
+    /**
+     * Construct a token with given type.
+     *
+     * @param token Object the token represents
+     * @param type Type of token
+     * @param isValid Whether the token is valid
+     */
     public ConcreteToken(Object token, TokenType type, boolean isValid) {
         checkNotNull(token);
         checkNotNull(type);
@@ -114,7 +127,7 @@ public final class ConcreteToken implements Token {
     }
 
     /**
-     * Perform a deep-copy of a token, returning a new, identical instance
+     * Perform a deep-copy of a token, returning a new, identical instance.
      *
      * @param token Token to copy
      * @return New, identical copy of that token

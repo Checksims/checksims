@@ -28,7 +28,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
- * Submission which ignores validity - tokens are compared ignoring their validity
+ * Submission which ignores validity - tokens are compared ignoring their validity.
  *
  * Decorates another submission and overrides equals()
  */

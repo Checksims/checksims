@@ -42,7 +42,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Interface for Submissions
+ * Interface for Submissions.
  *
  * Also contains factory methods for submissions
  */
@@ -73,7 +73,7 @@ public interface Submission extends Comparable<Submission> {
     TokenType getTokenType();
 
     /**
-     * Generate a list of all student submissions from a directory
+     * Generate a list of all student submissions from a directory.
      *
      * The directory is assumed to hold a number of subdirectories, each containing one student or group's submission
      * The student/group directories may contain subdirectories with files
@@ -122,7 +122,7 @@ public interface Submission extends Comparable<Submission> {
     }
 
     /**
-     * Get a single submission from a directory
+     * Get a single submission from a directory.
      *
      * @param directory Directory containing the student's submission
      * @param glob Match pattern used to identify files to include in submission
@@ -151,7 +151,7 @@ public interface Submission extends Comparable<Submission> {
     }
 
     /**
-     * Recursively find all files matching in a directory
+     * Recursively find all files matching in a directory.
      *
      * @param directory Directory to search in
      * @param glob Match pattern used to identify files to include
@@ -187,7 +187,7 @@ public interface Submission extends Comparable<Submission> {
     }
 
     /**
-     * Identify all files matching in a single directory
+     * Identify all files matching in a single directory.
      *
      * @param directory Directory to find files within
      * @param glob Match pattern used to identify files to include
@@ -211,7 +211,7 @@ public interface Submission extends Comparable<Submission> {
     }
 
     /**
-     * Turn a list of files and a name into a Submission
+     * Turn a list of files and a name into a Submission.
      *
      * The contents of a submission are built deterministically by reading in files in alphabetical order and appending
      * their contents.

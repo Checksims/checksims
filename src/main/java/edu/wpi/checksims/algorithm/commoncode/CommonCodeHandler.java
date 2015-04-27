@@ -26,11 +26,11 @@ import edu.wpi.checksims.submission.Submission;
 import java.util.Set;
 
 /**
- * A handler for Common Code Removal
+ * A handler for Common Code Removal.
  */
 public interface CommonCodeHandler {
     /**
-     * Handle common code in given submissions
+     * Handle common code in given submissions.
      *
      * @param input Submissions to handle common code within
      * @return Result of processing submissions for common code

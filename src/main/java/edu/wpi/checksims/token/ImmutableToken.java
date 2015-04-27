@@ -22,7 +22,7 @@
 package edu.wpi.checksims.token;
 
 /**
- * An immutable view of a token
+ * An immutable view of a token.
  */
 public final class ImmutableToken extends AbstractTokenDecorator {
     public ImmutableToken(Token wrappedToken) {

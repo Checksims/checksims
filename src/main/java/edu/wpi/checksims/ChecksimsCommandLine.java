@@ -49,11 +49,15 @@ import java.util.*;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Parses Checksims' command-line options
+ * Parses Checksims' command-line options.
  */
 public final class ChecksimsCommandLine {
     private static Logger logs;
 
+    /**
+     * @param level Logging level to use. Supported levels are 0 (nonverbose), 1 (verbose), 2 (very verbose)
+     * @return Logger with appropriate logging level
+     */
     static Logger startLogger(int level) {
         if(level == 1) {
             // Set verbose logging level
@@ -74,6 +78,9 @@ public final class ChecksimsCommandLine {
         return LoggerFactory.getLogger(ChecksimsCommandLine.class);
     }
 
+    /**
+     * @return CLI options used in Checksims
+     */
     static Options getOpts() {
         Options opts = new Options();
 
@@ -108,7 +115,13 @@ public final class ChecksimsCommandLine {
         return opts;
     }
 
-    // Parse a given set of CLI arguments
+    /**
+     * Parse a given set of CLI arguments into a Commons CLI CommandLine.
+     *
+     * @param args Arguments to parse
+     * @return CommandLine from parsed arguments
+     * @throws ParseException Thrown on error parsing arguments
+     */
     static CommandLine parseOpts(String[] args) throws ParseException {
         checkNotNull(args);
 
@@ -119,7 +132,7 @@ public final class ChecksimsCommandLine {
     }
 
     /**
-     * Print help message
+     * Print help message.
      */
     static void printHelp() {
         HelpFormatter f = new HelpFormatter();
@@ -150,7 +163,7 @@ public final class ChecksimsCommandLine {
     }
 
     /**
-     * Parse basic CLI flags and produce a ChecksimsConfig
+     * Parse basic CLI flags and produce a ChecksimsConfig.
      *
      * @param cli Parsed command line
      * @return Config derived from parsed CLI
@@ -234,7 +247,7 @@ public final class ChecksimsCommandLine {
     }
 
     /**
-     * Parse common code removal settings
+     * Parse common code removal settings.
      *
      * If the -c flag is not present, a CommonCodePassthroughHandler will be returned
      *
@@ -273,7 +286,7 @@ public final class ChecksimsCommandLine {
     }
 
     /**
-     * Build the collection of submissions Checksims will be run on
+     * Build the collection of submissions Checksims will be run on.
      *
      * TODO add unit tests
      *
@@ -316,7 +329,7 @@ public final class ChecksimsCommandLine {
     }
 
     /**
-     * Parse CLI arguments into a ChecksimsConfig
+     * Parse CLI arguments into a ChecksimsConfig.
      *
      * Also configures logger, and sets parallelism level in ParallelAlgorithm
      *

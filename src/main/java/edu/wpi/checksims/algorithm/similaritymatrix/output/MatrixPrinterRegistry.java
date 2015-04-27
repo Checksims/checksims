@@ -25,7 +25,7 @@ import edu.wpi.checksims.util.reflection.NoSuchImplementationException;
 import edu.wpi.checksims.util.reflection.RegistryWithDefault;
 
 /**
- * Registry for Matrix Printers
+ * Registry for Matrix Printers.
  */
 public class MatrixPrinterRegistry extends RegistryWithDefault<MatrixPrinter> {
     private static MatrixPrinterRegistry instance;

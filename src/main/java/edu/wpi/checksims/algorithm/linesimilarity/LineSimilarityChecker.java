@@ -38,13 +38,13 @@ import java.util.*;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Implements a line-by-line similarity checker
+ * Implements a line-by-line similarity checker.
  */
 public class LineSimilarityChecker implements SimilarityDetector {
     private static LineSimilarityChecker instance;
 
     /**
-     * Internal class for record-keeping - used to record a line at a specific location in a submission
+     * Internal class for record-keeping - used to record a line at a specific location in a submission.
      */
     class SubmissionLine {
         public final int lineNum;
@@ -83,7 +83,7 @@ public class LineSimilarityChecker implements SimilarityDetector {
     }
 
     /**
-     * Detect similarities using line similarity comparator
+     * Detect similarities using line similarity comparator.
      *
      * @param a First submission to check
      * @param b Second submission to check

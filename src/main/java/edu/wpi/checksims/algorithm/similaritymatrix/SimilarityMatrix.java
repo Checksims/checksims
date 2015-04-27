@@ -36,7 +36,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * A Similarity Matrix represents the similarities between a given group of submissions
+ * A Similarity Matrix represents the similarities between a given group of submissions.
  *
  * TODO consider offering Iterators for the entire similarity matrix, and for individual submissions on the X axis
  */
@@ -48,7 +48,7 @@ public final class SimilarityMatrix {
 
     /**
      * Create a Similarity Matrix with given parameters. Internal constructor used by factory methods.
-     * <p/>
+     *
      * Lists, not sets, of submissions, to ensure we have an ordering. We maintain the invariant that there are no
      * duplicates in the factories.
      *
@@ -135,7 +135,7 @@ public final class SimilarityMatrix {
     }
 
     /**
-     * Get similarities for one submission compared to another
+     * Get similarities for one submission compared to another.
      *
      * @param xIndex Index into similarity matrix on the X axis
      * @param yIndex Index into similarity matrix on the Y axis
@@ -153,7 +153,7 @@ public final class SimilarityMatrix {
     }
 
     /**
-     * Get similarity of X submission to Y submission
+     * Get similarity of X submission to Y submission.
      *
      * @param xSubmission Submission to get similarities for
      * @param ySubmission Submission to get similarities relative to
@@ -201,7 +201,7 @@ public final class SimilarityMatrix {
     }
 
     /**
-     * Generate a similarity matrix from a given set of submissions
+     * Generate a similarity matrix from a given set of submissions.
      *
      * @param inputSubmissions Submissions to generate from
      * @param results Results to build from. Must contain results for every possible unordered pair of input submissions
@@ -264,7 +264,7 @@ public final class SimilarityMatrix {
     }
 
     /**
-     * Generate a Similarity Matrix with archive submissions
+     * Generate a Similarity Matrix with archive submissions.
      *
      * The result is not a square matrix. Only the input submissions are on the X axis, but the Y axis contains both
      * input and archive submissions.

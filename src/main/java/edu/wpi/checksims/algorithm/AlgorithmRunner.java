@@ -33,13 +33,13 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Run a pairwise similarity detection algorithm on a number of submission pairs
+ * Run a pairwise similarity detection algorithm on a number of submission pairs.
  */
 public final class AlgorithmRunner {
     private AlgorithmRunner() {}
 
     /**
-     * Run a pairwise similarity detection algorithm
+     * Run a pairwise similarity detection algorithm.
      *
      * @param submissions Pairs to run on
      * @param algorithm Algorithm to use

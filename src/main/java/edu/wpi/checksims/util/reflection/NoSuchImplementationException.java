@@ -24,7 +24,7 @@ package edu.wpi.checksims.util.reflection;
 import edu.wpi.checksims.ChecksimsException;
 
 /**
- * Exception thrown when no matching implementation is available in a registry
+ * Exception thrown when no matching implementation is available in a registry.
  */
 public class NoSuchImplementationException extends ChecksimsException {
     private static final long serialVersionUID = 1L;

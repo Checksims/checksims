@@ -33,7 +33,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Implementation of the Smith-Waterman algorithm
+ * Implementation of the Smith-Waterman algorithm.
  */
 public class SmithWaterman implements SimilarityDetector {
     private static SmithWaterman instance;
@@ -68,7 +68,7 @@ public class SmithWaterman implements SimilarityDetector {
     }
 
     /**
-     * Apply the Smith-Waterman algorithm to determine the similarity between two submissions
+     * Apply the Smith-Waterman algorithm to determine the similarity between two submissions.
      *
      * Token list types of A and B must match
      *

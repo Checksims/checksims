@@ -29,7 +29,7 @@ import edu.wpi.checksims.token.tokenizer.Tokenizer;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Remove duplicated whitespace characters
+ * Remove duplicated whitespace characters.
  */
 public class WhitespaceDeduplicationPreprocessor implements SubmissionPreprocessor {
     private static WhitespaceDeduplicationPreprocessor instance;
@@ -48,7 +48,7 @@ public class WhitespaceDeduplicationPreprocessor implements SubmissionPreprocess
     }
 
     /**
-     * Deduplicate whitespace in a submission
+     * Deduplicate whitespace in a submission.
      *
      * @param submission Submission to transform
      * @return Input submission with whitespace deduplicated

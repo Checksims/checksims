@@ -28,7 +28,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Results for a pairwise comparison algorithm
+ * Results for a pairwise comparison algorithm.
  */
 public final class AlgorithmResults {
     // TODO consider making these private and adding getters
@@ -42,7 +42,7 @@ public final class AlgorithmResults {
     private final double percentMatchedB;
 
     /**
-     * Construct results for a pairwise similarity detection algorith,
+     * Construct results for a pairwise similarity detection algorithm.
      *
      * @param a First submission compared
      * @param b Second submission compared

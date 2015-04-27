@@ -24,7 +24,7 @@ package edu.wpi.checksims.submission;
 import edu.wpi.checksims.ChecksimsException;
 
 /**
- * Exception thrown when no the requested submission cannot be found
+ * Exception thrown when no the requested submission cannot be found.
  */
 public class NoSuchSubmissionException extends ChecksimsException {
     private static final long serialVersionUID = 1L;

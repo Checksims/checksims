@@ -44,7 +44,7 @@ public class SimilarityDetectionWorker implements Callable<AlgorithmResults> {
     private static Logger logs = LoggerFactory.getLogger(SimilarityDetectionWorker.class);
 
     /**
-     * Construct a Callable to perform pairwise similarity detection for one pair of assignments
+     * Construct a Callable to perform pairwise similarity detection for one pair of assignments.
      *
      * @param algorithm Algorithm to use
      * @param submissions Assignments to compare
@@ -60,7 +60,7 @@ public class SimilarityDetectionWorker implements Callable<AlgorithmResults> {
     }
 
     /**
-     * Perform pairwise similarity detection on assignments given when constructed
+     * Perform pairwise similarity detection on assignments given when constructed.
      *
      * We don't throw exceptions here, checked or unchecked. The reason for this is our desire to "fail-fast" on
      * algorithm errors --- instead of waiting for all comparisons to complete, we should immediately exit and inform

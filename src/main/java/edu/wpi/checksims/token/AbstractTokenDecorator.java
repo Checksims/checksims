@@ -24,7 +24,7 @@ package edu.wpi.checksims.token;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Superclass for decorators for Tokens
+ * Superclass for decorators for Tokens.
  */
 public abstract class AbstractTokenDecorator implements Token {
     private final Token wrappedToken;
