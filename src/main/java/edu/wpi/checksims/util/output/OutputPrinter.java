@@ -25,11 +25,11 @@ import edu.wpi.checksims.algorithm.similaritymatrix.SimilarityMatrix;
 import edu.wpi.checksims.algorithm.similaritymatrix.output.MatrixPrinter;
 
 /**
- * Print the output of a Checksims computation
+ * Print the output of a Checksims computation.
  */
 public interface OutputPrinter {
     /**
-     * Provide Checksims' output in a usable form
+     * Provide Checksims' output in a usable form.
      *
      * @param toPrint Output matrix to print
      * @param printWith Strategy to use when printing

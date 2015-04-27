@@ -35,14 +35,14 @@ import java.util.Set;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Remove common code from input submissions using the LineSimilarityChecker algorithm
+ * Remove common code from input submissions using the LineSimilarityChecker algorithm.
  */
 public class CommonCodeLineRemovalHandler implements CommonCodeHandler {
     private final Submission common;
     private final SimilarityDetector lineCompare;
 
     /**
-     * Instantiate a new common code remover
+     * Instantiate a new common code remover.
      *
      * @param common Common code to remove
      */
@@ -62,7 +62,7 @@ public class CommonCodeLineRemovalHandler implements CommonCodeHandler {
     }
 
     /**
-     * Perform parallel common code removal using the Line Comparison algorithm
+     * Perform parallel common code removal using the Line Comparison algorithm.
      *
      * @param input Submissions to handle common code within
      * @return Input submissions with lines contained in the common code removed

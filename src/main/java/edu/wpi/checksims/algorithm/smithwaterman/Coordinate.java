@@ -24,7 +24,7 @@ package edu.wpi.checksims.algorithm.smithwaterman;
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
- * An immutable 2-D coordinate
+ * An immutable 2-D coordinate.
  */
 public final class Coordinate extends Pair<Integer, Integer> {
     private final int x;
@@ -33,7 +33,7 @@ public final class Coordinate extends Pair<Integer, Integer> {
     private static final long serialVersionUID = 1L;
 
     /**
-     * Construct a 2D coordinate
+     * Construct a 2D coordinate.
      *
      * @param x Desired X coordinate
      * @param y Desired Y coordinate
@@ -86,7 +86,7 @@ public final class Coordinate extends Pair<Integer, Integer> {
     }
 
     /**
-     * Unsupported as Coordinate is immutable
+     * Unsupported as Coordinate is immutable.
      *
      * @param value Unused
      * @return Unused

@@ -42,7 +42,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Interface for Submissions
+ * Interface for Submissions.
  *
  * Also contains factory methods for submissions
  */
@@ -73,7 +73,7 @@ public interface Submission extends Comparable<Submission> {
     TokenType getTokenType();
 
     /**
-     * Generate a list of all student submissions from a directory
+     * Generate a list of all student submissions from a directory.
      *
      * The directory is assumed to hold a number of subdirectories, each containing one student or group's submission
      * The student/group directories may contain subdirectories with files
@@ -84,7 +84,8 @@ public interface Submission extends Comparable<Submission> {
      * @return Set of submissions including all unique nonempty submissions in the given directory
      * @throws java.io.IOException Thrown on error interacting with file or filesystem
      */
-    static Set<Submission> submissionListFromDir(File directory, String glob, Tokenizer splitter, boolean recursive) throws IOException {
+    static Set<Submission> submissionListFromDir(File directory, String glob, Tokenizer splitter, boolean recursive)
+            throws IOException {
         checkNotNull(directory);
         checkNotNull(glob);
         checkArgument(!glob.isEmpty(), "Glob pattern cannot be empty!");
@@ -112,7 +113,8 @@ public interface Submission extends Comparable<Submission> {
                     local.debug("Created submission with name " + s.getName());
                 }
             } catch (NoMatchingFilesException e) {
-                local.warn("Could not create submission from directory " + f.getName() + " - no files matching pattern found!");
+                local.warn("Could not create submission from directory " + f.getName()
+                        + " - no files matching pattern found!");
             }
         }
 
@@ -120,7 +122,7 @@ public interface Submission extends Comparable<Submission> {
     }
 
     /**
-     * Get a single submission from a directory
+     * Get a single submission from a directory.
      *
      * @param directory Directory containing the student's submission
      * @param glob Match pattern used to identify files to include in submission
@@ -128,7 +130,8 @@ public interface Submission extends Comparable<Submission> {
      * @return Single submission from all files matching the glob in given directory
      * @throws IOException Thrown on error interacting with file
      */
-    static Submission submissionFromDir(File directory, String glob, Tokenizer splitter, boolean recursive) throws IOException, NoMatchingFilesException {
+    static Submission submissionFromDir(File directory, String glob, Tokenizer splitter, boolean recursive)
+            throws IOException, NoMatchingFilesException {
         checkNotNull(directory);
         checkNotNull(glob);
         checkArgument(!glob.isEmpty(), "Glob pattern cannot be empty!");
@@ -148,13 +151,14 @@ public interface Submission extends Comparable<Submission> {
     }
 
     /**
-     * Recursively find all files matching in a directory
+     * Recursively find all files matching in a directory.
      *
      * @param directory Directory to search in
      * @param glob Match pattern used to identify files to include
      * @return List of all matching files in this directory and subdirectories
      */
-    static Set<File> getAllMatchingFiles(File directory, String glob, boolean recursive) throws NoSuchFileException, NotDirectoryException {
+    static Set<File> getAllMatchingFiles(File directory, String glob, boolean recursive)
+            throws NoSuchFileException, NotDirectoryException {
         checkNotNull(directory);
         checkNotNull(glob);
         checkArgument(!glob.isEmpty(), "Glob pattern cannot be empty");
@@ -183,13 +187,14 @@ public interface Submission extends Comparable<Submission> {
     }
 
     /**
-     * Identify all files matching in a single directory
+     * Identify all files matching in a single directory.
      *
      * @param directory Directory to find files within
      * @param glob Match pattern used to identify files to include
      * @return Array of files which match in this single directory
      */
-    static File[] getMatchingFilesFromDir(File directory, String glob) throws NoSuchFileException, NotDirectoryException {
+    static File[] getMatchingFilesFromDir(File directory, String glob)
+            throws NoSuchFileException, NotDirectoryException {
         checkNotNull(directory);
         checkNotNull(glob);
         checkArgument(!glob.isEmpty(), "Glob pattern cannot be empty");
@@ -206,7 +211,7 @@ public interface Submission extends Comparable<Submission> {
     }
 
     /**
-     * Turn a list of files and a name into a Submission
+     * Turn a list of files and a name into a Submission.
      *
      * The contents of a submission are built deterministically by reading in files in alphabetical order and appending
      * their contents.
@@ -214,11 +219,12 @@ public interface Submission extends Comparable<Submission> {
      * @param name Name of the new submission
      * @param files List of files to include in submission
      * @param splitter Tokenizer for files in the submission
-     * @return A new submission including a list containing a tokenization list consisting of the appended tokenization lists of every file included
+     * @return A new submission formed from the contents of all given files, appended and tokenized
      * @throws IOException Thrown on error reading from file
      * @throws NoMatchingFilesException Thrown if no files are given
      */
-    static Submission submissionFromFiles(String name, Set<File> files, Tokenizer splitter) throws IOException, NoMatchingFilesException {
+    static Submission submissionFromFiles(String name, Set<File> files, Tokenizer splitter)
+            throws IOException, NoMatchingFilesException {
         checkNotNull(name);
         checkArgument(!name.isEmpty(), "Submission name cannot be empty");
         checkNotNull(files);
@@ -231,7 +237,8 @@ public interface Submission extends Comparable<Submission> {
         }
 
         // To ensure submission generation is deterministic, sort files by name, and read them in that order
-        List<File> orderedFiles = Ordering.from((File file1, File file2) -> file1.getName().compareTo(file2.getName())).immutableSortedCopy(files);
+        List<File> orderedFiles = Ordering.from((File file1, File file2) -> file1.getName().compareTo(file2.getName()))
+                .immutableSortedCopy(files);
 
         TokenList tokenList = new TokenList(splitter.getType());
 

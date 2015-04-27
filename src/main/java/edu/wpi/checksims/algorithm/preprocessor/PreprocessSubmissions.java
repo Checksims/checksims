@@ -31,13 +31,13 @@ import java.util.Set;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Apply a preprocessor (maps Submission to Submission) to a given list of submissions
+ * Apply a preprocessor (maps Submission to Submission) to a given list of submissions.
  */
 public final class PreprocessSubmissions {
     private PreprocessSubmissions() {}
 
     /**
-     * Apply a given mapping function to each submission in a list of submissions
+     * Apply a given mapping function to each submission in a list of submissions.
      *
      * Is NOT expected to preserve tokenization validity, as these are to be applied before that is significant
      *

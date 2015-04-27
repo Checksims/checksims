@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Maps lexemes (integers) to the original token contents
+ * Maps lexemes (integers) to the original token contents.
  */
 public final class LexemeMap {
     private LexemeMap() {}
@@ -78,7 +78,7 @@ public final class LexemeMap {
     }
 
     /**
-     * Used to reset state for unit tests
+     * Used to reset state for unit tests.
      *
      * CAUTION! This will obliterate the existing token mappings! DO NOT CALL IN PRODUCTION CODE!
      */

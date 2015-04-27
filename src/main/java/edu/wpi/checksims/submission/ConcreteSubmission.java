@@ -38,7 +38,7 @@ public final class ConcreteSubmission implements Submission {
     private final String name;
 
     /**
-     * Construct a new Concrete Submission with given name and contents
+     * Construct a new Concrete Submission with given name and contents.
      *
      * Token content should be the result of tokenizing the string content of the submission with some tokenizer. This
      * invariant is maintained throughout the project, but not enforced.
@@ -96,7 +96,10 @@ public final class ConcreteSubmission implements Submission {
 
         Submission otherSubmission = (Submission)other;
 
-        return otherSubmission.getName().equals(this.name) && otherSubmission.getNumTokens() == this.getNumTokens() && otherSubmission.getContentAsTokens().equals(this.tokenList) && otherSubmission.getContentAsString().equals(this.content);
+        return otherSubmission.getName().equals(this.name)
+                && otherSubmission.getNumTokens() == this.getNumTokens()
+                && otherSubmission.getContentAsTokens().equals(this.tokenList)
+                && otherSubmission.getContentAsString().equals(this.content);
     }
 
     @Override
@@ -105,7 +108,7 @@ public final class ConcreteSubmission implements Submission {
     }
 
     /**
-     * Compare two Submissions, using natural ordering by name
+     * Compare two Submissions, using natural ordering by name.
      *
      * Note that the natural ordering of ConcreteSubmission is inconsistent with equality. Ordering is based solely on
      * the name of a submission; two submissions with the same name, but different contents, will have compareTo()

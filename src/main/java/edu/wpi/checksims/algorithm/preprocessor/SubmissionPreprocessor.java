@@ -26,14 +26,14 @@ import edu.wpi.checksims.submission.Submission;
 import edu.wpi.checksims.util.reflection.NamedInstantiable;
 
 /**
- * Interface for submission preprocessors which act on submissions
+ * Interface for submission preprocessors which act on submissions.
  *
  * The contract for PreprocessSubmissions() requests a Function from Submission<T> to Submission<T>,
  * which this can act as via a method reference.
  */
 public interface SubmissionPreprocessor extends NamedInstantiable {
     /**
-     * Perform some implementation-specific transformation on the input submission
+     * Perform some implementation-specific transformation on the input submission.
      *
      * @param submission Submission to transform
      * @return Result of transforming the input submission's contents

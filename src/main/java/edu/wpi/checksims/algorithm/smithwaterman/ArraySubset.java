@@ -25,14 +25,14 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * An immutable subset of a 2-Dimensional Array
+ * An immutable subset of a 2-Dimensional Array.
  */
 public final class ArraySubset {
     private final Coordinate origin;
     private final Coordinate max;
 
     /**
-     * Construct a new array subset
+     * Construct a new array subset.
      *
      * @param origin Origin point. Must be closer to the origin (smaller in both X and Y!) than max
      * @param max Point of maximum extent

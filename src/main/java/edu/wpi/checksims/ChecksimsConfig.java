@@ -45,7 +45,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.Collections.singletonList;
 
 /**
- * Per-run configuration of Checksims
+ * Per-run configuration of Checksims.
  */
 public final class ChecksimsConfig {
     private SimilarityDetector algorithm;
@@ -57,8 +57,9 @@ public final class ChecksimsConfig {
     private OutputPrinter outputMethod;
     private int numThreads;
 
-    private ChecksimsConfig(SimilarityDetector algorithm, TokenType tokenization, List<SubmissionPreprocessor> preprocessors,
-                            Set<Submission> submissions, CommonCodeHandler commonCodeHandler, List<MatrixPrinter> outputPrinters,
+    private ChecksimsConfig(SimilarityDetector algorithm, TokenType tokenization,
+                            List<SubmissionPreprocessor> preprocessors, Set<Submission> submissions,
+                            CommonCodeHandler commonCodeHandler, List<MatrixPrinter> outputPrinters,
                             OutputPrinter outputMethod, int numThreads) {
         this.algorithm = algorithm;
         this.tokenization = tokenization;
@@ -74,7 +75,7 @@ public final class ChecksimsConfig {
     }
 
     /**
-     * Base constructor, returns default config
+     * Base constructor, returns default config.
      */
     public ChecksimsConfig() {
         this.algorithm = AlgorithmRegistry.getInstance().getDefaultImplementation();
@@ -82,13 +83,15 @@ public final class ChecksimsConfig {
         this.submissions = ImmutableSet.copyOf(new ArrayList<>());
         this.preprocessors = ImmutableList.copyOf(new ArrayList<>());
         this.commonCodeHandler = CommonCodePassthroughHandler.getInstance();
-        this.outputPrinters = ImmutableList.copyOf(singletonList(MatrixPrinterRegistry.getInstance().getDefaultImplementation()));
+        this.outputPrinters = ImmutableList.copyOf(
+                singletonList(MatrixPrinterRegistry.getInstance().getDefaultImplementation()));
         this.outputMethod = OutputToStdoutPrinter.getInstance();
         this.numThreads = Runtime.getRuntime().availableProcessors();
     }
 
     private ChecksimsConfig getCopy() {
-        return new ChecksimsConfig(algorithm, tokenization, preprocessors, submissions, commonCodeHandler, outputPrinters, outputMethod, numThreads);
+        return new ChecksimsConfig(algorithm, tokenization, preprocessors, submissions, commonCodeHandler,
+                outputPrinters, outputMethod, numThreads);
     }
 
     /**
@@ -199,14 +202,15 @@ public final class ChecksimsConfig {
     }
 
     /**
-     * @param numThreads Number of threads to be used for parallel operations. Must be greater than 0.
+     * @param newNumThreads Number of threads to be used for parallel operations. Must be greater than 0.
      * @return Copy of configuration with new number of threads set
      */
-    public ChecksimsConfig setNumThreads(int numThreads) {
-        checkArgument(numThreads > 0, "Attempted to set number of threads to " + numThreads + " - must be positive integer!");
+    public ChecksimsConfig setNumThreads(int newNumThreads) {
+        checkArgument(newNumThreads > 0, "Attempted to set number of threads to " + newNumThreads
+                + " - must be positive integer!");
 
         ChecksimsConfig newConfig = getCopy();
-        newConfig.numThreads = numThreads;
+        newConfig.numThreads = newNumThreads;
 
         return newConfig;
     }

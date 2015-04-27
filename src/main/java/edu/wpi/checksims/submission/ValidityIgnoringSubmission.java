@@ -28,7 +28,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
- * Submission which ignores validity - tokens are compared ignoring their validity
+ * Submission which ignores validity - tokens are compared ignoring their validity.
  *
  * Decorates another submission and overrides equals()
  */
@@ -45,14 +45,26 @@ public final class ValidityIgnoringSubmission extends AbstractSubmissionDecorato
 
         Submission otherSubmission = (Submission)other;
 
-        if(!otherSubmission.getTokenType().equals(this.getTokenType()) || !otherSubmission.getName().equals(this.getName()) || !(otherSubmission.getNumTokens() == this.getNumTokens()) || !(otherSubmission.getContentAsString().equals(this.getContentAsString()))) {
+        if(!otherSubmission.getTokenType().equals(this.getTokenType())
+                || !otherSubmission.getName().equals(this.getName())
+                || !(otherSubmission.getNumTokens() == this.getNumTokens())
+                || !(otherSubmission.getContentAsString().equals(this.getContentAsString()))) {
             return false;
         }
 
         Supplier<TokenList> tokenListSupplier = () -> new TokenList(this.getTokenType());
-        TokenList thisList = this.getContentAsTokens().stream().map(ValidityIgnoringToken::new).collect(Collectors.toCollection(tokenListSupplier));
-        TokenList otherList = otherSubmission.getContentAsTokens().stream().map(ValidityIgnoringToken::new).collect(Collectors.toCollection(tokenListSupplier));
+        TokenList thisList = this.getContentAsTokens().stream()
+                .map(ValidityIgnoringToken::new)
+                .collect(Collectors.toCollection(tokenListSupplier));
+        TokenList otherList = otherSubmission.getContentAsTokens().stream()
+                .map(ValidityIgnoringToken::new)
+                .collect(Collectors.toCollection(tokenListSupplier));
 
         return thisList.equals(otherList);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 }

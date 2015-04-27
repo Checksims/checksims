@@ -22,11 +22,11 @@
 package edu.wpi.checksims.util.reflection;
 
 /**
- * All implementations which desire to be instantiated by a Registry must implement this interface
+ * All implementations which desire to be instantiated by a Registry must implement this interface.
  */
 public interface NamedInstantiable {
     /**
-     * MUST BE UNIQUE FOR EACH IMPLEMENTATION CLASS
+     * MUST BE UNIQUE FOR EACH IMPLEMENTATING CLASS.
      *
      * @return Name of the implementation as it will be seen in the registry
      */

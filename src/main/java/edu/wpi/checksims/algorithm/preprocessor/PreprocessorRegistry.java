@@ -24,7 +24,7 @@ package edu.wpi.checksims.algorithm.preprocessor;
 import edu.wpi.checksims.util.reflection.Registry;
 
 /**
- * Registry to obtain valid preprocessors
+ * Registry to obtain valid preprocessors.
  */
 public final class PreprocessorRegistry extends Registry<SubmissionPreprocessor> {
     private static PreprocessorRegistry instance;

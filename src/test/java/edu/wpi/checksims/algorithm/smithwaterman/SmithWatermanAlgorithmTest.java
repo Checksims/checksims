@@ -56,8 +56,10 @@ public class SmithWatermanAlgorithmTest {
         empty = new TokenList(TokenType.CHARACTER);
 
         hello = makeTokenListCharacter('h', 'e', 'l', 'l', 'o');
-        bigTest1 = makeTokenListCharacter('a', 'b', 'c', 'x', 'd', 'e', 'f', 'g', 'h', 'i', 'y', 'm', 'z', 'j', 'l', 'u', 'k', 'p', 'q', 's', 'j', 't', 'u', 'v');
-        bigTest2 = makeTokenListCharacter('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 'j', 't', 'u', 'v');
+        bigTest1 = makeTokenListCharacter('a', 'b', 'c', 'x', 'd', 'e', 'f', 'g', 'h', 'i', 'y', 'm', 'z', 'j', 'l',
+                'u', 'k', 'p', 'q', 's', 'j', 't', 'u', 'v');
+        bigTest2 = makeTokenListCharacter('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
+                'p', 'q', 'r', 's', 'j', 't', 'u', 'v');
 
         bigTest = new SmithWatermanAlgorithm(bigTest1, bigTest2);
         helloTest = new SmithWatermanAlgorithm(hello, hello);
@@ -221,7 +223,8 @@ public class SmithWatermanAlgorithmTest {
         toMerge.put(5, setFromElements(Coordinate.of(3, 3), Coordinate.of(4, 4), Coordinate.of(5, 5)));
 
         Map<Integer, Set<Coordinate>> expected = new HashMap<>();
-        expected.put(5, setFromElements(Coordinate.of(1, 1), Coordinate.of(2, 2), Coordinate.of(3, 3), Coordinate.of(4, 4), Coordinate.of(5, 5)));
+        expected.put(5, setFromElements(Coordinate.of(1, 1), Coordinate.of(2, 2), Coordinate.of(3, 3),
+                Coordinate.of(4, 4), Coordinate.of(5, 5)));
 
         helloTest.mergeIntoCandidates(toMerge);
 
@@ -237,7 +240,8 @@ public class SmithWatermanAlgorithmTest {
         toMerge.put(5, setFromElements(Coordinate.of(2, 2), Coordinate.of(4, 4), Coordinate.of(5, 5)));
 
         Map<Integer, Set<Coordinate>> expected = new HashMap<>();
-        expected.put(5, setFromElements(Coordinate.of(1, 1), Coordinate.of(2, 2), Coordinate.of(4, 4), Coordinate.of(5, 5)));
+        expected.put(5, setFromElements(Coordinate.of(1, 1), Coordinate.of(2, 2), Coordinate.of(4, 4),
+                Coordinate.of(5, 5)));
 
         helloTest.mergeIntoCandidates(toMerge);
 
@@ -254,7 +258,8 @@ public class SmithWatermanAlgorithmTest {
         toMerge.put(5, setFromElements(Coordinate.of(3, 3), Coordinate.of(4, 4), Coordinate.of(5, 5)));
 
         Map<Integer, Set<Coordinate>> expected = new HashMap<>();
-        expected.put(5, setFromElements(Coordinate.of(1, 1), Coordinate.of(2, 2), Coordinate.of(3, 3), Coordinate.of(4, 4), Coordinate.of(5, 5)));
+        expected.put(5, setFromElements(Coordinate.of(1, 1), Coordinate.of(2, 2), Coordinate.of(3, 3),
+                Coordinate.of(4, 4), Coordinate.of(5, 5)));
         expected.put(6, setFromElements(Coordinate.of(10, 10)));
 
         helloTest.mergeIntoCandidates(toMerge);
@@ -428,7 +433,8 @@ public class SmithWatermanAlgorithmTest {
     public void TestGetMatchCoordinatesHello() {
         helloTest.computeArraySubset(helloTest.getWholeArray());
 
-        Set<Coordinate> expected = setFromElements(Coordinate.of(1, 1), Coordinate.of(2, 2), Coordinate.of(3, 3), Coordinate.of(4, 4), Coordinate.of(5, 5));
+        Set<Coordinate> expected = setFromElements(Coordinate.of(1, 1), Coordinate.of(2, 2), Coordinate.of(3, 3),
+                Coordinate.of(4, 4), Coordinate.of(5, 5));
 
         Set<Coordinate> results = helloTest.getMatchCoordinates(Coordinate.of(5, 5));
 
@@ -465,7 +471,8 @@ public class SmithWatermanAlgorithmTest {
         bigTest.computeArraySubset(bigTest.getWholeArray());
 
         Set<Coordinate> expected = setFromElements(Coordinate.of(10, 9), Coordinate.of(9, 8), Coordinate.of(7, 6),
-                Coordinate.of(6, 5), Coordinate.of(5, 4), Coordinate.of(3, 3), Coordinate.of(2, 2), Coordinate.of(1, 1));
+                Coordinate.of(6, 5), Coordinate.of(5, 4), Coordinate.of(3, 3), Coordinate.of(2, 2),
+                Coordinate.of(1, 1));
         Set<Coordinate> results = bigTest.getMatchCoordinates(Coordinate.of(10, 9));
 
         assertEquals(expected, results);
@@ -488,7 +495,8 @@ public class SmithWatermanAlgorithmTest {
 
     @Test
     public void TestSetMatchesInvalidHello() {
-        Set<Coordinate> match = setFromElements(Coordinate.of(1, 1), Coordinate.of(2, 2), Coordinate.of(3, 3), Coordinate.of(4, 4), Coordinate.of(5, 5));
+        Set<Coordinate> match = setFromElements(Coordinate.of(1, 1), Coordinate.of(2, 2), Coordinate.of(3, 3),
+                Coordinate.of(4, 4), Coordinate.of(5, 5));
         TokenList expected = TokenList.cloneTokenList(hello);
         expected.stream().forEach((token) -> token.setValid(false));
 

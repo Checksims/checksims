@@ -33,7 +33,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Implementation of the Smith-Waterman algorithm
+ * Implementation of the Smith-Waterman algorithm.
  */
 public class SmithWaterman implements SimilarityDetector {
     private static SmithWaterman instance;
@@ -68,7 +68,7 @@ public class SmithWaterman implements SimilarityDetector {
     }
 
     /**
-     * Apply the Smith-Waterman algorithm to determine the similarity between two submissions
+     * Apply the Smith-Waterman algorithm to determine the similarity between two submissions.
      *
      * Token list types of A and B must match
      *
@@ -79,14 +79,16 @@ public class SmithWaterman implements SimilarityDetector {
      * @throws InternalAlgorithmError Thrown on internal error
      */
     @Override
-    public AlgorithmResults detectSimilarity(Submission a, Submission b) throws TokenTypeMismatchException, InternalAlgorithmError {
+    public AlgorithmResults detectSimilarity(Submission a, Submission b)
+            throws TokenTypeMismatchException, InternalAlgorithmError {
         checkNotNull(a);
         checkNotNull(b);
 
         // Test for token type mismatch
         if(!a.getTokenType().equals(b.getTokenType())) {
             throw new TokenTypeMismatchException("Token list type mismatch: submission " + a.getName() + " has type " +
-                    a.getTokenType().toString() + ", while submission " + b.getName() + " has type " + b.getTokenType().toString());
+                    a.getTokenType().toString() + ", while submission " + b.getName() + " has type "
+                    + b.getTokenType().toString());
         }
 
         // Handle a 0-token submission (no similarity)

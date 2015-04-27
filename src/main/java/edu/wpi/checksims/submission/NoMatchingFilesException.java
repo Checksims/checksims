@@ -24,7 +24,7 @@ package edu.wpi.checksims.submission;
 import edu.wpi.checksims.ChecksimsException;
 
 /**
- * Thrown when creating a submission if no files are found that match
+ * Thrown when creating a submission if no files are found that match.
  */
 public class NoMatchingFilesException extends ChecksimsException {
     private static final long serialVersionUID = 1L;

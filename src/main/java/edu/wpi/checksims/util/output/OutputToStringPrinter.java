@@ -30,13 +30,13 @@ import org.slf4j.LoggerFactory;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Provide results of Checksims as a string
+ * Provide results of Checksims as a string.
  */
 public class OutputToStringPrinter implements OutputPrinter {
     private final StringBuffer buffer;
 
     /**
-     * Instantiate a new OutputToStringPrinter with a clean buffer
+     * Instantiate a new OutputToStringPrinter with a clean buffer.
      */
     public OutputToStringPrinter() {
         buffer = new StringBuffer();
@@ -50,7 +50,7 @@ public class OutputToStringPrinter implements OutputPrinter {
     }
 
     /**
-     * Print the given output matrix using the given strategy and append it to the output buffer
+     * Print the given output matrix using the given strategy and append it to the output buffer.
      *
      * @param toPrint Output matrix to print
      * @param printWith Strategy to use when printing

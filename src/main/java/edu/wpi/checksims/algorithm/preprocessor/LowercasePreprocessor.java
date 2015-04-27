@@ -29,13 +29,16 @@ import edu.wpi.checksims.token.tokenizer.Tokenizer;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Lowercases tokens to prevent case from interfering with comparisons
+ * Lowercases tokens to prevent case from interfering with comparisons.
  */
 public class LowercasePreprocessor implements SubmissionPreprocessor {
     private static LowercasePreprocessor instance;
 
     private LowercasePreprocessor() {}
 
+    /**
+     * @return Singleton instance of LowercasePreprocessor
+     */
     public static LowercasePreprocessor getInstance() {
         if(instance == null) {
             instance = new LowercasePreprocessor();

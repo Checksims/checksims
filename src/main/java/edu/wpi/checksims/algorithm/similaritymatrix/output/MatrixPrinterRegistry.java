@@ -25,13 +25,14 @@ import edu.wpi.checksims.util.reflection.NoSuchImplementationException;
 import edu.wpi.checksims.util.reflection.RegistryWithDefault;
 
 /**
- * Registry for Matrix Printers
+ * Registry for Matrix Printers.
  */
 public class MatrixPrinterRegistry extends RegistryWithDefault<MatrixPrinter> {
     private static MatrixPrinterRegistry instance;
 
     private MatrixPrinterRegistry() throws NoSuchImplementationException {
-        super("edu.wpi.checksims.algorithm.similaritymatrix.output", MatrixPrinter.class, MatrixThresholdPrinter.getInstance().getName());
+        super("edu.wpi.checksims.algorithm.similaritymatrix.output", MatrixPrinter.class,
+                MatrixThresholdPrinter.getInstance().getName());
     }
 
     /**

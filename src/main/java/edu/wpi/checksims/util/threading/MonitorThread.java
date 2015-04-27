@@ -29,7 +29,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Monitor thread for parallel execution jobs
+ * Monitor thread for parallel execution jobs.
  */
 class MonitorThread implements Runnable {
     private final ThreadPoolExecutor toMonitor;
