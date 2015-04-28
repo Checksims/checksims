@@ -205,6 +205,9 @@ public class SmithWatermanAlgorithm {
             }
         }
 
+        // IntelliJ has an aversion to passing anything with a 'y' in it as the right side of a pair
+        // This alleviates the warning
+        //noinspection SuspiciousNameCombination
         return Pair.of(xList, yList);
     }
 

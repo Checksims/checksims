@@ -22,9 +22,9 @@
 package edu.wpi.checksims;
 
 import edu.wpi.checksims.algorithm.AlgorithmRegistry;
-import edu.wpi.checksims.algorithm.output.OutputRegistry;
-import edu.wpi.checksims.algorithm.output.SimilarityMatrixPrinter;
 import edu.wpi.checksims.algorithm.preprocessor.SubmissionPreprocessor;
+import edu.wpi.checksims.algorithm.similaritymatrix.output.MatrixPrinter;
+import edu.wpi.checksims.algorithm.similaritymatrix.output.MatrixPrinterRegistry;
 import edu.wpi.checksims.token.TokenType;
 import edu.wpi.checksims.util.output.OutputAsFilePrinter;
 import edu.wpi.checksims.util.output.OutputToStdoutPrinter;
@@ -400,7 +400,7 @@ public class ChecksimsCommandLineTest {
         ChecksimsConfig config = parseToConfig(new String[] { "-o", "csv,html" });
 
         assertEquals(2, config.getOutputPrinters().size());
-        List<String> names = config.getOutputPrinters().stream().map(SimilarityMatrixPrinter::getName).collect(Collectors.toList());
+        List<String> names = config.getOutputPrinters().stream().map(MatrixPrinter::getName).collect(Collectors.toList());
         assertTrue(names.contains("csv"));
         assertTrue(names.contains("html"));
     }
@@ -410,7 +410,7 @@ public class ChecksimsCommandLineTest {
         ChecksimsConfig config = parseToConfig(new String[] { "-o", "csv,html,threshold" });
 
         assertEquals(3, config.getOutputPrinters().size());
-        List<String> names = config.getOutputPrinters().stream().map(SimilarityMatrixPrinter::getName).collect(Collectors.toList());
+        List<String> names = config.getOutputPrinters().stream().map(MatrixPrinter::getName).collect(Collectors.toList());
         assertTrue(names.contains("csv"));
         assertTrue(names.contains("html"));
         assertTrue(names.contains("threshold"));
@@ -437,7 +437,7 @@ public class ChecksimsCommandLineTest {
         ChecksimsConfig config = parseToConfig(new String[] {});
 
         assertEquals(1, config.getOutputPrinters().size());
-        assertEquals(OutputRegistry.getInstance().getDefaultImplementationName(), config.getOutputPrinters().get(0).getName());
+        assertEquals(MatrixPrinterRegistry.getInstance().getDefaultImplementationName(), config.getOutputPrinters().get(0).getName());
     }
 
     @Test(expected = ChecksimsException.class)

@@ -21,7 +21,6 @@
 
 package edu.wpi.checksims.submission;
 
-import edu.wpi.checksims.testutil.SubmissionUtils;
 import edu.wpi.checksims.token.TokenType;
 import edu.wpi.checksims.token.tokenizer.Tokenizer;
 import org.junit.Before;
@@ -35,8 +34,8 @@ import java.nio.file.NotDirectoryException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static edu.wpi.checksims.testutil.SubmissionUtils.checkSubmissionCollections;
-import static edu.wpi.checksims.testutil.SubmissionUtils.lineSubmissionFromString;
+import static edu.wpi.checksims.testutil.SubmissionUtils.*;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -80,35 +79,35 @@ public class SubmissionGenerationTest {
     public void TestFileListingTest1JustTxt() throws Exception {
         Collection<File> files = Submission.getAllMatchingFiles(test1, "*.txt", false);
 
-        SubmissionUtils.checkFileCollections(files, namesToFiles(test1.getName(), Arrays.asList("test.txt", "test2.txt", "test3.txt")));
+        checkFileCollections(files, namesToFiles(test1.getName(), Arrays.asList("test.txt", "test2.txt", "test3.txt")));
     }
 
     @Test
     public void TestFileListingTest2JustTxt() throws Exception {
         Collection<File> files = Submission.getAllMatchingFiles(test2, "*.txt", false);
 
-        SubmissionUtils.checkFileCollections(files, namesToFiles(test2.getName(), Arrays.asList("test.txt", "test2.txt")));
+        checkFileCollections(files, namesToFiles(test2.getName(), Arrays.asList("test.txt", "test2.txt")));
     }
 
     @Test
     public void TestFileListingTestEmptyJustTxt() throws Exception {
         Collection<File> files = Submission.getAllMatchingFiles(testEmpty, "*.txt", false);
 
-        SubmissionUtils.checkFileCollections(files, new LinkedList<>());
+        checkFileCollections(files, new LinkedList<>());
     }
 
     @Test
     public void TestFileListingTestOneFileJustTxt() throws Exception {
         Collection<File> files = Submission.getAllMatchingFiles(testOneFile, "*.txt", false);
 
-        SubmissionUtils.checkFileCollections(files, namesToFiles(testOneFile.getName(), Arrays.asList("test.txt")));
+        checkFileCollections(files, namesToFiles(testOneFile.getName(), singletonList("test.txt")));
     }
 
     @Test
     public void TestFileListingTestEmptyFileJustTxt() throws Exception {
         Collection<File> files = Submission.getAllMatchingFiles(testEmptyFile, "*.txt", false);
 
-        SubmissionUtils.checkFileCollections(files, namesToFiles(testEmptyFile.getName(), Arrays.asList("empty.txt")));
+        checkFileCollections(files, namesToFiles(testEmptyFile.getName(), singletonList("empty.txt")));
     }
 
     @Test(expected = NoSuchFileException.class)
@@ -125,21 +124,21 @@ public class SubmissionGenerationTest {
     public void TestFileListingVariedExtensionsTxt() throws Exception {
         Collection<File> files = Submission.getAllMatchingFiles(testVariedExtensions, "*.txt", false);
 
-        SubmissionUtils.checkFileCollections(files, namesToFiles(testVariedExtensions.getName(), Arrays.asList("test.txt")));
+        checkFileCollections(files, namesToFiles(testVariedExtensions.getName(), singletonList("test.txt")));
     }
 
     @Test
     public void TestFileListingVariedExtensionsC() throws Exception {
         Collection<File> files = Submission.getAllMatchingFiles(testVariedExtensions, "*.c", false);
 
-        SubmissionUtils.checkFileCollections(files, namesToFiles(testVariedExtensions.getName(), Arrays.asList("test.c")));
+        checkFileCollections(files, namesToFiles(testVariedExtensions.getName(), singletonList("test.c")));
     }
 
     @Test
     public void TestFileListingVariedExtensionsCAndH() throws Exception {
         Collection<File> files = Submission.getAllMatchingFiles(testVariedExtensions, "*.{c,h}", false);
 
-        SubmissionUtils.checkFileCollections(files, namesToFiles(testVariedExtensions.getName(), Arrays.asList("test.c", "test.h")));
+        checkFileCollections(files, namesToFiles(testVariedExtensions.getName(), Arrays.asList("test.c", "test.h")));
     }
 
     @Test
@@ -153,14 +152,14 @@ public class SubmissionGenerationTest {
     public void TestFileListingNonRecursive() throws Exception {
         Collection<File> files = Submission.getAllMatchingFiles(testRecursive, "*.txt", false);
 
-        SubmissionUtils.checkFileCollections(files, namesToFiles(testRecursive.getName(), Arrays.asList("test1.txt")));
+        checkFileCollections(files, namesToFiles(testRecursive.getName(), singletonList("test1.txt")));
     }
 
     @Test
     public void TestFileListingRecursive() throws Exception {
         Collection<File> files = Submission.getAllMatchingFiles(testRecursive, "*.txt", true);
 
-        SubmissionUtils.checkFileCollections(files, namesToFiles(testRecursive.getName(), Arrays.asList("test1.txt", "subDir/test2.txt")));
+        checkFileCollections(files, namesToFiles(testRecursive.getName(), Arrays.asList("test1.txt", "subDir/test2.txt")));
     }
 
     @Test(expected = NoSuchFileException.class)

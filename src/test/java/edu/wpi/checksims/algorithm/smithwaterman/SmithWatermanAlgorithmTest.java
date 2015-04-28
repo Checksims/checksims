@@ -43,7 +43,7 @@ public class SmithWatermanAlgorithmTest {
     private TokenList bigTest1;
     private TokenList bigTest2;
 
-    int[][] bigExpectedS;
+    private int[][] bigExpectedS;
 
     private SmithWatermanAlgorithm bigTest;
     private SmithWatermanAlgorithm helloTest;

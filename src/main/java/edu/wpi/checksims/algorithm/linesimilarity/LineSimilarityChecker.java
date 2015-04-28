@@ -107,7 +107,7 @@ public class LineSimilarityChecker implements SimilarityDetector {
         } else if(a.equals(b)) {
             finalA.stream().forEach((token) -> token.setValid(false));
             finalB.stream().forEach((token) -> token.setValid(false));
-            return new AlgorithmResults(a, b, a.getNumTokens(), b.getNumTokens(), finalA, finalB);
+            return new AlgorithmResults(a, b, finalA, finalB);
         }
 
         MessageDigest hasher;
@@ -182,7 +182,7 @@ public class LineSimilarityChecker implements SimilarityDetector {
             throw new InternalAlgorithmError("Internal error: number of identical tokens (" + identicalLinesB + ") does not match number of invalid tokens (" + invalTokensB + ")");
         }
 
-        return new AlgorithmResults(a, b, identicalLinesA, identicalLinesB, finalA, finalB);
+        return new AlgorithmResults(a, b, finalA, finalB);
     }
 
     void addLinesToMap(TokenList lines, Map<String, List<SubmissionLine>> lineDatabase, Submission submitter, MessageDigest hasher) {

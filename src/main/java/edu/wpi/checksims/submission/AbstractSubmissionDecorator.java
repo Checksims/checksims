@@ -77,4 +77,9 @@ public abstract class AbstractSubmissionDecorator implements Submission {
     public int hashCode() {
         return wrappedSubmission.hashCode();
     }
+
+    @Override
+    public int compareTo(Submission other) {
+        return wrappedSubmission.compareTo(other);
+    }
 }

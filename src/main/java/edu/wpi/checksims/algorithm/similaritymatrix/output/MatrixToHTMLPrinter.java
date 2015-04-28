@@ -19,9 +19,10 @@
  * Copyright (c) 2014-2015 Matthew Heon and Dolan Murvihill
  */
 
-package edu.wpi.checksims.algorithm.output;
+package edu.wpi.checksims.algorithm.similaritymatrix.output;
 
 import edu.wpi.checksims.algorithm.InternalAlgorithmError;
+import edu.wpi.checksims.algorithm.similaritymatrix.SimilarityMatrix;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
@@ -33,32 +34,39 @@ import java.text.DecimalFormat;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Output a similarity matrix as HTML
+ * Print a Similarity Matrix to HTML
  */
-public class SimilarityMatrixAsHTMLPrinter implements SimilarityMatrixPrinter {
-    private static SimilarityMatrixAsHTMLPrinter instance;
+public class MatrixToHTMLPrinter implements MatrixPrinter {
+    private static MatrixToHTMLPrinter instance;
 
-    private SimilarityMatrixAsHTMLPrinter() {}
+    private MatrixToHTMLPrinter() {}
 
-    public static SimilarityMatrixAsHTMLPrinter getInstance() {
+    /**
+     * @return Singleton instance of MatrixToHTMLPrinter
+     */
+    public static MatrixToHTMLPrinter getInstance() {
         if(instance == null) {
-            instance = new SimilarityMatrixAsHTMLPrinter();
+            instance = new MatrixToHTMLPrinter();
         }
 
         return instance;
     }
 
-    @Override
-    public String getName() {
-        return "html";
-    }
-
+    /**
+     * Print a Similarity Matrix as a color-coded HTML page
+     *
+     * Uses Velocity templating
+     *
+     * @param matrix Matrix to print
+     * @return HTML representation of given matrix
+     * @throws InternalAlgorithmError Thrown on internal error processing matrix
+     */
     @Override
     public String printMatrix(SimilarityMatrix matrix) throws InternalAlgorithmError {
         checkNotNull(matrix);
 
         DecimalFormat f = new DecimalFormat("###.00");
-        InputStream stream = SimilarityMatrixAsHTMLPrinter.class.getResourceAsStream("/edu/wpi/checksims/algorithm/output/htmlOutput.vm");
+        InputStream stream = this.getClass().getResourceAsStream("/edu/wpi/checksims/algorithm/similaritymatrix/output/htmlOutput.vm");
 
         if(stream == null) {
             throw new InternalAlgorithmError("Could not resolve resource for HTML output template!");
@@ -68,13 +76,22 @@ public class SimilarityMatrixAsHTMLPrinter implements SimilarityMatrixPrinter {
         StringWriter output = new StringWriter();
 
         VelocityContext context = new VelocityContext();
-        context.put("students", matrix.getSubmissions());
-        context.put("resultArray", matrix.getResults());
+        context.put("matrix", matrix);
         context.put("floatFormatter", f);
 
         VelocityEngine ve = new VelocityEngine();
         ve.evaluate(context, output, "HTMLTemplate", template);
 
         return output.toString();
+    }
+
+    @Override
+    public String getName() {
+        return "html";
+    }
+
+    @Override
+    public String toString() {
+        return "Singleton instance of MatrixToHTMLPrinter";
     }
 }
