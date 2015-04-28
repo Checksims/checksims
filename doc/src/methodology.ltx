@@ -243,14 +243,51 @@ and MOSS on several assignments. By comparing the number of false positives
 produced by both programs, we hoped to determine whether MOSS (and its more
 strict definition of what constitutes academic dishonesty) produces more false
 positives than \textit{Checksims}. Furthermore, we hoped to verify that
-\textit{Checksims} contained few (or no) false negatives. 
+\textit{Checksims} contained few (or no) false negatives.
 
-To perform this experiment, we first identified separate groups of assignments
-from our test data that had a few, some, and many similarities according to
-data from the experiment described in Section~\ref{sec:algcompare}. Two of each
-were chosen and given to MOSS to test on --- because MOSS is a free service, and
-not particularly fast, we did not wish to place undue demands on it by asking it
-to process our entire set of test data. 
+Because MOSS is a free service, and not particularly fast, we did not wish to
+place undue demands on it by asking it to process every single student
+submission from our entire set of 43 assignments over nine course offerings. We
+grouped our assignments into the bins described in
+Table~\ref{tab:assignmentsizes}, according to the amount of similarity detected
+in the experiment described in Section~\ref{sec:algcompare}.
+
+\begin{table}
+\centering
+\begin{tabular}{cll}
+\# assignments & description & \# similar pairs \\
+\hline
+16 & Too few to use    & <= 5 pairs \\
+8  & Few similarities  & 6-15 pairs \\
+6  & Some similarities & 16-29 pairs \\
+8  & Many similarities & 30-75 pairs \\
+5  & Too many to use   & 76+ pairs \\
+\end{tabular}
+\caption{Assignment numbers by size}
+\label{tab:assignmentsizes}
+\end{table}
+
+Assignments with very few similarities were discarded because there was
+insufficient similarity to differentiate MOSS from \textit{Checksims}, while
+very large assignments were discarded because manual review would take too
+long. We chose two assignments uniformly at random from each of the three
+remaining categories for our MOSS comparison. Our tested assignments contained
+a total of 286 submissions, distributed according to
+Table~\ref{tab:selectedassignments}.
+
+\begin{table}
+\centering
+\begin{tabular}{cl}
+Assignment 1 & 50 student submissions \\
+Assignment 2 & 42 student submissions \\
+Assignment 3 & 41 student submissions \\
+Assignment 4 & 55 student submissions \\
+Assignment 5 & 55 student submissions \\
+Assignment 6 & 43 student submissions \\
+\end{tabular}
+\caption{Number of submissions in assignments selected for MOSS comparison}
+\label{tab:selectedassignments}
+\end{table}
 
 The MOSS results for the chosen assignments were examined by hand to identify
 false positives --- similarities identified by MOSS that did not match our
