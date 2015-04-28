@@ -36,17 +36,6 @@ notified that their programs might be used in an academic study. Furthermore,
 it might be possible to obtain an approximation of a particular student's grade
 based on that student's submission, compromising his or her academic privacy.
 
-% Consider moving if there's a good place for it
-\iffalse
-These concerns do not apply to a member of the course staff, who already have
-access to student source code and grades. Fortuitously, one of the authors was
-an undergraduate teaching assistant for the WPI Computer Science department
-while this project was completed. Unfortunately, the other author was not,
-which meant that any results obtained by this method could not be shared even
-within the team --- and even if both team members were able to share this
-information, it would not be able to be published.
-\fi
-
 In addition to privacy concerns, student code presents another obstacle.
 Prior to this project, there was no similarity detection system in common use
 in the WPI Computer Science department. Consequently, aside from occasional
@@ -129,8 +118,8 @@ investigated to verify that any reported similarities do exist and to eliminate
 false positives, it is impossible to identify false negatives (submissions
 that contain unusual similarities but are not flagged by our software)
 without baseline output identifying all similar submissions. We consider
-consider false negatives a very undesirable characteristic, so we would prefer
-to verify that they are not present. 
+false negatives a very undesirable characteristic, so we would prefer to verify
+that they are not present. 
 
 A manual investigation of an assignment would certainly prove the most precise
 manner of identifying similarities. However, since our obtained test data
@@ -168,7 +157,7 @@ on new algorithms in similarity detection compare their results against MOSS
 output quality compared against the gold standard in academic dishonesty
 detection for source code \cite{beth14}.
 
-It is noteworthy that using MOSS for baseline results do not completely
+It is noteworthy that using MOSS for baseline results does not completely
 eliminate false negatives. If both MOSS and \textit{Checksims} fail to detect
 an unusual similarity, our experiment will fail to record a false negative.
 We believe this event will be uncommon because of the quality and maturity of
@@ -249,22 +238,61 @@ algorithm. No false positive testing was performed.
 
 \subsection{MOSS Comparison}
 \label{sec:mosscompare}
-We aimed to learn several things by comparing the output of \textit{Checksims}
+We wanted to learn several things by comparing the output of \textit{Checksims}
 and MOSS on several assignments. By comparing the number of false positives
-produced by both programs, we aimed to determine whether MOSS, with its more
-sensitive definition of what constitutes academic dishonesty, produced an
-inordinate number of false positives compared to \textit{Checksims}.
-Furthermore, we aimed to estimate the false negative rate of
-\textit{Checksims}.
+produced by both programs, we hoped to determine whether MOSS (and its more
+strict definition of what constitutes academic dishonesty) produces more false
+positives than \textit{Checksims}. Furthermore, we hoped to verify that
+\textit{Checksims} contained few (or no) false negatives.
 
-To perform this experiment, we first identified groups of assignments from
-our test data that had a few, some, and many similarities according to data
-from the previous experiment. Two of each were chosen and checked with MOSS.
+Because MOSS is a free service, and not particularly fast, we did not wish to
+place undue demands on it by asking it to process every single student
+submission from our entire set of 43 assignments over nine course offerings. We
+grouped our assignments into the bins described in
+Table~\ref{tab:assignmentsizes}, according to the amount of similarity detected
+in the experiment described in Section~\ref{sec:algcompare}.
+
+\begin{table}
+\centering
+\begin{tabular}{cll}
+\# assignments & description & \# similar pairs \\
+\hline
+16 & Too few to use    & <= 5 pairs \\
+8  & Few similarities  & 6-15 pairs \\
+6  & Some similarities & 16-29 pairs \\
+8  & Many similarities & 30-75 pairs \\
+5  & Too many to use   & 76+ pairs \\
+\end{tabular}
+\caption{Assignment numbers by size}
+\label{tab:assignmentsizes}
+\end{table}
+
+Assignments with very few similarities were discarded because there was
+insufficient similarity to differentiate MOSS from \textit{Checksims}, while
+very large assignments were discarded because manual review would take too
+long. We chose two assignments uniformly at random from each of the three
+remaining categories for our MOSS comparison. Our tested assignments contained
+a total of 286 submissions, distributed according to
+Table~\ref{tab:selectedassignments}.
+
+\begin{table}
+\centering
+\begin{tabular}{cl}
+Assignment 1 & 50 student submissions \\
+Assignment 2 & 42 student submissions \\
+Assignment 3 & 41 student submissions \\
+Assignment 4 & 55 student submissions \\
+Assignment 5 & 55 student submissions \\
+Assignment 6 & 43 student submissions \\
+\end{tabular}
+\caption{Number of submissions in assignments selected for MOSS comparison}
+\label{tab:selectedassignments}
+\end{table}
 
 The MOSS results for the chosen assignments were examined by hand to identify
 false positives --- similarities identified by MOSS that did not match our
 definition of academic dishonesty. The number of false positives (and the
-original number of results) were recorded, and the false positives thrown
+original number of results) was recorded, and the false positives thrown
 out. The \textit{Checksims} results from the previous experiment for both  
 algorithms were then examined by the same process, with false positives being
 identified and thrown out, and the number of overall matches and false

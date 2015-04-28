@@ -16,7 +16,7 @@ algorithm but not another.
 
 
 \subsubsection{Overall Results Detected}
-Figure~\ref{fig:algocompare} shows all results from applying both algorithms
+Figure~\ref{fig:algcompare} shows all results from applying both algorithms
 to every assignment in the test data. Results under 70\% are not shown, as they
 are less interesting (a far lower proportion will be cases of unauthorized
 copying) and they are orders of magnitude more than the significant results. It
@@ -47,19 +47,19 @@ were able to use their submissions as common code for these assignments.
 \centering
 \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{algorithmcompare.pdf}
 \caption{Results detected by \textit{Line Comparison} and \textit{Smith Waterman} across all assignments}
-\label{fig:algocompare}
+\label{fig:algcompare}
 \end{figure}
 
 
 \paragraph{Previous Undiscovered Academic Dishonesty}
-As Figure~\ref{fig:algocompare} shows, the \textit{Smith-Waterman} algorithm
-identified 17 cases of 100\% similarity, and a further 35 over 90\%. As was
-mentioned in Section~\ref{sec:anon}, all our test data is taken from the actual
-courses --- previous offerings of sophomore-level Computer Science classes.
-Given this, we can assume that the results in Figure~\ref{fig:algocompare}
-represent a large number of cases of academic dishonesty, though we cannot say
-how many of the reported results are actually cases of academic dishonesty. We
-can, however, draw reasonable inferences.
+As Figure~\ref{fig:algcompare} shows, the \textit{Smith-Waterman} algorithm
+identified 17 cases of 100\% similarity, and a further 35 cases over 90\%. All
+of our test data is taken from the courses described in Section~\ref{sec:anon}
+--- previous offering of sophomore-level Computer Science classes. Given this,
+we can assume that the results in Figure~\ref{fig:algcompare} represent a large
+number of cases of academic dishonesty, and Professor Lauer has confirmed that
+we  detected far more instances than he and other faculty members were
+previously aware of.
 
 The 100\% results are almost certainly cases of academic dishonesty. The notion
 that two students could have typed in 100\% identical code independently is
@@ -67,7 +67,7 @@ completely implausible. We investigated several of these pairs, and all we
 found were what we
 consider to be academic dishonesty. Results from the 90\% to 99\% range are
 also nearly-certain cases of academic dishonesty. We reviewed 6 of these pairs
-of assignments, and found that all of them match our definition of academic
+of submissions, and found that all of them match our definition of academic
 dishonesty.
 
 The 70\% to 89\% range, however, contains a number of similarities that may
@@ -95,7 +95,7 @@ may well be due to the reasons identified in the previous paragraph.
 Even discounting a large number of the similarities present as potentially not
 cases of academic dishonesty, our results do paint a concerning picture of
 undetected past incidences of academic dishonesty within CS2301.
-Professor Lauer has confermed that to his knowledge, almost none of the near
+Professor Lauer has confirmed that to his knowledge, almost none of the near
 certain cases we identified (90\% and higher) were caught. We hope that the
 deployment of \textit{Checksims} may be able to reduce these numbers as word of
 its use spreads.
@@ -103,7 +103,7 @@ its use spreads.
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{classcompare.pdf}
-\caption{Results in Figure~\ref{fig:algocompare} split by course}
+\caption{Results in Figure~\ref{fig:algcompare} split by course}
 \label{fig:classcompare}
 \end{figure}
 
@@ -116,16 +116,16 @@ assignment took over 2400 seconds (40 minutes) to complete, and the vast
 majority finished in under 360 seconds (6 minutes). We originally intended to
 produce a comparative graph also showing results from \textit{Line Comparison},
 but the results from that algorithm were sufficiently similar that we did not
-deem it necessary to graph them. No assignment took longer than 1 second to
+deem it necessary to graph them. No assignment took longer than one second to
 complete using \textit{Line Comparison}; the graph, compared to the results
-from \textit{Smith-Waterman}, would be a flat line slightly above 0. This
+from \textit{Smith-Waterman}, would be a flat line slightly above zero. This
 supports our hypothesis that \textit{Line Comparison} is the faster of the two
 algorithms, and confirms its usefulness as a fast initial pass to identify
 highly similar submissions.
 
 It is noteworthy that, while no assignment shown completed in over 2400 seconds
 (40 minutes), we were forced to manually intervene on one occasion. The
-algorithm hung for 4 hours performing similarity detection on one pair of
+algorithm hung for four hours performing similarity detection on one pair of
 students on one assignment in our sample data (and likely would have run much
 longer, had we not ended it prematurely). We investigated the assignment more
 closely, and found that two students had submitted an unorthodox solution using
@@ -148,7 +148,7 @@ reduce the runtime of Smith-Waterman to around one minute.
 
 
 \subsubsection{Algorithm Comparison}
-Figure~\ref{fig:resultsbyalgo} shows the results from 6 randomly-selected
+Figure~\ref{fig:resultsbyalgo} shows the results from six randomly-selected
 assignments from the overall dataset. The results are grouped by assignment,
 and show how many results were detected by each algorithm for each of the
 assignments. It is immediately clear that, for two of the six assignments, the
@@ -179,11 +179,11 @@ accuracy of the \textit{Smith-Waterman} algorithm.
 
 
 \subsection{MOSS Comparison}
-We identified six assignments, containing over 120 individual student
-submissions, from our overall dataset to run through MOSS using the
-methodology explained in Section~\ref{sec:mosscompare}. These submissions were
-run through MOSS, and the results were compared to those obtained using
-\textit{Checksims} using the Smith-Waterman algorithm. 
+We identified six assignments, containing 286 individual student submissions,
+from our overall dataset to run through MOSS using the methodology explained
+in Section~\ref{sec:mosscompare}. These submissions were run through MOSS, and
+the results were compared to those obtained using \textit{Checksims} using the
+Smith-Waterman algorithm.  
 
 For the purposes of this comparison, we must clarify our definition of
 ``significant results.'' In \textit{Checksims} and throughout this paper, we
@@ -195,10 +195,9 @@ we were able to identify a point in the results where results after had many
 fewer similar tokens than results before; we used these points to define
 significant results in MOSS, with any results coming before being considered
 significant. We acknowledge that this is not an optimal method of selecting
-significant results, but could not find a better solution. Given the ease of
-selecting relevant results in \textit{Checksims}, we suggest that the overall
-usability of our results are better than MOSS, are no further research was
-performed to validate our suspicion.
+significant results, but could not find a better solution. We suggest further
+study of the usability consequences of \textit{Checksims}'s output as compared
+to MOSS.
 
 \textbf{Overall, we found that every significant similarity identified by MOSS
 was also identified by \textit{Checksims}.} The reverse, however, was not true.
@@ -207,8 +206,8 @@ very similar to other submissions by \textit{Checksims}, but were not found
 similar by MOSS. We found eight such submissions, and visually examined each to
 make a final determination of which piece of similarity detection software was
 correct. We sided with \textit{Checksims} in all cases, as the assignments were
-very similar on visual examination. This may indicate a weakness of MOSS with
-very small submissions, but we have insufficient data to draw conclusions.
+very similar on visual examination. We suggest further study of MOSS's
+performance with very small submissions.
 
 It is worth noting that the definition of similar matches differs between
 \textit{Checksims} and MOSS. \textit{Checksims} ranks similarities based on
@@ -224,9 +223,12 @@ similarity). We consider such submissions to be identified by both
 the other. We did not observe any matches ranked highly by MOSS but not
 \textit{Checksims}, though this could theoretically occur in very large
 submissions with a large number of matching tokens, but a low percentage of
-matching tokens.
+matching tokens. While labor-intensive, a thorough examination of very large
+assignments such as the ones listed in the last row of
+Table~\ref{tab:assignmentsizes} may shed some light on MOSS's potential
+advantage here.
 
-Our comparison also does not test one of the potential strengths of MOSS over
+Our comparison does not test another potential strength of MOSS over
 \textit{Checksims}. MOSS performs syntax-aware comparisons, which lets it
 perform much more powerful normalizations than \textit{Checksims} is capable of
 at present. These normalizations are described in
@@ -235,13 +237,13 @@ attempts to obfuscate similar code that would otherwise go unnoticed.
 Comparing data including such submissions might highlight the advantages of
 MOSS over \textit{Checksims}, but we could not find any submissions in our
 dataset that contained any significant attempt to obfuscate similarities.
-Because of this, our comparisons are more favorable to \textit{Checksims} than
-the real world may be. It is possible that the prevalence of deliberately
-obfuscated similarities may rise if knowledge that a similarity detection
-system is in use becomes widespread, which would make the performance of 
-\textit{Checksims} in such cases more important, and we would like to perform
-further experiments in this direction.
-
+Because of this, our comparisons are more favorable to \textit{Checksims} in
+our sample than it might be in an environment with more sophisticated copying.
+It is possible that the prevalence of deliberately obfuscated similarities may
+rise if knowledge that a similarity detection system is in use becomes
+widespread, which would make the performance of  \textit{Checksims} in such
+cases more important, and we would like to perform further experiments in this
+direction. 
 
 \section{Real-World Usage}
 During this project, \textit{Checksims} was used in real-world situations on two
