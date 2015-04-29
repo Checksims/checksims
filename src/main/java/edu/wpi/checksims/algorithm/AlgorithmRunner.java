@@ -33,19 +33,20 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Run a pairwise similarity detection algorithm on a number of submission pairs
+ * Run a pairwise similarity detection algorithm on a number of submission pairs.
  */
 public final class AlgorithmRunner {
     private AlgorithmRunner() {}
 
     /**
-     * Run a pairwise similarity detection algorithm
+     * Run a pairwise similarity detection algorithm.
      *
      * @param submissions Pairs to run on
      * @param algorithm Algorithm to use
      * @return Collection of AlgorithmResults, one for each input pair
      */
-    public static Set<AlgorithmResults> runAlgorithm(Set<Pair<Submission, Submission>> submissions, SimilarityDetector algorithm) {
+    public static Set<AlgorithmResults> runAlgorithm(Set<Pair<Submission, Submission>> submissions,
+                                                     SimilarityDetector algorithm) {
         checkNotNull(submissions);
         checkArgument(submissions.size() > 0, "Must provide at least one pair of submissions to run on!");
         checkNotNull(algorithm);
@@ -53,7 +54,8 @@ public final class AlgorithmRunner {
         Logger logs = LoggerFactory.getLogger(AlgorithmRunner.class);
         long startTime = System.currentTimeMillis();
 
-        logs.info("Performing similarity detection on " + submissions.size() + " pairs using algorithm " + algorithm.getName());
+        logs.info("Performing similarity detection on " + submissions.size() + " pairs using algorithm "
+                + algorithm.getName());
 
         // Perform parallel analysis of all submission pairs to generate a results list
         Set<AlgorithmResults> results = ParallelAlgorithm.parallelSimilarityDetection(algorithm, submissions);

@@ -31,7 +31,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Supported tokenization types
+ * Supported tokenization types.
  */
 public enum TokenType {
     CHARACTER("character"),
@@ -49,6 +49,13 @@ public enum TokenType {
         return "Token of type " + name;
     }
 
+    /**
+     * Convert String into TokenType.
+     *
+     * @param input String to convert
+     * @return TokenType with name given in input string
+     * @throws ChecksimsException Thrown if there is no token type with name in string
+     */
     public static TokenType fromString(String input) throws ChecksimsException {
         checkNotNull(input);
         checkArgument(!input.isEmpty(), "Empty string is not a valid token type!");
@@ -58,7 +65,9 @@ public enum TokenType {
         TokenType[] types = TokenType.class.getEnumConstants();
 
         // Filter to find anything with a matching name
-        List<TokenType> matching = Arrays.stream(types).filter((type) -> type.name.equals(lowerInput)).collect(Collectors.toList());
+        List<TokenType> matching = Arrays.stream(types)
+                .filter((type) -> type.name.equals(lowerInput))
+                .collect(Collectors.toList());
 
         // If we find nothing, throw an exception
         if(matching.size() == 0) {

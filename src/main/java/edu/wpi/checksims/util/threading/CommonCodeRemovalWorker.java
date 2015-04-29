@@ -38,7 +38,7 @@ import java.util.concurrent.Callable;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Basic unit of thread execution for Common Code Removal
+ * Basic unit of thread execution for Common Code Removal.
  */
 public class CommonCodeRemovalWorker implements Callable<Submission> {
     private final SimilarityDetector algorithm;
@@ -48,7 +48,7 @@ public class CommonCodeRemovalWorker implements Callable<Submission> {
     private static Logger logs = LoggerFactory.getLogger(CommonCodeRemovalWorker.class);
 
     /**
-     * Create a Callable worker to perform common code removal on a single submission
+     * Create a Callable worker to perform common code removal on a single submission.
      *
      * @param algorithm Algorithm to use to detect common code
      * @param common Common code to remove
@@ -65,7 +65,7 @@ public class CommonCodeRemovalWorker implements Callable<Submission> {
     }
 
     /**
-     * Perform common code removal on given submission
+     * Perform common code removal on given submission.
      *
      * @return Submission with common code removed
      * @throws Exception Unused - all exceptions will be RuntimeException or similar
@@ -88,7 +88,7 @@ public class CommonCodeRemovalWorker implements Callable<Submission> {
         // Use the new submissions to compute this
         AlgorithmResults results = algorithm.detectSimilarity(computeIn, computeCommon);
 
-        // The results contains two TokenLists, representing the final state of the submissions after similarity detection
+        // The results contains two TokenLists, representing the final state of the submissions after detection
         // All common code should be marked invalid for the input submission's final list
         TokenList listWithCommonInvalid;
         double percentMatched;
@@ -114,7 +114,8 @@ public class CommonCodeRemovalWorker implements Callable<Submission> {
         TokenList finalListGoodTokenization = oldTokenizer.splitFile(newBody);
 
         DecimalFormat d = new DecimalFormat("###.00");
-        logs.trace("Submission " + removeFrom.getName() + " contained " + d.format(100 * percentMatched) + "% common code");
+        logs.trace("Submission " + removeFrom.getName() + " contained " + d.format(100 * percentMatched)
+                + "% common code");
         logs.trace("Removed " + identTokens + " common tokens (of " + removeFrom.getNumTokens() + " total)");
 
         return new ConcreteSubmission(removeFrom.getName(), newBody, finalListGoodTokenization);

@@ -46,13 +46,13 @@ import java.util.Set;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Entry point for Checksims
+ * Entry point for Checksims.
  */
 public class ChecksimsRunner {
     private static Logger logs;
 
     /**
-     * CLI entrypoint of Checksims
+     * CLI entrypoint of Checksims.
      *
      * @param args CLI arguments
      */

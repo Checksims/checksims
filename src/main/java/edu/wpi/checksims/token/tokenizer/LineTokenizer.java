@@ -30,13 +30,16 @@ import java.util.Arrays;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Splits a file on a line-by-line basis
+ * Splits a file on a line-by-line basis.
  */
 public class LineTokenizer implements Tokenizer {
     private static LineTokenizer instance;
 
     private LineTokenizer() {}
 
+    /**
+     * @return Singleton instance of LineTokenizer
+     */
     public static LineTokenizer getInstance() {
         if(instance == null) {
             instance = new LineTokenizer();
@@ -46,7 +49,7 @@ public class LineTokenizer implements Tokenizer {
     }
 
     /**
-     * Split string into newline-delineated tokens
+     * Split string into newline-delineated tokens.
      *
      * @param string String to split
      * @return List of LINE tokens representing the input string

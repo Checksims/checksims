@@ -45,14 +45,26 @@ public final class ValidityEnsuringSubmission extends AbstractSubmissionDecorato
 
         Submission otherSubmission = (Submission)other;
 
-        if(!otherSubmission.getTokenType().equals(this.getTokenType()) || !otherSubmission.getName().equals(this.getName()) || !(otherSubmission.getNumTokens() == this.getNumTokens()) || !(otherSubmission.getContentAsString().equals(this.getContentAsString()))) {
+        if(!otherSubmission.getTokenType().equals(this.getTokenType())
+                || !otherSubmission.getName().equals(this.getName())
+                || !(otherSubmission.getNumTokens() == this.getNumTokens())
+                || !(otherSubmission.getContentAsString().equals(this.getContentAsString()))) {
             return false;
         }
 
         Supplier<TokenList> tokenListSupplier = () -> new TokenList(this.getTokenType());
-        TokenList thisList = this.getContentAsTokens().stream().map(ValidityEnsuringToken::new).collect(Collectors.toCollection(tokenListSupplier));
-        TokenList otherList = otherSubmission.getContentAsTokens().stream().map(ValidityEnsuringToken::new).collect(Collectors.toCollection(tokenListSupplier));
+        TokenList thisList = this.getContentAsTokens().stream()
+                .map(ValidityEnsuringToken::new)
+                .collect(Collectors.toCollection(tokenListSupplier));
+        TokenList otherList = otherSubmission.getContentAsTokens().stream()
+                .map(ValidityEnsuringToken::new)
+                .collect(Collectors.toCollection(tokenListSupplier));
 
         return thisList.equals(otherList);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 }

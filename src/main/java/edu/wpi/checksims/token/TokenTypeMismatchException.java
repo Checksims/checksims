@@ -24,7 +24,7 @@ package edu.wpi.checksims.token;
 import edu.wpi.checksims.ChecksimsException;
 
 /**
- * Exception thrown when attempting to compare two submissions with different tokenizations
+ * Exception thrown when attempting to compare two submissions with different tokenizations.
  */
 public class TokenTypeMismatchException extends ChecksimsException {
     private static final long serialVersionUID = 1L;

@@ -26,7 +26,7 @@ import edu.wpi.checksims.util.reflection.NoSuchImplementationException;
 import edu.wpi.checksims.util.reflection.RegistryWithDefault;
 
 /**
- * Registry for all supported similarity detection algorithms
+ * Registry for all supported similarity detection algorithms.
  */
 public final class AlgorithmRegistry extends RegistryWithDefault<SimilarityDetector> {
     private static AlgorithmRegistry instance;
@@ -35,6 +35,9 @@ public final class AlgorithmRegistry extends RegistryWithDefault<SimilarityDetec
         super("edu.wpi.checksims.algorithm", SimilarityDetector.class, LineSimilarityChecker.getInstance().getName());
     }
 
+    /**
+     * @return Singleton instance of AlgorithmRegistry
+     */
     public static AlgorithmRegistry getInstance() {
         if(instance == null) {
             try {

@@ -40,12 +40,12 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Actual implementation of the Smith-Waterman algorithm
+ * Actual implementation of the Smith-Waterman algorithm.
  */
 public class SmithWatermanAlgorithm {
     private final TokenList xList;
     private final TokenList yList;
-    private final ArraySubset wholeArray; // TODO should have one of these that is 1 before end of the array - prevent out of bounds
+    private final ArraySubset wholeArray; // TODO need one 1 before end of array to prevent out of bounds
     private final int[][] s;
     private final int[][] m;
     private Map<Integer, Set<Coordinate>> candidates;
@@ -56,7 +56,7 @@ public class SmithWatermanAlgorithm {
     private static final int swConstant = 1;
 
     /**
-     * Prepare for a Smith-Waterman alignment
+     * Prepare for a Smith-Waterman alignment.
      *
      * @param a First token list to align
      * @param b Second token list to align
@@ -79,7 +79,7 @@ public class SmithWatermanAlgorithm {
     }
 
     /**
-     * INTERNAL ONLY - for use in unit tests
+     * INTERNAL ONLY - for use in unit tests.
      *
      * @return Smith-Waterman S table
      */
@@ -88,7 +88,7 @@ public class SmithWatermanAlgorithm {
     }
 
     /**
-     * INTERNAL ONLY - for use in unit tests
+     * INTERNAL ONLY - for use in unit tests.
      *
      * @return Smith-Waterman M table
      */
@@ -97,7 +97,7 @@ public class SmithWatermanAlgorithm {
     }
 
     /**
-     * INTERNAL ONLY - for use in unit tests
+     * INTERNAL ONLY - for use in unit tests.
      *
      * @return ArraySubset containing bounds of entire array
      */
@@ -106,7 +106,7 @@ public class SmithWatermanAlgorithm {
     }
 
     /**
-     * INTERNAL ONLY - for use in unit tests
+     * INTERNAL ONLY - for use in unit tests.
      *
      * @return Smith-Waterman match candidates
      */
@@ -115,7 +115,7 @@ public class SmithWatermanAlgorithm {
     }
 
     /**
-     * INTERNAL ONLY - for use in unit tests
+     * INTERNAL ONLY - for use in unit tests.
      *
      * @return Token list along X axis
      */
@@ -124,7 +124,7 @@ public class SmithWatermanAlgorithm {
     }
 
     /**
-     * INTERNAL ONLY - for use in unit tests
+     * INTERNAL ONLY - for use in unit tests.
      *
      * @return Token list along Y axis
      */
@@ -133,7 +133,7 @@ public class SmithWatermanAlgorithm {
     }
 
     /**
-     * Compute a Smith-Waterman alignment
+     * Compute a Smith-Waterman alignment.
      *
      * TODO tests for this (Already tested through SmithWaterman, but should have independent tests as well)
      *
@@ -212,7 +212,7 @@ public class SmithWatermanAlgorithm {
     }
 
     /**
-     * Generate subsets of the Smith-Waterman arrays that require recomputation
+     * Generate subsets of the Smith-Waterman arrays that require recomputation.
      *
      * TODO unit tests for this once optimizations are added
      *
@@ -223,8 +223,10 @@ public class SmithWatermanAlgorithm {
     Set<ArraySubset> generateSubsets(Coordinate origin, Coordinate max) {
         checkNotNull(origin);
         checkNotNull(max);
-        checkArgument(wholeArray.contains(origin), "Origin of requested area out of bounds: " + origin + " not within " + wholeArray);
-        checkArgument(wholeArray.contains(max), "Max of requested area out of bounds: " + max + " not within " + wholeArray);
+        checkArgument(wholeArray.contains(origin), "Origin of requested area out of bounds: " + origin
+                + " not within " + wholeArray);
+        checkArgument(wholeArray.contains(max), "Max of requested area out of bounds: " + max
+                + " not within " + wholeArray);
 
         Set<ArraySubset> toRecompute = new HashSet<>();
 
@@ -251,7 +253,8 @@ public class SmithWatermanAlgorithm {
         // Fourth: Below and to the right
         // Check if it exists
         if(max.getX() < (wholeArray.getMax().getX() - 1) && max.getY() < (wholeArray.getMax().getY() - 1)) {
-            toRecompute.add(ArraySubset.of(max.getX(), max.getY(), wholeArray.getMax().getX() - 1, wholeArray.getMax().getY() - 1));
+            toRecompute.add(ArraySubset.of(max.getX(), max.getY(), wholeArray.getMax().getX() - 1,
+                    wholeArray.getMax().getY() - 1));
         }
 
         // If none of the subsets were added, we matched the entire array
@@ -269,7 +272,7 @@ public class SmithWatermanAlgorithm {
     }
 
     /**
-     * Zero out the portion of S and M arrays that was matched
+     * Zero out the portion of S and M arrays that was matched.
      *
      * @param origin Origin of the match
      * @param max Endpoint of the match
@@ -277,8 +280,10 @@ public class SmithWatermanAlgorithm {
     void zeroMatch(Coordinate origin, Coordinate max) {
         checkNotNull(origin);
         checkNotNull(max);
-        checkArgument(wholeArray.contains(origin), "Origin of requested area out of bounds: " + origin + " not within " + wholeArray);
-        checkArgument(wholeArray.contains(max), "Max of requested area out of bounds: " + max + " not within " + wholeArray);
+        checkArgument(wholeArray.contains(origin), "Origin of requested area out of bounds: " + origin
+                + " not within " + wholeArray);
+        checkArgument(wholeArray.contains(max), "Max of requested area out of bounds: " + max
+                + " not within " + wholeArray);
 
         int xLower = origin.getX();
         int xUpper = max.getX();
@@ -304,16 +309,18 @@ public class SmithWatermanAlgorithm {
     }
 
     /**
-     * Filter postdominated results of a match
+     * Filter postdominated results of a match.
      *
      * @param max Endpoint of match
-     * @return Filtered version of candidate results set, with all results postdominated by max (possibly including match) removed
+     * @return Filtered version of candidate results set, with all results postdominated by match removed
      */
     Map<Integer, Set<Coordinate>> filterPostdominated(Coordinate origin, Coordinate max) {
         checkNotNull(origin);
         checkNotNull(max);
-        checkArgument(wholeArray.contains(origin), "Origin of requested area out of bounds: " + origin + " not within " + wholeArray);
-        checkArgument(wholeArray.contains(max), "Max of requested area out of bounds: " + max + " not within " + wholeArray);
+        checkArgument(wholeArray.contains(origin), "Origin of requested area out of bounds: " + origin + " not within "
+                + wholeArray);
+        checkArgument(wholeArray.contains(max), "Max of requested area out of bounds: " + max + " not within "
+                + wholeArray);
 
         if(candidates.isEmpty()) {
             return candidates;
@@ -346,7 +353,10 @@ public class SmithWatermanAlgorithm {
                 // If the origin is NOT the same as the given origin, it's a candidate
                 if(!originOfCandidate.equals(origin)) {
                     // Also need to check if the origin and max are not within the rectangles identified
-                    if(xInval.contains(coord) || yInval.contains(coord) || xInval.contains(max) || yInval.contains(max)) {
+                    if(xInval.contains(coord)
+                            || yInval.contains(coord)
+                            || xInval.contains(max)
+                            || yInval.contains(max)) {
                         newSet.add(coord);
                     }
                 }
@@ -363,17 +373,19 @@ public class SmithWatermanAlgorithm {
     }
 
     /**
-     * Compute a subset of the array
+     * Compute a subset of the array.
      *
      * @param toCompute Subset to recompute. Can be entire array, if desired.
      * @return Map containing all candidate results identified while computing
      */
     Map<Integer, Set<Coordinate>> computeArraySubset(ArraySubset toCompute) {
         checkNotNull(toCompute);
-        checkArgument(wholeArray.contains(toCompute.getOrigin()), "Origin of subset out of bounds: " + toCompute.getOrigin() + " not within " + wholeArray);
-        checkArgument(wholeArray.contains(toCompute.getMax()), "Maximum of subset out of bounds: " + toCompute.getMax() + " not within " + wholeArray);
+        checkArgument(wholeArray.contains(toCompute.getOrigin()), "Origin of subset out of bounds: "
+                + toCompute.getOrigin() + " not within " + wholeArray);
+        checkArgument(wholeArray.contains(toCompute.getMax()), "Maximum of subset out of bounds: "
+                + toCompute.getMax() + " not within " + wholeArray);
 
-        Map<Integer, Set<Coordinate>> candidates = new HashMap<>();
+        Map<Integer, Set<Coordinate>> newCandidates = new HashMap<>();
 
         for(int x = toCompute.getOrigin().getX(); x < toCompute.getMax().getX(); x++) {
             Token xToken = new ValidityEnsuringToken(xList.get(x - 1));
@@ -446,8 +458,8 @@ public class SmithWatermanAlgorithm {
                 // Check if we our result is significant
                 if(newS >= threshold && newS > newM) {
                     // It's significant, add it to our results
-                    if(candidates.containsKey(newS)) {
-                        Set<Coordinate> valuesForKey = candidates.get(newS);
+                    if(newCandidates.containsKey(newS)) {
+                        Set<Coordinate> valuesForKey = newCandidates.get(newS);
 
                         valuesForKey.add(Coordinate.of(x, y));
                     } else {
@@ -455,17 +467,17 @@ public class SmithWatermanAlgorithm {
 
                         valuesForKey.add(Coordinate.of(x, y));
 
-                        candidates.put(newS, valuesForKey);
+                        newCandidates.put(newS, valuesForKey);
                     }
                 }
             }
         }
 
-        return candidates;
+        return newCandidates;
     }
 
     /**
-     * Get the closest coordinate to the origin from a given set
+     * Get the closest coordinate to the origin from a given set.
      *
      * @param coordinates Coordinates to search within
      * @return Closest coordinate to origin --- (0,0)
@@ -491,7 +503,7 @@ public class SmithWatermanAlgorithm {
     }
 
     /**
-     * Set matched tokens invalid
+     * Set matched tokens invalid.
      *
      * @param coordinates Set of matched coordinates in the S array
      */
@@ -513,15 +525,17 @@ public class SmithWatermanAlgorithm {
     }
 
     /**
-     * Retrieve a set of the coordinates that make up a match
+     * Retrieve a set of the coordinates that make up a match.
      *
      * @param matchCoord Coordinate of the end of the match. Must be within the S array.
      * @return Set of all coordinates that form the match
      */
     Set<Coordinate> getMatchCoordinates(Coordinate matchCoord) {
         checkNotNull(matchCoord);
-        checkArgument(wholeArray.contains(matchCoord), "Requested match coordinate is out of bounds: " + matchCoord + " not within " + wholeArray);
-        checkArgument(s[matchCoord.getX()][matchCoord.getY()] != 0, "Requested match coordinate " + matchCoord + " points to 0 in S array!");
+        checkArgument(wholeArray.contains(matchCoord), "Requested match coordinate is out of bounds: "
+                + matchCoord + " not within " + wholeArray);
+        checkArgument(s[matchCoord.getX()][matchCoord.getY()] != 0, "Requested match coordinate "
+                + matchCoord + " points to 0 in S array!");
 
         Set<Coordinate> matchCoordinates = new HashSet<>();
 
@@ -567,7 +581,7 @@ public class SmithWatermanAlgorithm {
     }
 
     /**
-     * Merge given map into the Candidates list
+     * Merge given map into the Candidates list.
      *
      * @param merge Map to merge into candidates
      */
@@ -588,7 +602,7 @@ public class SmithWatermanAlgorithm {
     }
 
     /**
-     * Get the maximum of 3 integers
+     * Get the maximum of 3 integers.
      *
      * @param a First int
      * @param b Second int

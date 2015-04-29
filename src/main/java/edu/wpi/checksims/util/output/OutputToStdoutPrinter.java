@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Output printer that prints all results to STDOUT
+ * Output printer that prints all results to STDOUT.
  */
 public final class OutputToStdoutPrinter implements OutputPrinter {
     private static OutputToStdoutPrinter instance;
@@ -49,7 +49,7 @@ public final class OutputToStdoutPrinter implements OutputPrinter {
     }
 
     /**
-     * Print matrix to STDOUT using given strategy
+     * Print matrix to STDOUT using given strategy.
      *
      * @param toPrint Matrix to print
      * @param printWith Strategy to print with

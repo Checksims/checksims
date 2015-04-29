@@ -127,6 +127,133 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>2.15</version>
+                <executions>
+                    <execution>
+                        <id>checkstyle</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <failOnViolation>true</failOnViolation>
+                            <checkstyleRules>
+                                <module name="checker">
+                                    <!-- Ensure newline at EOF -->
+                                    <module name="NewlineAtEndOfFile">
+                                        <property name="lineSeparator" value="lf"/>
+                                    </module>
+
+                                    <!-- All AST related checks -->
+                                    <module name="TreeWalker">
+                                        <!-- Ensure no redundant or unused import statements -->
+                                        <module name="RedundantImport"/>
+                                        <module name="UnusedImports"/>
+
+                                        <!-- Enforce Javadoc formatting -->
+                                        <module name="JavadocStyle"/>
+
+                                        <!-- Enforce positioning of left curly brace -->
+                                        <module name="LeftCurly"/>
+
+                                        <!-- Enforce positioning of right curly brace on some statement types -->
+                                        <module name="RightCurly">
+                                            <property name="option" value="same"/>
+                                        </module>
+
+                                        <!-- Enforce braces around if, else, for, while, do, etc -->
+                                        <module name="NeedBraces"/>
+
+                                        <!-- Enforce 120 max line length, as opposed to 80 -->
+                                        <module name="LineLength">
+                                            <property name="max" value="120"/>
+                                        </module>
+
+                                        <!-- Enforce annotation style -->
+                                        <module name="AnnotationUseStyle"/>
+
+                                        <!-- Enforce Java array style (String[] x not String x[]) -->
+                                        <module name="ArrayTypeStyle"/>
+
+                                        <!-- Ensure that if we define equals(T) we also define equals(Object) -->
+                                        <module name="CovariantEquals"/>
+
+                                        <!-- Enforce overriding hashCode if equals is overridden -->
+                                        <module name="EqualsHashCode"/>
+
+                                        <!-- Enforce not shadowing local variables or parameters -->
+                                        <!-- Allowed in constructors and setters -->
+                                        <module name="HiddenField">
+                                            <property name="ignoreConstructorParameter" value="true"/>
+                                            <property name="ignoreSetter" value="true"/>
+                                        </module>
+
+                                        <!-- Enforce no empty statements -->
+                                        <module name="EmptyStatement"/>
+
+                                        <!-- Enforce not modifying for loop control vars outside of the for()... statement -->
+                                        <module name="ModifiedControlVariable"/>
+
+                                        <!-- Enforce simplification of boolean expressions and returns -->
+                                        <module name="SimplifyBooleanExpression"/>
+                                        <module name="SimplifyBooleanReturn"/>
+
+                                        <!-- Check for accidental uses of == with strings -->
+                                        <module name="StringLiteralEquality"/>
+
+                                        <!-- Enforce no inner assignments -->
+                                        <module name="InnerAssignment"/>
+
+                                        <!-- Enforce package declaration - you need to declare one -->
+                                        <module name="PackageDeclaration"/>
+
+                                        <!-- Enforce modifier order -->
+                                        <module name="ModifierOrder"/>
+
+                                        <!-- Enforce no fallthrough in case statements -->
+                                        <module name="FallThrough"/>
+
+                                        <!-- Enforce whitespace around keywords and binary operators -->
+                                        <!-- Notable exclusions are for() if() catch() and while() -->
+                                        <module name="WhitespaceAround">
+                                            <property name="tokens" value="ASSIGN, BAND, BAND_ASSIGN, BOR,
+				                                BOR_ASSIGN, BSR, BSR_ASSIGN, BXOR, BXOR_ASSIGN, COLON, DIV, DIV_ASSIGN,
+				                                EQUAL, GE, GT, LAND, LE, LITERAL_DO, LITERAL_ELSE, LITERAL_FINALLY,
+				                                LITERAL_RETURN, LITERAL_SYNCHRONIZED, LITERAL_TRY, LOR, LT, MINUS,
+				                                MINUS_ASSIGN, MOD, MOD_ASSIGN, NOT_EQUAL, PLUS, PLUS_ASSIGN, QUESTION,
+				                                SL, SL_ASSIGN, SR_ASSIGN, STAR, STAR_ASSIGN"/>
+                                        </module>
+
+                                        <!-- Enforce whitespace after commas and semicolons -->
+                                        <module name="WhitespaceAfter">
+                                            <property name="tokens" value="COMMA, SEMI"/>
+                                        </module>
+
+                                        <!-- Enforce no whitespace after certain tokens -->
+                                        <module name="NoWhitespaceAfter">
+                                            <!-- Checks that there is no whitespace after various unary operators.
+                                                Linebreaks are allowed. -->
+                                            <property name="tokens" value="BNOT, DEC, DOT, INC, LNOT, UNARY_MINUS, UNARY_PLUS"/>
+                                        </module>
+
+                                        <!-- Check that there is no whitespace before various unary operators (newlines are allowed) -->
+                                        <module name="NoWhitespaceBefore">
+                                            <property name="tokens" value="SEMI, DOT, POST_DEC, POST_INC"/>
+                                            <property name="allowLineBreaks" value="true"/>
+                                        </module>
+
+                                        <!-- Ensure no whitespace padding after ( and before ). Newlines allowed. -->
+                                        <module name="ParenPad"/>
+                                    </module>
+                                </module>
+                            </checkstyleRules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
         <resources>
             <resource>

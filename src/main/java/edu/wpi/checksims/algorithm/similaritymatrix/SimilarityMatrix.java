@@ -36,7 +36,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * A Similarity Matrix represents the similarities between a given group of submissions
+ * A Similarity Matrix represents the similarities between a given group of submissions.
  *
  * TODO consider offering Iterators for the entire similarity matrix, and for individual submissions on the X axis
  */
@@ -48,7 +48,7 @@ public final class SimilarityMatrix {
 
     /**
      * Create a Similarity Matrix with given parameters. Internal constructor used by factory methods.
-     * <p/>
+     *
      * Lists, not sets, of submissions, to ensure we have an ordering. We maintain the invariant that there are no
      * duplicates in the factories.
      *
@@ -57,16 +57,24 @@ public final class SimilarityMatrix {
      * @param ySubmissions Submissions on the Y axis
      * @param builtFrom    Set of Algorithm Results used to build the matrix
      */
-    protected SimilarityMatrix(MatrixEntry[][] entries, List<Submission> xSubmissions, List<Submission> ySubmissions, Set<AlgorithmResults> builtFrom) {
+    protected SimilarityMatrix(MatrixEntry[][] entries, List<Submission> xSubmissions, List<Submission> ySubmissions,
+                               Set<AlgorithmResults> builtFrom) {
         checkNotNull(entries);
         checkNotNull(xSubmissions);
         checkNotNull(ySubmissions);
         checkNotNull(builtFrom);
-        checkArgument(!xSubmissions.isEmpty(), "Cannot make similarity matrix with empty list of submissions to be compared!");
-        checkArgument(!ySubmissions.isEmpty(), "Cannot make similarity matrix with empty list of submissions to compare to!");
-        checkArgument(xSubmissions.size() == entries.length, "Array size mismatch when creating Similarity Matrix - X direction, found " + xSubmissions.size() + ", expecting " + entries.length);
-        checkArgument(ySubmissions.size() == entries[0].length, "Array size mismatch when creating Similarity Matrix - Y direction, found " + ySubmissions.size() + ", expecting " + entries[0].length);
-        checkArgument(!builtFrom.isEmpty(), "Must provide Algorithm Results used to build similarity matrix - instead got empty set!");
+        checkArgument(!xSubmissions.isEmpty(),
+                "Cannot make similarity matrix with empty list of submissions to be compared!");
+        checkArgument(!ySubmissions.isEmpty(),
+                "Cannot make similarity matrix with empty list of submissions to compare to!");
+        checkArgument(xSubmissions.size() == entries.length,
+                "Array size mismatch when creating Similarity Matrix - X direction, found " + xSubmissions.size()
+                        + ", expecting " + entries.length);
+        checkArgument(ySubmissions.size() == entries[0].length,
+                "Array size mismatch when creating Similarity Matrix - Y direction, found " + ySubmissions.size()
+                        + ", expecting " + entries[0].length);
+        checkArgument(!builtFrom.isEmpty(),
+                "Must provide Algorithm Results used to build similarity matrix - instead got empty set!");
 
         this.entries = entries;
         this.xSubmissions = ImmutableList.copyOf(xSubmissions);
@@ -127,7 +135,7 @@ public final class SimilarityMatrix {
     }
 
     /**
-     * Get similarities for one submission compared to another
+     * Get similarities for one submission compared to another.
      *
      * @param xIndex Index into similarity matrix on the X axis
      * @param yIndex Index into similarity matrix on the Y axis
@@ -135,29 +143,33 @@ public final class SimilarityMatrix {
      */
     public MatrixEntry getEntryFor(int xIndex, int yIndex) {
         checkArgument(xIndex >= 0, "X index must be greater than 0!");
-        checkArgument(xIndex < xSubmissions.size(), "X index must be less than X submissions size (" + xSubmissions.size() + ")!");
+        checkArgument(xIndex < xSubmissions.size(), "X index must be less than X submissions size ("
+                + xSubmissions.size() + ")!");
         checkArgument(yIndex >= 0, "Y index must be greater than 0!");
-        checkArgument(yIndex < ySubmissions.size(), "Y index must be less than Y submissions size (" + ySubmissions.size() + ")!");
+        checkArgument(yIndex < ySubmissions.size(), "Y index must be less than Y submissions size ("
+                + ySubmissions.size() + ")!");
 
         return entries[xIndex][yIndex];
     }
 
     /**
-     * Get similarity of X submission to Y submission
+     * Get similarity of X submission to Y submission.
      *
      * @param xSubmission Submission to get similarities for
-     * @param ySubmission Submission to get similarities relative to (IE retrieve similarities of xSubmission to ySubmission)
+     * @param ySubmission Submission to get similarities relative to
      * @return Similarities of xSubmission to ySubmission
-     * @throws NoSuchSubmissionException Thrown if either xSubmission or ySubmission are not present in the similarity matrix
+     * @throws NoSuchSubmissionException Thrown if either xSubmission or ySubmission are not present in the matrix
      */
     public MatrixEntry getEntryFor(Submission xSubmission, Submission ySubmission) throws NoSuchSubmissionException {
         checkNotNull(xSubmission);
         checkNotNull(ySubmission);
 
         if (!xSubmissions.contains(xSubmission)) {
-            throw new NoSuchSubmissionException("X Submission with name " + xSubmission.getName() + " not found in similarity matrix!");
+            throw new NoSuchSubmissionException("X Submission with name " + xSubmission.getName()
+                    + " not found in similarity matrix!");
         } else if (!ySubmissions.contains(ySubmission)) {
-            throw new NoSuchSubmissionException("Y Submission with name " + ySubmission.getName() + " not found in similarity matrix!");
+            throw new NoSuchSubmissionException("Y Submission with name " + ySubmission.getName()
+                    + " not found in similarity matrix!");
         }
 
         int xIndex = xSubmissions.indexOf(xSubmission);
@@ -189,14 +201,15 @@ public final class SimilarityMatrix {
     }
 
     /**
-     * Generate a similarity matrix from a given set of submissions
+     * Generate a similarity matrix from a given set of submissions.
      *
      * @param inputSubmissions Submissions to generate from
-     * @param results          Results to build from. Must contain results for every possible unordered pair of input submissions.
+     * @param results Results to build from. Must contain results for every possible unordered pair of input submissions
      * @return Similarity Matrix built from given results
      * @throws InternalAlgorithmError Thrown on missing results, or results containing a submission not in the input
      */
-    public static SimilarityMatrix generateMatrix(Set<Submission> inputSubmissions, Set<AlgorithmResults> results) throws InternalAlgorithmError {
+    public static SimilarityMatrix generateMatrix(Set<Submission> inputSubmissions, Set<AlgorithmResults> results)
+            throws InternalAlgorithmError {
         checkNotNull(inputSubmissions);
         checkNotNull(results);
         checkArgument(!inputSubmissions.isEmpty(), "Must provide at least 1 submission to build matrix from");
@@ -223,10 +236,12 @@ public final class SimilarityMatrix {
             int bIndex = orderedSubmissions.indexOf(result.b);
 
             if (aIndex == -1) {
-                throw new InternalAlgorithmError("Processed Algorithm Result with submission not in given input submissions with name \""
+                throw new InternalAlgorithmError(
+                        "Processed Algorithm Result with submission not in given input submissions with name \""
                         + result.a.getName() + "\"");
             } else if (bIndex == -1) {
-                throw new InternalAlgorithmError("Processed Algorithm Result with submission not in given input submissions with name \""
+                throw new InternalAlgorithmError(
+                        "Processed Algorithm Result with submission not in given input submissions with name \""
                         + result.b.getName() + "\"");
             }
 
@@ -249,7 +264,7 @@ public final class SimilarityMatrix {
     }
 
     /**
-     * Generate a Similarity Matrix with archive submissions
+     * Generate a Similarity Matrix with archive submissions.
      *
      * The result is not a square matrix. Only the input submissions are on the X axis, but the Y axis contains both
      * input and archive submissions.
@@ -260,7 +275,8 @@ public final class SimilarityMatrix {
      * @return Similarity matrix built from given results
      * @throws InternalAlgorithmError Thrown on missing results, or results containing a submission not in the input
      */
-    public static SimilarityMatrix generateMatrix(Set<Submission> inputSubmissions, Set<Submission> archiveSubmissions, Set<AlgorithmResults> results) throws InternalAlgorithmError {
+    public static SimilarityMatrix generateMatrix(Set<Submission> inputSubmissions, Set<Submission> archiveSubmissions,
+                                                  Set<AlgorithmResults> results) throws InternalAlgorithmError {
         checkNotNull(inputSubmissions);
         checkNotNull(archiveSubmissions);
         checkNotNull(results);
@@ -271,7 +287,8 @@ public final class SimilarityMatrix {
         setOfBoth.addAll(inputSubmissions);
         setOfBoth.addAll(archiveSubmissions);
 
-        checkArgument(setOfBoth.size() == (archiveSubmissions.size() + inputSubmissions.size()), "Some submissions were found in both archive and input submissions!");
+        checkArgument(setOfBoth.size() == (archiveSubmissions.size() + inputSubmissions.size()),
+                "Some submissions were found in both archive and input submissions!");
 
         // If there are no archive submissions, just generate using the other function
         if(archiveSubmissions.isEmpty()) {

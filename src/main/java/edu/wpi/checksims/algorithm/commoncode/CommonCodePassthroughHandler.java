@@ -28,7 +28,7 @@ import java.util.Set;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Do not remove or otherwise interact with common code - just pass through every submission
+ * Do not remove or otherwise interact with common code - just pass through every submission.
  */
 public final class CommonCodePassthroughHandler implements CommonCodeHandler {
     private static CommonCodePassthroughHandler instance;
@@ -47,7 +47,7 @@ public final class CommonCodePassthroughHandler implements CommonCodeHandler {
     }
 
     /**
-     * Pass through input submissions, not altering them
+     * Pass through input submissions, not altering them.
      *
      * @param input Submissions to handle common code within
      * @return Unaltered input

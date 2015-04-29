@@ -30,13 +30,13 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Generates unordered pairs of submissions
+ * Generates unordered pairs of submissions.
  */
 public final class PairGenerator {
     private PairGenerator() {}
 
     /**
-     * Generate all possible unique, unordered pairs of submissions
+     * Generate all possible unique, unordered pairs of submissions.
      *
      * @param submissions Submissions to generate pairs from
      * @return Set of all unique, unordered pairs of submissions

@@ -26,11 +26,11 @@ import edu.wpi.checksims.algorithm.similaritymatrix.SimilarityMatrix;
 import edu.wpi.checksims.util.reflection.NamedInstantiable;
 
 /**
- * Output a Similarity Matrix in human-readable or machine-readable format
+ * Output a Similarity Matrix in human-readable or machine-readable format.
  */
 public interface MatrixPrinter extends NamedInstantiable {
     /**
-     * Print a Similarity Matrix to string
+     * Print a Similarity Matrix to string.
      *
      * @param matrix Matrix to print
      * @return String representation of matrix

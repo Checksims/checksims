@@ -27,7 +27,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * An entry in the Similarity Matrix
+ * An entry in the Similarity Matrix.
  */
 public final class MatrixEntry {
     private final Submission base;
@@ -37,7 +37,7 @@ public final class MatrixEntry {
     private final int totalTokens;
 
     /**
-     * Construct a Similarity Matrix entry
+     * Construct a Similarity Matrix entry.
      *
      * @param base Submission we are reporting relative to
      * @param comparedTo Submission being compared to

@@ -24,7 +24,7 @@ package edu.wpi.checksims.algorithm;
 import edu.wpi.checksims.ChecksimsException;
 
 /**
- * Exception thrown on internal algorithm error
+ * Exception thrown on internal algorithm error.
  */
 public class InternalAlgorithmError extends ChecksimsException {
     private static final long serialVersionUID = 1L;

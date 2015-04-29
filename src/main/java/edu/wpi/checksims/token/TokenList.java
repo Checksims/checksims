@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * A list of tokens of a specific type
+ * A list of tokens of a specific type.
  */
 public class TokenList extends PredicatedList<Token> {
     public final TokenType type;
@@ -53,7 +53,7 @@ public class TokenList extends PredicatedList<Token> {
     }
 
     /**
-     * Join each token in the list in order, using a tokenization-appropriate separating character
+     * Join each token in the list in order, using a tokenization-appropriate separating character.
      *
      * @param onlyValid If true, ignore invalid tokens when joining
      * @return String composed of each element in the token list, in order, separated by appropriate character
@@ -97,7 +97,7 @@ public class TokenList extends PredicatedList<Token> {
     }
 
     /**
-     * Peforms a shallow copy of a TokenList, returning an immutable version of the initial list
+     * Peforms a shallow copy of a TokenList, returning an immutable version of the initial list.
      *
      * @param cloneFrom List to copy
      * @return Immutable copy of cloneFrom
@@ -109,7 +109,9 @@ public class TokenList extends PredicatedList<Token> {
     }
 
     /**
-     * Perform a deep copy of a TokenList
+     * Perform a deep copy of a TokenList.
+     *
+     * TODO add a copy constructor as well
      *
      * @param cloneFrom List to deep copy
      * @return Cloned copy of the tokenization list
@@ -130,7 +132,7 @@ public class TokenList extends PredicatedList<Token> {
 
         TokenList otherList = (TokenList)other;
 
-        // The super.equals() call here is technically bad practice because we can't *guarantee* it's a PredicatedList<Token>
+        // The super.equals() call here is bad practice because we can't *guarantee* it's a PredicatedList<Token>
         // However, the instanceof TokenList should ensure that invariant is met
         return otherList.type.equals(this.type) && super.equals(otherList);
     }

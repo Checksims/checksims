@@ -27,7 +27,7 @@ import edu.wpi.checksims.token.TokenTypeMismatchException;
 import edu.wpi.checksims.util.reflection.NamedInstantiable;
 
 /**
- * Detect similarities between two submissions
+ * Detect similarities between two submissions.
  *
  * NOTE that, in addition to the methods listed here, all plagiarism detectors MUST support a no-arguments getInstance()
  * method, and be contained in edu.wpi.checksims.algorithm or a subpackage thereof.
@@ -42,7 +42,7 @@ public interface SimilarityDetector extends NamedInstantiable {
     TokenType getDefaultTokenType();
 
     /**
-     * Apply a pairwise similarity detection algorithm
+     * Apply a pairwise similarity detection algorithm.
      *
      * Token list types of A and B must match
      *
@@ -52,5 +52,6 @@ public interface SimilarityDetector extends NamedInstantiable {
      * @throws TokenTypeMismatchException Thrown on comparing two submissions with different token types
      * @throws InternalAlgorithmError Thrown on error detecting similarities
      */
-    AlgorithmResults detectSimilarity(Submission a, Submission b) throws TokenTypeMismatchException, InternalAlgorithmError;
+    AlgorithmResults detectSimilarity(Submission a, Submission b)
+            throws TokenTypeMismatchException, InternalAlgorithmError;
 }

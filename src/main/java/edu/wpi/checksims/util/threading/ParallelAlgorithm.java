@@ -38,7 +38,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Apply a given algorithm to a given set of data in parallel
+ * Apply a given algorithm to a given set of data in parallel.
  */
 public final class ParallelAlgorithm {
     private ParallelAlgorithm() {}
@@ -46,22 +46,25 @@ public final class ParallelAlgorithm {
     private static Logger logs = LoggerFactory.getLogger(ParallelAlgorithm.class);
 
     private static int threadCount = Runtime.getRuntime().availableProcessors();
-    private static ThreadPoolExecutor executor = new ThreadPoolExecutor(threadCount, threadCount, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<>(), new ThreadPoolExecutor.AbortPolicy());
+    private static ThreadPoolExecutor executor = new ThreadPoolExecutor(threadCount, threadCount, 1, TimeUnit.SECONDS,
+            new LinkedBlockingQueue<>(), new ThreadPoolExecutor.AbortPolicy());
 
     /**
      * @param threads Number of threads to be used for execution
      */
     public static void setThreadCount(int threads) {
-        checkArgument(threads > 0, "Attempted to set number of threads to " + threads + ", but must be positive integer!");
+        checkArgument(threads > 0, "Attempted to set number of threads to " + threads
+                + ", but must be positive integer!");
 
         threadCount = threads;
         executor.shutdown();
         // Set up the executor again with the new thread count
-        executor = new ThreadPoolExecutor(threadCount, threadCount, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<>(), new ThreadPoolExecutor.AbortPolicy());
+        executor = new ThreadPoolExecutor(threadCount, threadCount, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<>(),
+                new ThreadPoolExecutor.AbortPolicy());
     }
 
     /**
-     * Shut down the executor, preventing any more jobs from being processed
+     * Shut down the executor, preventing any more jobs from being processed.
      */
     public static void shutdownExecutor() {
         executor.shutdown();
@@ -75,52 +78,61 @@ public final class ParallelAlgorithm {
     }
 
     /**
-     * Remove common code in parallel
+     * Remove common code in parallel.
      *
      * @param algorithm Algorithm to use for common code removal
      * @param common Common code to remove
      * @param submissions Submissions to remove from
      * @return Submissions with common code removed
      */
-    public static Set<Submission> parallelCommonCodeRemoval(SimilarityDetector algorithm, Submission common, Set<Submission> submissions) {
+    public static Set<Submission> parallelCommonCodeRemoval(SimilarityDetector algorithm, Submission common,
+                                                            Set<Submission> submissions) {
         checkNotNull(algorithm);
         checkNotNull(common);
         checkNotNull(submissions);
 
-        Collection<CommonCodeRemovalWorker> workers = submissions.stream().map((submission) -> new CommonCodeRemovalWorker(algorithm, common, submission)).collect(Collectors.toList());
+        Collection<CommonCodeRemovalWorker> workers = submissions.stream()
+                .map((submission) -> new CommonCodeRemovalWorker(algorithm, common, submission))
+                .collect(Collectors.toList());
 
         return ImmutableSet.copyOf(executeTasks(workers));
     }
 
     /**
-     * Detect similarities in parallel
+     * Detect similarities in parallel.
      *
      * @param algorithm Algorithm to use for similarity detection
      * @param pairs Pairs of submissions to perform detection on
      * @return Collection of results, one for each pair
      */
-    public static Set<AlgorithmResults> parallelSimilarityDetection(SimilarityDetector algorithm, Set<Pair<Submission, Submission>> pairs) {
+    public static Set<AlgorithmResults> parallelSimilarityDetection(SimilarityDetector algorithm, Set<Pair<Submission,
+            Submission>> pairs) {
         checkNotNull(algorithm);
         checkNotNull(pairs);
 
         // Map the pairs to ChecksimsWorker instances
-        Collection<SimilarityDetectionWorker> workers = pairs.stream().map((pair) -> new SimilarityDetectionWorker(algorithm, pair)).collect(Collectors.toList());
+        Collection<SimilarityDetectionWorker> workers = pairs.stream()
+                .map((pair) -> new SimilarityDetectionWorker(algorithm, pair))
+                .collect(Collectors.toList());
 
         return ImmutableSet.copyOf(executeTasks(workers));
     }
 
-    public static Set<Submission> parallelSubmissionPreprocessing(SubmissionPreprocessor preprocessor, Set<Submission> submissions) {
+    public static Set<Submission> parallelSubmissionPreprocessing(SubmissionPreprocessor preprocessor,
+                                                                  Set<Submission> submissions) {
         checkNotNull(preprocessor);
         checkNotNull(submissions);
 
         // Map the submissions to PreprocessorWorker instances
-        Collection<PreprocessorWorker> workers = submissions.stream().map((submission) -> new PreprocessorWorker(submission, preprocessor)).collect(Collectors.toList());
+        Collection<PreprocessorWorker> workers = submissions.stream()
+                .map((submission) -> new PreprocessorWorker(submission, preprocessor))
+                .collect(Collectors.toList());
 
         return ImmutableSet.copyOf(executeTasks(workers));
     }
 
     /**
-     * Internal backend: Execute given tasks on a new thread pool
+     * Internal backend: Execute given tasks on a new thread pool.
      *
      * Expects Callable tasks, with non-void returns. If the need for void returning functions emerges, might need
      * another version of this?

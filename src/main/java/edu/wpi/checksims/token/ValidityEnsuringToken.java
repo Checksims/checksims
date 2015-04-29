@@ -22,7 +22,7 @@
 package edu.wpi.checksims.token;
 
 /**
- * Token which will only be equal to other tokens which are valid
+ * Token which will only be equal to other tokens which are valid.
  *
  * Decorates other tokens to override their equals() methods
  */
@@ -44,6 +44,13 @@ public final class ValidityEnsuringToken extends AbstractTokenDecorator {
 
         Token otherToken = (Token)other;
 
-        return otherToken.getType().equals(this.getType()) && otherToken.getLexeme() == this.getLexeme() && otherToken.isValid();
+        return otherToken.getType().equals(this.getType())
+                && otherToken.getLexeme() == this.getLexeme()
+                && otherToken.isValid();
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 }
