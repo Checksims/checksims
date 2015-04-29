@@ -48,9 +48,10 @@
     progressively higher-level analysis on C programs at five levels of
     abstraction. Very language-specific approach.}
 }
-@article{beth14,
+@misc{beth14,
   title={A Comparison of Similarity Techniques for Detecting Source Code Plagiarism},
   author={Beth, Bradley},
+  url={https://www.cs.utexas.edu/~bbeth/files/AComparisonOfSimilarityTechniquesForDetectingSourceCodePlagiarism.pdf},
   year={2014},
   annote={
     \setlength{\parskip}{1.5ex}
@@ -297,11 +298,12 @@
     tokens), and systems that compare the program structure.
   }
 }
-@article{cosma06,
+@misc{cosma06,
   title={Source-code plagiarism: A UK academic perspective},
   author={Cosma, Georgina and Joy, M.S.},
   year={2006},
   publisher={University of Warwick},
+  url={http://wrap.warwick.ac.uk/61520/},
   annote={
     \setlength{\parskip}{1.5ex}
     A survey of UK academics focused not on how to detect plagiarism, but what it
@@ -378,7 +380,7 @@
     \ref{itm:substrings}-\ref{itm:iterate} have the advantage of being
     language-agnostic. Note that this approach is reminiscent of the document
     fingerprinting approaches to plagiarism detection. Step \ref{itm:rawmatch}
-    is done by karp-rabin string matching \cite{karp87}. In step
+    is done by Karp-Rabin string matching \cite{karp87}. In step
     \ref{itm:iterate}, they perform tasks such as merging consecutive matches
     and other ``lossless'' compression strategies. Step \ref{itm:correct} is
     where one might  perform ``lossy'' compression, such as eliminating certain
@@ -404,7 +406,7 @@
   number={4},
   pages={253--261},
   year={2001},
-  organization={consortium for computing sciences in colleges},
+  organization={Consortium for Computing Sciences in Colleges},
   annote={
     \setlength{\parskip}{1.5ex}
     A developed example of ``feature comparison'' --- creates
@@ -445,7 +447,7 @@
     \end{itemize}
     \par
      incremental comparison compares five times: in original form, with whitespace
-     removed, with comments removed, with both removed, and tokenized. looks for
+     removed, with comments removed, with both removed, and tokenized. Looks for
      ``runs'' with a maximum allowed size and density of ``anomalies.'' looks for and
      reports maximum length runs.
     \par
@@ -565,11 +567,16 @@
     available, for instance, when checking for plagiarism between conferences with
     confidential systems.} 
 }
-@article{parker89,
-  title={Computer Algorithms for Plagiarism Detection},
-  author={Parker, Alan and others},
+@ARTICLE{parker89,
+  author={Parker, A. and Hamblen, J.O.},
+  journal={Education, IEEE Transactions on},
+  title={Computer algorithms for plagiarism detection},
   year={1989},
-  publisher={Citeseer},
+  month={May},
+  volume={32},
+  number={2},
+  pages={94-99},
+  ISSN={0018-9359},
   annote={
     \setlength{\parskip}{1.5ex}
     Defines a five-level plagiarism ``spectrum'' to categorize the different
@@ -692,10 +699,12 @@
     authors presented a very minor adjustment called ``robust winnowing'' to correct.
   }
 }
-@article{shivakumar95,
-  title={SCAM: A copy detection mechanism for digital documents},
-  author={Shivakumar, Narayanan and Garcia-Molina, Hector},
+@inproceedings{shivakumar95,
+  title={SCAM: A Copy Detection Mechanism for Digital Documents},
+  booktitle={2nd International Conference in Theory and Practice of Digital Libraries (DL 1995)},
+  author={N. Shivakumar and H. Garcia-Molina},
   year={1995},
+  url={http://ilpubs.stanford.edu:8090/95/},
   annote={
     \setlength{\parskip}{1.5ex}
     Presents SCAM, a vector distance approach to copy detection. Like previous

@@ -1,7 +1,7 @@
 \section{Need for Evaluation}
 Once \textit{Checksims} had been written, the next logical step was to test it
 to ensure functionality. The program could not be considered complete unless it
-met the requirements identified in Section~\ref{sec:requirements} - for
+met the requirements identified in Section~\ref{sec:requirements} --- for
 example, a low false negative rate. Given this, we sought to obtain suitable
 test data for use in verifying our implementation.
 
@@ -151,7 +151,7 @@ Section~\ref{sec:moss}, is a freely available similarity detection service
 intended for identifying academic dishonesty. Based on previous use, our
 advisor believes it uses a more sensitive definition of academic dishonesty
 than that used to construct \textit{Checksims}. Furthermore, MOSS is considered
-\textit{the} benchmark in similarity detection by most researchers. many papers
+\textit{the} benchmark in similarity detection by most researchers. Many papers
 on new algorithms in similarity detection compare their results against MOSS
 \cite{belkhouche04, beth14}. By doing the same, we can obtain a measure of our
 output quality compared against the gold standard in academic dishonesty
@@ -289,6 +289,17 @@ Assignment 6 & 43 student submissions \\
 \label{tab:selectedassignments}
 \end{table}
 
+The MOSS results for the chosen assignments were compared to the results
+generated with the \textit{Checksims} in the previous experiment. We chose to
+compare the results only to the more sensitive of the two algorithms (as
+identified using the methods in Section~\ref{sec:algcompare}). Significant
+results identified by both MOSS and \textit{Checksims} were overlayed to
+identify commonalities. The remaining similarities --- those found by MOSS but
+not \textit{Checksims}, or by \textit{Checksims} but not MOSS --- were used to
+find the false negative rate of \textit{Checksims} relative to MOSS.
+
+% We didn't actually do this.
+\iffalse
 The MOSS results for the chosen assignments were examined by hand to identify
 false positives --- similarities identified by MOSS that did not match our
 definition of academic dishonesty. The number of false positives (and the
@@ -302,3 +313,4 @@ compared, both in absolute terms and as a percentage of results recorded.
 Finally, the results were overlaid to see which matches are missing from
 either program --- what MOSS found but \textit{Checksims} did not, or
 \textit{Checksims} found but MOSS did not.
+\fi
