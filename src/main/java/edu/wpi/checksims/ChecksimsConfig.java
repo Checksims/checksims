@@ -36,6 +36,7 @@ import edu.wpi.checksims.util.output.OutputPrinter;
 import edu.wpi.checksims.util.output.OutputToStdoutPrinter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -52,6 +53,7 @@ public final class ChecksimsConfig {
     private TokenType tokenization;
     private ImmutableList<SubmissionPreprocessor> preprocessors;
     private ImmutableSet<Submission> submissions;
+    private ImmutableSet<Submission> archiveSubmissions;
     private CommonCodeHandler commonCodeHandler;
     private ImmutableList<MatrixPrinter> outputPrinters;
     private OutputPrinter outputMethod;
@@ -59,8 +61,8 @@ public final class ChecksimsConfig {
 
     private ChecksimsConfig(SimilarityDetector algorithm, TokenType tokenization,
                             List<SubmissionPreprocessor> preprocessors, Set<Submission> submissions,
-                            CommonCodeHandler commonCodeHandler, List<MatrixPrinter> outputPrinters,
-                            OutputPrinter outputMethod, int numThreads) {
+                            Set<Submission> archiveSubmissions, CommonCodeHandler commonCodeHandler,
+                            List<MatrixPrinter> outputPrinters, OutputPrinter outputMethod, int numThreads) {
         this.algorithm = algorithm;
         this.tokenization = tokenization;
         this.commonCodeHandler = commonCodeHandler;
@@ -68,6 +70,7 @@ public final class ChecksimsConfig {
         this.preprocessors = ImmutableList.copyOf(preprocessors);
 
         this.submissions = ImmutableSet.copyOf(submissions);
+        this.archiveSubmissions = ImmutableSet.copyOf(archiveSubmissions);
 
         this.outputPrinters = ImmutableList.copyOf(outputPrinters);
         this.outputMethod = outputMethod;
@@ -80,7 +83,8 @@ public final class ChecksimsConfig {
     public ChecksimsConfig() {
         this.algorithm = AlgorithmRegistry.getInstance().getDefaultImplementation();
         this.tokenization = this.algorithm.getDefaultTokenType();
-        this.submissions = ImmutableSet.copyOf(new ArrayList<>());
+        this.submissions = ImmutableSet.copyOf(new HashSet<>());
+        this.archiveSubmissions = ImmutableSet.copyOf(new HashSet<>());
         this.preprocessors = ImmutableList.copyOf(new ArrayList<>());
         this.commonCodeHandler = CommonCodePassthroughHandler.getInstance();
         this.outputPrinters = ImmutableList.copyOf(
@@ -90,8 +94,8 @@ public final class ChecksimsConfig {
     }
 
     private ChecksimsConfig getCopy() {
-        return new ChecksimsConfig(algorithm, tokenization, preprocessors, submissions, commonCodeHandler,
-                outputPrinters, outputMethod, numThreads);
+        return new ChecksimsConfig(algorithm, tokenization, preprocessors, submissions, archiveSubmissions,
+                commonCodeHandler, outputPrinters, outputMethod, numThreads);
     }
 
     /**
@@ -142,7 +146,7 @@ public final class ChecksimsConfig {
 
     /**
      * @param newSubmissions New list of submissions to work on. Must contain at least 1 submission.
-     * @return Copy of configuration with new submissions list
+     * @return Copy of configuration with new submissions set
      */
     public ChecksimsConfig setSubmissions(Set<Submission> newSubmissions) {
         checkNotNull(newSubmissions);
@@ -150,6 +154,19 @@ public final class ChecksimsConfig {
 
         ChecksimsConfig newConfig = getCopy();
         newConfig.submissions = ImmutableSet.copyOf(newSubmissions);
+
+        return newConfig;
+    }
+
+    /**
+     * @param newArchiveSubmissions New list of archive submissions to use. May be empty.
+     * @return Copy of configuration with new archive submissions set
+     */
+    public ChecksimsConfig setArchiveSubmissions(Set<Submission> newArchiveSubmissions) {
+        checkNotNull(newArchiveSubmissions);
+
+        ChecksimsConfig newConfig = getCopy();
+        newConfig.archiveSubmissions = ImmutableSet.copyOf(newArchiveSubmissions);
 
         return newConfig;
     }
@@ -237,10 +254,17 @@ public final class ChecksimsConfig {
     }
 
     /**
-     * @return List of submissions to run on
+     * @return Set of submissions to run on
      */
     public ImmutableSet<Submission> getSubmissions() {
         return submissions;
+    }
+
+    /**
+     * @return Set of archive submissions to run on
+     */
+    public ImmutableSet<Submission> getArchiveSubmissions() {
+        return archiveSubmissions;
     }
 
     /**

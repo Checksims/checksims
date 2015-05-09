@@ -89,6 +89,14 @@ public class ChecksimsConfigTest {
     }
 
     @Test
+    public void TestSetArchiveSubmissionsNull() {
+        expectedEx.expect(NullPointerException.class);
+
+        ChecksimsConfig config = new ChecksimsConfig();
+        config.setArchiveSubmissions(null);
+    }
+
+    @Test
     public void TestSetCommonCodeHandlerNull() {
         expectedEx.expect(NullPointerException.class);
 
