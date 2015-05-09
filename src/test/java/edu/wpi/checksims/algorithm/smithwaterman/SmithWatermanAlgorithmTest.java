@@ -774,4 +774,43 @@ public class SmithWatermanAlgorithmTest {
 
         assertEquals(3, max);
     }
+
+    @Test
+    public void TestGetMaxOfCoordinatesPassNull() {
+        expectedEx.expect(NullPointerException.class);
+
+        bigTest.computeArraySubset(bigTest.getWholeArray());
+        bigTest.getMaxOfCoordinates(null);
+    }
+
+    @Test
+    public void TestGetMaxOfCoordinatesPassEmpty() {
+        expectedEx.expect(IllegalArgumentException.class);
+
+        bigTest.computeArraySubset(bigTest.getWholeArray());
+        bigTest.getMaxOfCoordinates(new HashSet<>());
+    }
+
+    @Test
+    public void TestGetMaxOfCoordinatesOneCoordinate() {
+        Set<Coordinate> toCheck = setFromElements(Coordinate.of(10, 10));
+
+        bigTest.computeArraySubset(bigTest.getWholeArray());
+        Coordinate result = bigTest.getMaxOfCoordinates(toCheck);
+
+        assertEquals(Coordinate.of(10, 10), result);
+    }
+
+    @Test
+    public void TestGetMaxOfCoordinatesBigTest() {
+        Set<Coordinate> toCheck = setFromElements( Coordinate.of(9, 8), Coordinate.of(8, 7), Coordinate.of(10, 9),
+                Coordinate.of(7, 6), Coordinate.of(6, 5), Coordinate.of(5, 4), Coordinate.of(3, 3), Coordinate.of(2, 2),
+                Coordinate.of(1, 1));
+        Coordinate expected = Coordinate.of(10, 9);
+
+        bigTest.computeArraySubset(bigTest.getWholeArray());
+        Coordinate result = bigTest.getMaxOfCoordinates(toCheck);
+
+        assertEquals(expected, result);
+    }
 }

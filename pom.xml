@@ -232,10 +232,8 @@
                                             <property name="tokens" value="COMMA, SEMI"/>
                                         </module>
 
-                                        <!-- Enforce no whitespace after certain tokens -->
+                                        <!-- Enforce no whitespace after certain tokens. Newlines allowed. -->
                                         <module name="NoWhitespaceAfter">
-                                            <!-- Checks that there is no whitespace after various unary operators.
-                                                Linebreaks are allowed. -->
                                             <property name="tokens" value="BNOT, DEC, DOT, INC, LNOT, UNARY_MINUS, UNARY_PLUS"/>
                                         </module>
 

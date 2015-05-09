@@ -104,7 +104,7 @@ public class SmithWaterman implements SimilarityDetector {
         // Alright, easy cases taken care of. Generate an instance to perform the actual algorithm
         SmithWatermanAlgorithm algorithm = new SmithWatermanAlgorithm(a.getContentAsTokens(), b.getContentAsTokens());
 
-        Pair<TokenList, TokenList> endLists = algorithm.computeSmithWatermanAlignment();
+        Pair<TokenList, TokenList> endLists = algorithm.computeSmithWatermanAlignmentExhaustive();
 
         return new AlgorithmResults(a, b, endLists.getLeft(), endLists.getRight());
     }
