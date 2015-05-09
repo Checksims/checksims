@@ -45,7 +45,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class SmithWatermanAlgorithm {
     private final TokenList xList;
     private final TokenList yList;
-    private final ArraySubset wholeArray; // TODO need one 1 before end of array to prevent out of bounds
+    private final ArraySubset wholeArray;
+    private final ArraySubset wholeArrayBounds;
     private final int[][] s;
     private final int[][] m;
     private Map<Integer, Set<Coordinate>> candidates;
@@ -71,6 +72,7 @@ public class SmithWatermanAlgorithm {
         yList = TokenList.cloneTokenList(b);
 
         wholeArray = ArraySubset.of(1, 1, xList.size() + 1, yList.size() + 1);
+        wholeArrayBounds = ArraySubset.of(1, 1, xList.size(), yList.size());
 
         s = new int[wholeArray.getMax().getX()][wholeArray.getMax().getY()];
         m = new int[wholeArray.getMax().getX()][wholeArray.getMax().getY()];
@@ -133,9 +135,56 @@ public class SmithWatermanAlgorithm {
     }
 
     /**
+     * Compute a Smith-Waterman alignment through exhaustive (but more reliable) process.
+     *
+     * TODO tests for this (already tested through SmithWaterman)
+     *
+     * @return Pair of TokenList representing optimal alignments
+     * @throws InternalAlgorithmError Thrown if internal error causes violation of preconditions
+     */
+    public Pair<TokenList, TokenList> computeSmithWatermanAlignmentExhaustive() throws InternalAlgorithmError {
+        Map<Integer, Set<Coordinate>> localCandidates;
+
+        // Keep computing while we have results over threshold
+        do {
+            // Recompute whole array
+            localCandidates = computeArraySubset(wholeArray);
+
+            if(localCandidates.isEmpty()) {
+                break;
+            }
+
+            // Get the largest key
+            int largestKey = Ordering.natural().max(localCandidates.keySet());
+
+            // Get matching coordinates
+            Set<Coordinate> largestCoords = localCandidates.get(largestKey);
+
+            if(largestCoords == null || largestCoords.isEmpty()) {
+                throw new InternalAlgorithmError("Error: largest key " + largestKey
+                        + " maps to null or empty candidate set!");
+            }
+
+            // Arbitrarily break ties
+            Coordinate chosenCoord = Iterables.get(largestCoords, 0);
+
+            // Get match coordinates
+            Set<Coordinate> matchCoords = getMatchCoordinates(chosenCoord);
+
+            // Set match invalid
+            setMatchesInvalid(matchCoords);
+        } while(!localCandidates.isEmpty());
+
+        // IntelliJ has an aversion to passing anything with a 'y' in it as the right side of a pair
+        // This alleviates the warning
+        //noinspection SuspiciousNameCombination
+        return Pair.of(xList, yList);
+    }
+
+    /**
      * Compute a Smith-Waterman alignment.
      *
-     * TODO tests for this (Already tested through SmithWaterman, but should have independent tests as well)
+     * TODO tests for this
      *
      * @return Pair of Token Lists representing optimal detected alignments
      * @throws InternalAlgorithmError Thrown if internal error causes violation of preconditions
@@ -280,9 +329,9 @@ public class SmithWatermanAlgorithm {
     void zeroMatch(Coordinate origin, Coordinate max) {
         checkNotNull(origin);
         checkNotNull(max);
-        checkArgument(wholeArray.contains(origin), "Origin of requested area out of bounds: " + origin
+        checkArgument(wholeArrayBounds.contains(origin), "Origin of requested area out of bounds: " + origin
                 + " not within " + wholeArray);
-        checkArgument(wholeArray.contains(max), "Max of requested area out of bounds: " + max
+        checkArgument(wholeArrayBounds.contains(max), "Max of requested area out of bounds: " + max
                 + " not within " + wholeArray);
 
         int xLower = origin.getX();
@@ -578,6 +627,31 @@ public class SmithWatermanAlgorithm {
         } while(largestPredecessor > 0);
 
         return matchCoordinates;
+    }
+
+    /**
+     * Get the coordinate with the largest value in the S matrix from a given set to check.
+     *
+     * @param toTest Set of coordinates to check within
+     * @return Coordinate from toTest which maps to the largest value in the S matrix. Ties broken arbitrarily.
+     */
+    Coordinate getMaxOfCoordinates(Set<Coordinate> toTest) {
+        checkNotNull(toTest);
+        checkArgument(!toTest.isEmpty(), "Cannot get the maximum of an empty set of coordinates!");
+
+        Coordinate candidate = Iterables.get(toTest, 0);
+        int value = s[candidate.getX()][candidate.getY()];
+
+        for(Coordinate newCandidate : toTest) {
+            int newValue = s[newCandidate.getX()][newCandidate.getY()];
+
+            if(newValue > value) {
+                candidate = newCandidate;
+                value = newValue;
+            }
+        }
+
+        return candidate;
     }
 
     /**
