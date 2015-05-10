@@ -44,6 +44,7 @@ public class PairGeneratorTest {
     private Submission b;
     private Submission c;
     private Submission d;
+    private Submission e;
 
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
@@ -54,6 +55,7 @@ public class PairGeneratorTest {
         b = charSubmissionFromString("B", "");
         c = charSubmissionFromString("C", "");
         d = charSubmissionFromString("D", "");
+        e = charSubmissionFromString("E", "");
     }
 
     public static void checkPairsAreInSet(Set<Pair<Submission, Submission>> toCheck, Set<Pair<Submission, Submission>> expected) {
@@ -110,6 +112,64 @@ public class PairGeneratorTest {
         Set<Submission> submissions = setFromElements(a, b, c, d);
         Set<Pair<Submission, Submission>> expected = setFromElements(Pair.of(a, b), Pair.of(a, c), Pair.of(a, d), Pair.of(b, c), Pair.of(b, d), Pair.of(c, d));
         Set<Pair<Submission, Submission>> results = PairGenerator.generatePairs(submissions);
+
+        checkPairsAreInSet(results, expected);
+    }
+
+    @Test
+    public void TestGeneratePairsWithArchiveNullSubmissions() {
+        expectedEx.expect(NullPointerException.class);
+
+        PairGenerator.generatePairsWithArchive(null, new HashSet<>());
+    }
+
+    @Test
+    public void TestGeneratePairsWithArchiveNullArchive() {
+        expectedEx.expect(NullPointerException.class);
+
+        PairGenerator.generatePairsWithArchive(setFromElements(a, b), null);
+    }
+
+    @Test
+    public void TestGeneratePairsWithArchiveEmptyArchiveIdenticalToNormal() {
+        Set<Submission> submissions1 = setFromElements(a, b);
+        Set<Pair<Submission, Submission>> expected1 = PairGenerator.generatePairs(submissions1);
+        Set<Pair<Submission, Submission>> results1 = PairGenerator.generatePairsWithArchive(submissions1, new HashSet<>());
+
+        checkPairsAreInSet(results1, expected1);
+
+        Set<Submission> submissions2 = setFromElements(a, b, c);
+        Set<Pair<Submission, Submission>> expected2 = PairGenerator.generatePairs(submissions2);
+        Set<Pair<Submission, Submission>> results2 = PairGenerator.generatePairsWithArchive(submissions2, new HashSet<>());
+
+        checkPairsAreInSet(results2, expected2);
+
+        Set<Submission> submissions3 = setFromElements(a, b, c, d);
+        Set<Pair<Submission, Submission>> expected3 = PairGenerator.generatePairs(submissions3);
+        Set<Pair<Submission, Submission>> results3 = PairGenerator.generatePairsWithArchive(submissions3, new HashSet<>());
+
+        checkPairsAreInSet(results3, expected3);
+    }
+
+    @Test
+    public void TestGeneratePairsWithArchiveOneElementArchive() {
+        Set<Submission> submissions = setFromElements(a, b);
+        Set<Submission> archive = singleton(c);
+
+        Set<Pair<Submission, Submission>> expected = setFromElements(Pair.of(a, b), Pair.of(a, c), Pair.of(b, c));
+        Set<Pair<Submission, Submission>> results = PairGenerator.generatePairsWithArchive(submissions, archive);
+
+        checkPairsAreInSet(results, expected);
+    }
+
+    @Test
+    public void TestGeneratePairsWithArchiveTwoElementArchive() {
+        Set<Submission> submissions = setFromElements(a, b, c);
+        Set<Submission> archive = setFromElements(d, e);
+
+        Set<Pair<Submission, Submission>> expected = setFromElements(Pair.of(a, b), Pair.of(a, c), Pair.of(b, c), Pair.of(a, d),
+                Pair.of(b, d), Pair.of(c, d), Pair.of(a, e), Pair.of(b, e), Pair.of(c, e));
+        Set<Pair<Submission, Submission>> results = PairGenerator.generatePairsWithArchive(submissions, archive);
 
         checkPairsAreInSet(results, expected);
     }

@@ -73,4 +73,54 @@ public final class PairGenerator {
 
         return pairs;
     }
+
+    /**
+     * Generate all pairs for normal submissions, and pairs for archive submissions to compare to normal submissions.
+     *
+     * @param submissions Normal submissions - compared to each other and archive submissions
+     * @param archiveSubmissions Archive submissions - only compared to normal submissions, not each other
+     * @return Set of all unordered pairs required for comparison with archive directory
+     */
+    public static Set<Pair<Submission, Submission>> generatePairsWithArchive(Set<Submission> submissions,
+                                                                             Set<Submission> archiveSubmissions) {
+        checkNotNull(submissions);
+        checkNotNull(archiveSubmissions);
+
+        // TODO it may be desirable to allow comparison of a single submission to an archive
+        // However, generatePairs fails if only 1 submission is given
+        // (This would also require tweaks in the frontend)
+        Set<Pair<Submission, Submission>> basePairs = generatePairs(submissions);
+
+        // If we have no archive submissions, just return the same result generatePairs would
+        if(archiveSubmissions.isEmpty()) {
+            return basePairs;
+        }
+
+        // Now we need to add pairs for the archive submissions
+        List<Submission> remaining = new ArrayList<>();
+        remaining.addAll(archiveSubmissions);
+
+        // Loop through each archive submission
+        while(!remaining.isEmpty()) {
+            Submission first = remaining.get(0);
+            remaining.remove(0);
+
+            // For each archive submission, generate pairs for each normal submission
+            for(Submission s : submissions) {
+                Pair<Submission, Submission> pair = Pair.of(first, s);
+                Pair<Submission, Submission> reversed = Pair.of(s, first);
+
+                // Something's wrong, we've made a duplicate pair (but reversed)
+                // Should never happen
+                if(basePairs.contains(reversed)) {
+                    throw new RuntimeException("Internal error in pair generation: duplicate pair produced!");
+                }
+
+                // One pair for each normal submission, consisting of the archive submission and the normal submission
+                basePairs.add(pair);
+            }
+        }
+
+        return basePairs;
+    }
 }
