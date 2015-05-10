@@ -3,6 +3,7 @@ Changelog
 
 v1.1.1-DEV (UNRELEASED)
 -----------------------
+- Feature: Archive Directory support
 - Enhancement: New, faster version of Smith-Waterman algorithm
 - Enhancement: Major performance improvements
 
