@@ -88,9 +88,9 @@ public final class ChecksimsCommandLine {
 
         Option alg = new Option("a", "algorithm", true, "algorithm to use");
         Option token = new Option("t", "token", true, "tokenization type to use");
-        Option out = new Option("o", "output", true, "output format");
+        Option out = new Option("o", "output", true, "output formats to use, comma-separated");
         Option file = new Option("f", "file", true, "file to output to");
-        Option preprocess = new Option("p", "preprocess", true, "preprocessors to apply");
+        Option preprocess = new Option("p", "preprocess", true, "preprocessors to apply, comma-separated");
         Option jobs = new Option("j", "jobs", true, "number of threads to use");
         Option verbose = new Option("v", "verbose", false, "specify verbose output");
         Option doubleVerbose = new Option("vv", "veryverbose", false,
@@ -100,6 +100,8 @@ public final class ChecksimsCommandLine {
         Option recursive = new Option("r", "recursive", false,
                 "recursively traverse subdirectories to generate submissions");
         Option version = new Option("version", false, "print version of Checksims");
+        Option archiveDir = new Option("archive", true, "archive submissions - compared to main submissions but "
+                + "not each other");
 
         opts.addOption(alg);
         opts.addOption(token);
@@ -113,6 +115,7 @@ public final class ChecksimsCommandLine {
         opts.addOption(common);
         opts.addOption(recursive);
         opts.addOption(version);
+        opts.addOption(archiveDir);
 
         return opts;
     }
@@ -288,6 +291,38 @@ public final class ChecksimsCommandLine {
     }
 
     /**
+     * Parse archive directory to generate archive submissions.
+     *
+     * TODO add support for more than one archive directory
+     *
+     * @param cli Parsed command line
+     * @param glob Glob match pattern for generating submissions
+     * @param tokenizer Tokenizer to use when generating submissions
+     * @param recursive Whether to recurse when generating submissions
+     * @return Set of submissions to use as archive submissions
+     * @throws IOException Thrown on error reading file to generate submission
+     * @throws ChecksimsException Thrown on error generating submission
+     */
+    static Set<Submission> getArchiveSubmissions(CommandLine cli, String glob, Tokenizer tokenizer, boolean recursive)
+            throws IOException, ChecksimsException {
+        checkNotNull(cli);
+        checkNotNull(glob);
+        checkNotNull(tokenizer);
+
+        boolean hasArchiveSubmissions = cli.hasOption("archive");
+        if(hasArchiveSubmissions) {
+            String path = cli.getOptionValue("archive");
+
+            // TODO ensure that archive directory is not one of the submission directories
+
+            return Submission.submissionListFromDir(new File(path), glob, tokenizer, recursive);
+        }
+
+        // Return empty set --- no archive submissions
+        return new HashSet<>();
+    }
+
+    /**
      * Build the collection of submissions Checksims will be run on.
      *
      * TODO add unit tests
@@ -303,6 +338,7 @@ public final class ChecksimsCommandLine {
             throws IOException, ChecksimsException {
         checkNotNull(cli);
         checkNotNull(glob);
+        checkNotNull(tokenizer);
 
         String[] unusedArgs = cli.getArgs();
         List<File> submissionDirs = new ArrayList<>();
@@ -394,6 +430,10 @@ public final class ChecksimsCommandLine {
         // Next, parse common code settings
         CommonCodeHandler handler = parseCommonCodeSetting(cli, glob, tokenizer, recursive);
         config = config.setCommonCodeHandler(handler);
+
+        // Next, parse archive directory settings
+        Set<Submission> archiveSubmissions = getArchiveSubmissions(cli, glob, tokenizer, recursive);
+        config = config.setArchiveSubmissions(archiveSubmissions);
 
         // Next, build submissions
         Set<Submission> submissions = getSubmissions(cli, glob, tokenizer, recursive);
