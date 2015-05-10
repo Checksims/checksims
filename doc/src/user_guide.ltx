@@ -72,6 +72,8 @@ these are not parsed by your shell, it is recommended to escape this pattern
 (typically using double quotes --- \texttt{\textquotedbl*.c\textquotedbl}
 for example).
 
+% TODO explain archive directories in here
+
 After the glob match pattern, one or more directories to search for submissions
 must be provided. \textit{Checksims} assumes each subdirectory of these search
 directories is a submission. It identifies any files matching the given
@@ -101,42 +103,49 @@ Before the glob matcher, you may place a number of arguments to control the
 operation of \textit{Checksims}. These are detailed below:
 
 \begin{itemize}
-\item \texttt{-a}, \texttt{--algorithm}: Specify algorithm to use for
+\item \texttt{-a}, \texttt{-{}-algorithm}: Specify algorithm to use for
 	similarity detection. Available options are \texttt{linecompare} and
 	\texttt{smithwaterman} at present, and can be listed with the \texttt{-h}
 	option. If no algorithm is given, the default is used.
-\item \texttt{-c}, \texttt{--common}: Perform common code removal. Specify a
+\item \texttt{-{}-archive}: Specify an \textit{archive directory}. Submissions
+	in the archive directory will be compared to submissions in the given
+	submission directories, but not to each other. This is used to allow
+	comparison against assignments from previous offerings of a course ---
+	assignments from previous offerings are treated as archive submissions, and
+	will not be compared to each other, reducing the amount of computation
+	required.
+\item \texttt{-c}, \texttt{-{}-common}: Perform common code removal. Specify a
 	directory containing common code (files within this directory will be
 	identified using the same glob matcher as normal submissions).
-\item \texttt{-f}, \texttt{--file}: Output to a file. Must provide filename of
-	output file as argument. The name of the output strategy used will be
+\item \texttt{-f}, \texttt{-{}-file}: Output to a file. Must provide filename
+	of output file as argument. The name of the output strategy used will be
 	appended to the given filename as an extension. If more than one output
 	strategy is given, more than one output file will be produced, each with
 	the given filename but with differing extensions.
-\item \texttt{-h}, \texttt{--help}: Print usage information and available
+\item \texttt{-h}, \texttt{-{}-help}: Print usage information and available
 	algorithms, preprocessors, and output strategies.
-\item \texttt{-j}, \texttt{--jobs}: Specify number of threads to use. Defaults
-	to number of CPUs available on your system.
-\item \texttt{-o}, \texttt{--output}: Specify output format(s) to use. More
+\item \texttt{-j}, \texttt{-{}-jobs}: Specify number of threads to use.
+	Defaults to number of CPUs available on your system.
+\item \texttt{-o}, \texttt{-{}-output}: Specify output format(s) to use. More
 	than one can be provided; if so, separate them with commas. Available
 	options are \texttt{html}, \texttt{csv}, and \texttt{threshold} at
 	present, and can be listed with the \texttt{-h} option. If no output
 	format is given, the default is used.
-\item \texttt{-p}, \texttt{--preprocess}: Specify preprocessors to apply. More
-	than one can be provided; if so, separate them with commas. At present,
-	the only available option is \texttt{lowercase}. Available options can be
-	listed with the \texttt{-h} option. If this argument is not provided, no
-	preprocessors are applied.
-\item \texttt{-r}, \texttt{--recursive}: Recursively traverse subdirectories
+\item \texttt{-p}, \texttt{-{}-preprocess}: Specify preprocessors to apply.
+	More than one can be provided; if so, separate them with commas. At
+	present, the only available option is \texttt{lowercase}. Available options
+	can be listed with the \texttt{-h} option. If this argument is not
+	provided, no preprocessors are applied.
+\item \texttt{-r}, \texttt{-{}-recursive}: Recursively traverse subdirectories
 	when generating submissions.
-\item \texttt{-t}, \texttt{--token}: Specify tokenization to use. Available
+\item \texttt{-t}, \texttt{-{}-token}: Specify tokenization to use. Available
 	options are \texttt{line}, \texttt{whitespace}, and \texttt{character} at
 	present, and can be listed with the \texttt{-h} option. If the \texttt{-t}
 	option is not given, the default tokenization for the algorithm is used.
-\item \texttt{-v}, \texttt{--verbose}: Verbose debugging output.
-\item \texttt{-vv}, \texttt{--veryverbose}: Very verbose debugging output.
+\item \texttt{-v}, \texttt{-{}-verbose}: Verbose debugging output.
+\item \texttt{-vv}, \texttt{-{}-veryverbose}: Very verbose debugging output.
 	Overrides \texttt{-v} if both are specified.
-\item \texttt{--version}: Print current version of \textit{Checksims}.
+\item \texttt{-{}-version}: Print current version of \textit{Checksims}.
 \end{itemize}
 
 \textit{Checksims} contains built-in usage information and descriptions of its

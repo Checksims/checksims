@@ -113,6 +113,12 @@ public final class ChecksimsRunner {
 
         logs.info("Got " + submissions.size() + " submissions to test.");
 
+        ImmutableSet<Submission> archiveSubmissions = config.getArchiveSubmissions();
+
+        if(!archiveSubmissions.isEmpty()) {
+            logs.info("Got " + archiveSubmissions.size() + " archive submissions to test.");
+        }
+
         if(submissions.size() == 0) {
             logs.error("No student submissions were found! Nothing to do!");
             System.exit(0);
@@ -120,6 +126,7 @@ public final class ChecksimsRunner {
 
         // Apply the common code handler (which may just be a pass-through operation, if there is no common code)
         submissions = ImmutableSet.copyOf(config.getCommonCodeHandler().handleCommonCode(submissions));
+        archiveSubmissions = ImmutableSet.copyOf(config.getCommonCodeHandler().handleCommonCode(archiveSubmissions));
 
         // Apply all preprocessors
         for(SubmissionPreprocessor p : config.getPreprocessors()) {
@@ -131,11 +138,12 @@ public final class ChecksimsRunner {
             System.exit(0);
         }
 
-        // Apply algorithm to submission
-        Set<Pair<Submission, Submission>> allPairs = PairGenerator.generatePairs(submissions);
+        // Apply algorithm to submissions
+        Set<Pair<Submission, Submission>> allPairs = PairGenerator.generatePairsWithArchive(submissions,
+                archiveSubmissions);
         Set<AlgorithmResults> results = AlgorithmRunner.runAlgorithm(allPairs, config.getAlgorithm());
         try {
-            SimilarityMatrix resultsMatrix = SimilarityMatrix.generateMatrix(submissions, results);
+            SimilarityMatrix resultsMatrix = SimilarityMatrix.generateMatrix(submissions, archiveSubmissions, results);
 
             // All parallel jobs are done, shut down the parallel executor
             ParallelAlgorithm.shutdownExecutor();

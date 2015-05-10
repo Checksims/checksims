@@ -112,9 +112,7 @@ public final class AlgorithmResults {
         return this.a.equals(otherResults.a)
                 && this.b.equals(otherResults.b)
                 && this.finalListA.equals(otherResults.finalListA)
-                && this.finalListB.equals(otherResults.finalListB)
-                && this.identicalTokensA == otherResults.identicalTokensA
-                && this.identicalTokensB == otherResults.identicalTokensB;
+                && this.finalListB.equals(otherResults.finalListB);
     }
 
     @Override
