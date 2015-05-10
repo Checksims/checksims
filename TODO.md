@@ -10,7 +10,8 @@ Unit Tests
 Project Administration
 ----------------------
 - Clean up README
-- Generate User's Guide in usable web format - Markdown or HTML
+- Release Engineering process
+- Generate User's Guide for each version as PDF, and place in project root.
 
 Code Cleanup
 ------------
@@ -20,10 +21,12 @@ Code Cleanup
 
 Minor Improvements
 ------------------
-- Archive directory support
+- Add support for more than 1 archive directory (multiple uses of --archive flag)
+- Add support for using only a single base submission if archive submissions are provided
 - Add handling for empty submissions (flag to include, default do not include)
 - Leading and Trailing Whitespace Trimming Preprocessor
 - Further optimization of Smith-Waterman Algorithm
+- HTML output should have a rotated (45 degree) X axis, to reduce size
 
 Major new features
 ------------------
