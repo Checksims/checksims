@@ -32,7 +32,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Print a Similarity Matrix as machine-readable CSV.
  */
-public class MatrixToCSVPrinter implements MatrixPrinter {
+public final class MatrixToCSVPrinter implements MatrixPrinter {
     private static MatrixToCSVPrinter instance;
 
     private MatrixToCSVPrinter() {}

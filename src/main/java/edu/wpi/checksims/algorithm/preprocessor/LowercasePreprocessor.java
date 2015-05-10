@@ -31,7 +31,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Lowercases tokens to prevent case from interfering with comparisons.
  */
-public class LowercasePreprocessor implements SubmissionPreprocessor {
+public final class LowercasePreprocessor implements SubmissionPreprocessor {
     private static LowercasePreprocessor instance;
 
     private LowercasePreprocessor() {}

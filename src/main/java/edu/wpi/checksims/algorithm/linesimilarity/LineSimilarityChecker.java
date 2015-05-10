@@ -40,7 +40,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Implements a line-by-line similarity checker.
  */
-public class LineSimilarityChecker implements SimilarityDetector {
+public final class LineSimilarityChecker implements SimilarityDetector {
     private static LineSimilarityChecker instance;
 
     /**

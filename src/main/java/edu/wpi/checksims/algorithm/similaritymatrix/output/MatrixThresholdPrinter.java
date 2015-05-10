@@ -38,7 +38,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Print all results over a certain threshold.
  */
-public class MatrixThresholdPrinter implements MatrixPrinter {
+public final class MatrixThresholdPrinter implements MatrixPrinter {
     private static MatrixThresholdPrinter instance;
 
     private static final double threshold = 0.65;

@@ -48,8 +48,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Entry point for Checksims.
  */
-public class ChecksimsRunner {
+public final class ChecksimsRunner {
     private static Logger logs;
+
+    private ChecksimsRunner() {}
 
     /**
      * CLI entrypoint of Checksims.

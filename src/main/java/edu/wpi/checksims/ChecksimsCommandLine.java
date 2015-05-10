@@ -54,6 +54,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public final class ChecksimsCommandLine {
     private static Logger logs;
 
+    private ChecksimsCommandLine() {}
+
     /**
      * @param level Logging level to use. Supported levels are 0 (nonverbose), 1 (verbose), 2 (very verbose)
      * @return Logger with appropriate logging level

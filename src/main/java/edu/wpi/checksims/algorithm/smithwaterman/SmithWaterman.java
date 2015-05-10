@@ -35,7 +35,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Implementation of the Smith-Waterman algorithm.
  */
-public class SmithWaterman implements SimilarityDetector {
+public final class SmithWaterman implements SimilarityDetector {
     private static SmithWaterman instance;
 
     private SmithWaterman() {}
