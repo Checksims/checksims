@@ -156,24 +156,10 @@
                                         <!-- Enforce Javadoc formatting -->
                                         <module name="JavadocStyle"/>
 
-                                        <!-- Enforce positioning of left curly brace -->
-                                        <module name="LeftCurly"/>
-
-                                        <!-- Enforce positioning of right curly brace on some statement types -->
-                                        <module name="RightCurly">
-                                            <property name="option" value="same"/>
-                                        </module>
-
-                                        <!-- Enforce braces around if, else, for, while, do, etc -->
-                                        <module name="NeedBraces"/>
-
                                         <!-- Enforce 120 max line length, as opposed to 80 -->
                                         <module name="LineLength">
                                             <property name="max" value="120"/>
                                         </module>
-
-                                        <!-- Enforce annotation style -->
-                                        <module name="AnnotationUseStyle"/>
 
                                         <!-- Enforce Java array style (String[] x not String x[]) -->
                                         <module name="ArrayTypeStyle"/>
@@ -245,6 +231,48 @@
 
                                         <!-- Ensure no whitespace padding after ( and before ). Newlines allowed. -->
                                         <module name="ParenPad"/>
+
+                                        <!-- Enforce annotation location (between docs and declaration, on line before declaration) -->
+                                        <module name="AnnotationLocation"/>
+
+                                        <!-- Enforce annotation style -->
+                                        <module name="AnnotationUseStyle"/>
+
+                                        <!-- Enforce positioning of left curly brace -->
+                                        <module name="LeftCurly"/>
+
+                                        <!-- Enforce positioning of right curly brace on some statement types -->
+                                        <module name="RightCurly">
+                                            <property name="option" value="same"/>
+                                        </module>
+
+                                        <!-- Enforce braces around if, else, for, while, do, etc -->
+                                        <module name="NeedBraces"/>
+
+                                        <!-- No empty brackets -->
+                                        <!-- Does NOT check catch blocks -->
+                                        <module name="EmptyBlock"/>
+
+                                        <!-- No nested blocks not attached to a conditional/function/etc -->
+                                        <module name="AvoidNestedBlocks"/>
+
+                                        <!-- Classes with only private constructors must be final -->
+                                        <module name="FinalClass"/>
+
+                                        <!-- Disallow interfaces containing only constants -->
+                                        <module name="InterfaceIsType"/>
+
+                                        <!-- Classes with only static methods should not have a public constructor -->
+                                        <module name="HideUtilityClassConstructor"/>
+
+                                        <!-- Exceptions must be immutable -->
+                                        <module name="MutableException"/>
+
+                                        <!-- One top level (class/interface/etc) per file -->
+                                        <module name="OneTopLevelClass"/>
+
+                                        <!-- Verify top-level type name matches the filename -->
+                                        <module name="OuterTypeFilename"/>
                                     </module>
                                 </module>
                             </checkstyleRules>

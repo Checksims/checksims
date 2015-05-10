@@ -32,7 +32,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Splits a file on a line-by-line basis.
  */
-public class LineTokenizer implements Tokenizer {
+public final class LineTokenizer implements Tokenizer {
     private static LineTokenizer instance;
 
     private LineTokenizer() {}

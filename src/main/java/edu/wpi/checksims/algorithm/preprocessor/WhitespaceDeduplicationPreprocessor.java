@@ -31,7 +31,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Remove duplicated whitespace characters.
  */
-public class WhitespaceDeduplicationPreprocessor implements SubmissionPreprocessor {
+public final class WhitespaceDeduplicationPreprocessor implements SubmissionPreprocessor {
     private static WhitespaceDeduplicationPreprocessor instance;
 
     private WhitespaceDeduplicationPreprocessor() {}

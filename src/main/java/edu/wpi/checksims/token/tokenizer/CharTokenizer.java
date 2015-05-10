@@ -33,7 +33,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Split a file into a list of character tokens.
  */
-public class CharTokenizer implements Tokenizer {
+public final class CharTokenizer implements Tokenizer {
     private static CharTokenizer instance;
 
     private CharTokenizer() {}

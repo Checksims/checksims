@@ -36,7 +36,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Print a Similarity Matrix to HTML.
  */
-public class MatrixToHTMLPrinter implements MatrixPrinter {
+public final class MatrixToHTMLPrinter implements MatrixPrinter {
     private static MatrixToHTMLPrinter instance;
 
     private static final String templateLocation = "/edu/wpi/checksims/algorithm/similaritymatrix/output/htmlOutput.vm";

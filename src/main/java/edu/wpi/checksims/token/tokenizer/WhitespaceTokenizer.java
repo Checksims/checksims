@@ -32,7 +32,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Split a file into tokens based on spaces.
  */
-public class WhitespaceTokenizer implements Tokenizer {
+public final class WhitespaceTokenizer implements Tokenizer {
     private static WhitespaceTokenizer instance;
 
     private WhitespaceTokenizer() {}
