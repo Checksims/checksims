@@ -32,4 +32,12 @@ v1.0.2
 - Enhancement: Early exit with warning if no submissions detected
 - Other: Submissions are no longer built recursively by default
 
-TODO earlier than v1.0.2
+v1.0.1
+------
+- Enhancement: Major changes to internal handling of tokens
+- Enhancement: Significant performance improvements
+- Bugfix: Several small bugfixes to Common Code Removal
+
+v1.0.0
+------
+- Initial Release
