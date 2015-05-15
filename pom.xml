@@ -7,7 +7,7 @@
     <name>Checksims</name>
     <description>A plagiarism detection framework written in Java</description>
 
-    <groupId>edu.wpi.checksims</groupId>
+    <groupId>net.lldp.checksims</groupId>
     <artifactId>checksims</artifactId>
     <version>1.2.0-DEV</version>
     <packaging>jar</packaging>
@@ -98,7 +98,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>edu.wpi.checksims.ChecksimsRunner</mainClass>
+                            <mainClass>net.lldp.checksims.ChecksimsRunner</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -110,7 +110,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>edu.wpi.checksims.ChecksimsRunner</mainClass>
+                            <mainClass>net.lldp.checksims.ChecksimsRunner</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

@@ -1,0 +1,128 @@
+/*
+ * CDDL HEADER START
+ *
+ * The contents of this file are subject to the terms of the
+ * Common Development and Distribution License (the "License").
+ * You may not use this file except in compliance with the License.
+ *
+ * See LICENSE.txt included in this distribution for the specific
+ * language governing permissions and limitations under the License.
+ *
+ * When distributing Covered Code, include this CDDL HEADER in each
+ * file and include the License file at LICENSE.txt.
+ * If applicable, add the following below this CDDL HEADER, with the
+ * fields enclosed by brackets "[]" replaced with your own identifying
+ * information: Portions Copyright [yyyy] [name of copyright owner]
+ *
+ * CDDL HEADER END
+ *
+ * Copyright (c) 2014-2015 Nicholas DeMarinis, Matthew Heon, and Dolan Murvihill
+ */
+
+package net.lldp.checksims.util.threading;
+
+import net.lldp.checksims.algorithm.AlgorithmResults;
+import net.lldp.checksims.algorithm.SimilarityDetector;
+import net.lldp.checksims.submission.ConcreteSubmission;
+import net.lldp.checksims.submission.Submission;
+import net.lldp.checksims.submission.ValidityIgnoringSubmission;
+import net.lldp.checksims.token.TokenList;
+import net.lldp.checksims.token.TokenType;
+import net.lldp.checksims.token.tokenizer.Tokenizer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.text.DecimalFormat;
+import java.util.concurrent.Callable;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+
+/**
+ * Basic unit of thread execution for Common Code Removal.
+ */
+public class CommonCodeRemovalWorker implements Callable<Submission> {
+    private final SimilarityDetector algorithm;
+    private final Submission common;
+    private final Submission removeFrom;
+
+    private static Logger logs = LoggerFactory.getLogger(CommonCodeRemovalWorker.class);
+
+    /**
+     * Create a Callable worker to perform common code removal on a single submission.
+     *
+     * @param algorithm Algorithm to use to detect common code
+     * @param common Common code to remove
+     * @param removeFrom Submission to remove code from
+     */
+    public CommonCodeRemovalWorker(SimilarityDetector algorithm, Submission common, Submission removeFrom) {
+        checkNotNull(algorithm);
+        checkNotNull(common);
+        checkNotNull(removeFrom);
+
+        this.algorithm = algorithm;
+        this.common = common;
+        this.removeFrom = removeFrom;
+    }
+
+    /**
+     * Perform common code removal on given submission.
+     *
+     * @return Submission with common code removed
+     * @throws Exception Unused - all exceptions will be RuntimeException or similar
+     */
+    @Override
+    public Submission call() throws Exception {
+        logs.debug("Performing common code removal on submission " + removeFrom.getName());
+
+        TokenType type = algorithm.getDefaultTokenType();
+        Tokenizer tokenizer = Tokenizer.getTokenizer(type);
+
+        // Re-tokenize input and common code using given token type
+        TokenList redoneIn = tokenizer.splitFile(removeFrom.getContentAsString());
+        TokenList redoneCommon = tokenizer.splitFile(common.getContentAsString());
+        
+        // Create new submissions with retokenized input
+        Submission computeIn = new ConcreteSubmission(removeFrom.getName(), removeFrom.getContentAsString(), redoneIn);
+        Submission computeCommon = new ConcreteSubmission(common.getName(), common.getContentAsString(), redoneCommon);
+
+        // Use the new submissions to compute this
+        AlgorithmResults results = algorithm.detectSimilarity(computeIn, computeCommon);
+
+        // The results contains two TokenLists, representing the final state of the submissions after detection
+        // All common code should be marked invalid for the input submission's final list
+        TokenList listWithCommonInvalid;
+        double percentMatched;
+        int identTokens;
+        if(new ValidityIgnoringSubmission(results.a).equals(computeIn)) {
+            listWithCommonInvalid = results.finalListA;
+            percentMatched = results.percentMatchedA();
+            identTokens = results.identicalTokensA;
+        } else if(new ValidityIgnoringSubmission(results.b).equals(computeIn)) {
+            listWithCommonInvalid = results.finalListB;
+            percentMatched = results.percentMatchedB();
+            identTokens = results.identicalTokensB;
+        } else {
+            throw new RuntimeException("Unreachable code!");
+        }
+
+        // Recreate the string body of the submission from this new list
+        String newBody = listWithCommonInvalid.join(true);
+
+        // Retokenize the new body with the original tokenization
+        TokenType oldType = removeFrom.getTokenType();
+        Tokenizer oldTokenizer = Tokenizer.getTokenizer(oldType);
+        TokenList finalListGoodTokenization = oldTokenizer.splitFile(newBody);
+
+        DecimalFormat d = new DecimalFormat("###.00");
+        logs.trace("Submission " + removeFrom.getName() + " contained " + d.format(100 * percentMatched)
+                + "% common code");
+        logs.trace("Removed " + identTokens + " common tokens (of " + removeFrom.getNumTokens() + " total)");
+
+        return new ConcreteSubmission(removeFrom.getName(), newBody, finalListGoodTokenization);
+    }
+
+    @Override
+    public String toString() {
+        return "Common Code Removal Worker for submission \"" + removeFrom.getName() + "\"";
+    }
+}
