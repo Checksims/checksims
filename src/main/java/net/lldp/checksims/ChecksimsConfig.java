@@ -42,6 +42,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Per-run configuration of Checksims.
  *
+ * This configuration contains all of the information needed to run Checksims on a number of submissions and return
+ * meaningful output.
+ *
+ * All Setter methods return the current configuration, to allow chaining.
+ *
  * TODO: add a setImmutable method (or an immutable wrapper?) so ChecksimsRunner cannot alter a running config
  */
 public final class ChecksimsConfig {
@@ -56,6 +61,10 @@ public final class ChecksimsConfig {
 
     /**
      * Base constructor, returns default config.
+     *
+     * The default configuration is complete, and all fields are initialized to reasonable values. The only thing
+     * required to be set before running Checksims with a default config are the submissions to be run on, which
+     * default to empty --- ChecksimsRunner will throw an exception if run with no submissions.
      */
     public ChecksimsConfig() {
         this.algorithm = AlgorithmRegistry.getInstance().getDefaultImplementation();
@@ -129,7 +138,7 @@ public final class ChecksimsConfig {
     }
 
     /**
-     * @param newSubmissions New list of submissions to work on. Must contain at least 1 submission.
+     * @param newSubmissions New set of submissions to work on. Must contain at least 1 submission.
      * @return This configuration
      */
     public ChecksimsConfig setSubmissions(Set<Submission> newSubmissions) {
@@ -142,7 +151,7 @@ public final class ChecksimsConfig {
     }
 
     /**
-     * @param newArchiveSubmissions New list of archive submissions to use. May be empty.
+     * @param newArchiveSubmissions New set of archive submissions to use. May be empty.
      * @return This configuration
      */
     public ChecksimsConfig setArchiveSubmissions(Set<Submission> newArchiveSubmissions) {
@@ -154,7 +163,7 @@ public final class ChecksimsConfig {
     }
 
     /**
-     * @param newOutputPrinters List of output strategies to use. Cannot be empty.
+     * @param newOutputPrinters Set of output strategies to use. Cannot be empty.
      * @return This configuration
      */
     public ChecksimsConfig setOutputPrinters(Set<MatrixPrinter> newOutputPrinters) {

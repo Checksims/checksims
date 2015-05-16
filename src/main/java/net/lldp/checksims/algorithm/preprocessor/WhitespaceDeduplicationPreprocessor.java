@@ -63,7 +63,7 @@ public final class WhitespaceDeduplicationPreprocessor implements SubmissionPrep
 
         Tokenizer tokenizer = Tokenizer.getTokenizer(submission.getTokenType());
 
-        TokenList finalList = tokenizer.splitFile(windowsNewlineDedup);
+        TokenList finalList = tokenizer.splitString(windowsNewlineDedup);
 
         return new ConcreteSubmission(submission.getName(), windowsNewlineDedup, finalList);
     }

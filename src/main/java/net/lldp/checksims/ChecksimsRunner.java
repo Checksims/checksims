@@ -46,7 +46,7 @@ import java.util.Set;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Entry point for Checksims.
+ * CLI Entry point and main public API endpoint for Checksims.
  */
 public final class ChecksimsRunner {
     private static Logger logs;
@@ -71,6 +71,7 @@ public final class ChecksimsRunner {
             throw new RuntimeException("Error building submissions", e);
         }
 
+        // Instantiate logger after CLI parsing, so we get log-level changes for verbosity flags
         logs = LoggerFactory.getLogger(ChecksimsRunner.class);
 
         runChecksims(config);
@@ -79,6 +80,11 @@ public final class ChecksimsRunner {
     }
 
     /**
+     * Get current version
+     *
+     * TODO: Consider making public
+     * TODO: Consider throwing ChecksimsException if we can't get the version
+     *
      * @return Current version of Checksims
      */
     static String getChecksimsVersion() {

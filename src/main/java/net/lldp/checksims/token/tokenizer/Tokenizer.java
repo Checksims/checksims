@@ -25,11 +25,20 @@ import net.lldp.checksims.token.TokenList;
 import net.lldp.checksims.token.TokenType;
 
 /**
- * Interface to read in a file and return it as a list of tokens of a certain type.
+ * Interface to convert a string into a list of tokens of a certain type.
  */
 public interface Tokenizer {
-    TokenList splitFile(String string);
+    /**
+     * Tokenize a String.
+     *
+     * @param string String to tokenize
+     * @return A TokenList of type returned by getType(), containing tokens generated from the string
+     */
+    TokenList splitString(String string);
 
+    /**
+     * @return Type of tokens produced by this tokenizer.
+     */
     TokenType getType();
 
     /**

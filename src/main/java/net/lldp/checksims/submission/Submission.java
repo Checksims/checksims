@@ -44,6 +44,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Interface for Submissions.
  *
+ * Submissions are considered Comparable so they can be ordered for output. Generally, we only expect that their names,
+ * and not their contents, will be compared.
+ *
  * Also contains factory methods for submissions
  */
 public interface Submission extends Comparable<Submission> {
@@ -248,7 +251,7 @@ public interface Submission extends Comparable<Submission> {
         String contentString = fileContent.toString();
 
         // Split the content
-        tokenList.addAll(splitter.splitFile(contentString));
+        tokenList.addAll(splitter.splitString(contentString));
 
         if(tokenList.size() > 7500) {
             logs.warn("Warning: Submission " + name + " has very large token count (" + tokenList.size() + ")");

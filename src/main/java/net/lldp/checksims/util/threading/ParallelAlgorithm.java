@@ -71,7 +71,7 @@ public final class ParallelAlgorithm {
     }
 
     /**
-     * @return Number of threads to be used for execution
+     * @return Number of threads to be used for execution. Defaults to number of CPUs available on system.
      */
     public static int getThreadCount() {
         return threadCount;
@@ -84,8 +84,8 @@ public final class ParallelAlgorithm {
      * @param pairs Pairs of submissions to perform detection on
      * @return Collection of results, one for each pair
      */
-    public static Set<AlgorithmResults> parallelSimilarityDetection(SimilarityDetector algorithm, Set<Pair<Submission,
-            Submission>> pairs) {
+    public static Set<AlgorithmResults> parallelSimilarityDetection(SimilarityDetector algorithm,
+                                                                    Set<Pair<Submission, Submission>> pairs) {
         checkNotNull(algorithm);
         checkNotNull(pairs);
 

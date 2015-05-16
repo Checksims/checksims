@@ -39,6 +39,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Parent class for all registry implementations.
+ *
+ * A Registry contains a number of implementations of a given interface which are contained within a given package.
+ * Registries are initialized via reflection; no modification is required to add a new implementation to a registry, so
+ * long as it implements the appropriate interface and is in the appropriate package.
  */
 public class Registry<T extends NamedInstantiable> {
     private final Map<String, T> registeredHandlers;

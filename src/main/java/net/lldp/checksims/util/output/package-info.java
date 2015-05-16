@@ -19,22 +19,12 @@
  * Copyright (c) 2014-2015 Nicholas DeMarinis, Matthew Heon, and Dolan Murvihill
  */
 
-package net.lldp.checksims.algorithm.preprocessor;
-
-import net.lldp.checksims.algorithm.InternalAlgorithmError;
-import net.lldp.checksims.submission.Submission;
-import net.lldp.checksims.util.reflection.NamedInstantiable;
-
 /**
- * Interface for submission preprocessors which act on submissions.
+ * This package contains output methods for ChecksimsRunner.
+ *
+ * These output methods will print the final result of Checksims (not logging messages, but the human-readable output
+ * of a Similarity Matrix Printer) in a designated format.
+ *
+ * They do not implement NamedInstantiable and have no registry; there is no intent to have these be user-facing.
  */
-public interface SubmissionPreprocessor extends NamedInstantiable {
-    /**
-     * Perform some implementation-specific transformation on the input submission.
-     *
-     * @param submission Submission to transform
-     * @return Result of transforming the input submission's contents
-     * @throws InternalAlgorithmError Thrown on internal error preprocessing submission
-     */
-    Submission process(Submission submission) throws InternalAlgorithmError;
-}
+package net.lldp.checksims.util.output;

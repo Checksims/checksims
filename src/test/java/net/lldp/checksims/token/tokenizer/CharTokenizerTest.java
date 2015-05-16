@@ -42,7 +42,7 @@ public class CharTokenizerTest {
 
     @Test
     public void testEmptyReturnsEmpty() {
-        TokenList results = c.splitFile("");
+        TokenList results = c.splitString("");
 
         assertNotNull(results);
         assertTrue(results.isEmpty());
@@ -50,7 +50,7 @@ public class CharTokenizerTest {
 
     @Test
     public void testHelloReturnsChars() {
-        TokenList results = c.splitFile("hello");
+        TokenList results = c.splitString("hello");
         TokenList expected = TokenUtils.makeTokenListCharacter('h', 'e', 'l', 'l', 'o');
 
         assertNotNull(results);
@@ -59,7 +59,7 @@ public class CharTokenizerTest {
 
     @Test
     public void testHelloWorldReturnsChars() {
-        TokenList results = c.splitFile("hello world");
+        TokenList results = c.splitString("hello world");
         TokenList expected = TokenUtils.makeTokenListCharacter('h', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd');
 
         assertNotNull(results);
@@ -68,7 +68,7 @@ public class CharTokenizerTest {
 
     @Test
     public void TestHandlesWhitespaceCorrectly() {
-        TokenList results = c.splitFile("with\ttabs\t");
+        TokenList results = c.splitString("with\ttabs\t");
         TokenList expected = TokenUtils.makeTokenListCharacter('w', 'i', 't', 'h', '\t', 't', 'a', 'b', 's', '\t');
 
         assertNotNull(results);
@@ -77,7 +77,7 @@ public class CharTokenizerTest {
 
     @Test
     public void TestHandlesNewlinesCorrectly() {
-        TokenList results = c.splitFile("with\nnewlines\n");
+        TokenList results = c.splitString("with\nnewlines\n");
         TokenList expected = TokenUtils.makeTokenListCharacter('w', 'i', 't', 'h', '\n', 'n', 'e', 'w', 'l', 'i', 'n', 'e', 's', '\n');
 
         assertNotNull(results);

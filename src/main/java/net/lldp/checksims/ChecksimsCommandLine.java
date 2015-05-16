@@ -49,6 +49,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Parses Checksims' command-line options.
+ *
+ * TODO: Consider changing from a static class? Having the CommandLine as an instance variable would greatly simplify
  */
 public final class ChecksimsCommandLine {
     private static Logger logs;

@@ -81,8 +81,8 @@ public class CommonCodeLineRemovalPreprocessor implements SubmissionPreprocessor
         Tokenizer tokenizer = Tokenizer.getTokenizer(type);
 
         // Re-tokenize input and common code using given token type
-        TokenList redoneIn = tokenizer.splitFile(removeFrom.getContentAsString());
-        TokenList redoneCommon = tokenizer.splitFile(common.getContentAsString());
+        TokenList redoneIn = tokenizer.splitString(removeFrom.getContentAsString());
+        TokenList redoneCommon = tokenizer.splitString(common.getContentAsString());
 
         // Create new submissions with retokenized input
         Submission computeIn = new ConcreteSubmission(removeFrom.getName(), removeFrom.getContentAsString(), redoneIn);
@@ -121,7 +121,7 @@ public class CommonCodeLineRemovalPreprocessor implements SubmissionPreprocessor
         // Retokenize the new body with the original tokenization
         TokenType oldType = removeFrom.getTokenType();
         Tokenizer oldTokenizer = Tokenizer.getTokenizer(oldType);
-        TokenList finalListGoodTokenization = oldTokenizer.splitFile(newBody);
+        TokenList finalListGoodTokenization = oldTokenizer.splitString(newBody);
 
         DecimalFormat d = new DecimalFormat("###.00");
         logs.trace("Submission " + removeFrom.getName() + " contained " + d.format(100 * percentMatched)
