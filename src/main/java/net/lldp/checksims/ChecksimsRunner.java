@@ -127,7 +127,10 @@ public final class ChecksimsRunner {
         // Apply all preprocessors
         for(SubmissionPreprocessor p : config.getPreprocessors()) {
             submissions = ImmutableSet.copyOf(PreprocessSubmissions.process(p, submissions));
-            archiveSubmissions = ImmutableSet.copyOf(PreprocessSubmissions.process(p, archiveSubmissions));
+
+            if(!archiveSubmissions.isEmpty()) {
+                archiveSubmissions = ImmutableSet.copyOf(PreprocessSubmissions.process(p, archiveSubmissions));
+            }
         }
 
         if(submissions.size() < 2) {
