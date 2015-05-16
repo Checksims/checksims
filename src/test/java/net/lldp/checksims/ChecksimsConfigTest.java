@@ -100,14 +100,6 @@ public class ChecksimsConfigTest {
     }
 
     @Test
-    public void TestSetCommonCodeHandlerNull() {
-        expectedEx.expect(NullPointerException.class);
-
-        ChecksimsConfig config = new ChecksimsConfig();
-        config.setCommonCodeHandler(null);
-    }
-
-    @Test
     public void TestSetOutputPrintersNull() {
         expectedEx.expect(NullPointerException.class);
 

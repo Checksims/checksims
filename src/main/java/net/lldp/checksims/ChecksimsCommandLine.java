@@ -22,13 +22,11 @@
 package net.lldp.checksims;
 
 import net.lldp.checksims.algorithm.AlgorithmRegistry;
-import net.lldp.checksims.algorithm.commoncode.CommonCodeHandler;
-import net.lldp.checksims.algorithm.commoncode.CommonCodeLineRemovalHandler;
+import net.lldp.checksims.algorithm.preprocessor.CommonCodeLineRemovalPreprocessor;
 import net.lldp.checksims.algorithm.preprocessor.PreprocessorRegistry;
 import net.lldp.checksims.algorithm.preprocessor.SubmissionPreprocessor;
 import net.lldp.checksims.algorithm.similaritymatrix.output.MatrixPrinter;
 import net.lldp.checksims.algorithm.similaritymatrix.output.MatrixPrinterRegistry;
-import net.lldp.checksims.submission.EmptySubmissionException;
 import net.lldp.checksims.submission.Submission;
 import net.lldp.checksims.token.TokenType;
 import net.lldp.checksims.token.tokenizer.Tokenizer;
@@ -403,14 +401,16 @@ public final class ChecksimsCommandLine {
             Submission commonCodeSubmission = Submission.submissionFromDir(commonCodeDir, globPattern, tokenizer,
                     recursive);
 
-            try {
-                CommonCodeHandler handler = new CommonCodeLineRemovalHandler(commonCodeSubmission);
+            if(commonCodeSubmission.getContentAsString().isEmpty()) {
+                logs.warn("Common code is empty --- cowardly refusing to perform common code removal!");
+            } else {
+                SubmissionPreprocessor commonCodeRemover = new CommonCodeLineRemovalPreprocessor(commonCodeSubmission);
 
-                toReturn = toReturn.setCommonCodeHandler(handler);
-            } catch(EmptySubmissionException e) {
-                // Empty common code will not be removed
-                // Warn about this
-                logs.warn(e.getMessage());
+                // Common code removal first, always
+                List<SubmissionPreprocessor> oldPreprocessors = new ArrayList<>(toReturn.getPreprocessors());
+                oldPreprocessors.add(0, commonCodeRemover);
+
+                toReturn = toReturn.setPreprocessors(oldPreprocessors);
             }
         }
 

@@ -78,27 +78,6 @@ public final class ParallelAlgorithm {
     }
 
     /**
-     * Remove common code in parallel.
-     *
-     * @param algorithm Algorithm to use for common code removal
-     * @param common Common code to remove
-     * @param submissions Submissions to remove from
-     * @return Submissions with common code removed
-     */
-    public static Set<Submission> parallelCommonCodeRemoval(SimilarityDetector algorithm, Submission common,
-                                                            Set<Submission> submissions) {
-        checkNotNull(algorithm);
-        checkNotNull(common);
-        checkNotNull(submissions);
-
-        Collection<CommonCodeRemovalWorker> workers = submissions.stream()
-                .map((submission) -> new CommonCodeRemovalWorker(algorithm, common, submission))
-                .collect(Collectors.toList());
-
-        return ImmutableSet.copyOf(executeTasks(workers));
-    }
-
-    /**
      * Detect similarities in parallel.
      *
      * @param algorithm Algorithm to use for similarity detection

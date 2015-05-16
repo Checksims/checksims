@@ -23,6 +23,8 @@ package net.lldp.checksims.algorithm.preprocessor;
 
 import net.lldp.checksims.util.reflection.Registry;
 
+import java.util.Collections;
+
 /**
  * Registry to obtain valid preprocessors.
  */
@@ -30,7 +32,8 @@ public final class PreprocessorRegistry extends Registry<SubmissionPreprocessor>
     private static PreprocessorRegistry instance;
 
     private PreprocessorRegistry() {
-        super("net.lldp.checksims.algorithm.preprocessor", SubmissionPreprocessor.class);
+        super("net.lldp.checksims.algorithm.preprocessor", SubmissionPreprocessor.class,
+                Collections.singleton("commoncodeline"));
     }
 
     /**

@@ -5,6 +5,7 @@ v1.2.0-DEV
 ----------
 - Breaking Change: CLI Argument Parsing changed
 - Enhancement: Support for more than one Archive Directory
+- Bugfix: Preprocessors now correctly applied to archive submissions
 
 v1.2.0
 ------
@@ -14,6 +15,7 @@ v1.2.0
 
 v1.1.1
 ------
+- Breaking Change: Remove LCS algorithm due to poor performance
 - Feature: Add -version flag to view current version
 - Feature: Add Whitespace Deduplication preprocessor
 - Bugfix: common code removal now functional
@@ -22,7 +24,6 @@ v1.1.1
 - Enhancement: Make preprocessing parallel
 - Enhancement: Make common code removal parallel
 - Enhancement: Improve multithreading, increasing performance
-- Other: Remove LCS algorithm due to poor performance
 
 v1.1.0
 ------
@@ -30,12 +31,12 @@ v1.1.0
 
 v1.0.2
 ------
+- Breaking Change: Submissions are no longer built recursively by default
 - Feature: Add -r flag for recursive submission building
 - Feature: Added -vv flag (very verbose logging)
 - Feature: Added ability to specify multiple output formats for a single run
 - Enhancement: Improved logging
 - Enhancement: Early exit with warning if no submissions detected
-- Other: Submissions are no longer built recursively by default
 
 v1.0.1
 ------

@@ -124,13 +124,10 @@ public final class ChecksimsRunner {
             System.exit(0);
         }
 
-        // Apply the common code handler (which may just be a pass-through operation, if there is no common code)
-        submissions = ImmutableSet.copyOf(config.getCommonCodeHandler().handleCommonCode(submissions));
-        archiveSubmissions = ImmutableSet.copyOf(config.getCommonCodeHandler().handleCommonCode(archiveSubmissions));
-
         // Apply all preprocessors
         for(SubmissionPreprocessor p : config.getPreprocessors()) {
             submissions = ImmutableSet.copyOf(PreprocessSubmissions.process(p, submissions));
+            archiveSubmissions = ImmutableSet.copyOf(PreprocessSubmissions.process(p, archiveSubmissions));
         }
 
         if(submissions.size() < 2) {

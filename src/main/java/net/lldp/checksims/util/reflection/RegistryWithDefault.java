@@ -21,6 +21,9 @@
 
 package net.lldp.checksims.util.reflection;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -39,7 +42,20 @@ public class RegistryWithDefault<T extends NamedInstantiable> extends Registry<T
      */
     public RegistryWithDefault(String initPath, Class<T> baseClazz, String defaultImplementation)
             throws NoSuchImplementationException {
-        super(initPath, baseClazz);
+        this(initPath, baseClazz, new HashSet<>(), defaultImplementation);
+    }
+
+    /**
+     * Create a Registry instance for implementations of a given base class in the given package and subpackages.
+     *
+     * @param initPath Package to (recursively) search for implementations
+     * @param baseClazz Base class or interface which all implementations in the registry extend or implement
+     * @param defaultImplementation Name of default implementation for this registry
+     * @param ignoredImplementations Names of implementations which will not be included in the registry
+     */
+    public RegistryWithDefault(String initPath, Class<T> baseClazz, Set<String> ignoredImplementations,
+                               String defaultImplementation) throws NoSuchImplementationException {
+        super(initPath, baseClazz, ignoredImplementations);
 
         checkNotNull(defaultImplementation);
 

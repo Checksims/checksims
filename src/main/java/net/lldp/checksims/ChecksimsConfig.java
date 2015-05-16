@@ -25,8 +25,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import net.lldp.checksims.algorithm.AlgorithmRegistry;
 import net.lldp.checksims.algorithm.SimilarityDetector;
-import net.lldp.checksims.algorithm.commoncode.CommonCodeHandler;
-import net.lldp.checksims.algorithm.commoncode.CommonCodePassthroughHandler;
 import net.lldp.checksims.algorithm.preprocessor.SubmissionPreprocessor;
 import net.lldp.checksims.algorithm.similaritymatrix.output.MatrixPrinter;
 import net.lldp.checksims.algorithm.similaritymatrix.output.MatrixPrinterRegistry;
@@ -56,7 +54,6 @@ public final class ChecksimsConfig {
     private ImmutableList<SubmissionPreprocessor> preprocessors;
     private ImmutableSet<Submission> submissions;
     private ImmutableSet<Submission> archiveSubmissions;
-    private CommonCodeHandler commonCodeHandler;
     private ImmutableList<MatrixPrinter> outputPrinters;
     private OutputPrinter outputMethod;
     private int numThreads;
@@ -70,7 +67,6 @@ public final class ChecksimsConfig {
         this.submissions = ImmutableSet.copyOf(new HashSet<>());
         this.archiveSubmissions = ImmutableSet.copyOf(new HashSet<>());
         this.preprocessors = ImmutableList.copyOf(new ArrayList<>());
-        this.commonCodeHandler = CommonCodePassthroughHandler.getInstance();
         this.outputPrinters = ImmutableList.copyOf(
                 singletonList(MatrixPrinterRegistry.getInstance().getDefaultImplementation()));
         this.outputMethod = OutputToStdoutPrinter.getInstance();
@@ -78,7 +74,7 @@ public final class ChecksimsConfig {
     }
 
     /**
-     * Copy constructor
+     * Copy constructor.
      *
      * @param old Config to copy
      */
@@ -88,7 +84,6 @@ public final class ChecksimsConfig {
         this.submissions = old.getSubmissions();
         this.archiveSubmissions = old.getArchiveSubmissions();
         this.preprocessors = old.getPreprocessors();
-        this.commonCodeHandler = old.getCommonCodeHandler();
         this.outputPrinters = old.getOutputPrinters();
         this.outputMethod = old.getOutputMethod();
         this.numThreads = old.getNumThreads();
@@ -158,18 +153,6 @@ public final class ChecksimsConfig {
         checkNotNull(newArchiveSubmissions);
 
         this.archiveSubmissions = ImmutableSet.copyOf(archiveSubmissions);
-
-        return this;
-    }
-
-    /**
-     * @param newHandler Handler for common code
-     * @return This configuration
-     */
-    public ChecksimsConfig setCommonCodeHandler(CommonCodeHandler newHandler) {
-        checkNotNull(newHandler);
-
-        commonCodeHandler = newHandler;
 
         return this;
     }
@@ -255,13 +238,6 @@ public final class ChecksimsConfig {
     }
 
     /**
-     * @return Handler which will be used for common code removal
-     */
-    public CommonCodeHandler getCommonCodeHandler() {
-        return commonCodeHandler;
-    }
-
-    /**
      * @return List of output methods requested
      */
     public ImmutableList<MatrixPrinter> getOutputPrinters() {
@@ -302,7 +278,6 @@ public final class ChecksimsConfig {
 
         return this.algorithm.equals(otherConfig.getAlgorithm())
                 && this.archiveSubmissions.equals(otherConfig.getArchiveSubmissions())
-                && this.commonCodeHandler.equals(otherConfig.getCommonCodeHandler())
                 && this.numThreads == otherConfig.getNumThreads()
                 && this.outputPrinters.equals(otherConfig.getOutputPrinters())
                 && this.outputMethod.equals(otherConfig.getOutputMethod())

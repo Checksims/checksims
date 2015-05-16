@@ -19,59 +19,62 @@
  * Copyright (c) 2014-2015 Nicholas DeMarinis, Matthew Heon, and Dolan Murvihill
  */
 
-package net.lldp.checksims.util.threading;
+package net.lldp.checksims.algorithm.preprocessor;
 
 import net.lldp.checksims.algorithm.AlgorithmResults;
+import net.lldp.checksims.algorithm.InternalAlgorithmError;
 import net.lldp.checksims.algorithm.SimilarityDetector;
+import net.lldp.checksims.algorithm.linesimilarity.LineSimilarityChecker;
 import net.lldp.checksims.submission.ConcreteSubmission;
 import net.lldp.checksims.submission.Submission;
 import net.lldp.checksims.submission.ValidityIgnoringSubmission;
 import net.lldp.checksims.token.TokenList;
 import net.lldp.checksims.token.TokenType;
+import net.lldp.checksims.token.TokenTypeMismatchException;
 import net.lldp.checksims.token.tokenizer.Tokenizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
-import java.util.concurrent.Callable;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Basic unit of thread execution for Common Code Removal.
+ * Common Code Removal via Line Comparison.
  */
-public class CommonCodeRemovalWorker implements Callable<Submission> {
-    private final SimilarityDetector algorithm;
+public class CommonCodeLineRemovalPreprocessor implements SubmissionPreprocessor {
     private final Submission common;
-    private final Submission removeFrom;
-
-    private static Logger logs = LoggerFactory.getLogger(CommonCodeRemovalWorker.class);
+    private static final SimilarityDetector algorithm = LineSimilarityChecker.getInstance();
+    private static final Logger logs = LoggerFactory.getLogger(CommonCodeLineRemovalPreprocessor.class);
 
     /**
-     * Create a Callable worker to perform common code removal on a single submission.
-     *
-     * @param algorithm Algorithm to use to detect common code
-     * @param common Common code to remove
-     * @param removeFrom Submission to remove code from
+     * @return Dummy instance of CommonCodeLineRemovalPreprocessor with empty common code
      */
-    public CommonCodeRemovalWorker(SimilarityDetector algorithm, Submission common, Submission removeFrom) {
-        checkNotNull(algorithm);
-        checkNotNull(common);
-        checkNotNull(removeFrom);
-
-        this.algorithm = algorithm;
-        this.common = common;
-        this.removeFrom = removeFrom;
+    public static CommonCodeLineRemovalPreprocessor getInstance() {
+        return new CommonCodeLineRemovalPreprocessor(new ConcreteSubmission("Empty", "",
+                new TokenList(TokenType.CHARACTER)));
     }
 
     /**
-     * Perform common code removal on given submission.
+     * Create a Common Code Removal preprocessor using Line Compare.
      *
-     * @return Submission with common code removed
-     * @throws Exception Unused - all exceptions will be RuntimeException or similar
+     * @param common Common code to remove
+     */
+    public CommonCodeLineRemovalPreprocessor(Submission common) {
+        checkNotNull(common);
+
+        this.common = common;
+    }
+
+    /**
+     * Perform common code removal using Line Comparison.
+     *
+     * @param removeFrom Submission to remove common code from
+     * @return Input submission with common code removed
+     * @throws InternalAlgorithmError Thrown on error removing common code
      */
     @Override
-    public Submission call() throws Exception {
+    public Submission process(Submission removeFrom) throws InternalAlgorithmError {
         logs.debug("Performing common code removal on submission " + removeFrom.getName());
 
         TokenType type = algorithm.getDefaultTokenType();
@@ -80,13 +83,20 @@ public class CommonCodeRemovalWorker implements Callable<Submission> {
         // Re-tokenize input and common code using given token type
         TokenList redoneIn = tokenizer.splitFile(removeFrom.getContentAsString());
         TokenList redoneCommon = tokenizer.splitFile(common.getContentAsString());
-        
+
         // Create new submissions with retokenized input
         Submission computeIn = new ConcreteSubmission(removeFrom.getName(), removeFrom.getContentAsString(), redoneIn);
         Submission computeCommon = new ConcreteSubmission(common.getName(), common.getContentAsString(), redoneCommon);
 
         // Use the new submissions to compute this
-        AlgorithmResults results = algorithm.detectSimilarity(computeIn, computeCommon);
+        AlgorithmResults results;
+
+        // This exception should never happen, but if it does, just rethrow as InternalAlgorithmException
+        try {
+            results = algorithm.detectSimilarity(computeIn, computeCommon);
+        } catch(TokenTypeMismatchException e) {
+            throw new InternalAlgorithmError(e.getMessage());
+        }
 
         // The results contains two TokenLists, representing the final state of the submissions after detection
         // All common code should be marked invalid for the input submission's final list
@@ -121,8 +131,11 @@ public class CommonCodeRemovalWorker implements Callable<Submission> {
         return new ConcreteSubmission(removeFrom.getName(), newBody, finalListGoodTokenization);
     }
 
+    /**
+     * @return Name of the implementation as it will be seen in the registry
+     */
     @Override
-    public String toString() {
-        return "Common Code Removal Worker for submission \"" + removeFrom.getName() + "\"";
+    public String getName() {
+        return "commoncodeline";
     }
 }

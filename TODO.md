@@ -16,8 +16,6 @@ Project Administration
 Code Cleanup
 ------------
 - Exception rewrite. Convert many RuntimeExceptions to checked exceptions
-- Add ability to blacklist certain implementations in a registry
-- Change Common Code Removal to a preprocessor
 - Clean up CLI argument parsing exception handling - print user-readable errors
 
 Minor Improvements
