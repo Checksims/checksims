@@ -153,8 +153,6 @@ public interface Submission extends Comparable<Submission> {
     /**
      * Recursively find all files matching in a directory.
      *
-     * TODO consider refactoring into a static utility class and package-protecting?
-     *
      * @param directory Directory to search in
      * @param glob Match pattern used to identify files to include
      * @return List of all matching files in this directory and subdirectories
@@ -165,6 +163,14 @@ public interface Submission extends Comparable<Submission> {
         checkNotNull(glob);
         checkArgument(!glob.isEmpty(), "Glob pattern cannot be empty");
 
+        if(!directory.exists()) {
+            throw new NoSuchFileException("Does not exist: " + directory.getAbsolutePath());
+        } else if(!directory.isDirectory()) {
+            throw new NotDirectoryException("Not a directory: " + directory.getAbsolutePath());
+        }
+
+        PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:" + glob);
+
         Set<File> allFiles = new HashSet<>();
         Logger logs = LoggerFactory.getLogger(Submission.class);
 
@@ -172,8 +178,13 @@ public interface Submission extends Comparable<Submission> {
             logs.trace("Recursively traversing directory " + directory.getName());
         }
 
+        // Get files in this directory
+        File[] contents = directory.listFiles((f) -> matcher.matches(Paths.get(f.getAbsolutePath()).getFileName()));
+
+        // TODO consider mapping to absolute paths?
+
         // Add this directory
-        Collections.addAll(allFiles, getMatchingFilesFromDir(directory, glob));
+        Collections.addAll(allFiles, contents);
 
         // Get subdirectories
         File[] subdirs = directory.listFiles(File::isDirectory);
@@ -186,32 +197,6 @@ public interface Submission extends Comparable<Submission> {
         }
 
         return allFiles;
-    }
-
-    /**
-     * Identify all files matching in a single directory.
-     *
-     * TODO refactor this into a static utility class and package-protect, should not be public
-     *
-     * @param directory Directory to find files within
-     * @param glob Match pattern used to identify files to include
-     * @return Array of files which match in this single directory
-     */
-    static File[] getMatchingFilesFromDir(File directory, String glob)
-            throws NoSuchFileException, NotDirectoryException {
-        checkNotNull(directory);
-        checkNotNull(glob);
-        checkArgument(!glob.isEmpty(), "Glob pattern cannot be empty");
-
-        PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:" + glob);
-
-        if(!directory.exists()) {
-            throw new NoSuchFileException("Does not exist: " + directory.getAbsolutePath());
-        } else if(!directory.isDirectory()) {
-            throw new NotDirectoryException("Not a directory: " + directory.getAbsolutePath());
-        }
-
-        return directory.listFiles((f) -> matcher.matches(Paths.get(f.getAbsolutePath()).getFileName()));
     }
 
     /**
