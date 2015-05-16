@@ -152,7 +152,7 @@ public final class ChecksimsConfig {
     public ChecksimsConfig setArchiveSubmissions(Set<Submission> newArchiveSubmissions) {
         checkNotNull(newArchiveSubmissions);
 
-        this.archiveSubmissions = ImmutableSet.copyOf(archiveSubmissions);
+        this.archiveSubmissions = ImmutableSet.copyOf(newArchiveSubmissions);
 
         return this;
     }

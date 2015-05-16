@@ -378,6 +378,8 @@ public final class ChecksimsCommandLine {
         // Generate submissions
         Set<Submission> submissions = getSubmissions(submissionDirs, globPattern, tokenizer, recursive);
 
+        logs.debug("Generated " + submissions.size() + " submissions to process.");
+
         if(submissions.isEmpty()) {
             throw new ChecksimsException("Could build any submissions to operate on!");
         }
@@ -391,6 +393,8 @@ public final class ChecksimsCommandLine {
 
             // Make a file from it
             File commonCodeDir = new File(commonCodeDirString).getAbsoluteFile();
+
+            logs.debug("Creating common code submission " + commonCodeDir.getName());
 
             // Verify that it's not a submission dir
             if(submissionDirs.contains(commonCodeDir)) {
@@ -434,6 +438,13 @@ public final class ChecksimsCommandLine {
 
             // Get set of archive submissions
             Set<Submission> archiveSubmissions = getSubmissions(archiveDirs, globPattern, tokenizer, recursive);
+
+            logs.debug("Generated " + archiveSubmissions.size() + " archive submissions to process");
+
+            if(archiveSubmissions.isEmpty()) {
+                logs.warn("Did not find any archive submissions to test with!");
+            }
+
             toReturn = toReturn.setArchiveSubmissions(archiveSubmissions);
         }
 
@@ -462,6 +473,8 @@ public final class ChecksimsCommandLine {
         // Generate submissions to work on
         Set<Submission> submissions = new HashSet<>();
         for(File dir : submissionDirs) {
+            logs.debug("Adding directory " + dir.getName());
+
             submissions.addAll(Submission.submissionListFromDir(dir, glob, tokenizer, recursive));
         }
 
