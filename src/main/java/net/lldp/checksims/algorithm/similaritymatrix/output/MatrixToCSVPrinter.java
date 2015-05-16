@@ -107,4 +107,14 @@ public final class MatrixToCSVPrinter implements MatrixPrinter {
     public String toString() {
         return "Singleton matrix of MatrixToCSVPrinter";
     }
+
+    @Override
+    public int hashCode() {
+        return this.getName().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return other instanceof MatrixToCSVPrinter;
+    }
 }

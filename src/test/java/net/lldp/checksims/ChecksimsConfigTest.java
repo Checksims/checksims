@@ -22,14 +22,12 @@
 package net.lldp.checksims;
 
 import net.lldp.checksims.algorithm.preprocessor.LowercasePreprocessor;
-import net.lldp.checksims.algorithm.similaritymatrix.output.MatrixToCSVPrinter;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.LinkedList;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -112,15 +110,7 @@ public class ChecksimsConfigTest {
         expectedEx.expect(IllegalArgumentException.class);
 
         ChecksimsConfig config = new ChecksimsConfig();
-        config.setOutputPrinters(new LinkedList<>());
-    }
-
-    @Test
-    public void TestSetOutputPrintersDuplicated() {
-        expectedEx.expect(IllegalArgumentException.class);
-
-        ChecksimsConfig config = new ChecksimsConfig();
-        config.setOutputPrinters(Arrays.asList(MatrixToCSVPrinter.getInstance(), MatrixToCSVPrinter.getInstance()));
+        config.setOutputPrinters(new HashSet<>());
     }
 
     @Test

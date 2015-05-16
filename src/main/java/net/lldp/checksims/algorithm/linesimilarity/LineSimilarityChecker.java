@@ -209,4 +209,14 @@ public final class LineSimilarityChecker implements SimilarityDetector {
     public String toString() {
         return "Sole instance of the Line Similarity Counter algorithm";
     }
+
+    @Override
+    public int hashCode() {
+        return this.getName().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return other instanceof LineSimilarityChecker;
+    }
 }

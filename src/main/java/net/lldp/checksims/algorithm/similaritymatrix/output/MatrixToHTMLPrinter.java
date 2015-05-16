@@ -97,4 +97,14 @@ public final class MatrixToHTMLPrinter implements MatrixPrinter {
     public String toString() {
         return "Singleton instance of MatrixToHTMLPrinter";
     }
+
+    @Override
+    public int hashCode() {
+        return this.getName().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return other instanceof MatrixToHTMLPrinter;
+    }
 }

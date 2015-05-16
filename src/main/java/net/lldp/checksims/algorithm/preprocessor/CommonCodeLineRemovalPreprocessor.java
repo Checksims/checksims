@@ -138,4 +138,25 @@ public class CommonCodeLineRemovalPreprocessor implements SubmissionPreprocessor
     public String getName() {
         return "commoncodeline";
     }
+
+    @Override
+    public String toString() {
+        return "Common Code Line Removal preprocessor, removing common code submission " + common.getName();
+    }
+
+    @Override
+    public int hashCode() {
+        return getName().hashCode() ^ common.getName().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if(!(other instanceof CommonCodeLineRemovalPreprocessor)) {
+            return false;
+        }
+
+        CommonCodeLineRemovalPreprocessor otherPreprocessor = (CommonCodeLineRemovalPreprocessor)other;
+
+        return otherPreprocessor.common.equals(common);
+    }
 }

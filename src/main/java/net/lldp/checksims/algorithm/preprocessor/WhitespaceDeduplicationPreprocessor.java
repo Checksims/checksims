@@ -80,4 +80,14 @@ public final class WhitespaceDeduplicationPreprocessor implements SubmissionPrep
     public String toString() {
         return "Singleton instance of WhitespaceDeduplicationPreprocessor";
     }
+
+    @Override
+    public int hashCode() {
+        return this.getName().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return other instanceof WhitespaceDeduplicationPreprocessor;
+    }
 }

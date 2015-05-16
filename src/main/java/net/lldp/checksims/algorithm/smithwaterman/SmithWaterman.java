@@ -113,4 +113,14 @@ public final class SmithWaterman implements SimilarityDetector {
     public String toString() {
         return "Singleton instance of Smith-Waterman Algorithm";
     }
+
+    @Override
+    public int hashCode() {
+        return this.getName().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return other instanceof SmithWaterman;
+    }
 }

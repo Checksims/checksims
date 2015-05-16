@@ -33,15 +33,11 @@ import net.lldp.checksims.token.TokenType;
 import net.lldp.checksims.util.output.OutputPrinter;
 import net.lldp.checksims.util.output.OutputToStdoutPrinter;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static java.util.Collections.singletonList;
 
 /**
  * Per-run configuration of Checksims.
@@ -54,7 +50,7 @@ public final class ChecksimsConfig {
     private ImmutableList<SubmissionPreprocessor> preprocessors;
     private ImmutableSet<Submission> submissions;
     private ImmutableSet<Submission> archiveSubmissions;
-    private ImmutableList<MatrixPrinter> outputPrinters;
+    private ImmutableSet<MatrixPrinter> outputPrinters;
     private OutputPrinter outputMethod;
     private int numThreads;
 
@@ -67,8 +63,8 @@ public final class ChecksimsConfig {
         this.submissions = ImmutableSet.copyOf(new HashSet<>());
         this.archiveSubmissions = ImmutableSet.copyOf(new HashSet<>());
         this.preprocessors = ImmutableList.copyOf(new ArrayList<>());
-        this.outputPrinters = ImmutableList.copyOf(
-                singletonList(MatrixPrinterRegistry.getInstance().getDefaultImplementation()));
+        this.outputPrinters = ImmutableSet.copyOf(
+                Collections.singleton(MatrixPrinterRegistry.getInstance().getDefaultImplementation()));
         this.outputMethod = OutputToStdoutPrinter.getInstance();
         this.numThreads = Runtime.getRuntime().availableProcessors();
     }
@@ -161,18 +157,11 @@ public final class ChecksimsConfig {
      * @param newOutputPrinters List of output strategies to use. Cannot be empty.
      * @return This configuration
      */
-    public ChecksimsConfig setOutputPrinters(List<MatrixPrinter> newOutputPrinters) {
+    public ChecksimsConfig setOutputPrinters(Set<MatrixPrinter> newOutputPrinters) {
         checkNotNull(newOutputPrinters);
         checkArgument(!newOutputPrinters.isEmpty(), "Must provide at least one valid output printer!");
 
-        // Ensure all printers are unique
-        // Can't use a set, we don't require output strategies to implement equals() or hashCode() in sane ways
-        Set<String> names = newOutputPrinters.stream().map(MatrixPrinter::getName).collect(Collectors.toSet());
-        if(names.size() != newOutputPrinters.size()) {
-            throw new IllegalArgumentException("Output printers must be unique!");
-        }
-
-        outputPrinters = ImmutableList.copyOf(newOutputPrinters);
+        outputPrinters = ImmutableSet.copyOf(newOutputPrinters);
 
         return this;
     }
@@ -240,7 +229,7 @@ public final class ChecksimsConfig {
     /**
      * @return List of output methods requested
      */
-    public ImmutableList<MatrixPrinter> getOutputPrinters() {
+    public ImmutableSet<MatrixPrinter> getOutputPrinters() {
         return outputPrinters;
     }
 

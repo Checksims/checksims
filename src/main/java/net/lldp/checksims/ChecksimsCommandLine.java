@@ -318,7 +318,7 @@ public final class ChecksimsCommandLine {
             }
 
             // Convert to MatrixPrinters
-            List<MatrixPrinter> printers = new ArrayList<>();
+            Set<MatrixPrinter> printers = new HashSet<>();
             for(String name : deduplicatedStrategies) {
                 printers.add(MatrixPrinterRegistry.getInstance().getImplementationInstance(name));
             }

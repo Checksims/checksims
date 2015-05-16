@@ -21,6 +21,7 @@
 
 package net.lldp.checksims;
 
+import com.google.common.collect.Iterables;
 import net.lldp.checksims.algorithm.AlgorithmRegistry;
 import net.lldp.checksims.algorithm.preprocessor.SubmissionPreprocessor;
 import net.lldp.checksims.algorithm.similaritymatrix.output.MatrixPrinter;
@@ -380,7 +381,7 @@ public class ChecksimsCommandLineTest {
         ChecksimsConfig config = parseToConfig(new String[] { "-o", "csv" });
 
         assertEquals(1, config.getOutputPrinters().size());
-        assertEquals("csv", config.getOutputPrinters().get(0).getName());
+        assertEquals("csv", Iterables.get(config.getOutputPrinters(), 0).getName());
     }
 
     @Test
@@ -388,7 +389,7 @@ public class ChecksimsCommandLineTest {
         ChecksimsConfig config = parseToConfig(new String[] { "-o", "html" });
 
         assertEquals(1, config.getOutputPrinters().size());
-        assertEquals("html", config.getOutputPrinters().get(0).getName());
+        assertEquals("html", Iterables.get(config.getOutputPrinters(), 0).getName());
     }
 
 
@@ -397,7 +398,7 @@ public class ChecksimsCommandLineTest {
         ChecksimsConfig config = parseToConfig(new String[] { "-o", "threshold" });
 
         assertEquals(1, config.getOutputPrinters().size());
-        assertEquals("threshold", config.getOutputPrinters().get(0).getName());
+        assertEquals("threshold", Iterables.get(config.getOutputPrinters(), 0).getName());
     }
 
     @Test
@@ -405,7 +406,7 @@ public class ChecksimsCommandLineTest {
         ChecksimsConfig config = parseToConfig(new String[] { "-o", "threshold,threshold" });
 
         assertEquals(1, config.getOutputPrinters().size());
-        assertEquals("threshold", config.getOutputPrinters().get(0).getName());
+        assertEquals("threshold", Iterables.get(config.getOutputPrinters(), 0).getName());
     }
 
     @Test
@@ -434,7 +435,7 @@ public class ChecksimsCommandLineTest {
         ChecksimsConfig config = parseToConfig(new String[] { "-o", "HTML" });
 
         assertEquals(1, config.getOutputPrinters().size());
-        assertEquals("html", config.getOutputPrinters().get(0).getName());
+        assertEquals("html", Iterables.get(config.getOutputPrinters(), 0).getName());
     }
 
     @Test
@@ -442,7 +443,7 @@ public class ChecksimsCommandLineTest {
         ChecksimsConfig config = parseToConfig(new String[] { "--output", "threshold" });
 
         assertEquals(1, config.getOutputPrinters().size());
-        assertEquals("threshold", config.getOutputPrinters().get(0).getName());
+        assertEquals("threshold", Iterables.get(config.getOutputPrinters(), 0).getName());
     }
 
     @Test
@@ -450,7 +451,7 @@ public class ChecksimsCommandLineTest {
         ChecksimsConfig config = parseToConfig(new String[] {});
 
         assertEquals(1, config.getOutputPrinters().size());
-        assertEquals(MatrixPrinterRegistry.getInstance().getDefaultImplementationName(), config.getOutputPrinters().get(0).getName());
+        assertEquals(MatrixPrinterRegistry.getInstance().getDefaultImplementationName(), Iterables.get(config.getOutputPrinters(), 0).getName());
     }
 
     @Test(expected = ChecksimsException.class)
