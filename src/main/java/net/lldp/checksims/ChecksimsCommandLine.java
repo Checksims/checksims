@@ -347,7 +347,7 @@ public final class ChecksimsCommandLine {
         checkNotNull(cli);
         checkNotNull(baseConfig);
 
-        ChecksimsConfig toReturn = baseConfig;
+        ChecksimsConfig toReturn = new ChecksimsConfig(baseConfig);
 
         // Get glob match pattern
         // Default to *

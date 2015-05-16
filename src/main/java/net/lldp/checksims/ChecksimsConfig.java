@@ -47,6 +47,8 @@ import static java.util.Collections.singletonList;
 
 /**
  * Per-run configuration of Checksims.
+ *
+ * TODO: add a setImmutable method (or an immutable wrapper?) so ChecksimsRunner cannot alter a running config
  */
 public final class ChecksimsConfig {
     private SimilarityDetector algorithm;
@@ -58,24 +60,6 @@ public final class ChecksimsConfig {
     private ImmutableList<MatrixPrinter> outputPrinters;
     private OutputPrinter outputMethod;
     private int numThreads;
-
-    private ChecksimsConfig(SimilarityDetector algorithm, TokenType tokenization,
-                            List<SubmissionPreprocessor> preprocessors, Set<Submission> submissions,
-                            Set<Submission> archiveSubmissions, CommonCodeHandler commonCodeHandler,
-                            List<MatrixPrinter> outputPrinters, OutputPrinter outputMethod, int numThreads) {
-        this.algorithm = algorithm;
-        this.tokenization = tokenization;
-        this.commonCodeHandler = commonCodeHandler;
-
-        this.preprocessors = ImmutableList.copyOf(preprocessors);
-
-        this.submissions = ImmutableSet.copyOf(submissions);
-        this.archiveSubmissions = ImmutableSet.copyOf(archiveSubmissions);
-
-        this.outputPrinters = ImmutableList.copyOf(outputPrinters);
-        this.outputMethod = outputMethod;
-        this.numThreads = numThreads;
-    }
 
     /**
      * Base constructor, returns default config.
@@ -93,40 +77,50 @@ public final class ChecksimsConfig {
         this.numThreads = Runtime.getRuntime().availableProcessors();
     }
 
-    private ChecksimsConfig getCopy() {
-        return new ChecksimsConfig(algorithm, tokenization, preprocessors, submissions, archiveSubmissions,
-                commonCodeHandler, outputPrinters, outputMethod, numThreads);
+    /**
+     * Copy constructor
+     *
+     * @param old Config to copy
+     */
+    public ChecksimsConfig(ChecksimsConfig old) {
+        this.algorithm = old.getAlgorithm();
+        this.tokenization = old.getTokenization();
+        this.submissions = old.getSubmissions();
+        this.archiveSubmissions = old.getArchiveSubmissions();
+        this.preprocessors = old.getPreprocessors();
+        this.commonCodeHandler = old.getCommonCodeHandler();
+        this.outputPrinters = old.getOutputPrinters();
+        this.outputMethod = old.getOutputMethod();
+        this.numThreads = old.getNumThreads();
     }
 
     /**
      * @param newAlgorithm New similarity detection algorithm to use
-     * @return Copy of configuration with new detection algorithm
+     * @return This configuration
      */
     public ChecksimsConfig setAlgorithm(SimilarityDetector newAlgorithm) {
         checkNotNull(newAlgorithm);
 
-        ChecksimsConfig newConfig = getCopy();
-        newConfig.algorithm = newAlgorithm;
+        algorithm = newAlgorithm;
 
-        return newConfig;
+        return this;
     }
 
     /**
      * @param newTokenization New tokenization algorithm to use
-     * @return Copy of configuration with new tokenization algorithm
+     * @return This configuration
      */
     public ChecksimsConfig setTokenization(TokenType newTokenization) {
         checkNotNull(newTokenization);
 
-        ChecksimsConfig newConfig = getCopy();
-        newConfig.tokenization = newTokenization;
+        tokenization = newTokenization;
 
-        return newConfig;
+        return this;
     }
 
     /**
      * @param newPreprocessors New list of preprocessors to apply. Can be empty.
-     * @return Copy of configuration with new preprocessor list
+     * @return This configuration
      */
     public ChecksimsConfig setPreprocessors(List<SubmissionPreprocessor> newPreprocessors) {
         checkNotNull(newPreprocessors);
@@ -138,55 +132,51 @@ public final class ChecksimsConfig {
             throw new IllegalArgumentException("Preprocessors must be unique!");
         }
 
-        ChecksimsConfig newConfig = getCopy();
-        newConfig.preprocessors = ImmutableList.copyOf(newPreprocessors);
+        preprocessors = ImmutableList.copyOf(newPreprocessors);
 
-        return newConfig;
+        return this;
     }
 
     /**
      * @param newSubmissions New list of submissions to work on. Must contain at least 1 submission.
-     * @return Copy of configuration with new submissions set
+     * @return This configuration
      */
     public ChecksimsConfig setSubmissions(Set<Submission> newSubmissions) {
         checkNotNull(newSubmissions);
         checkArgument(!newSubmissions.isEmpty(), "Must provide at least one valid submission to run on!");
 
-        ChecksimsConfig newConfig = getCopy();
-        newConfig.submissions = ImmutableSet.copyOf(newSubmissions);
+        submissions = ImmutableSet.copyOf(newSubmissions);
 
-        return newConfig;
+        return this;
     }
 
     /**
      * @param newArchiveSubmissions New list of archive submissions to use. May be empty.
-     * @return Copy of configuration with new archive submissions set
+     * @return This configuration
      */
     public ChecksimsConfig setArchiveSubmissions(Set<Submission> newArchiveSubmissions) {
         checkNotNull(newArchiveSubmissions);
 
-        ChecksimsConfig newConfig = getCopy();
-        newConfig.archiveSubmissions = ImmutableSet.copyOf(newArchiveSubmissions);
+        this.archiveSubmissions = ImmutableSet.copyOf(archiveSubmissions);
 
-        return newConfig;
+        return this;
     }
 
     /**
      * @param newHandler Handler for common code
-     * @return Copy of configuration with new common code handler
+     * @return This configuration
      */
     public ChecksimsConfig setCommonCodeHandler(CommonCodeHandler newHandler) {
         checkNotNull(newHandler);
 
-        ChecksimsConfig newConfig = getCopy();
-        newConfig.commonCodeHandler = newHandler;
+        commonCodeHandler = newHandler;
 
-        return newConfig;
+        return this;
     }
 
     /**
      * @param newOutputPrinters List of output strategies to use. Cannot be empty.
-     * @return Copy of configuration with new list of output strategies
+     * @return This configuration
      */
     public ChecksimsConfig setOutputPrinters(List<MatrixPrinter> newOutputPrinters) {
         checkNotNull(newOutputPrinters);
@@ -199,23 +189,21 @@ public final class ChecksimsConfig {
             throw new IllegalArgumentException("Output printers must be unique!");
         }
 
-        ChecksimsConfig newConfig = getCopy();
-        newConfig.outputPrinters = ImmutableList.copyOf(newOutputPrinters);
+        outputPrinters = ImmutableList.copyOf(newOutputPrinters);
 
-        return newConfig;
+        return this;
     }
 
     /**
      * @param newOutputMethod How Checksims should present its output
-     * @return Copy of configuration with new output method
+     * @return This configuration
      */
     public ChecksimsConfig setOutputMethod(OutputPrinter newOutputMethod) {
         checkNotNull(newOutputMethod);
 
-        ChecksimsConfig newConfig = getCopy();
-        newConfig.outputMethod = newOutputMethod;
+        outputMethod = newOutputMethod;
 
-        return newConfig;
+        return this;
     }
 
     /**
@@ -226,10 +214,9 @@ public final class ChecksimsConfig {
         checkArgument(newNumThreads > 0, "Attempted to set number of threads to " + newNumThreads
                 + " - must be positive integer!");
 
-        ChecksimsConfig newConfig = getCopy();
-        newConfig.numThreads = newNumThreads;
+        numThreads = newNumThreads;
 
-        return newConfig;
+        return this;
     }
 
     /**
@@ -298,5 +285,29 @@ public final class ChecksimsConfig {
     @Override
     public String toString() {
         return "ChecksimConfig with algorithm " + algorithm.getName();
+    }
+
+    @Override
+    public int hashCode() {
+        return submissions.hashCode() ^ archiveSubmissions.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if(!(other instanceof ChecksimsConfig)) {
+            return false;
+        }
+
+        ChecksimsConfig otherConfig = (ChecksimsConfig)other;
+
+        return this.algorithm.equals(otherConfig.getAlgorithm())
+                && this.archiveSubmissions.equals(otherConfig.getArchiveSubmissions())
+                && this.commonCodeHandler.equals(otherConfig.getCommonCodeHandler())
+                && this.numThreads == otherConfig.getNumThreads()
+                && this.outputPrinters.equals(otherConfig.getOutputPrinters())
+                && this.outputMethod.equals(otherConfig.getOutputMethod())
+                && this.preprocessors.equals(otherConfig.getPreprocessors())
+                && this.submissions.equals(otherConfig.getSubmissions())
+                && this.tokenization.equals(otherConfig.getTokenization());
     }
 }

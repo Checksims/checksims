@@ -31,6 +31,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+
 /**
  * Tests of validity checking on ChecksimsConfig
  *
@@ -150,5 +153,35 @@ public class ChecksimsConfigTest {
 
         ChecksimsConfig config = new ChecksimsConfig();
         config.setNumThreads(0);
+    }
+
+    @Test
+    public void TestBaseConfigEquality() {
+        assertEquals(new ChecksimsConfig(), new ChecksimsConfig());
+    }
+
+    @Test
+    public void TestBasicInequality() {
+        ChecksimsConfig config = new ChecksimsConfig();
+        ChecksimsConfig config2 = new ChecksimsConfig().setNumThreads(config.getNumThreads() + 1);
+
+        assertNotEquals(config, config2);
+    }
+
+    @Test
+    public void TestEqualityCopyConstructor() {
+        ChecksimsConfig config = new ChecksimsConfig();
+        ChecksimsConfig config2 = new ChecksimsConfig(config);
+
+        assertEquals(config, config2);
+    }
+
+    @Test
+    public void TestCopyConstructorCopies() {
+        ChecksimsConfig config = new ChecksimsConfig();
+        ChecksimsConfig config2 = new ChecksimsConfig(config);
+        config2.setNumThreads(config.getNumThreads() + 1);
+
+        assertNotEquals(config, config2);
     }
 }
