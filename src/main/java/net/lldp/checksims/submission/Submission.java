@@ -153,6 +153,8 @@ public interface Submission extends Comparable<Submission> {
     /**
      * Recursively find all files matching in a directory.
      *
+     * TODO consider refactoring into a static utility class and package-protecting?
+     *
      * @param directory Directory to search in
      * @param glob Match pattern used to identify files to include
      * @return List of all matching files in this directory and subdirectories
@@ -188,6 +190,8 @@ public interface Submission extends Comparable<Submission> {
 
     /**
      * Identify all files matching in a single directory.
+     *
+     * TODO refactor this into a static utility class and package-protect, should not be public
      *
      * @param directory Directory to find files within
      * @param glob Match pattern used to identify files to include
@@ -233,7 +237,8 @@ public interface Submission extends Comparable<Submission> {
         Logger logs = LoggerFactory.getLogger(Submission.class);
 
         if(files.size() == 0) {
-            throw new NoMatchingFilesException("No matching files found, cannot create submission!");
+            throw new NoMatchingFilesException("No matching files found, cannot create submission named \"" + name
+                    + "\"");
         }
 
         // To ensure submission generation is deterministic, sort files by name, and read them in that order

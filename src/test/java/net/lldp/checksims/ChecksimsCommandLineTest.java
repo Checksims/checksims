@@ -29,8 +29,10 @@ import net.lldp.checksims.token.TokenType;
 import net.lldp.checksims.util.output.OutputAsFilePrinter;
 import net.lldp.checksims.util.output.OutputToStdoutPrinter;
 import net.lldp.checksims.util.threading.ParallelAlgorithm;
+import org.apache.commons.cli.AlreadySelectedException;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.MissingArgumentException;
+import org.apache.commons.cli.UnrecognizedOptionException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -47,13 +49,24 @@ public class ChecksimsCommandLineTest {
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
 
+    // TODO: Could make this take varargs String, removing the need to do new String[]{} when calling it
     public ChecksimsConfig parseToConfig(String[] args) throws Exception {
-        CommandLine cli = ChecksimsCommandLine.parseOpts(args);
+        CommandLine cli = ChecksimsCommandLine.parseOpts(args, false);
         ChecksimsConfig config = ChecksimsCommandLine.parseBaseFlags(cli);
 
         assertNotNull(config);
 
         return config;
+    }
+
+    @Test(expected = AlreadySelectedException.class)
+    public void TestVerboseAndVeryVerboseConflict() throws Exception {
+        parseToConfig(new String[] { "-v", "-vv" });
+    }
+
+    @Test(expected = UnrecognizedOptionException.class)
+    public void TestInvalidOptionThrowsException() throws Exception {
+        parseToConfig(new String[] { "-doesnotexist" });
     }
 
     @Test
@@ -95,7 +108,7 @@ public class ChecksimsCommandLineTest {
     public void TestParseAlgorithmBadName() throws Exception {
         String[] argsInvalid = new String[] { "-a", "no_such_algorithm" };
 
-        CommandLine cli = ChecksimsCommandLine.parseOpts(argsInvalid);
+        CommandLine cli = ChecksimsCommandLine.parseOpts(argsInvalid, false);
         ChecksimsCommandLine.parseBaseFlags(cli);
     }
 
@@ -152,7 +165,7 @@ public class ChecksimsCommandLineTest {
     public void TestParseInvalidTokenization() throws Exception {
         String[] invalid = new String[] { "-t", "no_such_token" };
 
-        CommandLine cli = ChecksimsCommandLine.parseOpts(invalid);
+        CommandLine cli = ChecksimsCommandLine.parseOpts(invalid, false);
         ChecksimsCommandLine.parseBaseFlags(cli);
     }
 
@@ -252,7 +265,7 @@ public class ChecksimsCommandLineTest {
 
         String[] invalidNumber = new String[] { "-j", "notanumber" };
 
-        CommandLine cli = ChecksimsCommandLine.parseOpts(invalidNumber);
+        CommandLine cli = ChecksimsCommandLine.parseOpts(invalidNumber, false);
         ChecksimsCommandLine.parseBaseFlags(cli);
     }
 
@@ -262,7 +275,7 @@ public class ChecksimsCommandLineTest {
 
         String[] invalidNumber = new String[] { "-j", "17.6" };
 
-        CommandLine cli = ChecksimsCommandLine.parseOpts(invalidNumber);
+        CommandLine cli = ChecksimsCommandLine.parseOpts(invalidNumber, false);
         ChecksimsCommandLine.parseBaseFlags(cli);
     }
 
@@ -270,7 +283,7 @@ public class ChecksimsCommandLineTest {
     public void TestParseNumThreadsZero() throws Exception {
         String[] invalidNumber = new String[] { "-j", "0" };
 
-        CommandLine cli = ChecksimsCommandLine.parseOpts(invalidNumber);
+        CommandLine cli = ChecksimsCommandLine.parseOpts(invalidNumber, false);
         ChecksimsCommandLine.parseBaseFlags(cli);
     }
 
@@ -278,7 +291,7 @@ public class ChecksimsCommandLineTest {
     public void TestParseNumThreadsNegative() throws Exception {
         String[] invalidNumber = new String[] { "-j", "-2" };
 
-        CommandLine cli = ChecksimsCommandLine.parseOpts(invalidNumber);
+        CommandLine cli = ChecksimsCommandLine.parseOpts(invalidNumber, false);
         ChecksimsCommandLine.parseBaseFlags(cli);
     }
 
@@ -342,7 +355,7 @@ public class ChecksimsCommandLineTest {
     public void TestParseInvalidPreprocessor() throws Exception {
         String[] invalid = new String[] { "-p", "does_not_exist" };
 
-        CommandLine cli = ChecksimsCommandLine.parseOpts(invalid);
+        CommandLine cli = ChecksimsCommandLine.parseOpts(invalid, false);
         ChecksimsCommandLine.parseBaseFlags(cli);
     }
 
@@ -350,7 +363,7 @@ public class ChecksimsCommandLineTest {
     public void TestParseOneInvalidPreprocessorOutOfMultiple() throws Exception {
         String[] invalid = new String[] { "-p", "lowercase,does_not_exist" };
 
-        CommandLine cli = ChecksimsCommandLine.parseOpts(invalid);
+        CommandLine cli = ChecksimsCommandLine.parseOpts(invalid, false);
         ChecksimsCommandLine.parseBaseFlags(cli);
     }
 
@@ -358,7 +371,7 @@ public class ChecksimsCommandLineTest {
     public void TestParsePreprocessorsMissingArg() throws Exception {
         String[] invalid = new String[] { "-p" };
 
-        CommandLine cli = ChecksimsCommandLine.parseOpts(invalid);
+        CommandLine cli = ChecksimsCommandLine.parseOpts(invalid, false);
         ChecksimsCommandLine.parseBaseFlags(cli);
     }
 
@@ -444,7 +457,7 @@ public class ChecksimsCommandLineTest {
     public void TestInvalidOutputStrategyThrowsException() throws Exception {
         String[] invalid = new String[] { "-o", "does_not_exist" };
 
-        CommandLine cli = ChecksimsCommandLine.parseOpts(invalid);
+        CommandLine cli = ChecksimsCommandLine.parseOpts(invalid, false);
         ChecksimsCommandLine.parseBaseFlags(cli);
     }
 
@@ -452,7 +465,7 @@ public class ChecksimsCommandLineTest {
     public void TestOneInvalidOutputStrategyAmongSeveralThrowsException() throws Exception {
         String[] invalid = new String[] { "-o", "csv,does_not_exist" };
 
-        CommandLine cli = ChecksimsCommandLine.parseOpts(invalid);
+        CommandLine cli = ChecksimsCommandLine.parseOpts(invalid, false);
         ChecksimsCommandLine.parseBaseFlags(cli);
     }
 
@@ -460,6 +473,6 @@ public class ChecksimsCommandLineTest {
     public void TestOutputStrategyMissingArg() throws Exception {
         String[] invalid = new String[] { "-o" };
 
-        ChecksimsCommandLine.parseOpts(invalid);
+        ChecksimsCommandLine.parseOpts(invalid, false);
     }
 }

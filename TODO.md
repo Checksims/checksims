@@ -18,6 +18,7 @@ Code Cleanup
 - Exception rewrite. Convert many RuntimeExceptions to checked exceptions
 - Add ability to blacklist certain implementations in a registry
 - Change Common Code Removal to a preprocessor
+- Clean up CLI argument parsing exception handling - print user-readable errors
 
 Minor Improvements
 ------------------
@@ -27,6 +28,7 @@ Minor Improvements
 - Leading and Trailing Whitespace Trimming Preprocessor
 - Further optimization of Smith-Waterman Algorithm
 - HTML output should have a rotated (45 degree) X axis, to reduce size
+- Output to JSON, containing all AlgorithmResults used to build similarity matrix
 
 Major new features
 ------------------

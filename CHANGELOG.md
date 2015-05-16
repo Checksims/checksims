@@ -1,8 +1,13 @@
 Changelog
 =========
 
+v1.2.0-DEV
+----------
+- Breaking Change: CLI Argument Parsing changed
+- Enhancement: Support for more than one Archive Directory
+
 v1.2.0
------------------------
+------
 - Feature: Archive Directory support
 - Enhancement: New, faster version of Smith-Waterman algorithm
 - Enhancement: Major performance improvements

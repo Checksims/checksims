@@ -60,60 +60,62 @@ wrapping shell script to reduce the amount of typing required for this basic
 invocation.
 
 
+\subsubsection{Submissions}
+A \textit{submission} is the basic unit of comparison in \textit{Checksims}. A
+submission is composed of the work submitted by a single student or group for
+the assignment being checked. \textit{Checksims} assumes submissions are
+organized into directories, one group's work per directory. By default, all
+files within this directory (but not subdirectories) will be concatenated,
+tokenized, and compared by \textit{Checksims}. Submissions are named for their
+root directory --- a student submission contained in a folder named ``A''
+would also be named ``A'', for example.
+
+A \textit{glob pattern} can be specified to change which files are included.
+This is a shell-style match pattern, created using the same wildcard characters
+accepted by a shell. fFr example, providing a \texttt{*} does match every file
+in a submission, while \texttt{*.c} includes all C files. To ensure that these
+are not parsed by your shell, it is recommended to escape this pattern
+(typically using double quotes --- \texttt{\textquotedbl*.c\textquotedbl} for
+example).
+
+A flag can also be set to search for files within subdirectories of
+submissions. By default, files in subdirectories are ignored.
+
+
+\subsubsection{Submission Directories}
+A \textit{submission directory} is a single directory containing a number of
+subdirectories, each assumed to be a single submission. \textit{Checksims}
+requires one or more of these directories to be passed as arguments, and
+compares all the submissions contained within them. Any files not contained
+within a subdirectory will be ignored --- all submissions must be a
+subdirectory of a submission directory. Submissions, as mentioned previously,
+may themselves contain subdirectories, which are considered a part of the same
+submission, not a separate submission.
+
+
+\subsubsection{Archive Directories}
+An \textit{archive directory} is a directory containing submissions which will
+not be compared to each other. They will still be compared to any submissions
+not found in archive directories. Archive directories are otherwise identical
+to submission directories.
+
+Archive directories are used to compare against submissions from a previous
+offering of the course. The submissions from the previous offering(s) of the
+course are included as archive directories, reducing the number of comparisons
+required and allowing \textit{Checksims} to run faster. 
+
 \subsubsection{Arguments}
-\textit{Checksims} has two mandatory arguments: a single \textit{glob} match
-pattern, and at least one directory to scan for submissions.
-
-The \textit{glob} match pattern is a shell-style match pattern used to
-identify files to include in submissions. Wildcard characters accepted by a
-shell are permitted; for example, providing a \texttt{*} does match every file
-in a submission, while \texttt{*.c} includes all C files. To ensure that
-these are not parsed by your shell, it is recommended to escape this pattern
-(typically using double quotes --- \texttt{\textquotedbl*.c\textquotedbl}
-for example).
-
-% TODO explain archive directories in here
-
-After the glob match pattern, one or more directories to search for submissions
-must be provided. \textit{Checksims} assumes each subdirectory of these search
-directories is a submission. It identifies any files matching the given
-glob pattern within a submission directory, append all matching files together,
-and tokenize the collection. By default, it is not recursive and will only
-identify files in the submission directory, but not in any subdirectories. An
-argument is provided to enable recursion through subdirectories to generate
-submissions (see section \ref{sec:optionalargs} for details). File names are
-discarded during this process, but the contents of all matching files will be
-present. Each submission is named for its \textit{root} directory (that is, the
-subdirectory of a submissions directory); if a
-directory containing two subdirectories named ``A'' and ``B'' is provided as a
-search directory for submissions, two submissions named ``A'' and ``B'' will
-be created.
-
-After creation, any empty submissions (no files found matching given pattern,
-or only empty files found) are removed prior to running the detection
-algorithm.
-
-At present, there is no way of differentiating submissions beyond placing them
-within separate directories.
-
-
-\paragraph{Optional Arguments}
-\label{sec:optionalargs}
-Before the glob matcher, you may place a number of arguments to control the
-operation of \textit{Checksims}. These are detailed below:
+The following arguments can be specified when running \textit{Checksims}. The
+\texttt{-s} argument is mandatory and must be provided. All other arguments are
+optional.
 
 \begin{itemize}
 \item \texttt{-a}, \texttt{-{}-algorithm}: Specify algorithm to use for
 	similarity detection. Available options are \texttt{linecompare} and
 	\texttt{smithwaterman} at present, and can be listed with the \texttt{-h}
 	option. If no algorithm is given, the default is used.
-\item \texttt{-{}-archive}: Specify an \textit{archive directory}. Submissions
-	in the archive directory will be compared to submissions in the given
-	submission directories, but not to each other. This is used to allow
-	comparison against assignments from previous offerings of a course ---
-	assignments from previous offerings are treated as archive submissions, and
-	will not be compared to each other, reducing the amount of computation
-	required.
+\item \texttt{-archive, \texttt{-{}-archivedir}}: Specify one or more archive
+	directories to include in comparisons.
 \item \texttt{-c}, \texttt{-{}-common}: Perform common code removal. Specify a
 	directory containing common code (files within this directory will be
 	identified using the same glob matcher as normal submissions).
@@ -122,6 +124,8 @@ operation of \textit{Checksims}. These are detailed below:
 	appended to the given filename as an extension. If more than one output
 	strategy is given, more than one output file will be produced, each with
 	the given filename but with differing extensions.
+\item \texttt{-g}, \texttt{-{}-glob}: Match pattern used to determine which
+	files to include in submissions. Defaults to \texttt{*} --- all files.
 \item \texttt{-h}, \texttt{-{}-help}: Print usage information and available
 	algorithms, preprocessors, and output strategies.
 \item \texttt{-j}, \texttt{-{}-jobs}: Specify number of threads to use.
@@ -138,6 +142,8 @@ operation of \textit{Checksims}. These are detailed below:
 	provided, no preprocessors are applied.
 \item \texttt{-r}, \texttt{-{}-recursive}: Recursively traverse subdirectories
 	when generating submissions.
+\item \texttt{-s}, \texttt{-{}-submissiondir}: Add one or more directories
+	containing student submissions to be compared. Mandatory argument.
 \item \texttt{-t}, \texttt{-{}-token}: Specify tokenization to use. Available
 	options are \texttt{line}, \texttt{whitespace}, and \texttt{character} at
 	present, and can be listed with the \texttt{-h} option. If the \texttt{-t}
@@ -184,7 +190,7 @@ A typical command line invocation of \textit{Checksims} is shown below.
 \begin{figure}[H]
 \centering
 \texttt{java -d64 -jar PATH/TO/CHECKSIMS\_JAR.jar -a smithwaterman -o html,csv
--v -r -f ./out \textquotedbl*.c\textquotedbl\ \ SUBMISSION\_DIR\_ONE
+-v -r -f ./out -g \textquotedbl*.c\textquotedbl\ \ -s\ \ SUBMISSION\_DIR\_ONE
 \ \ SUBMISSION\_DIR\_TWO}
 \end{figure}
 
@@ -194,12 +200,12 @@ This instructs \textit{Checksims} to do the following:
 \item Use an algorithm named \texttt{smithwaterman} to perform similarity
 	detection (\texttt{-a}).
 \item Generate output using two strategies, \texttt{html} and \texttt{csv}
-	(\texttt{-o}), and save this output in two files names \texttt{out.html}
+	(\texttt{-o}), and save this output in two files named \texttt{out.html}
 	and \texttt{out.csv} (\texttt{-f}).
 \item Perform similarity detection on all files with
-	extension~\texttt{\textquotedbl.c\textquotedbl}~in
-	directories~\texttt{SUBMISSION\_DIR\_ONE} and
-	\texttt{SUBMISSION\_DIR\_TWO}.
+	extension~\texttt{\textquotedbl.c\textquotedbl}~(\texttt{-g}) in
+	directories \texttt{SUBMISSION\_DIR\_ONE} and
+	\texttt{SUBMISSION\_DIR\_TWO} (\texttt{-s}).
 \end{itemize}
 
 
