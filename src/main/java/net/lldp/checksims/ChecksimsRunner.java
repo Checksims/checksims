@@ -80,7 +80,7 @@ public final class ChecksimsRunner {
     }
 
     /**
-     * Get current version
+     * Get current version.
      *
      * TODO: Consider making public
      * TODO: Consider throwing ChecksimsException if we can't get the version

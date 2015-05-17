@@ -148,6 +148,8 @@ public final class ChecksimsCommandLine {
 
         Option help = new Option("h", "help", false, "show usage information");
 
+        Option empty = new Option("e", "empty", false, "retain empty submissions");
+
         Option common = Option.builder("c")
                 .longOpt("common")
                 .hasArg()
@@ -189,6 +191,7 @@ public final class ChecksimsCommandLine {
         opts.addOption(glob);
         opts.addOptionGroup(verbosity);
         opts.addOption(help);
+        opts.addOption(empty);
         opts.addOption(common);
         opts.addOption(recursive);
         opts.addOption(version);
@@ -356,6 +359,9 @@ public final class ChecksimsCommandLine {
         // Check if we are recursively building
         boolean recursive = cli.hasOption("r");
 
+        // Check if we are retaining empty submissions
+        boolean retainEmpty = cli.hasOption("e");
+
         // Get the tokenizer specified by base config
         Tokenizer tokenizer = Tokenizer.getTokenizer(baseConfig.getTokenization());
 
@@ -378,7 +384,7 @@ public final class ChecksimsCommandLine {
         }
 
         // Generate submissions
-        Set<Submission> submissions = getSubmissions(submissionDirs, globPattern, tokenizer, recursive);
+        Set<Submission> submissions = getSubmissions(submissionDirs, globPattern, tokenizer, recursive, retainEmpty);
 
         logs.debug("Generated " + submissions.size() + " submissions to process.");
 
@@ -439,7 +445,8 @@ public final class ChecksimsCommandLine {
             }
 
             // Get set of archive submissions
-            Set<Submission> archiveSubmissions = getSubmissions(archiveDirs, globPattern, tokenizer, recursive);
+            Set<Submission> archiveSubmissions = getSubmissions(archiveDirs, globPattern, tokenizer, recursive,
+                    retainEmpty);
 
             logs.debug("Generated " + archiveSubmissions.size() + " archive submissions to process");
 
@@ -465,8 +472,8 @@ public final class ChecksimsCommandLine {
      * @return Collection of submissions which will be used to run Checksims
      * @throws IOException Thrown on issue reading files or traversing directories to build submissions
      */
-    static Set<Submission> getSubmissions(Set<File> submissionDirs, String glob, Tokenizer tokenizer, boolean recursive)
-            throws IOException, ChecksimsException {
+    static Set<Submission> getSubmissions(Set<File> submissionDirs, String glob, Tokenizer tokenizer, boolean recursive,
+                                          boolean retainEmpty) throws IOException, ChecksimsException {
         checkNotNull(submissionDirs);
         checkArgument(!submissionDirs.isEmpty(), "Must provide at least one submission directory!");
         checkNotNull(glob);
@@ -478,6 +485,21 @@ public final class ChecksimsCommandLine {
             logs.debug("Adding directory " + dir.getName());
 
             submissions.addAll(Submission.submissionListFromDir(dir, glob, tokenizer, recursive));
+        }
+
+        // If not retaining empty submissions, filter the empty ones out
+        if(!retainEmpty) {
+            Set<Submission> submissionsNoEmpty = new HashSet<>();
+
+            for(Submission s : submissions) {
+                if(s.getContentAsString().isEmpty()) {
+                    logs.warn("Discarding empty submission " + s.getName());
+                } else {
+                    submissionsNoEmpty.add(s);
+                }
+            }
+
+            return submissionsNoEmpty;
         }
 
         return submissions;
