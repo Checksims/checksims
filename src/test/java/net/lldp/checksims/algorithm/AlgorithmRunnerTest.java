@@ -21,6 +21,7 @@
 
 package net.lldp.checksims.algorithm;
 
+import net.lldp.checksims.ChecksimsException;
 import net.lldp.checksims.submission.Submission;
 import net.lldp.checksims.testutil.AlgorithmUtils;
 import net.lldp.checksims.token.TokenType;
@@ -78,28 +79,28 @@ public class AlgorithmRunnerTest {
     }
 
     @Test
-    public void TestRunAlgorithmNull() {
+    public void TestRunAlgorithmNull() throws ChecksimsException {
         expectedEx.expect(NullPointerException.class);
 
         AlgorithmRunner.runAlgorithm(null, detectNothing);
     }
 
     @Test
-    public void TestRunAlgorithmNullAlgorithm() {
+    public void TestRunAlgorithmNullAlgorithm() throws ChecksimsException {
         expectedEx.expect(NullPointerException.class);
 
         AlgorithmRunner.runAlgorithm(singleton(Pair.of(a, b)), null);
     }
 
     @Test
-    public void TestRunAlgorithmEmptySet() {
+    public void TestRunAlgorithmEmptySet() throws ChecksimsException {
         expectedEx.expect(IllegalArgumentException.class);
 
         AlgorithmRunner.runAlgorithm(new HashSet<>(), null);
     }
 
     @Test
-    public void TestRunAlgorithmSinglePair() {
+    public void TestRunAlgorithmSinglePair() throws ChecksimsException {
         Set<Pair<Submission, Submission>> submissions = singleton(Pair.of(a, b));
         Collection<AlgorithmResults> results = AlgorithmRunner.runAlgorithm(submissions, detectNothing);
 
@@ -107,7 +108,7 @@ public class AlgorithmRunnerTest {
     }
 
     @Test
-    public void TestRunAlgorithmTwoPairs() {
+    public void TestRunAlgorithmTwoPairs() throws ChecksimsException {
         Set<Pair<Submission, Submission>> submissions = setFromElements(Pair.of(a, b), Pair.of(a, c));
         Collection<AlgorithmResults> results = AlgorithmRunner.runAlgorithm(submissions, detectNothing);
 
@@ -115,7 +116,7 @@ public class AlgorithmRunnerTest {
     }
 
     @Test
-    public void TestRunAlgorithmThreePairs() {
+    public void TestRunAlgorithmThreePairs() throws ChecksimsException {
         Set<Pair<Submission, Submission>> submissions = setFromElements(Pair.of(a, b), Pair.of(a, c), Pair.of(b, c));
         Collection<AlgorithmResults> results = AlgorithmRunner.runAlgorithm(submissions, detectNothing);
 
@@ -123,7 +124,7 @@ public class AlgorithmRunnerTest {
     }
 
     @Test
-    public void TestRunAlgorithmAllPossiblePairs() {
+    public void TestRunAlgorithmAllPossiblePairs() throws ChecksimsException {
         Set<Pair<Submission, Submission>> submissions = setFromElements(Pair.of(a, b), Pair.of(a, c), Pair.of(a, d), Pair.of(b, c), Pair.of(b, d), Pair.of(c, d));
         Collection<AlgorithmResults> results = AlgorithmRunner.runAlgorithm(submissions, detectNothing);
 

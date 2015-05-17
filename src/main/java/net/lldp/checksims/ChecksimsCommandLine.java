@@ -244,7 +244,11 @@ public final class ChecksimsCommandLine {
                 forEach((name) -> System.err.print(name + ", "));
         System.err.println();
 
-        System.err.println("\nChecksims Version " + ChecksimsRunner.getChecksimsVersion() + "\n\n");
+        try {
+            System.err.println("\nChecksims Version " + ChecksimsRunner.getChecksimsVersion() + "\n\n");
+        } catch(ChecksimsException e) {
+            System.err.println("Error obtaining version: " + e.getMessage());
+        }
 
         System.exit(0);
     }

@@ -21,6 +21,7 @@
 
 package net.lldp.checksims.algorithm;
 
+import net.lldp.checksims.ChecksimsException;
 import net.lldp.checksims.submission.Submission;
 import net.lldp.checksims.util.threading.ParallelAlgorithm;
 import org.apache.commons.lang3.tuple.Pair;
@@ -46,7 +47,7 @@ public final class AlgorithmRunner {
      * @return Collection of AlgorithmResults, one for each input pair
      */
     public static Set<AlgorithmResults> runAlgorithm(Set<Pair<Submission, Submission>> submissions,
-                                                     SimilarityDetector algorithm) {
+                                                     SimilarityDetector algorithm) throws ChecksimsException {
         checkNotNull(submissions);
         checkArgument(submissions.size() > 0, "Must provide at least one pair of submissions to run on!");
         checkNotNull(algorithm);
