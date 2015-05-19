@@ -21,6 +21,7 @@
 
 package net.lldp.checksims;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import net.lldp.checksims.algorithm.AlgorithmResults;
 import net.lldp.checksims.algorithm.AlgorithmRunner;
@@ -30,7 +31,6 @@ import net.lldp.checksims.algorithm.similaritymatrix.SimilarityMatrix;
 import net.lldp.checksims.algorithm.similaritymatrix.output.MatrixPrinter;
 import net.lldp.checksims.submission.Submission;
 import net.lldp.checksims.util.PairGenerator;
-import net.lldp.checksims.util.output.OutputPrinter;
 import net.lldp.checksims.util.threading.ParallelAlgorithm;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.IOUtils;
@@ -40,6 +40,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -58,9 +60,7 @@ public final class ChecksimsRunner {
      */
     public static void main(String[] args) {
         try {
-            ChecksimsConfig config = ChecksimsCommandLine.parseCLI(args);
-
-            runChecksims(config);
+            ChecksimsCommandLine.runCLI(args);
         } catch(ParseException e) {
             System.err.println(e.getMessage());
             System.exit(-1);
@@ -73,7 +73,7 @@ public final class ChecksimsRunner {
             e.printStackTrace();
             System.exit(-1);
         } catch(IOException e) {
-            System.err.println("Error bulding submissions!");
+            System.err.println("I/O Error!");
             System.err.println(e.getMessage());
             System.exit(-1);
         }
@@ -103,14 +103,11 @@ public final class ChecksimsRunner {
     /**
      * Main public entrypoint to Checksims. Runs similarity detection according to given configuration.
      *
-     * TODO: Consider returning result as a string... or perhaps a map(string->string)?
-     * It removes output logic from the backend, makes it a frontend concern, which I'd be more OK with.
-     * String to String map: Output Strategy Name -> Output of Strategy
-     *
      * @param config Configuration defining how Checksims will be run
+     * @return Map containing output of all output printers requested. Keys are name of output printer.
      * @throws ChecksimsException Thrown on error performing similarity detection
      */
-    public static void runChecksims(ChecksimsConfig config) throws ChecksimsException {
+    public static ImmutableMap<String, String> runChecksims(ChecksimsConfig config) throws ChecksimsException {
         checkNotNull(config);
 
         // Create a logger to log activity
@@ -158,12 +155,15 @@ public final class ChecksimsRunner {
         // All parallel jobs are done, shut down the parallel executor
         ParallelAlgorithm.shutdownExecutor();
 
+        Map<String, String> outputMap = new HashMap<>();
+
         // Output using all output printers
-        OutputPrinter printer = config.getOutputMethod();
         for(MatrixPrinter p : config.getOutputPrinters()) {
             logs.info("Generating " + p.getName() + " output");
 
-            printer.print(resultsMatrix, p);
+            outputMap.put(p.getName(), p.printMatrix(resultsMatrix));
         }
+
+        return ImmutableMap.copyOf(outputMap);
     }
 }

@@ -27,8 +27,6 @@ import net.lldp.checksims.algorithm.preprocessor.SubmissionPreprocessor;
 import net.lldp.checksims.algorithm.similaritymatrix.output.MatrixPrinter;
 import net.lldp.checksims.algorithm.similaritymatrix.output.MatrixPrinterRegistry;
 import net.lldp.checksims.token.TokenType;
-import net.lldp.checksims.util.output.OutputAsFilePrinter;
-import net.lldp.checksims.util.output.OutputToStdoutPrinter;
 import net.lldp.checksims.util.threading.ParallelAlgorithm;
 import org.apache.commons.cli.AlreadySelectedException;
 import org.apache.commons.cli.CommandLine;
@@ -117,7 +115,7 @@ public class ChecksimsCommandLineTest {
     public void TestParseAlgorithmWithNoName() throws Exception {
         String[] argsInvalid = new String[] { "-a" };
 
-        ChecksimsCommandLine.parseCLI(argsInvalid);
+        ChecksimsCommandLine.runCLI(argsInvalid);
     }
 
     @Test
@@ -174,48 +172,7 @@ public class ChecksimsCommandLineTest {
     public void TestParseTokenizationMissingArg() throws Exception {
         String[] invalid = new String[] { "-t" };
 
-        ChecksimsCommandLine.parseCLI(invalid);
-    }
-
-    @Test
-    public void TestParseOutputToFileOne() throws Exception {
-        ChecksimsConfig config = parseToConfig(new String[] { "-f", "filename" });
-
-        assertTrue(config.getOutputMethod() instanceof OutputAsFilePrinter);
-        OutputAsFilePrinter printer = (OutputAsFilePrinter)config.getOutputMethod();
-        assertEquals("filename", printer.getFile().getName());
-    }
-
-    @Test
-    public void TestParseOutputToFileTwo() throws Exception {
-        ChecksimsConfig config = parseToConfig(new String[] { "-f", "anotherfile" });
-
-        assertTrue(config.getOutputMethod() instanceof OutputAsFilePrinter);
-        OutputAsFilePrinter printer = (OutputAsFilePrinter)config.getOutputMethod();
-        assertEquals("anotherfile", printer.getFile().getName());
-    }
-
-    @Test
-    public void TestParseOutputToStdout() throws Exception {
-        ChecksimsConfig config = parseToConfig(new String[] {});
-
-        assertTrue(config.getOutputMethod() instanceof OutputToStdoutPrinter);
-    }
-
-    @Test
-    public void TestParseOutputToFileLongForm() throws Exception {
-        ChecksimsConfig config = parseToConfig(new String[] { "--file", "verbose" });
-
-        assertTrue(config.getOutputMethod() instanceof OutputAsFilePrinter);
-        OutputAsFilePrinter printer = (OutputAsFilePrinter)config.getOutputMethod();
-        assertEquals("verbose", printer.getFile().getName());
-    }
-
-    @Test(expected = MissingArgumentException.class)
-    public void TestOutputToFileNoArg() throws Exception {
-        String[] invalid = new String[] { "-f" };
-
-        ChecksimsCommandLine.parseCLI(invalid);
+        ChecksimsCommandLine.runCLI(invalid);
     }
 
     @Test
@@ -300,7 +257,7 @@ public class ChecksimsCommandLineTest {
     public void TestJobsMissingArg() throws Exception {
         String[] invalid = new String[] { "-j" };
 
-        ChecksimsCommandLine.parseCLI(invalid);
+        ChecksimsCommandLine.runCLI(invalid);
     }
 
     @Test

@@ -114,14 +114,6 @@ public class ChecksimsConfigTest {
     }
 
     @Test
-    public void TestSetOutputMethodNull() {
-        expectedEx.expect(NullPointerException.class);
-
-        ChecksimsConfig config = new ChecksimsConfig();
-        config.setOutputMethod(null);
-    }
-
-    @Test
     public void TestSetThreadsNegative() {
         expectedEx.expect(IllegalArgumentException.class);
 

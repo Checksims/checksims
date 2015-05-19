@@ -30,8 +30,6 @@ import net.lldp.checksims.algorithm.similaritymatrix.output.MatrixPrinter;
 import net.lldp.checksims.algorithm.similaritymatrix.output.MatrixPrinterRegistry;
 import net.lldp.checksims.submission.Submission;
 import net.lldp.checksims.token.TokenType;
-import net.lldp.checksims.util.output.OutputPrinter;
-import net.lldp.checksims.util.output.OutputToStdoutPrinter;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -56,7 +54,6 @@ public final class ChecksimsConfig {
     private ImmutableSet<Submission> submissions;
     private ImmutableSet<Submission> archiveSubmissions;
     private ImmutableSet<MatrixPrinter> outputPrinters;
-    private OutputPrinter outputMethod;
     private int numThreads;
 
     /**
@@ -74,7 +71,6 @@ public final class ChecksimsConfig {
         this.preprocessors = ImmutableList.copyOf(new ArrayList<>());
         this.outputPrinters = ImmutableSet.copyOf(
                 Collections.singleton(MatrixPrinterRegistry.getInstance().getDefaultImplementation()));
-        this.outputMethod = OutputToStdoutPrinter.getInstance();
         this.numThreads = Runtime.getRuntime().availableProcessors();
     }
 
@@ -90,7 +86,6 @@ public final class ChecksimsConfig {
         this.archiveSubmissions = old.getArchiveSubmissions();
         this.preprocessors = old.getPreprocessors();
         this.outputPrinters = old.getOutputPrinters();
-        this.outputMethod = old.getOutputMethod();
         this.numThreads = old.getNumThreads();
     }
 
@@ -176,18 +171,6 @@ public final class ChecksimsConfig {
     }
 
     /**
-     * @param newOutputMethod How Checksims should present its output
-     * @return This configuration
-     */
-    public ChecksimsConfig setOutputMethod(OutputPrinter newOutputMethod) {
-        checkNotNull(newOutputMethod);
-
-        outputMethod = newOutputMethod;
-
-        return this;
-    }
-
-    /**
      * @param newNumThreads Number of threads to be used for parallel operations. Must be greater than 0.
      * @return Copy of configuration with new number of threads set
      */
@@ -242,12 +225,6 @@ public final class ChecksimsConfig {
         return outputPrinters;
     }
 
-    /**
-     * @return Method by which Checksims will present its output
-     */
-    public OutputPrinter getOutputMethod() {
-        return outputMethod;
-    }
 
     /**
      * @return Number of threads that will be used for parallel operations
@@ -278,7 +255,6 @@ public final class ChecksimsConfig {
                 && this.archiveSubmissions.equals(otherConfig.getArchiveSubmissions())
                 && this.numThreads == otherConfig.getNumThreads()
                 && this.outputPrinters.equals(otherConfig.getOutputPrinters())
-                && this.outputMethod.equals(otherConfig.getOutputMethod())
                 && this.preprocessors.equals(otherConfig.getPreprocessors())
                 && this.submissions.equals(otherConfig.getSubmissions())
                 && this.tokenization.equals(otherConfig.getTokenization());

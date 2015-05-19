@@ -21,6 +21,7 @@
 
 package net.lldp.checksims;
 
+import com.google.common.collect.ImmutableMap;
 import net.lldp.checksims.algorithm.AlgorithmRegistry;
 import net.lldp.checksims.algorithm.preprocessor.CommonCodeLineRemovalPreprocessor;
 import net.lldp.checksims.algorithm.preprocessor.PreprocessorRegistry;
@@ -30,10 +31,9 @@ import net.lldp.checksims.algorithm.similaritymatrix.output.MatrixPrinterRegistr
 import net.lldp.checksims.submission.Submission;
 import net.lldp.checksims.token.TokenType;
 import net.lldp.checksims.token.tokenizer.Tokenizer;
-import net.lldp.checksims.util.output.OutputAsFilePrinter;
-import net.lldp.checksims.util.output.OutputPrinter;
 import org.apache.commons.cli.*;
 import org.apache.commons.collections4.list.SetUniqueList;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.impl.SimpleLogger;
@@ -41,6 +41,7 @@ import org.slf4j.impl.SimpleLogger;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -283,15 +284,6 @@ public final class ChecksimsCommandLine {
             config = config.setTokenization(TokenType.fromString(cli.getOptionValue("t")));
         }
 
-        // Parse file output value
-        boolean outputToFile = cli.hasOption("f");
-        if(outputToFile) {
-            File outputFile = new File(cli.getOptionValue("f"));
-            OutputPrinter filePrinter = new OutputAsFilePrinter(outputFile);
-            config = config.setOutputMethod(filePrinter);
-            logs.info("Saving output to file " + outputFile.getName());
-        }
-
         // Parse number of threads to use
         if(cli.hasOption("j")) {
             int numThreads = Integer.parseInt(cli.getOptionValue("j"));
@@ -510,18 +502,16 @@ public final class ChecksimsCommandLine {
     }
 
     /**
-     * Parse CLI arguments into a ChecksimsConfig.
-     *
-     * Also configures logger, and sets parallelism level in ParallelAlgorithm
+     * Parse CLI arguments and run Checksims from them.
      *
      * TODO add unit tests
      *
      * @param args CLI arguments to parse
-     * @return Config created from CLI arguments
      * @throws ParseException Thrown on error parsing CLI arguments
-     * @throws IOException Thrown on error building a submission from files
+     * @throws ChecksimsException Thrown on invalid CLI arguments or error running Checksims
+     * @throws IOException Thrown on error building a submission from files or writing output to file
      */
-    static ChecksimsConfig parseCLI(String[] args) throws ParseException, ChecksimsException, IOException {
+    public static void runCLI(String[] args) throws ParseException, ChecksimsException, IOException {
         checkNotNull(args);
 
         // Parse options, first round: nothing required, so we can check for --help and --version
@@ -554,10 +544,35 @@ public final class ChecksimsCommandLine {
         ChecksimsConfig config = parseBaseFlags(cli);
 
         // Parse file flags
-        config = parseFileFlags(cli, config);
+        ChecksimsConfig finalConfig = parseFileFlags(cli, config);
+
+        // Run Checksims with this config
+        ImmutableMap<String, String> output = ChecksimsRunner.runChecksims(finalConfig);
+
+        // Check if file output specified
+        if(cli.hasOption("f")) {
+            // Writing to a file
+            // Get the filename
+            String outfileBaseName = cli.getOptionValue("f");
+
+            // Output for all specified strategies
+            for(String strategy : output.keySet()) {
+                // Final filename is the basename specified through CLI, with the strategy name as its extension.
+                File outfile = new File(outfileBaseName + "." + strategy);
+
+                logs.info("Writing " + strategy + " output to " + outfile.getName());
+
+                FileUtils.writeStringToFile(outfile, output.get(strategy), StandardCharsets.UTF_8);
+            }
+        } else {
+            // Just outputting to STDOUT
+            for(String strategy : output.keySet()) {
+                System.out.println("\n\n");
+                System.out.println("Output from " + strategy + "\n");
+                System.out.println(output.get(strategy));
+            }
+        }
 
         logs.trace("CLI parsing complete!");
-
-        return config;
     }
 }
