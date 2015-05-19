@@ -21,22 +21,19 @@
 
 package net.lldp.checksims;
 
+import com.google.common.collect.ImmutableMap;
 import net.lldp.checksims.algorithm.AlgorithmRegistry;
-import net.lldp.checksims.algorithm.commoncode.CommonCodeHandler;
-import net.lldp.checksims.algorithm.commoncode.CommonCodeLineRemovalHandler;
-import net.lldp.checksims.algorithm.commoncode.CommonCodePassthroughHandler;
+import net.lldp.checksims.algorithm.preprocessor.CommonCodeLineRemovalPreprocessor;
 import net.lldp.checksims.algorithm.preprocessor.PreprocessorRegistry;
 import net.lldp.checksims.algorithm.preprocessor.SubmissionPreprocessor;
 import net.lldp.checksims.algorithm.similaritymatrix.output.MatrixPrinter;
 import net.lldp.checksims.algorithm.similaritymatrix.output.MatrixPrinterRegistry;
-import net.lldp.checksims.submission.EmptySubmissionException;
 import net.lldp.checksims.submission.Submission;
 import net.lldp.checksims.token.TokenType;
 import net.lldp.checksims.token.tokenizer.Tokenizer;
-import net.lldp.checksims.util.output.OutputAsFilePrinter;
-import net.lldp.checksims.util.output.OutputPrinter;
 import org.apache.commons.cli.*;
 import org.apache.commons.collections4.list.SetUniqueList;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.impl.SimpleLogger;
@@ -44,12 +41,17 @@ import org.slf4j.impl.SimpleLogger;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.stream.Collectors;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Parses Checksims' command-line options.
+ *
+ * TODO: Consider changing from a static class? Having the CommandLine as an instance variable would greatly simplify
  */
 public final class ChecksimsCommandLine {
     private static Logger logs;
@@ -81,27 +83,105 @@ public final class ChecksimsCommandLine {
     }
 
     /**
+     * @param anyRequired Whether any arguments are required
      * @return CLI options used in Checksims
      */
-    static Options getOpts() {
+    static Options getOpts(boolean anyRequired) {
         Options opts = new Options();
 
-        Option alg = new Option("a", "algorithm", true, "algorithm to use");
-        Option token = new Option("t", "token", true, "tokenization type to use");
-        Option out = new Option("o", "output", true, "output formats to use, comma-separated");
-        Option file = new Option("f", "file", true, "file to output to");
-        Option preprocess = new Option("p", "preprocess", true, "preprocessors to apply, comma-separated");
-        Option jobs = new Option("j", "jobs", true, "number of threads to use");
-        Option verbose = new Option("v", "verbose", false, "specify verbose output");
+        Option alg = Option.builder("a")
+                .longOpt("algorithm")
+                .hasArg()
+                .argName("name")
+                .desc("algorithm to compare with")
+                .build();
+
+        Option token = Option.builder("t")
+                .longOpt("token")
+                .hasArg()
+                .argName("type")
+                .desc("tokenization to use for submissions")
+                .build();
+
+        Option out = Option.builder("o")
+                .longOpt("output")
+                .hasArgs()
+                .argName("name1[,name2,...]")
+                .valueSeparator(',')
+                .desc("output format(s) to use, comma-separated if multiple given")
+                .build();
+
+        Option file = Option.builder("f")
+                .longOpt("file")
+                .hasArg()
+                .argName("filename")
+                .desc("print output to given file")
+                .build();
+
+        Option preprocess = Option.builder("p")
+                .longOpt("preprocess")
+                .hasArgs()
+                .argName("name1[,name2,...]")
+                .valueSeparator(',')
+                .desc("preprocessor(s) to apply, comma-separated if multiple given")
+                .build();
+
+        Option jobs = Option.builder("j")
+                .longOpt("jobs")
+                .hasArg()
+                .argName("num")
+                .desc("number of threads to use")
+                .build();
+
+        Option glob = Option.builder("g")
+                .longOpt("glob")
+                .hasArg()
+                .argName("matchpattern")
+                .desc("match pattern to determine files included in submissions")
+                .build();
+
+        OptionGroup verbosity = new OptionGroup();
+        Option verbose = new Option("v", "verbose", false, "specify verbose output. conflicts with -vv");
         Option doubleVerbose = new Option("vv", "veryverbose", false,
-                "specify very verbose output. supercedes -v if both specified.");
+                "specify very verbose output. conflicts with -v");
+        verbosity.addOption(verbose);
+        verbosity.addOption(doubleVerbose);
+
         Option help = new Option("h", "help", false, "show usage information");
-        Option common = new Option("c", "common", true, "remove common code contained in given directory");
+
+        Option empty = new Option("e", "empty", false, "retain empty submissions");
+
+        Option common = Option.builder("c")
+                .longOpt("common")
+                .hasArg()
+                .argName("path")
+                .desc("directory containing common code which will be removed from all submissions")
+                .build();
+
         Option recursive = new Option("r", "recursive", false,
                 "recursively traverse subdirectories to generate submissions");
+
         Option version = new Option("version", false, "print version of Checksims");
-        Option archiveDir = new Option("archive", true, "archive submissions - compared to main submissions but "
-                + "not each other");
+
+        Option archiveDir = Option.builder("archive")
+                .longOpt("archivedir")
+                .desc("archive submissions - compared to main submissions but not each other")
+                .argName("path")
+                .hasArgs()
+                .valueSeparator('*')
+                .build();
+
+        Option submissionDir = Option.builder("s")
+                .longOpt("submissiondir")
+                .desc("directory or directories containing submissions to compare - mandatory!")
+                .argName("path")
+                .hasArgs()
+                .valueSeparator('*')
+                .build();
+
+        if(anyRequired) {
+            submissionDir.setRequired(true);
+        }
 
         opts.addOption(alg);
         opts.addOption(token);
@@ -109,13 +189,15 @@ public final class ChecksimsCommandLine {
         opts.addOption(file);
         opts.addOption(preprocess);
         opts.addOption(jobs);
-        opts.addOption(verbose);
-        opts.addOption(doubleVerbose);
+        opts.addOption(glob);
+        opts.addOptionGroup(verbosity);
         opts.addOption(help);
+        opts.addOption(empty);
         opts.addOption(common);
         opts.addOption(recursive);
         opts.addOption(version);
         opts.addOption(archiveDir);
+        opts.addOption(submissionDir);
 
         return opts;
     }
@@ -124,16 +206,17 @@ public final class ChecksimsCommandLine {
      * Parse a given set of CLI arguments into a Commons CLI CommandLine.
      *
      * @param args Arguments to parse
+     * @param anyRequired Whether arguments should be required
      * @return CommandLine from parsed arguments
      * @throws ParseException Thrown on error parsing arguments
      */
-    static CommandLine parseOpts(String[] args) throws ParseException {
+    static CommandLine parseOpts(String[] args, boolean anyRequired) throws ParseException {
         checkNotNull(args);
 
-        Parser parser = new GnuParser();
+        DefaultParser parser = new DefaultParser();
 
         // Parse the CLI args
-        return parser.parse(getOpts(), args);
+        return parser.parse(getOpts(anyRequired), args);
     }
 
     /**
@@ -143,8 +226,8 @@ public final class ChecksimsCommandLine {
         HelpFormatter f = new HelpFormatter();
         PrintWriter systemErr = new PrintWriter(System.err, true);
 
-        f.printHelp(systemErr, 80, "checksims [args] glob directory [directory2 ...]",
-                "checksims: check similarity of student submissions", getOpts(), 2, 4, "");
+        f.printHelp(systemErr, 80, "checksims [args]",
+                "checksims: check similarity of student submissions", getOpts(true), 2, 4, "");
 
         System.err.println("\nSupported Similarity Detection Algorithms:");
         AlgorithmRegistry.getInstance().getSupportedImplementationNames().stream().
@@ -162,7 +245,11 @@ public final class ChecksimsCommandLine {
                 forEach((name) -> System.err.print(name + ", "));
         System.err.println();
 
-        System.err.println("\nChecksims Version " + ChecksimsRunner.getChecksimsVersion() + "\n\n");
+        try {
+            System.err.println("\nChecksims Version " + ChecksimsRunner.getChecksimsVersion() + "\n\n");
+        } catch(ChecksimsException e) {
+            System.err.println("Error obtaining version: " + e.getMessage());
+        }
 
         System.exit(0);
     }
@@ -197,15 +284,6 @@ public final class ChecksimsCommandLine {
             config = config.setTokenization(TokenType.fromString(cli.getOptionValue("t")));
         }
 
-        // Parse file output value
-        boolean outputToFile = cli.hasOption("f");
-        if(outputToFile) {
-            File outputFile = new File(cli.getOptionValue("f"));
-            OutputPrinter filePrinter = new OutputAsFilePrinter(outputFile);
-            config = config.setOutputMethod(filePrinter);
-            logs.info("Saving output to file " + outputFile.getName());
-        }
-
         // Parse number of threads to use
         if(cli.hasOption("j")) {
             int numThreads = Integer.parseInt(cli.getOptionValue("j"));
@@ -221,8 +299,9 @@ public final class ChecksimsCommandLine {
         // Ensure no duplicates
         if(cli.hasOption("p")) {
             List<SubmissionPreprocessor> preprocessors = SetUniqueList.setUniqueList(new ArrayList<>());
-            String[] splitPreprocessors = cli.getOptionValue("p").split(",");
-            for (String s : splitPreprocessors) {
+
+            String[] preprocessorsToUse = cli.getOptionValues("p");
+            for (String s : preprocessorsToUse) {
                 SubmissionPreprocessor p = PreprocessorRegistry.getInstance().getImplementationInstance(s);
                 preprocessors.add(p);
             }
@@ -232,7 +311,7 @@ public final class ChecksimsCommandLine {
         // Parse output strategies
         // Ensure no duplicates
         if(cli.hasOption("o")) {
-            String[] desiredStrategies = cli.getOptionValue("o").split(",");
+            String[] desiredStrategies = cli.getOptionValues("o");
             Set<String> deduplicatedStrategies = new HashSet<>(Arrays.asList(desiredStrategies));
 
             if(deduplicatedStrategies.isEmpty()) {
@@ -240,7 +319,7 @@ public final class ChecksimsCommandLine {
             }
 
             // Convert to MatrixPrinters
-            List<MatrixPrinter> printers = new ArrayList<>();
+            Set<MatrixPrinter> printers = new HashSet<>();
             for(String name : deduplicatedStrategies) {
                 printers.add(MatrixPrinterRegistry.getInstance().getImplementationInstance(name));
             }
@@ -252,74 +331,129 @@ public final class ChecksimsCommandLine {
     }
 
     /**
-     * Parse common code removal settings.
+     * Parse flags which require submissions to be built.
      *
-     * If the -c flag is not present, a CommonCodePassthroughHandler will be returned
+     * TODO unit tests
      *
-     * TODO add unit tests
-     *
-     * @param cli Parsed command line options
-     * @param glob Glob matcher to use when building common code submission
-     * @param tokenizer Tokenizer to use when building common code submission
-     * @param recursive Whether to recursively traverse common code directory
-     * @return Handler for common code
-     * @throws ChecksimsException Thrown if no files matching the glob pattern are found in the common code directory
-     * @throws IOException Thrown on error creating common code submission
+     * @param cli Parse CLI options
+     * @param baseConfig Base configuration to work off
+     * @return Modified baseConfig with submissions (and possibly common code and archive submissions) changed
+     * @throws ChecksimsException Thrown on bad argument
+     * @throws IOException Thrown on error building submissions
      */
-    static CommonCodeHandler parseCommonCodeSetting(CommandLine cli, String glob, Tokenizer tokenizer,
-                                                    boolean recursive) throws ChecksimsException, IOException {
+    static ChecksimsConfig parseFileFlags(CommandLine cli, ChecksimsConfig baseConfig)
+            throws ChecksimsException, IOException {
         checkNotNull(cli);
-        checkNotNull(glob);
+        checkNotNull(baseConfig);
 
-        // Parse common code detection
-        boolean removeCommonCode = cli.hasOption("c");
-        if(removeCommonCode) {
-            File commonCodeDir = new File(cli.getOptionValue("c"));
-            Submission commonCode = Submission.submissionFromDir(commonCodeDir, glob, tokenizer, recursive);
+        ChecksimsConfig toReturn = new ChecksimsConfig(baseConfig);
 
-            try {
-                return new CommonCodeLineRemovalHandler(commonCode);
-            } catch(EmptySubmissionException e) {
-                // The common code submission was empty
-                // Inform the user we're not actually removing common code because of this
-                logs.warn(e.getMessage());
-                return CommonCodePassthroughHandler.getInstance();
+        // Get glob match pattern
+        // Default to *
+        String globPattern = cli.getOptionValue("g", "*");
+
+        // Check if we are recursively building
+        boolean recursive = cli.hasOption("r");
+
+        // Check if we are retaining empty submissions
+        boolean retainEmpty = cli.hasOption("e");
+
+        // Get the tokenizer specified by base config
+        Tokenizer tokenizer = Tokenizer.getTokenizer(baseConfig.getTokenization());
+
+        // Get submission directories
+        if(!cli.hasOption("s")) {
+            throw new ChecksimsException("Must provide at least one submission directory!");
+        }
+
+        String[] submissionDirsString = cli.getOptionValues("s");
+
+        // Make a Set<File> from those submission directories
+        // Map to absolute file, to ensure no dups
+        Set<File> submissionDirs = Arrays.stream(submissionDirsString)
+                .map(File::new)
+                .map(File::getAbsoluteFile)
+                .collect(Collectors.toSet());
+
+        if(submissionDirs.isEmpty()) {
+            throw new ChecksimsException("Must provide at least one submission directory!");
+        }
+
+        // Generate submissions
+        Set<Submission> submissions = getSubmissions(submissionDirs, globPattern, tokenizer, recursive, retainEmpty);
+
+        logs.debug("Generated " + submissions.size() + " submissions to process.");
+
+        if(submissions.isEmpty()) {
+            throw new ChecksimsException("Could build any submissions to operate on!");
+        }
+
+        toReturn = toReturn.setSubmissions(submissions);
+
+        // Check if we need to perform common code removal
+        if(cli.hasOption("c")) {
+            // Get the directory containing the common code
+            String commonCodeDirString = cli.getOptionValue("c");
+
+            // Make a file from it
+            File commonCodeDir = new File(commonCodeDirString).getAbsoluteFile();
+
+            logs.debug("Creating common code submission " + commonCodeDir.getName());
+
+            // Verify that it's not a submission dir
+            if(submissionDirs.contains(commonCodeDir)) {
+                throw new ChecksimsException("Common code directory cannot be a submission directory!");
+            }
+
+            // All right, parse common code
+            Submission commonCodeSubmission = Submission.submissionFromDir(commonCodeDir, globPattern, tokenizer,
+                    recursive);
+
+            if(commonCodeSubmission.getContentAsString().isEmpty()) {
+                logs.warn("Common code is empty --- cowardly refusing to perform common code removal!");
+            } else {
+                SubmissionPreprocessor commonCodeRemover = new CommonCodeLineRemovalPreprocessor(commonCodeSubmission);
+
+                // Common code removal first, always
+                List<SubmissionPreprocessor> oldPreprocessors = new ArrayList<>(toReturn.getPreprocessors());
+                oldPreprocessors.add(0, commonCodeRemover);
+
+                toReturn = toReturn.setPreprocessors(oldPreprocessors);
             }
         }
 
-        return CommonCodePassthroughHandler.getInstance();
-    }
+        // Check if we need to add archive directories
+        if(cli.hasOption("archive")) {
+            String[] archiveDirsString = cli.getOptionValues("archive");
 
-    /**
-     * Parse archive directory to generate archive submissions.
-     *
-     * TODO add support for more than one archive directory
-     *
-     * @param cli Parsed command line
-     * @param glob Glob match pattern for generating submissions
-     * @param tokenizer Tokenizer to use when generating submissions
-     * @param recursive Whether to recurse when generating submissions
-     * @return Set of submissions to use as archive submissions
-     * @throws IOException Thrown on error reading file to generate submission
-     * @throws ChecksimsException Thrown on error generating submission
-     */
-    static Set<Submission> getArchiveSubmissions(CommandLine cli, String glob, Tokenizer tokenizer, boolean recursive)
-            throws IOException, ChecksimsException {
-        checkNotNull(cli);
-        checkNotNull(glob);
-        checkNotNull(tokenizer);
+            // Convert them into a set of files, again using getAbsoluteFile
+            Set<File> archiveDirs = Arrays.stream(archiveDirsString)
+                    .map(File::new)
+                    .map(File::getAbsoluteFile)
+                    .collect(Collectors.toSet());
 
-        boolean hasArchiveSubmissions = cli.hasOption("archive");
-        if(hasArchiveSubmissions) {
-            String path = cli.getOptionValue("archive");
+            // Ensure that none of them are also submission directories
+            for(File archiveDir : archiveDirs) {
+                if(submissionDirs.contains(archiveDir)) {
+                    throw new ChecksimsException("Directory is both an archive directory and submission directory: "
+                            + archiveDir.getAbsolutePath());
+                }
+            }
 
-            // TODO ensure that archive directory is not one of the submission directories
+            // Get set of archive submissions
+            Set<Submission> archiveSubmissions = getSubmissions(archiveDirs, globPattern, tokenizer, recursive,
+                    retainEmpty);
 
-            return Submission.submissionListFromDir(new File(path), glob, tokenizer, recursive);
+            logs.debug("Generated " + archiveSubmissions.size() + " archive submissions to process");
+
+            if(archiveSubmissions.isEmpty()) {
+                logs.warn("Did not find any archive submissions to test with!");
+            }
+
+            toReturn = toReturn.setArchiveSubmissions(archiveSubmissions);
         }
 
-        // Return empty set --- no archive submissions
-        return new HashSet<>();
+        return toReturn;
     }
 
     /**
@@ -327,61 +461,61 @@ public final class ChecksimsCommandLine {
      *
      * TODO add unit tests
      *
-     * @param cli Parsed command line options
+     * @param submissionDirs Directories to build submissions from
      * @param glob Glob matcher to use when building submissions
      * @param tokenizer Tokenizer to use when building submissions
      * @param recursive Whether to recursively traverse when building submissions
      * @return Collection of submissions which will be used to run Checksims
      * @throws IOException Thrown on issue reading files or traversing directories to build submissions
      */
-    static Set<Submission> getSubmissions(CommandLine cli, String glob, Tokenizer tokenizer, boolean recursive)
-            throws IOException, ChecksimsException {
-        checkNotNull(cli);
+    static Set<Submission> getSubmissions(Set<File> submissionDirs, String glob, Tokenizer tokenizer, boolean recursive,
+                                          boolean retainEmpty) throws IOException, ChecksimsException {
+        checkNotNull(submissionDirs);
+        checkArgument(!submissionDirs.isEmpty(), "Must provide at least one submission directory!");
         checkNotNull(glob);
         checkNotNull(tokenizer);
-
-        String[] unusedArgs = cli.getArgs();
-        List<File> submissionDirs = new ArrayList<>();
-
-        if(unusedArgs.length < 2) {
-            throw new ChecksimsException("Expected at least 2 arguments: glob pattern and a submission directory!");
-        }
-
-        // The first element in args should be the glob matcher, so start at index 1
-        for(int i = 1; i < unusedArgs.length; i++) {
-            logs.debug("Adding directory " + unusedArgs[i]);
-            submissionDirs.add(new File(unusedArgs[i]));
-        }
 
         // Generate submissions to work on
         Set<Submission> submissions = new HashSet<>();
         for(File dir : submissionDirs) {
+            logs.debug("Adding directory " + dir.getName());
+
             submissions.addAll(Submission.submissionListFromDir(dir, glob, tokenizer, recursive));
         }
 
-        if(submissions.isEmpty()) {
-            throw new ChecksimsException("Did not obtain any submissions to operate on!");
+        // If not retaining empty submissions, filter the empty ones out
+        if(!retainEmpty) {
+            Set<Submission> submissionsNoEmpty = new HashSet<>();
+
+            for(Submission s : submissions) {
+                if(s.getContentAsString().isEmpty()) {
+                    logs.warn("Discarding empty submission " + s.getName());
+                } else {
+                    submissionsNoEmpty.add(s);
+                }
+            }
+
+            return submissionsNoEmpty;
         }
 
         return submissions;
     }
 
     /**
-     * Parse CLI arguments into a ChecksimsConfig.
-     *
-     * Also configures logger, and sets parallelism level in ParallelAlgorithm
+     * Parse CLI arguments and run Checksims from them.
      *
      * TODO add unit tests
      *
      * @param args CLI arguments to parse
-     * @return Config created from CLI arguments
      * @throws ParseException Thrown on error parsing CLI arguments
-     * @throws IOException Thrown on error building a submission from files
+     * @throws ChecksimsException Thrown on invalid CLI arguments or error running Checksims
+     * @throws IOException Thrown on error building a submission from files or writing output to file
      */
-    static ChecksimsConfig parseCLI(String[] args) throws ParseException, ChecksimsException, IOException {
+    public static void runCLI(String[] args) throws ParseException, ChecksimsException, IOException {
         checkNotNull(args);
 
-        CommandLine cli = parseOpts(args);
+        // Parse options, first round: nothing required, so we can check for --help and --version
+        CommandLine cli = parseOpts(args, false);
 
         // Print CLI Help
         if(cli.hasOption("h")) {
@@ -394,6 +528,9 @@ public final class ChecksimsCommandLine {
             System.exit(0);
         }
 
+        // Parse options, second round: required arguments are required
+        cli = parseOpts(args, true);
+
         // Parse verbose setting
         if(cli.hasOption("vv")) {
             logs = startLogger(2);
@@ -403,44 +540,39 @@ public final class ChecksimsCommandLine {
             logs = startLogger(0);
         }
 
-        // Parse recursive flag
-        boolean recursive = false;
-        if(cli.hasOption("r")) {
-            recursive = true;
-            logs.trace("Recursively traversing subdirectories of student directories");
-        }
-
-        // Get unconsumed arguments
-        String[] unusedArgs = cli.getArgs();
-
-        if(unusedArgs.length < 2) {
-            throw new ChecksimsException("Expecting at least two arguments: File match glob, and folder(s) to check");
-        }
-
-        // First non-flag argument is the glob matcher
-        // All the rest are directories containing student submissions
-        String glob = unusedArgs[0];
-
         // First, parse basic flags
         ChecksimsConfig config = parseBaseFlags(cli);
 
-        // Set up a tokenizer to use
-        Tokenizer tokenizer = Tokenizer.getTokenizer(config.getTokenization());
+        // Parse file flags
+        ChecksimsConfig finalConfig = parseFileFlags(cli, config);
 
-        // Next, parse common code settings
-        CommonCodeHandler handler = parseCommonCodeSetting(cli, glob, tokenizer, recursive);
-        config = config.setCommonCodeHandler(handler);
+        // Run Checksims with this config
+        ImmutableMap<String, String> output = ChecksimsRunner.runChecksims(finalConfig);
 
-        // Next, parse archive directory settings
-        Set<Submission> archiveSubmissions = getArchiveSubmissions(cli, glob, tokenizer, recursive);
-        config = config.setArchiveSubmissions(archiveSubmissions);
+        // Check if file output specified
+        if(cli.hasOption("f")) {
+            // Writing to a file
+            // Get the filename
+            String outfileBaseName = cli.getOptionValue("f");
 
-        // Next, build submissions
-        Set<Submission> submissions = getSubmissions(cli, glob, tokenizer, recursive);
-        config = config.setSubmissions(submissions);
+            // Output for all specified strategies
+            for(String strategy : output.keySet()) {
+                // Final filename is the basename specified through CLI, with the strategy name as its extension.
+                File outfile = new File(outfileBaseName + "." + strategy);
+
+                logs.info("Writing " + strategy + " output to " + outfile.getName());
+
+                FileUtils.writeStringToFile(outfile, output.get(strategy), StandardCharsets.UTF_8);
+            }
+        } else {
+            // Just outputting to STDOUT
+            for(String strategy : output.keySet()) {
+                System.out.println("\n\n");
+                System.out.println("Output from " + strategy + "\n");
+                System.out.println(output.get(strategy));
+            }
+        }
 
         logs.trace("CLI parsing complete!");
-
-        return config;
     }
 }

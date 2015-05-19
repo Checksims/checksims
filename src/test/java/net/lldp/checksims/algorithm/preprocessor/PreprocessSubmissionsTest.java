@@ -21,6 +21,7 @@
 
 package net.lldp.checksims.algorithm.preprocessor;
 
+import net.lldp.checksims.ChecksimsException;
 import net.lldp.checksims.submission.ConcreteSubmission;
 import net.lldp.checksims.submission.Submission;
 import org.junit.Before;
@@ -81,7 +82,7 @@ public class PreprocessSubmissionsTest {
     }
 
     @Test
-    public void testEmptyReturnsEmpty() {
+    public void testEmptyReturnsEmpty() throws ChecksimsException {
         Collection<Submission> results = PreprocessSubmissions.process(identity, empty);
 
         assertNotNull(results);
@@ -89,7 +90,7 @@ public class PreprocessSubmissionsTest {
     }
 
     @Test
-    public void testOneSubmissionIdentity() {
+    public void testOneSubmissionIdentity() throws ChecksimsException {
         Collection<Submission> results = PreprocessSubmissions.process(identity, oneSubmission);
 
         assertNotNull(results);
@@ -97,7 +98,7 @@ public class PreprocessSubmissionsTest {
     }
 
     @Test
-    public void testOneSubmissionRename() {
+    public void testOneSubmissionRename() throws ChecksimsException {
         Collection<Submission> results = PreprocessSubmissions.process(renamer, oneSubmission);
         Submission expected = lineSubmissionFromString("renamed " + a.getName(), a.getContentAsString());
 
@@ -105,14 +106,14 @@ public class PreprocessSubmissionsTest {
     }
 
     @Test
-    public void testTwoSubmissionIdentity() {
+    public void testTwoSubmissionIdentity() throws ChecksimsException {
         Collection<Submission> results = PreprocessSubmissions.process(identity, twoSubmissions);
 
         checkSubmissionCollections(twoSubmissions, results);
     }
 
     @Test
-    public void testTwoSubmissionRename() {
+    public void testTwoSubmissionRename() throws ChecksimsException {
         Collection<Submission> results = PreprocessSubmissions.process(renamer, twoSubmissions);
         Submission expectedA = lineSubmissionFromString("renamed " + a.getName(), a.getContentAsString());
         Submission expectedB = lineSubmissionFromString("renamed " + b.getName(), b.getContentAsString());

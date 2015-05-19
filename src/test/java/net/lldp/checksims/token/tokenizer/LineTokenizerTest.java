@@ -42,7 +42,7 @@ public class LineTokenizerTest {
 
     @Test
     public void TestEmptyNotNullReturnsEmpty() {
-        TokenList results = l.splitFile("");
+        TokenList results = l.splitString("");
 
         assertNotNull(results);
         assertTrue(results.isEmpty());
@@ -50,7 +50,7 @@ public class LineTokenizerTest {
 
     @Test
     public void TestOneStringReturnsString() {
-        TokenList results = l.splitFile("hello");
+        TokenList results = l.splitString("hello");
 
         TokenList expected = TokenUtils.makeTokenListLine("hello");
 
@@ -60,7 +60,7 @@ public class LineTokenizerTest {
 
     @Test
     public void TestMultiLineReturnsTwoStrings() {
-        TokenList results = l.splitFile("hello\nworld\n");
+        TokenList results = l.splitString("hello\nworld\n");
         TokenList expected = TokenUtils.makeTokenListLine("hello", "world");
 
         assertNotNull(results);
@@ -69,7 +69,7 @@ public class LineTokenizerTest {
 
     @Test
     public void TestMultiLineNoTrailingReturnsTwoStrings() {
-        TokenList results = l.splitFile("hello\nworld");
+        TokenList results = l.splitString("hello\nworld");
         TokenList expected = TokenUtils.makeTokenListLine("hello", "world");
 
         assertNotNull(results);
@@ -78,7 +78,7 @@ public class LineTokenizerTest {
 
     @Test
     public void TestThreeLineSplit() {
-        TokenList results = l.splitFile("A\nB\nC\n");
+        TokenList results = l.splitString("A\nB\nC\n");
         TokenList expected = TokenUtils.makeTokenListLine("A", "B", "C");
 
         assertNotNull(results);
@@ -87,7 +87,7 @@ public class LineTokenizerTest {
 
     @Test
     public void TestAdjacentNewlines() {
-        TokenList results = l.splitFile("\n\n");
+        TokenList results = l.splitString("\n\n");
 
         assertNotNull(results);
         assertTrue(results.isEmpty());
@@ -95,7 +95,7 @@ public class LineTokenizerTest {
 
     @Test
     public void TestAdjacentNewlinesWithContent() {
-        TokenList results = l.splitFile("\n\nHello\n\n\nWorld\n\n\n\n");
+        TokenList results = l.splitString("\n\nHello\n\n\nWorld\n\n\n\n");
         TokenList expected = TokenUtils.makeTokenListLine("Hello", "World");
 
         assertNotNull(results);

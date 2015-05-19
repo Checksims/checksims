@@ -21,10 +21,13 @@
 
 package net.lldp.checksims.util.reflection;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Extension of a Registry with the ability to retrieve a default value.
+ * Extension of a Registry with the ability to retrieve a default implementation.
  */
 public class RegistryWithDefault<T extends NamedInstantiable> extends Registry<T> {
     private final String defaultImplementation;
@@ -36,10 +39,25 @@ public class RegistryWithDefault<T extends NamedInstantiable> extends Registry<T
      * @param initPath Package to (recursively) search for implementations
      * @param baseClazz Base class or interface which all implementations in the registry extend or implement
      * @param defaultImplementation Name of default implementation for this registry
+     * @throws NoSuchImplementationException Thrown if no implementation with the name of the requested default exists
      */
     public RegistryWithDefault(String initPath, Class<T> baseClazz, String defaultImplementation)
             throws NoSuchImplementationException {
-        super(initPath, baseClazz);
+        this(initPath, baseClazz, new HashSet<>(), defaultImplementation);
+    }
+
+    /**
+     * Create a Registry instance for implementations of a given base class in the given package and subpackages.
+     *
+     * @param initPath Package to (recursively) search for implementations
+     * @param baseClazz Base class or interface which all implementations in the registry extend or implement
+     * @param defaultImplementation Name of default implementation for this registry
+     * @param ignoredImplementations Names of implementations which will not be included in the registry
+     * @throws NoSuchImplementationException Thrown if no implementation with the name of the requested default exists
+     */
+    public RegistryWithDefault(String initPath, Class<T> baseClazz, Set<String> ignoredImplementations,
+                               String defaultImplementation) throws NoSuchImplementationException {
+        super(initPath, baseClazz, ignoredImplementations);
 
         checkNotNull(defaultImplementation);
 

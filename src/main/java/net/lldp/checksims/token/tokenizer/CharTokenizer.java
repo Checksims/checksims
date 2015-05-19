@@ -56,7 +56,7 @@ public final class CharTokenizer implements Tokenizer {
      * @return Input string, with a single token representing each character
      */
     @Override
-    public TokenList splitFile(String string) {
+    public TokenList splitString(String string) {
         checkNotNull(string);
 
         TokenList toReturn = new TokenList(this.getType());

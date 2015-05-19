@@ -19,22 +19,10 @@
  * Copyright (c) 2014-2015 Nicholas DeMarinis, Matthew Heon, and Dolan Murvihill
  */
 
-package net.lldp.checksims.algorithm.preprocessor;
-
-import net.lldp.checksims.algorithm.InternalAlgorithmError;
-import net.lldp.checksims.submission.Submission;
-import net.lldp.checksims.util.reflection.NamedInstantiable;
-
 /**
- * Interface for submission preprocessors which act on submissions.
+ * This package contains Tokenizers, which convert a string into a TokenList suitable for use in submissions.
+ *
+ * There is one Tokenizer for each type of token, and all are singletons. A method in Tokenizer can be used to retrieve
+ * a Tokenizer for each token type.
  */
-public interface SubmissionPreprocessor extends NamedInstantiable {
-    /**
-     * Perform some implementation-specific transformation on the input submission.
-     *
-     * @param submission Submission to transform
-     * @return Result of transforming the input submission's contents
-     * @throws InternalAlgorithmError Thrown on internal error preprocessing submission
-     */
-    Submission process(Submission submission) throws InternalAlgorithmError;
-}
+package net.lldp.checksims.token.tokenizer;

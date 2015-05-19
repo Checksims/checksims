@@ -63,7 +63,7 @@ public final class WhitespaceDeduplicationPreprocessor implements SubmissionPrep
 
         Tokenizer tokenizer = Tokenizer.getTokenizer(submission.getTokenType());
 
-        TokenList finalList = tokenizer.splitFile(windowsNewlineDedup);
+        TokenList finalList = tokenizer.splitString(windowsNewlineDedup);
 
         return new ConcreteSubmission(submission.getName(), windowsNewlineDedup, finalList);
     }
@@ -79,5 +79,15 @@ public final class WhitespaceDeduplicationPreprocessor implements SubmissionPrep
     @Override
     public String toString() {
         return "Singleton instance of WhitespaceDeduplicationPreprocessor";
+    }
+
+    @Override
+    public int hashCode() {
+        return this.getName().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return other instanceof WhitespaceDeduplicationPreprocessor;
     }
 }

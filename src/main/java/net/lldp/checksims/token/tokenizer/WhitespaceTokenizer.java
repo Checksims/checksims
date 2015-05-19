@@ -55,7 +55,7 @@ public final class WhitespaceTokenizer implements Tokenizer {
      * @return List of WHITESPACE tokens representing the input submission
      */
     @Override
-    public TokenList splitFile(String string) {
+    public TokenList splitString(String string) {
         checkNotNull(string);
 
         TokenList toReturn = new TokenList(this.getType());

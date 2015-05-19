@@ -41,7 +41,7 @@ public class WhitespaceTokenizerTest {
 
     @Test
     public void testEmptyReturnsEmpty() {
-        TokenList tokens = s.splitFile("");
+        TokenList tokens = s.splitString("");
 
         assertNotNull(tokens);
         assertTrue(tokens.isEmpty());
@@ -49,7 +49,7 @@ public class WhitespaceTokenizerTest {
 
     @Test
     public void testOneWordReturnsWordToken() {
-        TokenList tokens = s.splitFile("hello");
+        TokenList tokens = s.splitString("hello");
         TokenList expected = makeTokenListWhitespace("hello");
 
         assertNotNull(tokens);
@@ -58,7 +58,7 @@ public class WhitespaceTokenizerTest {
 
     @Test
     public void testTwoWordsReturnsTwoWordTokens() {
-        TokenList tokens = s.splitFile("hello world");
+        TokenList tokens = s.splitString("hello world");
         TokenList expected = makeTokenListWhitespace("hello", "world");
 
         assertNotNull(tokens);
@@ -67,7 +67,7 @@ public class WhitespaceTokenizerTest {
 
     @Test
     public void testWordsSpaceSeparatedParsedCorrectly() {
-        TokenList tokens = s.splitFile("    hello     world       this is   a test     ");
+        TokenList tokens = s.splitString("    hello     world       this is   a test     ");
         TokenList expected = makeTokenListWhitespace("hello", "world", "this", "is", "a", "test");
 
         assertNotNull(tokens);
@@ -76,7 +76,7 @@ public class WhitespaceTokenizerTest {
 
     @Test
     public void testWordsTabSeparatedParsedCorrectly() {
-        TokenList tokens = s.splitFile("hello\tworld\t\tthis \t \t is a test\t");
+        TokenList tokens = s.splitString("hello\tworld\t\tthis \t \t is a test\t");
         TokenList expected = makeTokenListWhitespace("hello", "world", "this", "is", "a", "test");
 
         assertNotNull(tokens);

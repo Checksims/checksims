@@ -21,17 +21,16 @@
 
 package net.lldp.checksims;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import net.lldp.checksims.algorithm.AlgorithmResults;
 import net.lldp.checksims.algorithm.AlgorithmRunner;
-import net.lldp.checksims.algorithm.InternalAlgorithmError;
-import net.lldp.checksims.algorithm.similaritymatrix.SimilarityMatrix;
 import net.lldp.checksims.algorithm.preprocessor.PreprocessSubmissions;
 import net.lldp.checksims.algorithm.preprocessor.SubmissionPreprocessor;
+import net.lldp.checksims.algorithm.similaritymatrix.SimilarityMatrix;
 import net.lldp.checksims.algorithm.similaritymatrix.output.MatrixPrinter;
 import net.lldp.checksims.submission.Submission;
 import net.lldp.checksims.util.PairGenerator;
-import net.lldp.checksims.util.output.OutputPrinter;
 import net.lldp.checksims.util.threading.ParallelAlgorithm;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.IOUtils;
@@ -41,15 +40,16 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Entry point for Checksims.
+ * CLI Entry point and main public API endpoint for Checksims.
  */
 public final class ChecksimsRunner {
-    private static Logger logs;
 
     private ChecksimsRunner() {}
 
@@ -59,39 +59,44 @@ public final class ChecksimsRunner {
      * @param args CLI arguments
      */
     public static void main(String[] args) {
-        ChecksimsConfig config;
-
         try {
-            config = ChecksimsCommandLine.parseCLI(args);
-        } catch (ParseException e) {
-            throw new RuntimeException("Error parsing command-line options", e);
-        } catch (ChecksimsException e) {
-            throw new RuntimeException("Error interpreting command-line options", e);
+            ChecksimsCommandLine.runCLI(args);
+        } catch(ParseException e) {
+            System.err.println(e.getMessage());
+            System.exit(-1);
+        } catch(ChecksimsException e) {
+            System.err.println(e.toString());
+            if(e.getCause() != null) {
+                System.err.println("Caused by: " + e.getCause().toString());
+            }
+            // Print the stack trace for internal exceptions, they may be serious
+            e.printStackTrace();
+            System.exit(-1);
         } catch(IOException e) {
-            throw new RuntimeException("Error building submissions", e);
+            System.err.println("I/O Error!");
+            System.err.println(e.getMessage());
+            System.exit(-1);
         }
-
-        logs = LoggerFactory.getLogger(ChecksimsRunner.class);
-
-        runChecksims(config);
 
         System.exit(0);
     }
 
     /**
+     * Get current version.
+     *
      * @return Current version of Checksims
      */
-    static String getChecksimsVersion() {
+    public static String getChecksimsVersion() throws ChecksimsException {
         InputStream resource = ChecksimsCommandLine.class.getResourceAsStream("version.txt");
 
         if(resource == null) {
-            return "Error obtaining version number: could not obtain input stream for version.txt";
+            throw new ChecksimsException("Error obtaining resource for version!");
         }
 
         try {
             return IOUtils.toString(resource);
         } catch (IOException e) {
-            return "Error obtaining version number: " + e.getMessage();
+            throw new ChecksimsException("IO Exception reading version: " + e.getMessage(), e);
         }
     }
 
@@ -99,9 +104,14 @@ public final class ChecksimsRunner {
      * Main public entrypoint to Checksims. Runs similarity detection according to given configuration.
      *
      * @param config Configuration defining how Checksims will be run
+     * @return Map containing output of all output printers requested. Keys are name of output printer.
+     * @throws ChecksimsException Thrown on error performing similarity detection
      */
-    public static void runChecksims(ChecksimsConfig config) {
+    public static ImmutableMap<String, String> runChecksims(ChecksimsConfig config) throws ChecksimsException {
         checkNotNull(config);
+
+        // Create a logger to log activity
+        Logger logs = LoggerFactory.getLogger(ChecksimsRunner.class);
 
         // Set parallelism
         int threads = config.getNumThreads();
@@ -120,46 +130,40 @@ public final class ChecksimsRunner {
         }
 
         if(submissions.size() == 0) {
-            logs.error("No student submissions were found! Nothing to do!");
-            System.exit(0);
+            throw new ChecksimsException("No student submissions were found - cannot run Checksims!");
         }
-
-        // Apply the common code handler (which may just be a pass-through operation, if there is no common code)
-        submissions = ImmutableSet.copyOf(config.getCommonCodeHandler().handleCommonCode(submissions));
-        archiveSubmissions = ImmutableSet.copyOf(config.getCommonCodeHandler().handleCommonCode(archiveSubmissions));
 
         // Apply all preprocessors
         for(SubmissionPreprocessor p : config.getPreprocessors()) {
             submissions = ImmutableSet.copyOf(PreprocessSubmissions.process(p, submissions));
+
+            if(!archiveSubmissions.isEmpty()) {
+                archiveSubmissions = ImmutableSet.copyOf(PreprocessSubmissions.process(p, archiveSubmissions));
+            }
         }
 
         if(submissions.size() < 2) {
-            logs.error("Not enough submissions for a pairwise comparison! Nothing to do!");
-            System.exit(0);
+            throw new ChecksimsException("Did not get at least 2 student submissions! Cannot run Checksims!");
         }
 
         // Apply algorithm to submissions
         Set<Pair<Submission, Submission>> allPairs = PairGenerator.generatePairsWithArchive(submissions,
                 archiveSubmissions);
         Set<AlgorithmResults> results = AlgorithmRunner.runAlgorithm(allPairs, config.getAlgorithm());
-        try {
-            SimilarityMatrix resultsMatrix = SimilarityMatrix.generateMatrix(submissions, archiveSubmissions, results);
+        SimilarityMatrix resultsMatrix = SimilarityMatrix.generateMatrix(submissions, archiveSubmissions, results);
 
-            // All parallel jobs are done, shut down the parallel executor
-            ParallelAlgorithm.shutdownExecutor();
+        // All parallel jobs are done, shut down the parallel executor
+        ParallelAlgorithm.shutdownExecutor();
 
-            // Output using all output printers
-            OutputPrinter printer = config.getOutputMethod();
-            for(MatrixPrinter p : config.getOutputPrinters()) {
-                logs.info("Generating " + p.getName() + " output");
+        Map<String, String> outputMap = new HashMap<>();
 
-                printer.print(resultsMatrix, p);
-            }
-        } catch(InternalAlgorithmError e) {
-            logs.error("Error generating Similarity Matrix!");
-            logs.error(e.getMessage());
-            e.printStackTrace();
-            System.exit(-1);
+        // Output using all output printers
+        for(MatrixPrinter p : config.getOutputPrinters()) {
+            logs.info("Generating " + p.getName() + " output");
+
+            outputMap.put(p.getName(), p.printMatrix(resultsMatrix));
         }
+
+        return ImmutableMap.copyOf(outputMap);
     }
 }

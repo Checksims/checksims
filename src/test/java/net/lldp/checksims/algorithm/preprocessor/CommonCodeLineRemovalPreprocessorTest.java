@@ -19,9 +19,8 @@
  * Copyright (c) 2014-2015 Nicholas DeMarinis, Matthew Heon, and Dolan Murvihill
  */
 
-package net.lldp.checksims.algorithm.commoncode;
+package net.lldp.checksims.algorithm.preprocessor;
 
-import net.lldp.checksims.submission.EmptySubmissionException;
 import net.lldp.checksims.submission.Submission;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,14 +31,12 @@ import java.util.Set;
 
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
-import static net.lldp.checksims.testutil.SubmissionUtils.charSubmissionFromString;
-import static net.lldp.checksims.testutil.SubmissionUtils.checkSubmissionCollections;
-import static net.lldp.checksims.testutil.SubmissionUtils.setFromElements;
+import static net.lldp.checksims.testutil.SubmissionUtils.*;
 
 /**
- * Tests for the Common Code Line Removal Handler
+ * Tests for the Common Code Line Removal preprocessor
  */
-public class CommonCodeLineRemovalHandlerTest {
+public class CommonCodeLineRemovalPreprocessorTest {
     private Submission empty;
     private Submission abc;
     private Submission abcde;
@@ -53,74 +50,69 @@ public class CommonCodeLineRemovalHandlerTest {
         def = charSubmissionFromString("DEF", "D\nE\nF\n");
     }
 
-    @Test(expected = EmptySubmissionException.class)
-    public void TestAttemptEmptyCommonCodeRemovalThrowsException() throws Exception {
-        new CommonCodeLineRemovalHandler(empty);
-    }
-
     @Test
     public void TestRemoveCommonCodeFromEmpty() throws Exception {
-        CommonCodeLineRemovalHandler handler = new CommonCodeLineRemovalHandler(abc);
+        SubmissionPreprocessor handler = new CommonCodeLineRemovalPreprocessor(abc);
         Set<Submission> removeFrom = singleton(empty);
 
-        Collection<Submission> result = handler.handleCommonCode(removeFrom);
+        Collection<Submission> result = PreprocessSubmissions.process(handler, removeFrom);
 
         checkSubmissionCollections(result, removeFrom);
     }
 
     @Test
     public void TestRemoveIdenticalCommonCodeReturnsEmpty() throws Exception {
-        CommonCodeLineRemovalHandler handler = new CommonCodeLineRemovalHandler(abc);
+        SubmissionPreprocessor handler = new CommonCodeLineRemovalPreprocessor(abc);
         Set<Submission> removeFrom = singleton(abc);
         Submission expected = charSubmissionFromString(abc.getName(), empty.getContentAsString());
 
-        Collection<Submission> results = handler.handleCommonCode(removeFrom);
+        Collection<Submission> results = PreprocessSubmissions.process(handler, removeFrom);
 
         checkSubmissionCollections(results, singletonList(expected));
     }
 
     @Test
     public void TestRemoveCommonCodeNoOverlapReturnsIdentical() throws Exception {
-        CommonCodeLineRemovalHandler handler = new CommonCodeLineRemovalHandler(def);
+        SubmissionPreprocessor handler = new CommonCodeLineRemovalPreprocessor(def);
         Set<Submission> removeFrom = singleton(abc);
 
-        Collection<Submission> results = handler.handleCommonCode(removeFrom);
+        Collection<Submission> results = PreprocessSubmissions.process(handler, removeFrom);
 
         checkSubmissionCollections(results, removeFrom);
     }
 
     @Test
     public void TestRemoveCommonCodePartialOverlap() throws Exception {
-        CommonCodeLineRemovalHandler handler = new CommonCodeLineRemovalHandler(abc);
+        SubmissionPreprocessor handler = new CommonCodeLineRemovalPreprocessor(abc);
         Set<Submission> removeFrom = singleton(abcde);
         Submission expected = charSubmissionFromString(abcde.getName(), "D\nE\n");
 
-        Collection<Submission> results = handler.handleCommonCode(removeFrom);
+        Collection<Submission> results = PreprocessSubmissions.process(handler, removeFrom);
 
         checkSubmissionCollections(results, singletonList(expected));
     }
 
     @Test
     public void TestRemoveCommonCodeSubsetOfCommon() throws Exception {
-        CommonCodeLineRemovalHandler handler = new CommonCodeLineRemovalHandler(abcde);
+        SubmissionPreprocessor handler = new CommonCodeLineRemovalPreprocessor(abcde);
         Set<Submission> removeFrom = singleton(abc);
         Submission expected = charSubmissionFromString(abc.getName(), empty.getContentAsString());
 
-        Collection<Submission> results = handler.handleCommonCode(removeFrom);
+        Collection<Submission> results = PreprocessSubmissions.process(handler, removeFrom);
 
         checkSubmissionCollections(results, singletonList(expected));
     }
 
     @Test
     public void TestRemoveCommonCodeMultipleSubmissions() throws Exception {
-        CommonCodeLineRemovalHandler handler = new CommonCodeLineRemovalHandler(abc);
+        SubmissionPreprocessor handler = new CommonCodeLineRemovalPreprocessor(abc);
         Set<Submission> removeFrom = setFromElements(abc, abcde, def);
         Submission expected1 = charSubmissionFromString(abc.getName(), empty.getContentAsString());
         Submission expected2 = charSubmissionFromString(abcde.getName(), "D\nE\n");
         Submission expected3 = def;
         Collection<Submission> expected = Arrays.asList(expected1, expected2, expected3);
 
-        Collection<Submission> results = handler.handleCommonCode(removeFrom);
+        Collection<Submission> results = PreprocessSubmissions.process(handler, removeFrom);
 
         checkSubmissionCollections(results, expected);
     }

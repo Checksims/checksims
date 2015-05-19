@@ -16,17 +16,15 @@ Project Administration
 Code Cleanup
 ------------
 - Exception rewrite. Convert many RuntimeExceptions to checked exceptions
-- Add ability to blacklist certain implementations in a registry
-- Change Common Code Removal to a preprocessor
+- Clean up CLI argument parsing exception handling - print user-readable errors
 
 Minor Improvements
 ------------------
-- Add support for more than 1 archive directory (multiple uses of --archive flag)
 - Add support for using only a single base submission if archive submissions are provided
-- Add handling for empty submissions (flag to include, default do not include)
 - Leading and Trailing Whitespace Trimming Preprocessor
 - Further optimization of Smith-Waterman Algorithm
 - HTML output should have a rotated (45 degree) X axis, to reduce size
+- Output to JSON, containing all AlgorithmResults used to build similarity matrix
 
 Major new features
 ------------------

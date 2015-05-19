@@ -23,6 +23,7 @@ package net.lldp.checksims.algorithm.preprocessor;
 
 import net.lldp.checksims.ChecksimsException;
 import net.lldp.checksims.testutil.RegistryUtils;
+import net.lldp.checksims.util.reflection.NoSuchImplementationException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -54,5 +55,10 @@ public class PreprocessorRegistryTest {
     @Test(expected = ChecksimsException.class)
     public void TestNonExistantThrowsException() throws ChecksimsException {
         PreprocessorRegistry.getInstance().getImplementationInstance("does not exist");
+    }
+
+    @Test(expected = NoSuchImplementationException.class)
+    public void TestRegistryDoesNotContainCommonCodeRemoval() throws ChecksimsException {
+        PreprocessorRegistry.getInstance().getImplementationInstance(CommonCodeLineRemovalPreprocessor.getInstance().getName());
     }
 }

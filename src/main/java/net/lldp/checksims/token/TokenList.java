@@ -39,6 +39,11 @@ public class TokenList extends PredicatedList<Token> {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Create a TokenList accepting a specific type of token.
+     *
+     * @param type Type of token which will be allowed in the list
+     */
     public TokenList(TokenType type) {
         super(new ArrayList<>(), (token) -> token.getType().equals(type));
         
@@ -47,6 +52,15 @@ public class TokenList extends PredicatedList<Token> {
         this.type = type;
     }
 
+    /**
+     * Internal copy constructor.
+     *
+     * DOES NOT enforce the invariant that all tokens already in baseList must be of the given type (performance
+     * reasons). All uses of this function are in scenarios that guarantee this invariant is held true, however.
+     *
+     * @param type Type of token accepted
+     * @param baseList List of tokens to use when building list
+     */
     private TokenList(TokenType type, List<Token> baseList) {
         super(baseList, (token) -> token.getType().equals(type));
         this.type = type;

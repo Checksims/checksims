@@ -19,21 +19,14 @@
  * Copyright (c) 2014-2015 Nicholas DeMarinis, Matthew Heon, and Dolan Murvihill
  */
 
-package net.lldp.checksims.algorithm.commoncode;
-
-import net.lldp.checksims.submission.Submission;
-
-import java.util.Set;
-
 /**
- * A handler for Common Code Removal.
+ * The Submission package contains all classes related to Submissions.
+ *
+ * A Submission contains all the code for a single submission of a single assignment. Checksims compares a number of
+ * Submissions for similarities. Submissions are typically formed by reading all files matching a given pattern in a
+ * directory, concatenating them, and tokenizing the results (using the methods in the base Submission interface).
+ * However, Submissions can be constructed on their own by instantiating a ConcreteSubmission.
+ *
+ * Submission itself is an interface with one concrete implementation and a number of decorators.
  */
-public interface CommonCodeHandler {
-    /**
-     * Handle common code in given submissions.
-     *
-     * @param input Submissions to handle common code within
-     * @return Result of processing submissions for common code
-     */
-    Set<Submission> handleCommonCode(Set<Submission> input);
-}
+package net.lldp.checksims.submission;

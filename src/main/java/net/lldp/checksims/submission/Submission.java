@@ -44,6 +44,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Interface for Submissions.
  *
+ * Submissions are considered Comparable so they can be ordered for output. Generally, we only expect that their names,
+ * and not their contents, will be compared.
+ *
  * Also contains factory methods for submissions
  */
 public interface Submission extends Comparable<Submission> {
@@ -163,6 +166,14 @@ public interface Submission extends Comparable<Submission> {
         checkNotNull(glob);
         checkArgument(!glob.isEmpty(), "Glob pattern cannot be empty");
 
+        if(!directory.exists()) {
+            throw new NoSuchFileException("Does not exist: " + directory.getAbsolutePath());
+        } else if(!directory.isDirectory()) {
+            throw new NotDirectoryException("Not a directory: " + directory.getAbsolutePath());
+        }
+
+        PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:" + glob);
+
         Set<File> allFiles = new HashSet<>();
         Logger logs = LoggerFactory.getLogger(Submission.class);
 
@@ -170,8 +181,13 @@ public interface Submission extends Comparable<Submission> {
             logs.trace("Recursively traversing directory " + directory.getName());
         }
 
+        // Get files in this directory
+        File[] contents = directory.listFiles((f) -> matcher.matches(Paths.get(f.getAbsolutePath()).getFileName()));
+
+        // TODO consider mapping to absolute paths?
+
         // Add this directory
-        Collections.addAll(allFiles, getMatchingFilesFromDir(directory, glob));
+        Collections.addAll(allFiles, contents);
 
         // Get subdirectories
         File[] subdirs = directory.listFiles(File::isDirectory);
@@ -184,30 +200,6 @@ public interface Submission extends Comparable<Submission> {
         }
 
         return allFiles;
-    }
-
-    /**
-     * Identify all files matching in a single directory.
-     *
-     * @param directory Directory to find files within
-     * @param glob Match pattern used to identify files to include
-     * @return Array of files which match in this single directory
-     */
-    static File[] getMatchingFilesFromDir(File directory, String glob)
-            throws NoSuchFileException, NotDirectoryException {
-        checkNotNull(directory);
-        checkNotNull(glob);
-        checkArgument(!glob.isEmpty(), "Glob pattern cannot be empty");
-
-        PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:" + glob);
-
-        if(!directory.exists()) {
-            throw new NoSuchFileException("Does not exist: " + directory.getAbsolutePath());
-        } else if(!directory.isDirectory()) {
-            throw new NotDirectoryException("Not a directory: " + directory.getAbsolutePath());
-        }
-
-        return directory.listFiles((f) -> matcher.matches(Paths.get(f.getAbsolutePath()).getFileName()));
     }
 
     /**
@@ -233,7 +225,8 @@ public interface Submission extends Comparable<Submission> {
         Logger logs = LoggerFactory.getLogger(Submission.class);
 
         if(files.size() == 0) {
-            throw new NoMatchingFilesException("No matching files found, cannot create submission!");
+            throw new NoMatchingFilesException("No matching files found, cannot create submission named \"" + name
+                    + "\"");
         }
 
         // To ensure submission generation is deterministic, sort files by name, and read them in that order
@@ -258,7 +251,7 @@ public interface Submission extends Comparable<Submission> {
         String contentString = fileContent.toString();
 
         // Split the content
-        tokenList.addAll(splitter.splitFile(contentString));
+        tokenList.addAll(splitter.splitString(contentString));
 
         if(tokenList.size() > 7500) {
             logs.warn("Warning: Submission " + name + " has very large token count (" + tokenList.size() + ")");

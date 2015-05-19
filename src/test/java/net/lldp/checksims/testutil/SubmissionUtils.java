@@ -86,7 +86,7 @@ public class SubmissionUtils {
     public static Submission submissionFromString(String name, String content, TokenType type) {
         Tokenizer tokenizer = Tokenizer.getTokenizer(type);
 
-        return new ConcreteSubmission(name, content, tokenizer.splitFile(content));
+        return new ConcreteSubmission(name, content, tokenizer.splitString(content));
     }
 
     /**

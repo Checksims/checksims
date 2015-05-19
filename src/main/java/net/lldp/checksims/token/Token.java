@@ -22,7 +22,14 @@
 package net.lldp.checksims.token;
 
 /**
- * Interface for Tokens, to enable decorators.
+ * Interface for Tokens.
+ *
+ * A Token is the basic unit of comparison in Checksims. A token represents a "chunk" of a submission --- typically a
+ * substring of the submission, or a single character.
+ *
+ * Tokens are backed by "Lexemes" --- for details, see LexemeMap
+ *
+ * This interface enables easy use of Decorators for tokens.
  */
 public interface Token {
     /**

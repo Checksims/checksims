@@ -30,13 +30,19 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Parent class for all registry implementations.
+ *
+ * A Registry contains a number of implementations of a given interface which are contained within a given package.
+ * Registries are initialized via reflection; no modification is required to add a new implementation to a registry, so
+ * long as it implements the appropriate interface and is in the appropriate package.
  */
 public class Registry<T extends NamedInstantiable> {
     private final Map<String, T> registeredHandlers;
@@ -50,10 +56,24 @@ public class Registry<T extends NamedInstantiable> {
      * @param baseClazz Base class or interface which all implementations in the registry extend or implement
      */
     public Registry(String initPath, Class<T> baseClazz) {
+        this(initPath, baseClazz, new HashSet<>());
+    }
+
+    /**
+     * Create a Registry instance for implementations of a given base class in the given package and subpackages.
+     *
+     * Please note that inner classes *WILL NOT BE REGISTERED* - only top-level classes will be included in a registry!
+     *
+     * @param initPath Package to (recursively) search for implementations
+     * @param baseClazz Base class or interface which all implementations in the registry extend or implement
+     * @param ignoredImplementations Names of implementations which should not be included in the registry.
+     */
+    public Registry(String initPath, Class<T> baseClazz, Set<String> ignoredImplementations) {
         checkNotNull(initPath);
         checkNotNull(baseClazz);
+        checkNotNull(ignoredImplementations);
 
-        Map<String, T> handlers = reflectiveInstantiator(initPath, baseClazz);
+        Map<String, T> handlers = reflectiveInstantiator(initPath, baseClazz, ignoredImplementations);
 
         if(handlers.isEmpty()) {
             throw new RuntimeException("Cannot find any valid classes to instantiate in " + initPath);
@@ -96,11 +116,18 @@ public class Registry<T extends NamedInstantiable> {
      *
      * @param packageName Package name to instantiate in
      * @param subclassesOf Class to instantiate subclasses of
+     * @param ignore Set of implementations to ignore (not include in the registry)
      * @param <T> Type of the original class, which all subclasses will be as well
      * @return List of instances of classes extending/implementing subclassesOf
      */
     public static <T extends NamedInstantiable> Map<String, T> reflectiveInstantiator(String packageName,
-                                                                                      Class<T> subclassesOf) {
+                                                                                      Class<T> subclassesOf,
+                                                                                      Set<String> ignore) {
+        checkNotNull(packageName);
+        checkArgument(!packageName.isEmpty(), "Empty string is not a valid Java package!");
+        checkNotNull(subclassesOf);
+        checkNotNull(ignore);
+
         Logger logs = LoggerFactory.getLogger(Registry.class);
 
         Map<String, T> allInstances = new HashMap<>();
@@ -142,6 +169,11 @@ public class Registry<T extends NamedInstantiable> {
                 // Suppress the unchecked cast warning because we verify it works with reflection above
                 @SuppressWarnings("unchecked")
                 T instance = (T)getInstance.invoke(null);
+
+                // If configured to ignore the implementation, do not add it
+                if(ignore.contains(instance.getName().toLowerCase())) {
+                    continue;
+                }
 
                 if(!allInstances.containsKey(instance.getName().toLowerCase())) {
                     allInstances.put(instance.getName().toLowerCase(), instance);

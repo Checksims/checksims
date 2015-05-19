@@ -41,7 +41,9 @@ public final class ConcreteSubmission implements Submission {
      * Construct a new Concrete Submission with given name and contents.
      *
      * Token content should be the result of tokenizing the string content of the submission with some tokenizer. This
-     * invariant is maintained throughout the project, but not enforced.
+     * invariant is maintained throughout the project, but not enforced here for performance reasons. It is thus
+     * possible to create a ConcreteSubmission with Token contents not equal to tokenized String contents. This is not
+     * recommended and will most likely break, at the very least, Preprocessors.
      *
      * @param name Name of new submission
      * @param content Content of submission, as string

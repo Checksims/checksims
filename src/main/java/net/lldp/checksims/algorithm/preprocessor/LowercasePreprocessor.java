@@ -60,8 +60,23 @@ public final class LowercasePreprocessor implements SubmissionPreprocessor {
 
         // Lowercase the content of the submission, then retokenize
         String contentLower = submission.getContentAsString().toLowerCase();
-        TokenList tokenizedLower = tokenizer.splitFile(contentLower);
+        TokenList tokenizedLower = tokenizer.splitString(contentLower);
 
         return new ConcreteSubmission(submission.getName(), contentLower, tokenizedLower);
+    }
+
+    @Override
+    public String toString() {
+        return "Singleton instance of LowercasePreprocessor";
+    }
+
+    @Override
+    public int hashCode() {
+        return this.getName().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return other instanceof LowercasePreprocessor;
     }
 }

@@ -16,13 +16,10 @@ jar:
 test:
 	mvn compile test
 
-docs: main userguide devguide
+docs: userguide devguide
 
 builddir:
 	mkdir -p $(LATEX_ROOT)/dist
-
-main: builddir
-	$(LATEX) $(LATEX_BUILD_ARGS) $(LATEX_SRC)/main.ltx
 
 userguide: builddir $(LATEX_DIST)/user_guide_only.pdf
 

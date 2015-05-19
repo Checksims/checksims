@@ -24,7 +24,11 @@ package net.lldp.checksims.token;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Interface for comparable tokens of various types.
+ * Concrete implementation of comparable tokens with varying type and validity.
+ *
+ * Tokens are backed by an Object. In the case of Line and Whitespace tokens, this should be a string. In the case of
+ * Character tokens, this should be a Character. This is not enforced for performance reasons, but the invariant is
+ * maintained throughout the program.
  */
 public final class ConcreteToken implements Token {
     private boolean valid;
@@ -42,7 +46,7 @@ public final class ConcreteToken implements Token {
     }
 
     /**
-     * Construct a token with given type.
+     * Construct a token with given type and validity.
      *
      * @param token Object the token represents
      * @param type Type of token
@@ -57,6 +61,17 @@ public final class ConcreteToken implements Token {
         this.lexeme = LexemeMap.getLexemeForToken(token);
     }
 
+    /**
+     * Private constructor which is essentially a copy constructor.
+     *
+     * Does not actually use the LexemeMap, and instead uses a directly-provided lexeme. If the given lexeme is invalid,
+     * it WILL result in a RuntimeException. Hence, this is only used as a copy constructor, for high-speed duplication
+     * of tokens.
+     *
+     * @param lexeme Lexeme for this token
+     * @param type Type of this token
+     * @param valid Validity of this token
+     */
     private ConcreteToken(int lexeme, TokenType type, boolean valid) {
         this.valid = valid;
         this.type = type;

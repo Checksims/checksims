@@ -22,6 +22,7 @@
 package net.lldp.checksims.util.threading;
 
 import com.google.common.collect.ImmutableSet;
+import net.lldp.checksims.ChecksimsException;
 import net.lldp.checksims.algorithm.AlgorithmResults;
 import net.lldp.checksims.algorithm.SimilarityDetector;
 import net.lldp.checksims.algorithm.preprocessor.SubmissionPreprocessor;
@@ -71,31 +72,10 @@ public final class ParallelAlgorithm {
     }
 
     /**
-     * @return Number of threads to be used for execution
+     * @return Number of threads to be used for execution. Defaults to number of CPUs available on system.
      */
     public static int getThreadCount() {
         return threadCount;
-    }
-
-    /**
-     * Remove common code in parallel.
-     *
-     * @param algorithm Algorithm to use for common code removal
-     * @param common Common code to remove
-     * @param submissions Submissions to remove from
-     * @return Submissions with common code removed
-     */
-    public static Set<Submission> parallelCommonCodeRemoval(SimilarityDetector algorithm, Submission common,
-                                                            Set<Submission> submissions) {
-        checkNotNull(algorithm);
-        checkNotNull(common);
-        checkNotNull(submissions);
-
-        Collection<CommonCodeRemovalWorker> workers = submissions.stream()
-                .map((submission) -> new CommonCodeRemovalWorker(algorithm, common, submission))
-                .collect(Collectors.toList());
-
-        return ImmutableSet.copyOf(executeTasks(workers));
     }
 
     /**
@@ -105,8 +85,9 @@ public final class ParallelAlgorithm {
      * @param pairs Pairs of submissions to perform detection on
      * @return Collection of results, one for each pair
      */
-    public static Set<AlgorithmResults> parallelSimilarityDetection(SimilarityDetector algorithm, Set<Pair<Submission,
-            Submission>> pairs) {
+    public static Set<AlgorithmResults> parallelSimilarityDetection(SimilarityDetector algorithm,
+                                                                    Set<Pair<Submission, Submission>> pairs)
+            throws ChecksimsException {
         checkNotNull(algorithm);
         checkNotNull(pairs);
 
@@ -119,7 +100,8 @@ public final class ParallelAlgorithm {
     }
 
     public static Set<Submission> parallelSubmissionPreprocessing(SubmissionPreprocessor preprocessor,
-                                                                  Set<Submission> submissions) {
+                                                                  Set<Submission> submissions)
+            throws ChecksimsException {
         checkNotNull(preprocessor);
         checkNotNull(submissions);
 
@@ -141,7 +123,8 @@ public final class ParallelAlgorithm {
      * @param <T> Type returned by the tasks
      * @return Collection of Ts
      */
-    private static <T, T2 extends Callable<T>> Collection<T> executeTasks(Collection<T2> tasks) {
+    private static <T, T2 extends Callable<T>> Collection<T> executeTasks(Collection<T2> tasks)
+            throws ChecksimsException {
         checkNotNull(tasks);
 
         if(tasks.size() == 0) {
@@ -150,7 +133,7 @@ public final class ParallelAlgorithm {
         }
 
         if(executor.isShutdown()) {
-            throw new RuntimeException("Attempted to call executeTasks while executor was shut down!");
+            throw new ChecksimsException("Attempted to call executeTasks while executor was shut down!");
         }
 
         logs.info("Starting work using " + threadCount + " threads.");
@@ -176,19 +159,17 @@ public final class ParallelAlgorithm {
                 } catch(ExecutionException e) {
                     executor.shutdownNow();
                     logs.error("Fatal error in executed job!");
-                    throw new RuntimeException("Error while executing worker for future", e.getCause());
+                    throw new ChecksimsException("Error while executing worker for future", e.getCause());
                 }
             }
 
             return unpackInto;
         } catch (InterruptedException e) {
             executor.shutdownNow();
-            logs.error("Execution of Checksims was interrupted!");
-            throw new RuntimeException(e);
+            throw new ChecksimsException("Execution of Checksims was interrupted!", e);
         } catch (RejectedExecutionException e) {
             executor.shutdownNow();
-            logs.error("Could not schedule execution of all comparisons --- possibly too few resources available?");
-            throw new RuntimeException(e);
+            throw new ChecksimsException("Could not schedule execution of all tasks!", e);
         }
     }
 }

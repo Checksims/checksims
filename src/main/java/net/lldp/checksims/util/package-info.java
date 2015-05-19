@@ -19,22 +19,7 @@
  * Copyright (c) 2014-2015 Nicholas DeMarinis, Matthew Heon, and Dolan Murvihill
  */
 
-package net.lldp.checksims.algorithm.preprocessor;
-
-import net.lldp.checksims.algorithm.InternalAlgorithmError;
-import net.lldp.checksims.submission.Submission;
-import net.lldp.checksims.util.reflection.NamedInstantiable;
-
 /**
- * Interface for submission preprocessors which act on submissions.
+ * The util package contains common utility classes unrelated to Submissions, Tokens, or Algorithms.
  */
-public interface SubmissionPreprocessor extends NamedInstantiable {
-    /**
-     * Perform some implementation-specific transformation on the input submission.
-     *
-     * @param submission Submission to transform
-     * @return Result of transforming the input submission's contents
-     * @throws InternalAlgorithmError Thrown on internal error preprocessing submission
-     */
-    Submission process(Submission submission) throws InternalAlgorithmError;
-}
+package net.lldp.checksims.util;

@@ -22,14 +22,15 @@
 package net.lldp.checksims;
 
 import net.lldp.checksims.algorithm.preprocessor.LowercasePreprocessor;
-import net.lldp.checksims.algorithm.similaritymatrix.output.MatrixToCSVPrinter;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.LinkedList;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 /**
  * Tests of validity checking on ChecksimsConfig
@@ -97,14 +98,6 @@ public class ChecksimsConfigTest {
     }
 
     @Test
-    public void TestSetCommonCodeHandlerNull() {
-        expectedEx.expect(NullPointerException.class);
-
-        ChecksimsConfig config = new ChecksimsConfig();
-        config.setCommonCodeHandler(null);
-    }
-
-    @Test
     public void TestSetOutputPrintersNull() {
         expectedEx.expect(NullPointerException.class);
 
@@ -117,23 +110,7 @@ public class ChecksimsConfigTest {
         expectedEx.expect(IllegalArgumentException.class);
 
         ChecksimsConfig config = new ChecksimsConfig();
-        config.setOutputPrinters(new LinkedList<>());
-    }
-
-    @Test
-    public void TestSetOutputPrintersDuplicated() {
-        expectedEx.expect(IllegalArgumentException.class);
-
-        ChecksimsConfig config = new ChecksimsConfig();
-        config.setOutputPrinters(Arrays.asList(MatrixToCSVPrinter.getInstance(), MatrixToCSVPrinter.getInstance()));
-    }
-
-    @Test
-    public void TestSetOutputMethodNull() {
-        expectedEx.expect(NullPointerException.class);
-
-        ChecksimsConfig config = new ChecksimsConfig();
-        config.setOutputMethod(null);
+        config.setOutputPrinters(new HashSet<>());
     }
 
     @Test
@@ -150,5 +127,35 @@ public class ChecksimsConfigTest {
 
         ChecksimsConfig config = new ChecksimsConfig();
         config.setNumThreads(0);
+    }
+
+    @Test
+    public void TestBaseConfigEquality() {
+        assertEquals(new ChecksimsConfig(), new ChecksimsConfig());
+    }
+
+    @Test
+    public void TestBasicInequality() {
+        ChecksimsConfig config = new ChecksimsConfig();
+        ChecksimsConfig config2 = new ChecksimsConfig().setNumThreads(config.getNumThreads() + 1);
+
+        assertNotEquals(config, config2);
+    }
+
+    @Test
+    public void TestEqualityCopyConstructor() {
+        ChecksimsConfig config = new ChecksimsConfig();
+        ChecksimsConfig config2 = new ChecksimsConfig(config);
+
+        assertEquals(config, config2);
+    }
+
+    @Test
+    public void TestCopyConstructorCopies() {
+        ChecksimsConfig config = new ChecksimsConfig();
+        ChecksimsConfig config2 = new ChecksimsConfig(config);
+        config2.setNumThreads(config.getNumThreads() + 1);
+
+        assertNotEquals(config, config2);
     }
 }

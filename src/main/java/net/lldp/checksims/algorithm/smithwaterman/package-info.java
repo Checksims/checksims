@@ -19,20 +19,10 @@
  * Copyright (c) 2014-2015 Nicholas DeMarinis, Matthew Heon, and Dolan Murvihill
  */
 
-package net.lldp.checksims.util.output;
-
-import net.lldp.checksims.algorithm.similaritymatrix.SimilarityMatrix;
-import net.lldp.checksims.algorithm.similaritymatrix.output.MatrixPrinter;
-
 /**
- * Print the output of a Checksims computation.
+ * This package contains the implementation of a Smith-Waterman algorithm based Similarity Detector.
+ *
+ * A number of support classes are also present. It is not recommended that these be used external to the package,
+ * however.
  */
-public interface OutputPrinter {
-    /**
-     * Provide Checksims' output in a usable form.
-     *
-     * @param toPrint Output matrix to print
-     * @param printWith Strategy to use when printing
-     */
-    void print(SimilarityMatrix toPrint, MatrixPrinter printWith);
-}
+package net.lldp.checksims.algorithm.smithwaterman;

@@ -55,7 +55,7 @@ public final class LineTokenizer implements Tokenizer {
      * @return List of LINE tokens representing the input string
      */
     @Override
-    public TokenList splitFile(String string) {
+    public TokenList splitString(String string) {
         checkNotNull(string);
 
         TokenList toReturn = new TokenList(this.getType());
