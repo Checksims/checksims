@@ -293,4 +293,26 @@ public class TokenListTest {
         assertNotNull(joined);
         assertEquals("line line line\nanother line\n", joined);
     }
+
+    @Test
+    public void testNumValid() {
+        assertEquals(3, threeElementsCharacter.numValid());
+    }
+
+    @Test
+    public void testNumValidAgain() {
+        assertEquals(2, twoElementsWhitespace.numValid());
+    }
+
+    @Test
+    public void testNumValidAfterChange() {
+        threeElementsCharacter.get(1).setValid(false);
+        assertEquals(2, threeElementsCharacter.numValid());
+    }
+
+    @Test(expected=UnsupportedOperationException.class)
+    public void testImmutableCopyContainsImmutableTokens() {
+        final TokenList t = TokenList.immutableCopy(threeElementsCharacter);
+        t.get(1).setValid(false);
+    }
 }
