@@ -122,7 +122,7 @@ public class TokenList extends PredicatedList<Token> {
 
         final List<ImmutableToken> tmp = new LinkedList<>();
         for(final Token t : cloneFrom) {
-            tmp.add(new ImmutableToken(t));
+            tmp.add(new ImmutableToken(Token.cloneToken(t)));
         }
 
         return new TokenList(cloneFrom.type, ImmutableList.copyOf(tmp));
