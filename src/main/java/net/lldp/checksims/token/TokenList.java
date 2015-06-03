@@ -25,6 +25,7 @@ import com.google.common.collect.ImmutableList;
 import org.apache.commons.collections4.list.PredicatedList;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -111,15 +112,20 @@ public class TokenList extends PredicatedList<Token> {
     }
 
     /**
-     * Peforms a shallow copy of a TokenList, returning an immutable version of the initial list.
+     * Peforms a deep copy of a TokenList, returning an immutable version of the initial list with immutable tokens.
      *
      * @param cloneFrom List to copy
      * @return Immutable copy of cloneFrom
      */
-    public static TokenList immutableCopy(TokenList cloneFrom) {
+    public static TokenList immutableCopy(final TokenList cloneFrom) {
         checkNotNull(cloneFrom);
 
-        return new TokenList(cloneFrom.type, ImmutableList.copyOf(cloneFrom));
+        final List<ImmutableToken> tmp = new LinkedList<>();
+        for(final Token t : cloneFrom) {
+            tmp.add(new ImmutableToken(Token.cloneToken(t)));
+        }
+
+        return new TokenList(cloneFrom.type, ImmutableList.copyOf(tmp));
     }
 
     /**
@@ -159,5 +165,9 @@ public class TokenList extends PredicatedList<Token> {
     @Override
     public int hashCode() {
         return type.hashCode() ^ super.hashCode();
+    }
+
+    public int numValid() {
+        return (int)this.stream().filter(Token::isValid).count();
     }
 }

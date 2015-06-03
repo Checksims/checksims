@@ -30,12 +30,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import static net.lldp.checksims.testutil.AlgorithmUtils.checkResults;
-import static net.lldp.checksims.testutil.AlgorithmUtils.checkResultsIdenticalSubmissions;
-import static net.lldp.checksims.testutil.AlgorithmUtils.checkResultsNoMatch;
-import static net.lldp.checksims.testutil.SubmissionUtils.charSubmissionFromString;
-import static net.lldp.checksims.testutil.SubmissionUtils.lineSubmissionFromString;
-import static net.lldp.checksims.testutil.SubmissionUtils.whitespaceSubmissionFromString;
+import static net.lldp.checksims.testutil.AlgorithmUtils.*;
+import static net.lldp.checksims.testutil.SubmissionUtils.*;
 
 /**
  * Tests for the Smith-Waterman Algorithm plagiarism detector

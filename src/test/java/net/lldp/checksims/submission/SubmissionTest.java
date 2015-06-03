@@ -21,9 +21,13 @@
 
 package net.lldp.checksims.submission;
 
+import net.lldp.checksims.token.Token;
+import net.lldp.checksims.token.TokenList;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Iterator;
 
 import static net.lldp.checksims.testutil.SubmissionUtils.charSubmissionFromString;
 import static org.junit.Assert.assertEquals;
@@ -42,8 +46,9 @@ public class SubmissionTest {
     public void setUp() {
         a = charSubmissionFromString("a", "a");
         aTwo = charSubmissionFromString("a", "a");
-        aInval = charSubmissionFromString("a", "a");
-        aInval.getContentAsTokens().get(0).setValid(false);
+        final TokenList aInvalList = TokenList.cloneTokenList(a.getContentAsTokens());
+        aInvalList.get(0).setValid(false);
+        aInval = new ConcreteSubmission("a", "a", aInvalList);
         abc = charSubmissionFromString("abc", "abc");
     }
 
@@ -84,5 +89,27 @@ public class SubmissionTest {
         assertNotEquals(aEnforcing, aInval);
         assertNotEquals(aInvalEnforcing, a);
         assertNotEquals(aInvalEnforcing, aInval);
+    }
+    @Test(expected=UnsupportedOperationException.class)
+    public void testTokenListIsImmutable() {
+        Submission s1 = charSubmissionFromString("s1", "testtest");
+        Submission s2 = charSubmissionFromString("s2", "test");
+        final TokenList aTokens = s1.getContentAsTokens();
+        final TokenList bTokens = s2.getContentAsTokens();
+
+        final Iterator<Token> aIt = aTokens.iterator();
+        final Iterator<Token> bIt = bTokens.iterator();
+
+        while(aIt.hasNext() && bIt.hasNext()) {
+            final Token aTok = aIt.next();
+            final Token bTok = bIt.next();
+            if(aTok.equals(bTok)) {
+                aTok.setValid(false);
+                bTok.setValid(false);
+            }
+        }
+
+        assertEquals(8, s1.getContentAsTokens().numValid());
+        assertEquals(4, s2.getContentAsTokens().numValid());
     }
 }
