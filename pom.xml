@@ -81,7 +81,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
+                <version>3.3</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -93,7 +93,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.5</version>
+                <version>2.6</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -106,7 +106,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.4.1</version>
+                <version>2.5.4</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -126,6 +126,15 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.18.1</version>
+                <configuration>
+                    <argLine>${surefireArgLine}</argLine>
+                    <skipTests>${skip.unit.tests}</skipTests>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -206,11 +215,11 @@
                                         <!-- Notable exclusions are for() if() catch() and while() -->
                                         <module name="WhitespaceAround">
                                             <property name="tokens" value="ASSIGN, BAND, BAND_ASSIGN, BOR,
-				                                BOR_ASSIGN, BSR, BSR_ASSIGN, BXOR, BXOR_ASSIGN, COLON, DIV, DIV_ASSIGN,
-				                                EQUAL, GE, GT, LAND, LE, LITERAL_DO, LITERAL_ELSE, LITERAL_FINALLY,
-				                                LITERAL_RETURN, LITERAL_SYNCHRONIZED, LITERAL_TRY, LOR, LT, MINUS,
-				                                MINUS_ASSIGN, MOD, MOD_ASSIGN, NOT_EQUAL, PLUS, PLUS_ASSIGN, QUESTION,
-				                                SL, SL_ASSIGN, SR_ASSIGN, STAR, STAR_ASSIGN"/>
+                                                BOR_ASSIGN, BSR, BSR_ASSIGN, BXOR, BXOR_ASSIGN, COLON, DIV, DIV_ASSIGN,
+                                                EQUAL, GE, GT, LAND, LE, LITERAL_DO, LITERAL_ELSE, LITERAL_FINALLY,
+                                                LITERAL_RETURN, LITERAL_SYNCHRONIZED, LITERAL_TRY, LOR, LT, MINUS,
+                                                MINUS_ASSIGN, MOD, MOD_ASSIGN, NOT_EQUAL, PLUS, PLUS_ASSIGN, QUESTION,
+                                                SL, SL_ASSIGN, SR_ASSIGN, STAR, STAR_ASSIGN"/>
                                         </module>
 
                                         <!-- Enforce whitespace after commas and semicolons -->
@@ -280,6 +289,29 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.7.5.201505241946</version>
+                <executions>
+                    <execution>
+                        <id>pre-unit-test</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <propertyName>surefireArgLine</propertyName>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>post-unit-test</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
         <resources>
             <resource>
@@ -301,8 +333,8 @@
 
     <licenses>
         <license>
-	    <name>CDDL 1.0</name>
-	    <url>http://www.opensource.org/licenses/CDDL-1.0</url>
-	</license>
+            <name>CDDL 1.0</name>
+            <url>http://www.opensource.org/licenses/CDDL-1.0</url>
+        </license>
     </licenses>
 </project>
