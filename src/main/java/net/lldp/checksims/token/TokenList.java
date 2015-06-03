@@ -122,7 +122,7 @@ public class TokenList extends PredicatedList<Token> {
 
         final List<ImmutableToken> tmp = new LinkedList<>();
         for(final Token t : cloneFrom) {
-            tmp.add(new ImmutableToken(Token.cloneToken(t)));
+            tmp.add(new ImmutableToken(t));
         }
 
         return new TokenList(cloneFrom.type, ImmutableList.copyOf(tmp));
@@ -168,12 +168,6 @@ public class TokenList extends PredicatedList<Token> {
     }
 
     public int numValid() {
-        int numValid = 0;
-        for(Token t : this) {
-            if (t.isValid()) {
-                numValid++;
-            }
-        }
-        return numValid;
+        return (int)this.stream().filter(Token::isValid).count();
     }
 }
